@@ -1,5 +1,5 @@
 import { CRM_MENU, CRM_CURRENT_LEVEL_ONE_MENU, CRM_USER_INFO } from './keys';
-import { GetContactByUid } from '../api/callCenter';
+
 
 export const startMarquee = (lh, speed, delay, id) => { // 消息滚动
     let t;
@@ -221,91 +221,7 @@ export const messageTitle = { // title 消息提示
             document.title = messageTitle.title;
         }
     }
-    // 拨打电话
-    /** 
-     * { this, Uid, 号码,   号码类型,   CustomGuid, Guid}
-     */
-export function getCallUp(self, Uid, mobile, phoneType, CustomGuid, Guid) {
-    let userInfo = JSON.parse(localStorage.getItem(CRM_USER_INFO));
-    let queryParm = { UserNo: userInfo.UserId, ExtNo: userInfo.PartialPhone };
-    self.$store.dispatch("setCallInfo", 0); //将通话ID置为0
-    self.$store.dispatch('getExtStatus', queryParm);
-    let callStatus = self.$store.state.navigation.extStatusId;
 
-    if (Guid && callStatus == 2) {
-        let trackingGuid = {
-            CustomGuid,
-            Guid,
-            Uid
-        }
-        self.$store.dispatch('isTracking', true);
-        self.$store.dispatch('getTrackingIds', trackingGuid);
-    }
-    if (callStatus == 1) {
-        self.$message({
-            message: '请先签入,再拨打电话',
-            type: 'warning'
-        });
-        return;
-    } else if (callStatus == 3) {
-        self.$message({
-            message: '请先置闲，再拨打电话',
-            type: 'warning'
-        });
-        return;
-    } else if (callStatus == 4) {
-        self.$message({
-            message: '通话中, 请稍后再试',
-            type: 'warning'
-        });
-        return;
-    } else if (callStatus == 2) {
-        let sendCall = {
-            Uid,
-            mobile,
-            phoneType
-        }
-        if (mobile.indexOf('*') == -1) {
-            self.$store.dispatch('callUp', {
-                UserNo: userInfo.UserId,
-                FromNo: userInfo.PartialPhone,
-                ToNo: mobile
-            })
-            setTimeout(() => {
-                self.$store.dispatch('getExtStatus', queryParm);
-            }, 2500);
-        } else {
-            GetContactByUid(sendCall).then(ret => { // 获取手机号码明文
-                if (ret.status === 0) {
-                    self.$store.dispatch('callUp', {
-                        UserNo: userInfo.UserId,
-                        FromNo: userInfo.PartialPhone,
-                        ToNo: ret.result.replace('-', '')
-                    })
-                    setTimeout(() => {
-                        self.$store.dispatch('getExtStatus', queryParm);
-                    }, 2500);
-                } else {
-                    self.$message({
-                        message: '拨打电话失败，请稍后再试',
-                        type: 'warning'
-                    });
-                    return;
-                }
-            }).catch(() => {
-                self.$message({
-                    message: '拨打电话失败，请稍后再试',
-                    type: 'warning'
-                });
-            });
-        }
-    } else {
-        self.$message({
-            message: '服务未处理异常',
-            type: 'warning'
-        });
-    }
-}
 
 export const isIE9 = () => {
     var DEFAULT_VERSION = "9.0";

@@ -1,5 +1,4 @@
-import {CURRENT_SUB_MENU, SIGNIN_OUT, EXT_STATUS, HANGUP_CALL, Breadcrumb} from '../mutation-types';
-import {signOperate, getSingleExtStatus, hangup} from '../../api/callCenter';
+import {CURRENT_SUB_MENU, SIGNIN_OUT, EXT_STATUS, Breadcrumb} from '../mutation-types';
 import {CRM_MENU, CRM_CURRENT_SUBMENU, CRM_CURRENT_LEVEL_ONE_MENU, FORMAT_MENU} from '../../util/keys';
 const state = {
   currentLevelOneId: 9,
@@ -46,27 +45,6 @@ const actions = {
   updateCurrentTabId({commit, state}, id) {
     state.currentTabId = id;
   },
-  async signOperate({commit}, parmSignInfo) {
-    let ret = await signOperate(parmSignInfo);
-    if (ret && ret.status === 0) {
-      commit(SIGNIN_OUT, ret.result);
-    } //获取签入状态
-    let queryPrm = {ExtNo: parmSignInfo.ExtNo};
-    let extInfo = await getSingleExtStatus(queryPrm);
-    commit(EXT_STATUS, extInfo.result);
-  },
-  async getExtStatus({commit}, parmExtStatus) {
-    let ret = await getSingleExtStatus(parmExtStatus);
-    if (ret && ret.status === 0) {
-      commit(EXT_STATUS, ret.result);
-    }
-  },
-  async hangupCall({commit}, parm) {
-    let ret = await hangup(parm);
-    if (ret && ret.status === 0) {
-      commit(HANGUP_CALL, ret.result);
-    }
-  }
 };
 // 逻辑代码
 const mutations = {
@@ -92,9 +70,6 @@ const mutations = {
     state.extStatusId = result.StatusId;
     state.extStatusName = result.Status;
   },
-  [HANGUP_CALL](state, result) {
-
-  }
 };
 export default {
   state,

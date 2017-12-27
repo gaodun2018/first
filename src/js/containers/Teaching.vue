@@ -1,12 +1,6 @@
 <template>
   <div class="module-teaching-content teaching-manage-style">
-   <!-- <el-row class="breadcrumb">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item :to="{ path: '/index' }">班级管理</el-breadcrumb-item>
-        <el-breadcrumb-item>课程管理</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-row>-->
-
+    
     <div class="course">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="课程列表" name="first">
