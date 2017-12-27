@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2017-12-27 17:00:30 */
+/*! gaodun modified this file at 2017-12-27 17:53:02 */
 .permission-courseoutline .rowtype{color:#f00;}
 .edu_table .el-button--text a{color:#20a0ff;}
 .outlineeat{position:relative;font-size:16px;color:#2A2B2C;border-bottom:1px solid #CBCBCB;padding:14px 0;margin-right:20px;font-weight:bold;}
@@ -51,7 +51,7 @@
 .cloneinfo{color:#f60;margin:0 30px 50px 30px;}
 .tabplane .upload-demo{width:360px;margin:0 auto;}
 .tabplane .upload-demo .el-upload__tip em{font-style:normal;color:#20a0ff;display:inline-block;margin:4px 0 8px;}
-
+.clues-pagination{margin-top:30px;}
 .order-manage-dislog .el-dialog--small {
   width: 30%;
 }
@@ -890,11 +890,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
   font-size: 12px;
   color: #20a0ff;
 }
-
-
-
-
-
 
 
 
