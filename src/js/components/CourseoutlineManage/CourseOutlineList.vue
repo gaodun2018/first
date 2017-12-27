@@ -7,19 +7,16 @@
           <div class="button_group_t">
             <span>项 目:</span>
             <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']" @click="outlinechange('0')">全部</span>
-            <template v-for="(rev,index) in tablist">
-                <span class="clitem" :class="[rev.id === clver ?'current':'']" @click="outlinechange(rev.id)">{{rev.name}}</span>
+            <template v-for="(rev,index) in projectlist">
+                <span class="clitem" :class="[rev.project_id === clver ?'current':'']" @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
             </template>
 
           </div>
           <div class="button_group_b">
             <span> 科 目:</span>
             <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']" @click="mulchange('0')">全部</span>
-
-            <template v-for="(revm,index) in tablist">
-              <template v-for="(revs,index) in revm.tabdata">
-                  <span class="clitem" :class="[revs.id === clversm ?'current':'']" @click="mulchange(revs.id)">{{revs.name}}</span>
-              </template>
+            <template v-for="(revs,index) in subjectlist">
+              <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']" @click="mulchange(revs.subject_id,index)">{{revs.subject_name}}</span>
             </template>
           </div>
         </el-col>
@@ -95,25 +92,23 @@
           <el-input class="coursetxt" v-model="ruleForm.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="所属项目" prop="region">
-          <el-select v-model="ruleForm.region" placeholder="请选择所属项目">
-            <el-option label="ACCA" value="ACCA"></el-option>
-            <el-option label="CFA" value="CFA"></el-option>
+        <el-form-item label="所属项目" prop="project">
+          <el-select v-model="ruleForm.project" @change="checkproject" placeholder="请选择所属项目">
+            <el-option v-for="(rev,index) in projectlist" :key="rev.project_id" :label="rev.project_name" :value="rev.project_id"></el-option>
           </el-select>
         </el-form-item>
 
         
-        <el-form-item label="所属科目" prop="subjectn">
-          <el-select v-model="ruleForm.subjectn" placeholder="请选择所属科目">
-            <el-option label="Level1" value="Level1"></el-option>
-            <el-option label="Level2" value="Level2"></el-option>
+        <el-form-item label="所属科目" prop="subjectrule">
+          <el-select v-model="ruleForm.subjectrule" :disabled="!issubject" placeholder="请选择所属科目">
+            <el-option v-for="(com,index) in boxsubject" :label="com.subject_name" :value="com.subject_id"></el-option>
           </el-select>
         </el-form-item>
         
         <el-form-item label="是否启用" prop="istrue">
           <el-select v-model="ruleForm.istrue" placeholder="是否启用">
-            <el-option label="是" value="1"></el-option>
-            <el-option label="否" value="0"></el-option>
+            <el-option label="是" value="0"></el-option>
+            <el-option label="否" value="1"></el-option>
           </el-select>
         </el-form-item>
 
@@ -131,7 +126,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject} from '../../api/outline.js';
+  import {getProjectSubject,CourseSyllabus} from '../../api/outline.js';
 
   export default {
     components: {},
@@ -161,8 +156,8 @@
         ],
         ruleForm: {
           name: '',
-          region: '',
-          subjectn: '',
+          project: '',
+          subjectrule: '',
           istrue: ''
         },
         rules: {
@@ -170,10 +165,10 @@
             { required: true, message: '课程大纲名称', trigger: 'blur' },
             { min: 3, max: 80, message: '长度在 3 到 80 个字符', trigger: 'blur' }
           ],
-          region: [
+          project: [
             { required: true, message: '所属项目', trigger: 'change' }
           ],
-          subjectn: [
+          subjectrule: [
             { required: true, message: '所属科目', trigger: 'change' }
           ],
           istrue: [
@@ -223,14 +218,49 @@
           }]
         }
         ],
-        outdata:[]
+        outdata:[],
+        projectlist:[],
+        subjectlist:[],
+        issubject:false,
+        boxsubject:[]
       }
     },
     methods: {
+      checkproject(value){
+        this.issubject = true;
+        for(let reg of this.projectlist){
+          if(reg.project_id == value){
+            let subjectall = reg.subject_list;
+            subjectall.unshift({
+              subject_id:'0',
+              subject_name:'全部'
+            })
+            this.boxsubject = subjectall;
+          }
+        }
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //alert('submit!');
+            let ret = CourseSyllabus({
+              title:this.ruleForm.name,
+              project_id:this.ruleForm.project,
+              subject_id:this.ruleForm.subjectrule,
+              status:this.ruleForm.istrue
+            });
+            
+            if(ret.status == 0){
+              console.log("提交成功！");
+            }else{
+              console.log("提交失败！");
+            }
+
+
+
+
+
+
+
             this.dialogFormVisible = false;
           } else {
             console.log('error submit!!');
@@ -246,20 +276,24 @@
       //   console.log(ret);
       //   this.outdata = ret;
       // },
-      outlinechange(reid){
+      outlinechange(reid,index){
         this.clver = reid;
-        // let ret = this.tablist
-        // if(ret.id == reid){
-        //   this.outdata = ret;
-        // }
+        if(this.clver == '0'){
+          this.subjectlist = [];
+        }else{
+          this.subjectlist = this.projectlist[index].subject_list;
+        }
       },
       mulchange(reid){
         this.clversm = reid;
       },
-      async getProjectSubject(){
+      async getProjectSubject(projectid){
         let ret = await getProjectSubject();
-        console.log(ret)
-      }
+        if(ret.status == 0){
+          this.projectlist = ret.result;
+          this.boxsubject = ret.result;
+        }
+      },
     },
     computed: {},
     mounted() {

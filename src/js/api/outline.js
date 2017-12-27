@@ -1,13 +1,18 @@
 import axios from 'axios';
-// import { post, get } from '../util/crmAxios';
+import { post, get } from '../util/crmAxios';
 import { getBaseUrl } from '../util/config'
 // 登录
 var instance = axios.create({
     baseURL: getBaseUrl(),
 });
 
-//视频播放地址
-export const getProjectSubject = parameters => instance.get('course-service.gaodun.com/course/manage/get/project/subject/list', parameters);
+//获取项目和科目
+export const getProjectSubject = parameters => get(`${getBaseUrl()}course-service.gaodun.com/course/manage/get/project/subject/list`, parameters);
+
+//根据身份证号获取订单信息
+export const CourseSyllabus = parameters => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, parameters);
+
+
 
 // //根据身份证号获取订单信息
 // export const getOrderInfoByCardId = parameters => instance.post('/Agreement/GetOrderInfoByCardId', parameters);
