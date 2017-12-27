@@ -12,22 +12,17 @@
               <span class="clitem" :class="[rev.project_id === clver ?'current':'']"
                     @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
             </template>
-
           </div>
           <div class="button_group_b">
             <span> 科 目:</span>
             <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']"
                   @click="mulchange('0')">全部</span>
-
-            <!--<template v-for="(revm,index) in subtablist">-->
               <template v-for="(revs,index) in subtablist">
                 <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']"
                       @click="mulchange(revs.subject_id)">{{revs.subject_name}}</span>
               </template>
-            <!--</template>-->
           </div>
         </el-col>
-
       </el-row>
       <el-row type="flex" align="bottom">
         <el-col :sm="12">
@@ -74,10 +69,10 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="200" align="center">
           <template scope="scope">
-            <el-button type="text">
+            <el-button type="text" style="margin: 0 10px;">
               <router-link class="routerBtn" to="/CourseSet">基本设置</router-link>
             </el-button>
-            <el-button type="text">
+            <el-button type="text" style="margin: 0 10px;">
               <router-link class="routerBtn" to="/CourseContent">课程内容</router-link>
             </el-button>
           </template>
@@ -88,7 +83,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[15, 30, 50]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="eduTotal"
@@ -98,8 +93,6 @@
     </div>
 
     <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
-      <div>
-
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="课程名称" prop="course_name">
             <el-input v-model="ruleForm.course_name"></el-input>
@@ -109,28 +102,21 @@
               <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist" :key="item.project_id"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="所属科目" prop="subject_id">
             <el-select v-model="ruleForm.subject_id" :disabled="!bSubject" placeholder="请选择所属科目">
               <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist" :key="item.subject_id"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="网课类型" prop="course_type_id">
             <el-select v-model="ruleForm.course_type_id" placeholder="请选择网课类型">
               <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type" :key="item.course_type_id"></el-option>
             </el-select>
           </el-form-item>
-
-
           <el-form-item class="last-form-item">
             <el-button @click="closeDialog('ruleForm')">取消</el-button>
             <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-
           </el-form-item>
         </el-form>
-
-      </div>
     </el-dialog>
 
   </div>
@@ -150,10 +136,10 @@
     components: {},
     data() {
       return {
-        projectlist: [],   //项目列表
+        projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
         selectedlist:[],   //新增课程科目列表
-        bSubject:false,
+        bSubject:false,    //是否可以选择科目
         course_type:[
           {
             course_type_id:'0',
@@ -175,7 +161,7 @@
             name:'SmartSchool',
           }
         ],   //网课类型
-        selectvalue: '全部课程类型',
+        selectvalue: '全部课程类型', //下拉搜索所选择的的网课类型
         options: [
           {
             value: '',
@@ -199,8 +185,8 @@
             value:'4',
             label:'SmartSchool',
           }
-        ],
-        rules: {
+        ],     //下拉搜索的网课类型列表
+        rules: {   //表单验证
           course_name: [
             {required: true, message: '请输入课程名称', trigger: 'blur'}
           ],
@@ -214,6 +200,7 @@
             {required: true, message: '请选择网课类型', trigger: 'change'}
           ]
         },
+        //新增课程的表单
         ruleForm: {
           course_name: '',
           project_id: '',
@@ -222,8 +209,8 @@
         },
         dialogCourseVisible: false,
         input2: '',
-        clver: "0",    //项目
-        clversm: "0",     //科目
+        clver: "0",    //点击搜索所选项目
+        clversm: "0",     //点击搜索所选科目
         videoList: [
           {
             courseid: '123',
@@ -251,9 +238,9 @@
             status: '发布'
           },
         ],
-        eduTotal: 3,
-        currentPage: 1,
-        pageSize: 10,
+        eduTotal: 3,       //总数
+        currentPage: 1,     //默认当前页
+        pageSize: 15,    //默认分页数量
       }
     },
     computed: {},
@@ -275,6 +262,7 @@
           }
         }
       },
+      //点击项目切换科目
       outlinechange(reid,index){
         this.clver = reid;
         if(reid == '0'){
@@ -309,6 +297,7 @@
         });
 
       },
+      //新增课程确定按钮表单验证
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
