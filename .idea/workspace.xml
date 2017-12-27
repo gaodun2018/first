@@ -2,74 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f20089e-df61-47ea-9a69-72d8d3eff779" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/js/api/course.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/js/api/fromAxios.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/css/order.less" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/addNewuser-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/addNewuserWhite-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/audition-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/audition-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/batchclue.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/call-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/call-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/circulation-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/circulation-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/clues-setting-1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/clues-setting-2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesDistribution-gray.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesDistribution-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesImport-gray.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesImport-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesQuery-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesRemove-gray.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesRemove-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/cluesmeger-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/communication-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/communication-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/download.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/huchu.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/huru.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/play.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/recommend-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/recommend-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/registration-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/registration-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/share-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/tracking-edit.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/clues/urgency-icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/crm-bc-logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/copper.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/crown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/gender-men.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/gender-women.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/phone1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/phone2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/home/silver.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/order/copy.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/order/message.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/order/product-package.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/order/refresh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/order/roder-create.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/class.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/stop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/stop1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/stop2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/takeProduct.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/takeProduct2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/images/product/删除.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/css/main.less" afterPath="$PROJECT_DIR$/src/css/main.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/api/login.js" afterPath="$PROJECT_DIR$/src/js/api/login.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue" afterPath="$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/containers/Entry.vue" afterPath="$PROJECT_DIR$/src/js/containers/Entry.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/containers/Home.vue" afterPath="$PROJECT_DIR$/src/js/containers/Home.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/containers/Login.vue" afterPath="$PROJECT_DIR$/src/js/containers/Login.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/containers/Stage.vue" afterPath="$PROJECT_DIR$/src/js/containers/Stage.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/index.js" afterPath="$PROJECT_DIR$/src/js/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/store/modules/navigation.js" afterPath="$PROJECT_DIR$/src/js/store/modules/navigation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/store/mutation-types.js" afterPath="$PROJECT_DIR$/src/js/store/mutation-types.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/util/config.js" afterPath="$PROJECT_DIR$/src/js/util/config.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/js/util/crmAxios.js" afterPath="$PROJECT_DIR$/src/js/util/zeusAxios.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -83,47 +16,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/index.js">
+      <file leaf-file-name="zeusAxios.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/util/zeusAxios.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-239">
-              <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+            <state relative-caret-position="187">
+              <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fromAxios.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/js/api/fromAxios.js">
+      <file leaf-file-name="course.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/api/course.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="51">
+              <caret line="5" column="57" lean-forward="false" selection-start-line="5" selection-start-column="47" selection-end-line="5" selection-end-column="57" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CourseList.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue">
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/js/util/config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="146" column="46" lean-forward="false" selection-start-line="146" selection-start-column="46" selection-end-line="146" selection-end-column="46" />
-              <folding>
-                <element signature="n#style#0;n#el-table#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#!!top" expanded="false" />
-                <element signature="e#6413#6899#0" expanded="false" />
-                <element signature="e#6958#7462#0" expanded="false" />
-                <element signature="e#8188#8940#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="outline.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/css/outline.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="437">
+              <caret line="23" column="45" lean-forward="false" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -133,7 +50,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>operation</find>
       <find>StageFrom</find>
       <find>.coursecontent .el-tabs__content</find>
       <find>.coursecontent .el-table .el-table__body-wrapper tr td</find>
@@ -163,6 +79,7 @@
       <find>SIGN_IN_OUT</find>
       <find>bSubject</find>
       <find>closeDialog</find>
+      <find>console</find>
     </findStrings>
     <replaceStrings>
       <replace>addStage</replace>
@@ -224,7 +141,6 @@
         <option value="$PROJECT_DIR$/src/js/common/KMENU.js" />
         <option value="$PROJECT_DIR$/src/js/api/home.js" />
         <option value="$PROJECT_DIR$/src/js/store/modules/home.js" />
-        <option value="$PROJECT_DIR$/src/js/util/config.js" />
         <option value="$PROJECT_DIR$/src/js/containers/Home.vue" />
         <option value="$PROJECT_DIR$/src/js/util/crmAxios.js" />
         <option value="$PROJECT_DIR$/src/js/api/course.js" />
@@ -237,6 +153,7 @@
         <option value="$PROJECT_DIR$/src/js/index.js" />
         <option value="$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue" />
         <option value="$PROJECT_DIR$/src/js/api/fromAxios.js" />
+        <option value="$PROJECT_DIR$/src/js/util/config.js" />
       </list>
     </option>
   </component>
@@ -337,124 +254,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="containers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CourseManage" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -470,24 +269,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="zeus-console.gaodun.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -611,13 +392,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102714000" />
+    <option name="totallyTimeSpent" value="105889000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.203125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -677,30 +458,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/js/api/product.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/api/SaleManage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/api/SaleNewClueList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/api/settingManage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -883,16 +640,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/api/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/store/getters.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -983,39 +730,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/api/course.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/util/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="29" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/util/fetch.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/util/zeusAxios.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-375">
-          <caret line="53" column="22" lean-forward="false" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#26#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1059,14 +778,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/css/outline.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/css/main.less">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2007">
@@ -1080,14 +791,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-239">
-          <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/api/addCourse.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -1096,13 +799,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/css/outline.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="146" column="46" lean-forward="false" selection-start-line="146" selection-start-column="46" selection-end-line="146" selection-end-column="46" />
+        <state relative-caret-position="136">
+          <caret line="300" column="34" lean-forward="true" selection-start-line="300" selection-start-column="34" selection-end-line="300" selection-end-column="34" />
           <folding>
-            <element signature="n#style#0;n#el-table#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#el-table#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#!!top" expanded="false" />
+            <element signature="e#6077#6099#0" expanded="false" />
             <element signature="e#6413#6899#0" expanded="false" />
             <element signature="e#6958#7462#0" expanded="false" />
             <element signature="e#8188#8940#0" expanded="false" />
@@ -1110,10 +822,76 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dist/js/passwordModify.d6141e663a2cc2c9c2e1.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/js/common.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/css/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/api/fromAxios.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-239">
+          <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/util/zeusAxios.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/course.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="57" lean-forward="false" selection-start-line="5" selection-start-column="47" selection-end-line="5" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/util/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="23" column="45" lean-forward="false" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
           <folding />
         </state>
       </provider>
