@@ -17,3 +17,6 @@ let {get,post} = instance;
 
 //新增一个课程
 export const addCourse = parameters => post(`${getBaseUrl()}course-service.gaodun.com/course`, parameters)
+
+//创建课程大纲
+export const CourseSyllabus = parameters => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, parameters)
