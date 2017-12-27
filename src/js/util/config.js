@@ -5,9 +5,10 @@ export const getEnv = () => {
     if (host.indexOf('localhost') > -1 || host.indexOf('192') > -1) {
         return 'dev-'
     }
-    let pre = location.host.match(/^.*-/);
+    // let pre = location.host.match(/^.*-/);
+    let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre === null) {
+    if (pre === 'zeus-') {
         return '';
     }
     // 测试及预发布环境
@@ -19,9 +20,10 @@ export const getBaseUrl = () => {
     if (host.indexOf('localhost') > -1 || host.indexOf('192') > -1) {
         return '//t-'
     }
-    let pre = location.host.match(/^.*-/);
+    // let pre = location.host.match(/^.*-/);
+    let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre === null) {
+    if (pre === 'zeus-') {
         return '//';
     } else {
         pre[0] = pre[0] == 'dev-' ? 't-' : pre[0];
