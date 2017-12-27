@@ -136,7 +136,7 @@
     components: {},
     data() {
       return {
-        projectlist: [],   //项目列表
+        projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
         selectedlist:[],   //新增课程科目列表
         bSubject:false,
