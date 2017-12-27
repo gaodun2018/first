@@ -70,7 +70,6 @@
   import {messageTitle} from '../util/util';
   import {CRM_MENU, CRM_USER_INFO, CRM_TOKEN} from '../util/keys';
   import {getCookie, setCookie} from 'cookieUtils';
-  import {CallInClues} from '../api/message';
   import {mapState} from 'vuex';
   import {parseUrl} from 'base';
   import modal from 'vueModal';
@@ -141,101 +140,6 @@
         }
         CrmMessage.create({
           type: 'info',
-          message: msg.Data
-        });
-      },
-      // 振铃
-      messageType10000(msg) {
-        if (msg.data) {
-          this.$store.dispatch("setCallInfo", msg.data.RecordId)
-        }
-        //alert(this.$store.state.callInfo.RecordId);
-      },
-      // 挂断电话获取通话记录信息
-      messageType10003(msg) {
-        let vself = this;
-        setTimeout(function () {
-          vself.$store.dispatch('getCallInfo', msg.ExtId);
-        }, 1000);
-        setTimeout(function () {
-          vself.$store.dispatch('getExtStatus', {"ExtNo": msg.ExtId});
-        }, 1000);
-      },
-      // 来电信息
-      messageType10004(msg) {
-        CallInClues({phoneNo: msg.data.FromNo}).then(ret => {
-          if (ret.status === 0) {
-            this.CallInData = ret.result;
-            let CallFromNo = {
-              FromNo: msg.data.FromNo,
-              ToNo: msg.data.ToNo
-            }
-            require.ensure([], (require) => {
-              let CallIn = require("../components/message/CallIn.vue");
-              modal.openComponent(CallIn, {
-                title: '来电信息',
-                showCancelButton: false,
-                width: '950px',
-                CallInData: ret.result,
-                CallFromNo,
-                self: this
-              });
-            }, 'CallIn');
-          }
-        })
-      },
-      messageDesktop(msg) {
-        if (Notification.permission == "granted") {
-          let text = msg.Data;
-          if (!text)
-            return;
-          var notification = new Notification("消息提示:", {
-            body: text.replace(/<[^>]+>/g, "")
-          });
-          notification.onclick = function () {
-            window.focus();
-            notification.close();
-          };
-        }
-      },
-      MessageBrowser(message) {
-        messageTitle.show();
-        setTimeout(() => {
-          messageTitle.clear();
-        }, 5000)
-        window.onfocus = function () {
-          messageTitle.clear();
-        };
-        document.onfocusin = function () {
-          messageTitle.clear();
-        };
-        if (window.Notification) {
-          if (Notification.permission == "granted") {
-            this.messageDesktop(message);
-          } else if (Notification.permission != "denied") {
-            Notification.requestPermission(function (permission) {
-              this.messageDesktop(message);
-            });
-          }
-        } else {
-          console.log('浏览器不支持Notification');
-        }
-      },
-      messageType20014(msg) {
-        CrmMessage.create({
-          type: 'car', // car ,plane
-          message: msg.Data
-        });
-      },
-      messageType20015(msg) {
-        CrmMessage.create({
-          type: 'balloon', // car ,plane
-          message: msg.Data
-        });
-      },
-      messageType20016(msg) {
-        CrmMessage.create({
-          type: 'plane', // car ,plane
           message: msg.Data
         });
       },

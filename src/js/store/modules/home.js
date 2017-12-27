@@ -1,6 +1,5 @@
-import { GET_MESSAGE_COUNT, ADD_TABS, REMOVE_TAB, SELECTED_TABLE, ADD_HOME, GET_GE_CLUEBASE_LIST, GET_USER_TREE } from '../mutation-types'; // 'ADD' , 'SUBTRACT'
+import { ADD_TABS, REMOVE_TAB, SELECTED_TABLE, ADD_HOME, GET_USER_TREE } from '../mutation-types'; // 'ADD' , 'SUBTRACT'
 import { CRM_CURRENT_TAB, CRM_OPEN_TABS } from '../../util/keys';
-import { GetUnreadMessageCount } from '../../api/cluesManage';
 const state = {
     addTabs: [], // 添加Tab标签
     currentTab: '488', // 显示当前的Tab
@@ -12,10 +11,6 @@ const state = {
 const getters = {}
     // 方法调用逻辑
 const actions = {
-    async GetUnreadMessageCount({ commit, state }) {
-        let ret = await GetUnreadMessageCount();
-        commit(GET_MESSAGE_COUNT, ret.result);
-    },
     addTabs({ commit, state, dispatch }, add) {
         commit(ADD_TABS, add);
     },
@@ -38,9 +33,6 @@ const actions = {
 };
 // 逻辑代码
 const mutations = {
-    [GET_MESSAGE_COUNT](state, data) {
-        state.getMessageCount = data;
-    },
     [ADD_TABS](state, add) {
         function isInArray(arr, value) {
             let res = 0;

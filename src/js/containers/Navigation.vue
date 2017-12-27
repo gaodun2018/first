@@ -71,7 +71,7 @@
 
       this.$store.dispatch('initCurrentLevelOneId');  // 记录一级菜单ID
       this.$store.dispatch('updateCurrentSubMenu', this.$store.state.navigation.currentLevelOneId);   // 根据一级菜单ID找到二级菜单
-      this.$store.dispatch('GetUnreadMessageCount')
+      //this.$store.dispatch('GetUnreadMessageCount')
     },
     mounted() {
       let nid = localStorage.getItem(CRM_CURRENT_LEVEL_ONE_MENU)
