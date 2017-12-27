@@ -13,10 +13,10 @@ if (userInfo) {
  } else {
  axios.defaults.baseURL = `//${prefix}baiyiapi.gaodun.com`;
  }*/
-axios.defaults.baseURL = getBaseUrl();
+axios.defaults.baseURL = '//';
 axios.defaults.headers.post['Content-Type'] = "application/json";
 axios.interceptors.request.use(function (config) {
-    let GDSID = getCookie(`${prefix}GDSID`);
+   /* let GDSID = getCookie(`${prefix}GDSID`);
     let token = getCookie(CRM_TOKEN);
     // 非登录和获取login接口
     if (config.url.indexOf('UserLogin') === -1 && config.url.indexOf('token') === -1 && token == undefined) {
@@ -27,13 +27,13 @@ axios.interceptors.request.use(function (config) {
     if (config.url.indexOf('UserLogin') === -1) {
         config.headers.common['Authorization'] = `Bearer ${token}`;
     }
-    config.headers.common[`GDSID`] = GDSID;
+    config.headers.common[`GDSID`] = GDSID;*/
     return Promise.resolve(config);
 }, function (error) {
     return Promise.reject(error);
 });
 axios.interceptors.response.use(function (response) {
-    // 获取token接口不校验，直接返回
+    /*// 获取token接口不校验，直接返回
     if (response.config.url.indexOf('token') !== -1) {
         return Promise.resolve(response.data);
     }
@@ -50,10 +50,11 @@ axios.interceptors.response.use(function (response) {
             showClose: true,
             type: 'warning'
         });
-    }
+    }*/
+  console.log(response);
     return Promise.resolve(response.data);
 }, function (error) {
-    // 获取token接口不校验，直接返回
+   /* // 获取token接口不校验，直接返回
     if (error.config.url.indexOf('token') !== -1) {
         error.message = error.response.data.error_description
     }    
@@ -66,10 +67,10 @@ axios.interceptors.response.use(function (response) {
         message: error.message,
         showClose: true,
         type: 'warning'
-    });
+    });*/
     return Promise.reject(error);
 });
-export default class CRMAxios {
+export default class ZEUSAxios {
     constructor(options = {}) {
         this.options = options;
     }
@@ -99,7 +100,7 @@ export default class CRMAxios {
         });
     }
 }
-const instanceAxios = new CRMAxios;
+const instanceAxios = new ZEUSAxios;
 export const request = instanceAxios.request.bind(instanceAxios);
 export const get = instanceAxios.get.bind(instanceAxios);
 export const post = instanceAxios.post.bind(instanceAxios);

@@ -25,8 +25,9 @@
       <div class="w_1200">
         <h3 class="banner_titt">高顿教育-财经云</h3>
         <h4 class="banner_titb">提供教学活动和教育资源管理、分析的一体化解决方案</h4>
-        <a href="javascript:;" class="login ban_btn" v-if="loginFlag" @click="dialogFormVisible = true">登录</a>
-        <router-link to="/index" v-if="!loginFlag" class="goIn ban_btn">进入</router-link>
+        <!--<a href="javascript:;" class="login ban_btn" v-if="loginFlag" @click="dialogFormVisible = true">登录</a>-->
+        <!--<router-link to="/index" v-if="!loginFlag" class="goIn ban_btn">进入</router-link>-->
+        <router-link to="/index" class="goIn ban_btn">进入</router-link>
       </div>
     </div>
     <div class="contentHome">
@@ -122,7 +123,7 @@
 
 <script>
   import Vue from 'vue';
-  import {post} from '../util/crmAxios';
+  import {post} from '../util/zeusAxios';
   import {getCookie, setCookie} from 'cookieUtils';
   import {userLogin, getToken, getLoginUserInfo, getCurrentUserMenuTree} from '../api/login';
   import {stringify} from 'queryString';
@@ -303,6 +304,11 @@
       this.loadSSIDJS();
     },
     mounted() {
+      //暂时写在这儿
+      let routesMenus = [...KMENU,...routesMenu]
+      this.formatRoute(routesMenus); //格式化菜单
+      this.reWriteEmptyUrl(KMENU);          //2017-12-15 13:26:37  修改
+      localStorage.setItem(CRM_MENU, JSON.stringify(KMENU));    //2017-12-15 11:49:10 修改
     }
   }
 </script>

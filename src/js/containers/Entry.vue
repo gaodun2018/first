@@ -74,9 +74,9 @@
   import {parseUrl} from 'base';
   import modal from 'vueModal';
   import CrmMessage from '../plugins/message';
-  import Access from '../util/accessControl';
+//  import Access from '../util/accessControl';
   import {getEnv} from '../util/config';
-  Vue.use(Access);
+//  Vue.use(Access);
   export default {
     name: 'app',
     components: {
