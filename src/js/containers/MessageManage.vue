@@ -195,7 +195,7 @@ export default {
                     if (ret.status === 0) {
                         this.MessageList=ret.result.Body;
                         this.MessageTotal=ret.result.Count;
-                        this.$store.dispatch('GetUnreadMessageCount')
+                        //this.$store.dispatch('GetUnreadMessageCount')
                     }
                 })
          }

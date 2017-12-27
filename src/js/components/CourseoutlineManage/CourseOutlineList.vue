@@ -131,6 +131,7 @@
 </style>
 <script>
   import Vue from 'vue';
+  import {getProjectSubject} from '../../api/outline.js';
 
   export default {
     components: {},
@@ -254,11 +255,16 @@
       },
       mulchange(reid){
         this.clversm = reid;
+      },
+      async getProjectSubject(){
+        let ret = await getProjectSubject();
+        console.log(ret)
       }
     },
     computed: {},
     mounted() {
       //this.onload();
+      this.getProjectSubject();
     },
     created() {
 
