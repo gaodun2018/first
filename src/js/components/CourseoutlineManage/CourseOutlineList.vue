@@ -7,19 +7,16 @@
           <div class="button_group_t">
             <span>项 目:</span>
             <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']" @click="outlinechange('0')">全部</span>
-            <template v-for="(rev,index) in tablist">
-                <span class="clitem" :class="[rev.id === clver ?'current':'']" @click="outlinechange(rev.id)">{{rev.name}}</span>
+            <template v-for="(rev,index) in projectlist">
+                <span class="clitem" :class="[rev.project_id === clver ?'current':'']" @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
             </template>
 
           </div>
           <div class="button_group_b">
             <span> 科 目:</span>
             <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']" @click="mulchange('0')">全部</span>
-
-            <template v-for="(revm,index) in tablist">
-              <template v-for="(revs,index) in revm.tabdata">
-                  <span class="clitem" :class="[revs.id === clversm ?'current':'']" @click="mulchange(revs.id)">{{revs.name}}</span>
-              </template>
+            <template v-for="(revs,index) in subjectlist">
+              <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']" @click="mulchange(revs.subject_id,index)">{{revs.subject_name}}</span>
             </template>
           </div>
         </el-col>
@@ -53,21 +50,21 @@
     </div>
 
     <div class="edu_table">
-      <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" border :data="videoList" style="width: 100%">
+      <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" border :data="CourseLineList" style="width: 100%">
 
-        <el-table-column prop="videoid" label="大纲ID" min-width="100">
+        <el-table-column prop="id" label="大纲ID" min-width="100">
         </el-table-column>
-        <el-table-column prop="classname" label="课程大纲名称" min-width="200">
+        <el-table-column prop="title" label="课程大纲名称" min-width="200">
         </el-table-column>
-        <el-table-column prop="project" label="所属项目" min-width="100">
+        <el-table-column prop="subject.name" label="所属项目" min-width="100">
         </el-table-column>
-        <el-table-column prop="subject" label="所属科目" min-width="125">
+        <el-table-column prop="subject.project.name" label="所属科目" min-width="125">
         </el-table-column>
         <el-table-column prop="num" label="使用" min-width="150">
         </el-table-column>
         <el-table-column label="所属状态" min-width="115">
           <template scope="scope">
-            <span v-if="scope.row.type == 1">启用</span>
+            <span v-if="scope.row.status == 0">启用</span>
             <span class="rowtype" v-else>禁用</span>
           </template>
         </el-table-column>
@@ -79,41 +76,40 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="clues-pagination">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      <div class="clues-pagination">
+        <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :page-sizes="[10, 20, 50, 100, 200, 300, 400]" :page-size="pageSize"
                        :current-page="currentPage" layout="total, sizes, prev, pager, next, jumper"
                        :total="cluesTotal" :page-count="10/pageSize">
+        </el-pagination> -->
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[15, 30,50]" :page-size="page_size" :current-page="pagenum" :current-page.sync="pagenum" layout="total, sizes, prev, pager, next, jumper" :total="courselinenum">
         </el-pagination>
-      </div>-->
+      </div>
     </div>
-
 
     <el-dialog title="新建课程大纲" class="tabplane" :visible.sync="dialogFormVisible">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="课程大纲名称" prop="name">
-          <el-input class="coursetxt" v-model="ruleForm.name"></el-input>
+        <el-form-item label="课程大纲名称" prop="title">
+          <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="所属项目" prop="region">
-          <el-select v-model="ruleForm.region" placeholder="请选择所属项目">
-            <el-option label="ACCA" value="ACCA"></el-option>
-            <el-option label="CFA" value="CFA"></el-option>
+        <el-form-item label="所属项目" prop="project_id">
+          <el-select v-model="ruleForm.project_id" @change="checkproject" placeholder="请选择所属项目">
+            <el-option v-for="(rev,index) in projectlist" :key="rev.project_id" :label="rev.project_name" :value="rev.project_id"></el-option>
           </el-select>
         </el-form-item>
 
         
-        <el-form-item label="所属科目" prop="subjectn">
-          <el-select v-model="ruleForm.subjectn" placeholder="请选择所属科目">
-            <el-option label="Level1" value="Level1"></el-option>
-            <el-option label="Level2" value="Level2"></el-option>
+        <el-form-item label="所属科目" prop="subject_id">
+          <el-select v-model="ruleForm.subject_id" :disabled="!issubject" placeholder="请选择所属科目">
+            <el-option v-for="(com,index) in boxsubject" :label="com.subject_name" :value="com.subject_id"></el-option>
           </el-select>
         </el-form-item>
         
-        <el-form-item label="是否启用" prop="istrue">
-          <el-select v-model="ruleForm.istrue" placeholder="是否启用">
-            <el-option label="是" value="1"></el-option>
-            <el-option label="否" value="0"></el-option>
+        <el-form-item label="是否启用" prop="status">
+          <el-select v-model="ruleForm.status" placeholder="是否启用">
+            <el-option label="是" value="0"></el-option>
+            <el-option label="否" value="1"></el-option>
           </el-select>
         </el-form-item>
 
@@ -123,7 +119,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
   </div>
 </template>
 <style>
@@ -131,6 +126,8 @@
 </style>
 <script>
   import Vue from 'vue';
+  import {getProjectSubject,CourseSyllabuses} from '../../api/outline.js';
+  import {CourseSyllabus} from '../../api/fromAxios';
 
   export default {
     components: {},
@@ -139,43 +136,26 @@
         radio: '全部',
         radio2: '全部',
         input2:'',
-        videoList:[
-          {
-            videoid: '123',
-            classname: '基金从业一类线索',
-            project: 'CFA',
-            subject: 'level1',
-            type:1,
-            num: '12',
-            updatetime: '2017-10-21 09:57'
-          },{
-            videoid: '1234',
-            classname: '基金从业一类线索1',
-            project: 'ACCA',
-            subject: 'level2',
-            type:0,
-            num: '4',
-            updatetime: '2017-10-21 09:57'
-          }
-        ],
+        CourseLineList:[],
+        courselinenum:'',
         ruleForm: {
-          name: '',
-          region: '',
-          subjectn: '',
-          istrue: ''
+          title: '',
+          project_id: '',
+          subject_id: '',
+          status: ''
         },
         rules: {
-          name: [
+          title: [
             { required: true, message: '课程大纲名称', trigger: 'blur' },
             { min: 3, max: 80, message: '长度在 3 到 80 个字符', trigger: 'blur' }
           ],
-          region: [
+          project_id: [
             { required: true, message: '所属项目', trigger: 'change' }
           ],
-          subjectn: [
+          subject_id: [
             { required: true, message: '所属科目', trigger: 'change' }
           ],
-          istrue: [
+          status: [
             { required: true, message: '是否启用', trigger: 'change' }
           ]
         },
@@ -222,15 +202,48 @@
           }]
         }
         ],
-        outdata:[]
+        outdata:[],
+        projectlist:[],
+        subjectlist:[],
+        issubject:false,
+        boxsubject:[],
+        pagenum:'',
+        page_size:'',
+        flag:false,
+        flagtwo:false
       }
     },
     methods: {
+      checkproject(value){
+        this.issubject = true;
+        for(let reg of this.projectlist){
+          if(reg.project_id == value){
+            let subjectall = reg.subject_list;
+            subjectall.unshift({
+              subject_id:'0',
+              subject_name:'全部'
+            })
+            this.boxsubject = subjectall;
+          }
+        }
+      },
+      coursesubmit(ruleForm){
+        CourseSyllabus({...ruleForm}).then(res=>{
+          if(res.data.status == 0){
+            this.dialogFormVisible = false;
+            this.$message({
+              message: res.message,
+              type: 'success'
+            });
+          }
+        }).catch( error => {
+          console.log(error);
+        });
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //alert('submit!');
-            this.dialogFormVisible = false;
+            this.coursesubmit(this.ruleForm)
           } else {
             console.log('error submit!!');
             return false;
@@ -245,20 +258,63 @@
       //   console.log(ret);
       //   this.outdata = ret;
       // },
-      outlinechange(reid){
+      outlinechange(reid,index){
         this.clver = reid;
-        // let ret = this.tablist
-        // if(ret.id == reid){
-        //   this.outdata = ret;
-        // }
+        if(this.clver == '0'){
+          this.subjectlist = [];
+        }else{
+          this.subjectlist = this.projectlist[index].subject_list;
+        }
       },
       mulchange(reid){
         this.clversm = reid;
+      },
+      async getProjectSubject(projectid){
+        let ret = await getProjectSubject();
+        if(ret.status == 0){
+          this.projectlist = ret.result;
+          this.boxsubject = ret.result;
+        }
+      },
+      async getCourseSyllabuses(pagenum,page_size){
+        if(!pagenum){        //不传页面  切换科目  查看回放
+          this.flag = false;
+          this.pagenum = 1; 
+        }
+        this.pagenum = pagenum ? pagenum : '1';
+        this.page_size = page_size ? page_size : '15';
+        let ret = await CourseSyllabuses({
+          page:this.pagenum,
+          page_size:this.page_size
+        });
+        this.flag = true;
+        if(ret.status == 0){
+          this.CourseLineList = ret.result.list;
+          this.courselinenum = ret.result.total;
+        }
+      },
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pagenum = val;
+        this.page_size = val;
+        if(this.flag){
+          //this.getCourseSyllabuses(1,`${val}`);
+        }
+        //flagtwo
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        console.log(this.page_size)
+        if(this.flag){
+          this.getCourseSyllabuses(`${val}`,this.page_size);
+        }
       }
     },
     computed: {},
     mounted() {
       //this.onload();
+      this.getProjectSubject();
+      this.getCourseSyllabuses();
     },
     created() {
 
