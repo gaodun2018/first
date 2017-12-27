@@ -12,22 +12,17 @@
               <span class="clitem" :class="[rev.project_id === clver ?'current':'']"
                     @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
             </template>
-
           </div>
           <div class="button_group_b">
             <span> 科 目:</span>
             <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']"
                   @click="mulchange('0')">全部</span>
-
-            <!--<template v-for="(revm,index) in subtablist">-->
               <template v-for="(revs,index) in subtablist">
                 <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']"
                       @click="mulchange(revs.subject_id)">{{revs.subject_name}}</span>
               </template>
-            <!--</template>-->
           </div>
         </el-col>
-
       </el-row>
       <el-row type="flex" align="bottom">
         <el-col :sm="12">
@@ -98,8 +93,6 @@
     </div>
 
     <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
-      <div>
-
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="课程名称" prop="course_name">
             <el-input v-model="ruleForm.course_name"></el-input>
@@ -109,28 +102,21 @@
               <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist" :key="item.project_id"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="所属科目" prop="subject_id">
             <el-select v-model="ruleForm.subject_id" :disabled="!bSubject" placeholder="请选择所属科目">
               <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist" :key="item.subject_id"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="网课类型" prop="course_type_id">
             <el-select v-model="ruleForm.course_type_id" placeholder="请选择网课类型">
               <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type" :key="item.course_type_id"></el-option>
             </el-select>
           </el-form-item>
-
-
           <el-form-item class="last-form-item">
             <el-button @click="closeDialog('ruleForm')">取消</el-button>
             <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-
           </el-form-item>
         </el-form>
-
-      </div>
     </el-dialog>
 
   </div>

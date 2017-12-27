@@ -1,1 +1,4 @@
 pc/dist/*
+.idea/
+.idea/workspace.xml
+workspace.xml
