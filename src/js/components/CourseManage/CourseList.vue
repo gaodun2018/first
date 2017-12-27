@@ -69,10 +69,10 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="200" align="center">
           <template scope="scope">
-            <el-button type="text">
+            <el-button type="text" style="margin: 0 10px;">
               <router-link class="routerBtn" to="/CourseSet">基本设置</router-link>
             </el-button>
-            <el-button type="text">
+            <el-button type="text" style="margin: 0 10px;">
               <router-link class="routerBtn" to="/CourseContent">课程内容</router-link>
             </el-button>
           </template>
@@ -83,7 +83,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[15, 30, 50]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="eduTotal"
@@ -139,7 +139,7 @@
         projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
         selectedlist:[],   //新增课程科目列表
-        bSubject:false,
+        bSubject:false,    //是否可以选择科目
         course_type:[
           {
             course_type_id:'0',
@@ -161,7 +161,7 @@
             name:'SmartSchool',
           }
         ],   //网课类型
-        selectvalue: '全部课程类型',
+        selectvalue: '全部课程类型', //下拉搜索所选择的的网课类型
         options: [
           {
             value: '',
@@ -185,8 +185,8 @@
             value:'4',
             label:'SmartSchool',
           }
-        ],
-        rules: {
+        ],     //下拉搜索的网课类型列表
+        rules: {   //表单验证
           course_name: [
             {required: true, message: '请输入课程名称', trigger: 'blur'}
           ],
@@ -200,6 +200,7 @@
             {required: true, message: '请选择网课类型', trigger: 'change'}
           ]
         },
+        //新增课程的表单
         ruleForm: {
           course_name: '',
           project_id: '',
@@ -208,8 +209,8 @@
         },
         dialogCourseVisible: false,
         input2: '',
-        clver: "0",    //项目
-        clversm: "0",     //科目
+        clver: "0",    //点击搜索所选项目
+        clversm: "0",     //点击搜索所选科目
         videoList: [
           {
             courseid: '123',
@@ -237,9 +238,9 @@
             status: '发布'
           },
         ],
-        eduTotal: 3,
-        currentPage: 1,
-        pageSize: 10,
+        eduTotal: 3,       //总数
+        currentPage: 1,     //默认当前页
+        pageSize: 15,    //默认分页数量
       }
     },
     computed: {},
@@ -261,6 +262,7 @@
           }
         }
       },
+      //点击项目切换科目
       outlinechange(reid,index){
         this.clver = reid;
         if(reid == '0'){
@@ -295,6 +297,7 @@
         });
 
       },
+      //新增课程确定按钮表单验证
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

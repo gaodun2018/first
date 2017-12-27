@@ -8,7 +8,7 @@ export const getEnv = () => {
     // let pre = location.host.match(/^.*-/);
     let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre === 'zeus-') {
+    if (pre[0] === 'zeus-') {
         return '';
     }
     // 测试及预发布环境
@@ -23,7 +23,7 @@ export const getBaseUrl = () => {
     // let pre = location.host.match(/^.*-/);
     let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre === 'zeus-') {
+    if (pre[0] === 'zeus-') {
         return '//';
     } else {
         pre[0] = pre[0] == 'dev-' ? 't-' : pre[0];
