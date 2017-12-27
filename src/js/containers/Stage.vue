@@ -5,7 +5,7 @@
 
 <script>
     import Vue from 'vue';
-    import {post} from '../util/crmAxios';
+    import {post} from '../util/zeusAxios';
     import {getCookie, setCookie} from 'cookieUtils';
     import {stringify} from 'queryString';
     import {parseUrl} from 'base';

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { post, get } from '../util/crmAxios';
+import { post, get } from '../util/zeusAxios';
 import { getBaseUrl } from '../util/config'
 // 登录
 var instance = axios.create({
@@ -9,9 +9,8 @@ var instance = axios.create({
 //获取项目和科目
 export const getProjectSubject = parameters => get(`${getBaseUrl()}course-service.gaodun.com/course/manage/get/project/subject/list`, parameters);
 
-//根据身份证号获取订单信息
-export const CourseSyllabus = parameters => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, parameters);
-
+//大纲列表
+export const CourseSyllabuses = parameters => get(`${getBaseUrl()}toc-service.gaodun.com/course-syllabuses`, parameters);
 
 
 // //根据身份证号获取订单信息

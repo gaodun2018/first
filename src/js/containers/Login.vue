@@ -39,7 +39,7 @@
 import Vue from 'vue';
 import 'element-ui/lib/theme-default/index.css';
 import { Form, Input, FormItem, Button } from 'element-ui';
-import { post } from '../util/crmAxios';
+import { post } from '../util/zeusAxios';
 import { getCookie, setCookie } from 'cookieUtils';
 import { userLogin, getToken, getLoginUserInfo, getCurrentUserMenuTree } from '../api/login';
 import { stringify } from 'queryString';

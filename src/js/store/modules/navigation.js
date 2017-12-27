@@ -1,4 +1,4 @@
-import {CURRENT_SUB_MENU, SIGNIN_OUT, EXT_STATUS, Breadcrumb} from '../mutation-types';
+import {CURRENT_SUB_MENU, Breadcrumb} from '../mutation-types';
 import {CRM_MENU, CRM_CURRENT_SUBMENU, CRM_CURRENT_LEVEL_ONE_MENU, FORMAT_MENU} from '../../util/keys';
 const state = {
   currentLevelOneId: 9,
@@ -35,8 +35,6 @@ const actions = {
     let formatMenu = JSON.parse(localStorage.getItem(FORMAT_MENU));
     for (let i in formatMenu) {
       if (formatMenu[i]['Url'].indexOf(path) > -1) {
-        console.log(formatMenu[i]);
-        console.log(formatMenu[i].parenttitle);
         commit(Breadcrumb, formatMenu[i].parenttitle);
       }
     }
@@ -62,13 +60,6 @@ const mutations = {
   },
   [Breadcrumb](state,data){
       state.breadcrumbmenu = data;
-  },
-  [SIGNIN_OUT](state, recult) {
-
-  },
-  [EXT_STATUS](state, result) {
-    state.extStatusId = result.StatusId;
-    state.extStatusName = result.Status;
   },
 };
 export default {

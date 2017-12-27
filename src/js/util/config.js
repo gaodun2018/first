@@ -22,18 +22,11 @@ export const getBaseUrl = () => {
     let pre = location.host.match(/^.*-/);
     // 正式环境
     if (pre === null) {
-        if (isIE9()) {
-            return '//'
-        }
-        return '';
+        return '//';
     } else {
         pre[0] = pre[0] == 'dev-' ? 't-' : pre[0];
         // 测试及预发布环境
-        if (isIE9()) {
-            return `//${pre[0]}`;
-        } else {
-            return `//${pre[0]}`;
-        }
+        return `//${pre[0]}`;
     }
 
 }

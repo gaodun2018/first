@@ -9,7 +9,6 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
 import '../css/main.less';
 import '../css/teaching.css';
-import '../css/order.less';
 import '../css/home.css';
 import '../css/outline.css';
 import '../css/animate.min.css';
@@ -38,7 +37,6 @@ router.beforeEach((to, from, next) => {
     if (to.path == '/index') {
         window.nid = 9;
     }
-    console.log(to,'to to to to ');
     store.dispatch('updateCurrentSubMenu', window.nid);
     store.dispatch('updateBreadcrumb', to.path);//更新面包屑
     document.title = `高顿教育 ${to.meta.title}` || '高顿教育'
