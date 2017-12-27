@@ -1,0 +1,16 @@
+.teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
+.teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
+
+.teaching-manage-style .course .el-tabs__content .btn_items{margin-bottom: 9px;}
+.teaching-manage-style .course .el-tabs__content .btn_items .el-button{float: right;}
+.teaching-manage-style .course .el-tabs__content .btn_items .btn_new{width: 80px;}
+.teaching-manage-style .course .el-tabs__content .btn_items .btn_excel{width: 130px;border-radius: 2px;background-color: #ffffff;border: solid 1px #26a1ff;font-size: 12px;color: #2ba4ff;margin-right: 10px;}
+
+.teaching-manage-style .course .el-tabs__content .el-table tr th{height: 36px;}
+.teaching-manage-style .course .el-tabs__content .el-table tr td{height: 60px;}
+.teaching-manage-style .course .el-tabs__content .el-table tr th .cell,.teaching-manage-style .course .el-tabs__content .el-table tr td .cell{text-align: center;}
+
+.teaching-manage-style .addVideo .el-dialog{width: 902px;height: 577px;border-radius: 2px;}
+.teaching-manage-style .addVideo .el-dialog .chooseVideo{overflow: hidden;}
+.teaching-manage-style .addVideo .el-dialog__body .button_group{float: left}
+.teaching-manage-style .addVideo .el-dialog__body .search_input{float: right}
