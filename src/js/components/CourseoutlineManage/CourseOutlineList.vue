@@ -1,11 +1,5 @@
 <template>
   <div class="module-edu-content permission-courseoutline">
-    <!--<el-row class="breadcrumb">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item>讲义管理</el-breadcrumb-item>
-        <el-breadcrumb-item>讲义列表</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-row>-->
 
     <div class="search_tools" style="overflow: hidden;margin-bottom: 22px;">
       <el-row>
@@ -59,7 +53,7 @@
     </div>
 
     <div class="edu_table">
-      <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" :data="videoList" style="width: 100%">
+      <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" border :data="videoList" style="width: 100%">
 
         <el-table-column prop="videoid" label="大纲ID" min-width="100">
         </el-table-column>
@@ -199,7 +193,8 @@
         selectvalue:"全部状态",
         clver:"0",
         clversm:"0",
-        tablist:[{
+        tablist:[
+          {
           id:"12",
           name:"CFA",
           tabdata:[{
@@ -225,7 +220,8 @@
             id:"6",
             name:"alevel16"
           }]
-        }],
+        }
+        ],
         outdata:[]
       }
     },

@@ -213,7 +213,7 @@ export default[
   },
   {
     "AppId": 130555,
-    "Title": "- 编辑课程大纲",
+    "Title": "编辑课程大纲",
     "NavigationId": 10000,
     "ParentID": 0,
     "Url": "/CourseoutlineManage/CourseOutline",
@@ -224,13 +224,13 @@ export default[
     "parenttitle": [
       {name:"课程大纲管理",url:''},
       {name:"课程大纲列表",url:'/CourseOutlineList'},
-      {name:"编辑课程大纲",url:'/CourseOutline'},
+      {name:"编辑课程大纲",url:'CourseoutlineManage/CourseOutline'},
     ]
   },
 
   {
     "AppId": 130555,
-    "Title": "- 课程大纲模块",
+    "Title": "课程大纲模块",
     "NavigationId": 10000,
     "ParentID": 0,
     "Url": "/CourseoutlineManage/CourseModule",
@@ -241,12 +241,12 @@ export default[
     "parenttitle": [
       {name:"课程大纲管理",url:''},
       {name:"课程大纲列表",url:'/CourseOutlineList'},
-      {name:"编辑课程大纲",url:'/CourseModule'},
+      {name:"编辑课程大纲",url:'/CourseoutlineManage/CourseModule'},
     ]
   },
   {
     "AppId": 130555,
-    "Title": "- 课程基本设置",
+    "Title": "课程基本设置",
     "NavigationId": 10000,
     "ParentID": 0,
     "Url": "/CourseSet",
@@ -258,6 +258,22 @@ export default[
       {name:"课程管理",url:''},
       {name:"课程列表",url:'/CourseList'},
       {name:"课程基本设置",url:'/CourseSet'},
+    ]
+  },
+  {
+    "AppId": 130555,
+    "Title": "课程内容",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/CourseContent",
+    "Path": "components/CourseManage/CourseContent",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "parenttitle": [
+      {name:"课程管理",url:''},
+      {name:"课程列表",url:'/CourseList'},
+      {name:"课程内容",url:'/CourseContent'},
     ]
   }
 ]

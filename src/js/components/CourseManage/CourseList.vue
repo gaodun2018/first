@@ -1,68 +1,28 @@
 <template>
   <div class="module-edu-content course-manage">
-    <!--<el-row class="breadcrumb">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item>讲义管理</el-breadcrumb-item>
-        <el-breadcrumb-item>讲义列表</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-row>-->
 
     <div class="search_tools" style="overflow: hidden;margin-bottom: 22px;">
       <el-row>
+
+
         <el-col :sm="24">
           <div class="button_group_t">
             <span>项 目:</span>
-            <el-radio-group v-model="radio">
-              <el-radio-button label="全部"></el-radio-button>
-              <el-radio-button label="ACCA"></el-radio-button>
-              <el-radio-button label="CPA1"></el-radio-button>
-              <el-radio-button label="CFA2"></el-radio-button>
-              <el-radio-button label="CFA3"></el-radio-button>
-              <el-radio-button label="CFA4"></el-radio-button>
-              <el-radio-button label="CFA5"></el-radio-button>
-              <el-radio-button label="CFA6"></el-radio-button>
-              <el-radio-button label="CFA7"></el-radio-button>
-              <el-radio-button label="CFA8"></el-radio-button>
-              <el-radio-button label="CFA9"></el-radio-button>
-              <el-radio-button label="CFA10"></el-radio-button>
-              <el-radio-button label="CFA11"></el-radio-button>
-              <el-radio-button label="CFA12"></el-radio-button>
-              <el-radio-button label="CFA13"></el-radio-button>
-              <el-radio-button label="CFA14"></el-radio-button>
-              <el-radio-button label="CFA15"></el-radio-button>
-              <el-radio-button label="CFA16"></el-radio-button>
-              <el-radio-button label="CFA17"></el-radio-button>
-              <el-radio-button label="CFA18"></el-radio-button>
-              <el-radio-button label="CFA19"></el-radio-button>
-              <el-radio-button label="CFA20"></el-radio-button>
-              <el-radio-button label="CFA21"></el-radio-button>
-              <el-radio-button label="CFA22"></el-radio-button>
-              <el-radio-button label="CFA23"></el-radio-button>
-              <el-radio-button label="CFA24"></el-radio-button>
-              <el-radio-button label="CFA25"></el-radio-button>
-            </el-radio-group>
+            <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']" @click="outlinechange('0')">全部</span>
+            <template v-for="(rev,index) in tablist">
+              <span class="clitem" :class="[rev.id === clver ?'current':'']" @click="outlinechange(rev.id)">{{rev.name}}</span>
+            </template>
+
           </div>
           <div class="button_group_b">
             <span> 科 目:</span>
-            <el-radio-group v-model="radio2">
-              <el-radio-button label="全部"></el-radio-button>
-              <el-radio-button label="Level1"></el-radio-button>
-              <el-radio-button label="Level2"></el-radio-button>
-              <el-radio-button label="Level3"></el-radio-button>
-              <el-radio-button label="Level4"></el-radio-button>
-              <el-radio-button label="Level5"></el-radio-button>
-              <el-radio-button label="Level6"></el-radio-button>
-              <el-radio-button label="Level7"></el-radio-button>
-              <el-radio-button label="Level8"></el-radio-button>
-              <el-radio-button label="Level9"></el-radio-button>
-              <el-radio-button label="Level10"></el-radio-button>
-              <el-radio-button label="Level11"></el-radio-button>
-              <el-radio-button label="Level12"></el-radio-button>
-              <el-radio-button label="Level13"></el-radio-button>
-              <el-radio-button label="Level14"></el-radio-button>
-              <el-radio-button label="Level15"></el-radio-button>
-              <el-radio-button label="Level16"></el-radio-button>
-            </el-radio-group>
+            <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']" @click="mulchange('0')">全部</span>
+
+            <template v-for="(revm,index) in tablist">
+              <template v-for="(revs,index) in revm.tabdata">
+                <span class="clitem" :class="[revs.id === clversm ?'current':'']" @click="mulchange(revs.id)">{{revs.name}}</span>
+              </template>
+            </template>
           </div>
         </el-col>
 
@@ -112,11 +72,10 @@
         </el-table-column>
         <el-table-column prop="status" label="发布状态" min-width="150">
         </el-table-column>
-        <el-table-column fixed="right" label="操作" min-width="200">
+        <el-table-column fixed="right" label="操作" min-width="200" align="center">
           <template scope="scope">
-            <!--<el-button type="text">基本设置</el-button>-->
-            <router-link class="routerBtn" to="/CourseSet">基本设置</router-link>
-            <router-link class="routerBtn" to="/CourseSet">课程内容</router-link>
+            <el-button type="text"><router-link class="routerBtn" to="/CourseSet">基本设置</router-link></el-button>
+            <el-button type="text"><router-link class="routerBtn" to="/CourseContent">课程内容</router-link></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -134,7 +93,7 @@
       </div>
     </div>
 
-    <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible">
+    <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
       <div>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -164,7 +123,7 @@
 
 
           <el-form-item class="last-form-item">
-            <el-button @click="dialogCourseVisible = false">取消</el-button>
+            <el-button @click="closeDialog('ruleForm')">取消</el-button>
             <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
 
           </el-form-item>
@@ -176,9 +135,6 @@
   </div>
 </template>
 <style>
-  .course-manage .input-search .el-button {
-    width: 114px;
-  }
   .course-manage .el-dialog__header {
     padding: 30px 20px 0;
     text-align: center;
@@ -202,8 +158,38 @@
     components: {},
     data() {
       return {
+        tablist:[
+          {
+            id:"12",
+            name:"CFA",
+            tabdata:[{
+              id:"1",
+              name:"level11"
+            },{
+              id:"2",
+              name:"level12"
+            },{
+              id:"3",
+              name:"level13"
+            }]
+          },{
+            id:"123",
+            name:"ACCA",
+            tabdata:[{
+              id:"4",
+              name:"alevel14"
+            },{
+              id:"5",
+              name:"alevel15"
+            },{
+              id:"6",
+              name:"alevel16"
+            }]
+          }
+        ],
         selectvalue:'全部课程类型',
-        options: [{
+        options: [
+          {
           value: '1',
           label: '全部课程类型'
         }, {
@@ -215,7 +201,8 @@
         }, {
           value: '4',
           label: '普通网课'
-        }],
+        }
+        ],
         rules: {
           name: [
             {required: true, message: '请输入课程名称', trigger: 'blur'},
@@ -238,10 +225,11 @@
           type: '',
         },
         dialogCourseVisible: false,
-        radio: '全部',
-        radio2: '全部',
         input2: '',
-        videoList: [{
+        clver:"0",
+        clversm:"0",
+        videoList: [
+          {
           courseid: '123',
           coursename: 'CFA持证无忧123456789',
           usefullife: '36个月',
@@ -272,8 +260,28 @@
         pageSize:10,
       }
     },
+    computed:{
+    },
     methods: {
+
+      outlinechange(reid){
+        this.clver = reid;
+        // let ret = this.tablist
+        // if(ret.id == reid){
+        //   this.outdata = ret;
+        // }
+      },
+      mulchange(reid){
+        this.clversm = reid;
+      },
+      //关闭弹层
+      closeDialog(formName){
+        this.dialogCourseVisible = false;
+        this.$refs[formName].resetFields();
+
+      },
       submitForm(formName) {
+        console.log('submitFormsubmitFormsubmitFormsubmitFormsubmitFormsubmitFormsubmitFormsubmitForm');
         this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!');
@@ -290,7 +298,6 @@
         console.log(page);
       }
     },
-    computed: {},
     mounted() {
 
     },

@@ -1031,5 +1031,16 @@
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 课程内容",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/CourseContent",
+    "Path": "components/CourseManage/CourseContent",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
   }
 ]

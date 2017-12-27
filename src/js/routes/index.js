@@ -91,6 +91,8 @@ import CourseOutline from '../components/CourseoutlineManage/CourseOutline.vue';
 import CourseModule from '../components/CourseoutlineManage/CourseModule.vue';
 // - 课程基本设置
 import CourseSet from '../components/CourseManage/CourseSet.vue';
+// - 课程内容
+import CourseContent from '../components/CourseManage/CourseContent.vue';
 
 
 export const routes = [
@@ -132,6 +134,7 @@ export const routes = [
 		{ path: '/CourseoutlineManage/CourseOutline',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
 		{ path: '/CourseoutlineManage/CourseModule',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
+		{ path: '/CourseContent',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '/live',meta:{ title:'直播' }, name:'10008',component: Jump }, // 直播
