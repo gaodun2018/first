@@ -65,6 +65,10 @@ import CourseModule from '../components/CourseoutlineManage/CourseModule.vue';
 import CourseSet from '../components/CourseManage/CourseSet.vue';
 // - 课程内容
 import CourseContent from '../components/CourseManage/CourseContent.vue';
+// - 新增视频
+import AddVideo from '../components/resourceCenter/AddVideo.vue';
+// - 新增讲义
+import AddHandout from '../components/resourceCenter/AddHandout.vue';
 
 
 export const routes = [
@@ -98,6 +102,8 @@ export const routes = [
 		{ path: '/CourseoutlineManage/CourseModule',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
 		{ path: '/CourseContent',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
+		{ path: '/addVideo',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
+		{ path: '/addHandout',meta:{ title:'- 新增讲义' }, name:'10000',component: AddHandout }, // - 新增讲义
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10009',component: Page404 }, // 404
