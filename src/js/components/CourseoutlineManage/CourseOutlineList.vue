@@ -120,10 +120,10 @@
         CourseLineList:[],
         courselinenum:'',
         ruleForm: {
-          title:'54656',
-          project_id:'1',
-          subject_id:'1',
-          status:'1'
+          title:'',
+          project_id:'',
+          subject_id:'',
+          status:''
         },
         rules: {
           title: [
