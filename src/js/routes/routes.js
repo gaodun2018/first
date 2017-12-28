@@ -69,7 +69,7 @@ export default[
     "Title": "课程大纲模块",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseoutlineManage/CourseModule",
+    "Url": "/CourseoutlineManage/CourseModule/",
     "Path": "components/CourseoutlineManage/CourseModule",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
