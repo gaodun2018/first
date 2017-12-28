@@ -12,7 +12,7 @@ var instance = axios.create({
     return strData;
   },
 });
-let {get,post} = instance;
+let {get,post,put} = instance;
 
 
 //新增一个课程
@@ -20,3 +20,4 @@ export const addCourse = parameters => post(`${getBaseUrl()}course-service.gaodu
 
 //创建课程大纲
 export const CourseSyllabus = parameters => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, parameters)
+
