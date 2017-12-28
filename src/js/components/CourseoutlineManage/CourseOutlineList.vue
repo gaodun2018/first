@@ -26,13 +26,8 @@
         <el-col :sm="12">
           <el-row>
             <div class="select-search">
-              <el-select v-model="selectvalue" placeholder="请选择" size="small">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
+              <el-select v-model="selectvalue" @change="selectval" placeholder="请选择" size="small">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </div>
           </el-row>
@@ -41,7 +36,7 @@
           <el-row type="flex" justify="end">
             <div class="input-search">
               <el-input placeholder="请输入课程大纲ID、名称" size="small" icon="search" v-model="input2"
-                        :on-icon-click="handleIconClick"></el-input>
+                        :on-icon-click="handleIconClick" @keyup.native.enter="handleIconClick"></el-input>
               <el-button type="primary" size="small" @click="dialogFormVisible = true">新建一个课程大纲</el-button>
             </div>
           </el-row>
@@ -70,13 +65,13 @@
         </el-table-column>
         <el-table-column label="操作" min-width="155">
           <template scope="scope">
-            <el-button type="text"><router-link to="/CourseoutlineManage/CourseOutline">编辑课程大纲</router-link></el-button>
-
-            <!-- <el-button type="text"><router-link to="/CourseoutlineManage/CourseModule">编辑课程大纲</router-link></el-button> -->
+            <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">编辑课程大纲</el-button>
+            <!-- <el-button type="text"><router-link to="/CourseoutlineManage/CourseOutline">查看大纲</router-link></el-button> -->
+            <el-button type="text"><router-link to="/CourseoutlineManage/CourseModule">查看大纲</router-link></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="clues-pagination">
+      <div class="edu-pagination">
         <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :page-sizes="[10, 20, 50, 100, 200, 300, 400]" :page-size="pageSize"
                        :current-page="currentPage" layout="total, sizes, prev, pager, next, jumper"
@@ -146,8 +141,7 @@
         },
         rules: {
           title: [
-            { required: true, message: '课程大纲名称', trigger: 'blur' },
-            { min: 3, max: 80, message: '长度在 3 到 80 个字符', trigger: 'blur' }
+            { required: true, message: '课程大纲名称', trigger: 'blur' }
           ],
           project_id: [
             { required: true, message: '所属项目', trigger: 'change' }
@@ -161,47 +155,18 @@
         },
         dialogFormVisible: false,
         options: [{
-          value: '1',
+          value: '',
           label: '全部状态'
         }, {
-          value: '2',
+          value: '0',
           label: '启用'
         }, {
-          value: '3',
+          value: '1',
           label: '禁用'
         }],
-        selectvalue:"全部状态",
+        selectvalue:'',
         clver:"0",
         clversm:"0",
-        tablist:[
-          {
-          id:"12",
-          name:"CFA",
-          tabdata:[{
-            id:"1",
-            name:"level11"
-          },{
-            id:"2",
-            name:"level12"
-          },{
-            id:"3",
-            name:"level13"
-          }]
-        },{
-          id:"123",
-          name:"ACCA",
-          tabdata:[{
-            id:"4",
-            name:"alevel14"
-          },{
-            id:"5",
-            name:"alevel15"
-          },{
-            id:"6",
-            name:"alevel16"
-          }]
-        }
-        ],
         outdata:[],
         projectlist:[],
         subjectlist:[],
@@ -209,8 +174,12 @@
         boxsubject:[],
         pagenum:'',
         page_size:'',
-        flag:false,
-        flagtwo:false
+        flag:true,
+        flagtwo:true,
+        projectlid:'',
+        subjectlid:'',
+        currentIndex:{},
+        currentIndex:''
       }
     },
     methods: {
@@ -218,7 +187,7 @@
         this.issubject = true;
         for(let reg of this.projectlist){
           if(reg.project_id == value){
-            let subjectall = reg.subject_list;
+            let subjectall = [...reg.subject_list];
             subjectall.unshift({
               subject_id:'0',
               subject_name:'全部'
@@ -231,6 +200,9 @@
         CourseSyllabus({...ruleForm}).then(res=>{
           if(res.data.status == 0){
             this.dialogFormVisible = false;
+            if(res.message == ""){
+              res.message = "已添加"
+            }
             this.$message({
               message: res.message,
               type: 'success'
@@ -253,21 +225,26 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      // onload(){
-      //   let ret = this.tablist
-      //   console.log(ret);
-      //   this.outdata = ret;
-      // },
       outlinechange(reid,index){
         this.clver = reid;
+        this.projectlid = reid
+        this.clversm = '0';
         if(this.clver == '0'){
           this.subjectlist = [];
         }else{
           this.subjectlist = this.projectlist[index].subject_list;
         }
+        this.subjectlid = '0';
+        this.selectvalue = '';
+        this.options.value = '';
+        this.input2 = "";
+        this.getCourseSyllabuses(1,this.page_size);
       },
       mulchange(reid){
         this.clversm = reid;
+        this.subjectlid = reid;
+        this.input2 = "";
+        this.getCourseSyllabuses(1,this.page_size);
       },
       async getProjectSubject(projectid){
         let ret = await getProjectSubject();
@@ -276,18 +253,42 @@
           this.boxsubject = ret.result;
         }
       },
+      selectval(value){ // 状态搜索
+        this.selectvalue = value;
+        this.getCourseSyllabuses(1,this.page_size);
+        this.input2 = "";
+      },
+      handleIconClick(){   // 搜索框
+        console.log(this.input2)
+        this.subjectlid = '0';
+        this.projectlid = '0';
+        this.clversm = '0';
+        this.clver = '0';
+        this.selectvalue = '';
+        if(this.clver == '0'){
+          this.subjectlist = [];
+        }else{
+          this.subjectlist = this.projectlist[index].subject_list;
+        }
+        this.getCourseSyllabuses();
+      },
       async getCourseSyllabuses(pagenum,page_size){
         if(!pagenum){        //不传页面  切换科目  查看回放
           this.flag = false;
-          this.pagenum = 1; 
+          this.flagtwo = false;
+          this.pagenum = 1;
         }
-        this.pagenum = pagenum ? pagenum : '1';
         this.page_size = page_size ? page_size : '15';
         let ret = await CourseSyllabuses({
           page:this.pagenum,
-          page_size:this.page_size
+          page_size:this.page_size,
+          project_id:this.projectlid,
+          subject_id:this.subjectlid,
+          status:this.selectvalue,
+          keyword:this.input2
         });
         this.flag = true;
+        this.flagtwo = true;
         if(ret.status == 0){
           this.CourseLineList = ret.result.list;
           this.courselinenum = ret.result.total;
@@ -295,24 +296,27 @@
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.pagenum = val;
+        this.pagenum = 0;
         this.page_size = val;
-        if(this.flag){
-          //this.getCourseSyllabuses(1,`${val}`);
+        if(!this.flagtwo){
+          this.getCourseSyllabuses(1,val);
         }
         //flagtwo
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        console.log(this.page_size)
         if(this.flag){
-          this.getCourseSyllabuses(`${val}`,this.page_size);
+          this.getCourseSyllabuses(val,this.page_size);
         }
+      },
+      UpdateOutlineTitle(index, row){
+        this.NewTableForm = {...this.CourseLineList[index]};
+        this.currentIndex = index;
+        this.dialogFormVisible = true;
       }
     },
     computed: {},
     mounted() {
-      //this.onload();
       this.getProjectSubject();
       this.getCourseSyllabuses();
     },
