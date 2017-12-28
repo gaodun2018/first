@@ -15,6 +15,7 @@ if (userInfo) {
  }*/
 axios.defaults.baseURL = '//';
 axios.defaults.headers.post['Content-Type'] = "application/json";
+axios.defaults.headers.put['Content-Type'] = "application/json";
 axios.interceptors.request.use(function (config) {
    /* let GDSID = getCookie(`${prefix}GDSID`);
     let token = getCookie(CRM_TOKEN);
@@ -98,8 +99,21 @@ export default class ZEUSAxios {
             ...options
         });
     }
+
+    put(url, data, options = {}) {
+        if (data instanceof Object) {
+            data = JSON.stringify(data);
+        }
+        return this.request({
+            method: 'put',
+            url,
+            data,
+            ...options
+        });
+    }
 }
 const instanceAxios = new ZEUSAxios;
 export const request = instanceAxios.request.bind(instanceAxios);
 export const get = instanceAxios.get.bind(instanceAxios);
 export const post = instanceAxios.post.bind(instanceAxios);
+export const put = instanceAxios.put.bind(instanceAxios);
