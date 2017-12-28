@@ -1,10 +1,5 @@
-import axios from 'axios';
-import { post, get } from '../util/zeusAxios';
+import { post, get, put } from '../util/zeusAxios';
 import { getBaseUrl } from '../util/config'
-// 登录
-var instance = axios.create({
-    baseURL: getBaseUrl(),
-});
 
 //获取项目和科目
 export const getProjectSubject = parameters => get(`${getBaseUrl()}course-service.gaodun.com/course/manage/get/project/subject/list`, parameters);
@@ -12,6 +7,8 @@ export const getProjectSubject = parameters => get(`${getBaseUrl()}course-servic
 //大纲列表
 export const CourseSyllabuses = parameters => get(`${getBaseUrl()}toc-service.gaodun.com/course-syllabuses`, parameters);
 
+//修改大纲
+export const UpdateCourseSyllabus = (url,param) => put(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus/${url}`, param);
 
 // //根据身份证号获取订单信息
 // export const getOrderInfoByCardId = parameters => instance.post('/Agreement/GetOrderInfoByCardId', parameters);
