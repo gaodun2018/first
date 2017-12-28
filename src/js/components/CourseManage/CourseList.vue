@@ -156,9 +156,6 @@
           },{
             course_type_id:'4',
             name:'私播课-Glive+',
-          },{
-            course_type_id:'4',
-            name:'SmartSchool',
           }
         ],   //网课类型
         selectvalue: '全部课程类型', //下拉搜索所选择的的网课类型
@@ -181,9 +178,6 @@
           },{
             value:'4',
             label:'私播课-Glive+',
-          },{
-            value:'4',
-            label:'SmartSchool',
           }
         ],     //下拉搜索的网课类型列表
         rules: {   //表单验证
