@@ -880,5 +880,28 @@
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增视频",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addVideo",
+    "Path": "components/resourceCenter/AddVideo",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增讲义",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addHandout",
+    "Path": "components/resourceCenter/AddHandout",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
   }
+
 ]

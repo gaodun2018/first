@@ -111,5 +111,39 @@ export default[
       {name:"课程列表",url:'/CourseList'},
       {name:"课程内容",url:'/CourseContent'},
     ]
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增视频",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addVideo",
+    "Path": "components/resourceCenter/addVideo",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "parenttitle": [
+      {name:"资源中心",url:''},
+      {name:"视频管理",url:''},
+      {name:"视频列表",url:'/VideoList'},
+      {name:"新增视频",url:'/addVideo'},
+    ]
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增讲义",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addHandout",
+    "Path": "components/resourceCenter/addHandout",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "parenttitle": [
+      {name:"资源中心",url:''},
+      {name:"讲义管理",url:''},
+      {name:"讲义列表",url:'/HandoutList'},
+      {name:"新增讲义",url:'/addHandout'},
+    ]
   }
 ]

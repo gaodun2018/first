@@ -53,15 +53,22 @@
     <div class="edu_table">
       <el-table ref="multipleTable" border v-loading="loading" @selection-change="handleSelectionChange"
                 :data="videoList" style="width: 100%">
-        <el-table-column prop="courseid" label="课程id" min-width="100" fixed>
+        <el-table-column prop="course_id" label="课程id" min-width="100" fixed>
         </el-table-column>
-        <el-table-column prop="coursename" label="课程名称" min-width="300">
+        <el-table-column prop="course_name" label="课程名称" min-width="300">
         </el-table-column>
         <el-table-column prop="usefullife" label="课程有效期" min-width="150">
         </el-table-column>
         <el-table-column prop="price" label="课程价格" min-width="125">
         </el-table-column>
-        <el-table-column prop="coursetype" label="课程包类型" min-width="150">
+        <el-table-column prop="course_type" label="课程包类型" min-width="150">
+          <template scope="scope">
+            <span v-if="scope.row.course_type==0">普通网课</span>
+            <span v-if="scope.row.course_type==1">任务制网课（选择考试时间）</span>
+            <span v-if="scope.row.course_type==2">任务制网课（选择自主学习时间）</span>
+            <span v-if="scope.row.course_type==3">自适应学习网课-EP</span>
+            <span v-if="scope.row.course_type==3">私播课-Glive+</span>
+          </template>
         </el-table-column>
         <el-table-column prop="onlinecoursetype" label="网课类型" min-width="115">
         </el-table-column>
@@ -129,7 +136,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProject} from '../../api/course'
+  import {getProject,searchCourse} from '../../api/course'
   import {addCourse} from '../../api/fromAxios'
 
   export default {
@@ -180,7 +187,8 @@
             label:'私播课-Glive+',
           }
         ],     //下拉搜索的网课类型列表
-        rules: {   //表单验证
+        //表单验证
+        rules: {
           course_name: [
             {required: true, message: '请输入课程名称', trigger: 'blur'}
           ],
@@ -232,13 +240,30 @@
             status: '发布'
           },
         ],
-        eduTotal: 3,       //总数
+        eduTotal: 0,       //总数
         currentPage: 1,     //默认当前页
         pageSize: 15,    //默认分页数量
       }
     },
     computed: {},
     methods: {
+      async searchCourse(){
+        let ret = await searchCourse({
+          project_id:this.clver,
+//          project_id:'2',
+          subject_id:this.clversm,
+//          subject_id:'19',
+          page:this.currentPage,
+          page_size:this.pageSize,
+//          course_type:this.course_type,
+          course_type:'0',
+        });
+        if(ret.status == 0){
+//          this. = ret.result.all_page;
+          this.videoList = ret.result.item_list
+        }
+        console.log(ret);
+      },
       //新增下拉框选取项目后切换科目
       changeProject(val){
         for(var obj in this.projectlist){
@@ -265,9 +290,16 @@
           this.subtablist = this.projectlist[index].subject_list;
         }
         this.clversm = '0';  //科目设置为0
+        this.pageSize = 15;
+        this.currentPage = 1;
+        this.searchCourse();
       },
+      //点击切换科目
       mulchange(reid){
         this.clversm = reid;
+        this.pageSize = 15;
+        this.currentPage = 1;
+        this.searchCourse();
       },
       //关闭弹层
       closeDialog(formName){
@@ -303,19 +335,22 @@
         });
       },
       handleSizeChange(size){
-        console.log(size);
+        this.pageSize = size;
+        this.searchCourse();
       },
       handleCurrentChange(page){
         console.log(page);
+        this.currentPage = page;
+        this.searchCourse();
       },
       async getProject(){
         let ret = await getProject();
-        console.log(ret);
         this.projectlist = ret.result;
       }
     },
     mounted() {
       this.getProject();
+      this.searchCourse();
     },
     created() {
 

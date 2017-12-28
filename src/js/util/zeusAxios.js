@@ -52,7 +52,6 @@ axios.interceptors.response.use(function (response) {
             type: 'warning'
         });
     }*/
-  console.log(response);
     return Promise.resolve(response.data);
 }, function (error) {
    /* // 获取token接口不校验，直接返回
