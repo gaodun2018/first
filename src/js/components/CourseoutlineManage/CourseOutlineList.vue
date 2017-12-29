@@ -169,21 +169,27 @@
         currentIndex:'',
         substatus:'addoutline',
         outlineid:'',
-        dialogCourse:true
+        dialogCourse:true,
+        hhh:true
       }
     },
     methods: {
       checkproject(value){
-        this.issubject = true;
         for(let reg of this.projectlist){
           if(reg.project_id == value){
+            this.issubject = true;
+            let sdsd = "0"
             let subjectall = [...reg.subject_list];
             subjectall.unshift({
               subject_id:'0',
               subject_name:'全部'
             })
             this.boxsubject = subjectall;
-            this.ruleForm.subject_id = '0';
+            console.log(value)
+            if(value){
+              console.log("===============");
+              this.ruleForm.subject_id = '0';
+            }
           }
         }
       },
@@ -369,23 +375,10 @@
         }
       },
       UpdateOutlineTitle(index, row){
-        // let arr = {...this.CourseLineList[index]}
-        // let status;
         this.substatus = 'updateoutline';
         this.dialogCourse = false;
         this.issubject = true;
-        if(row.status == 1){
-          status = "否"
-        }else if(row.status == 0){
-          status = "是"
-        }
         this.outlineid = row.id;
-        
-        for(var i = 0; i < this.projectlist.length; i++){
-          if(this.projectlist[i].project_id == row.subject.project.id){
-            this.boxsubject = this.projectlist[i]['subject_list'];
-          }
-        }
 
         this.ruleForm = {
           title:row.title,
@@ -394,13 +387,20 @@
           status:row.status+'',
         }
 
+        for(var i = 0; i < this.projectlist.length; i++){
+          if(this.projectlist[i].project_id == row.subject.project.id){
+            this.boxsubject = this.projectlist[i]['subject_list'];
+          }
+        }
+
+        //this.ruleForm.subject_id = row.subject.id+'';
+
         this.currentIndex = index;
         this.dialogFormVisible = true;
       }
     },
     computed: {},
     mounted() {
-
       this.getProjectSubject();
       this.getCourseSyllabuses();
     },

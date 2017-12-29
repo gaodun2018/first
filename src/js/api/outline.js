@@ -10,20 +10,8 @@ export const CourseSyllabuses = parameters => get(`${getBaseUrl()}toc-service.ga
 //修改大纲
 export const UpdateCourseSyllabus = (url,param) => put(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus/${url}`, param);
 
-// //根据身份证号获取订单信息
-// export const getOrderInfoByCardId = parameters => instance.post('/Agreement/GetOrderInfoByCardId', parameters);
+//添加大纲条目
+export const CourseSyllabusItem = parameters => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus-item`, parameters);
 
-// //协议确认
-// export const confirmAgreement = parameters => instance.post('/Agreement/ConfirmAgreement', parameters);
-
-// //删除文件
-// export const removeUploadFile = parameters => instance.post('/Agreement/RemoveUploadFile', parameters);
-
-// // 用户协议
-// export const CustomRegisterInfo = (objParam) => instance.post('/Agreement/CustomRegisterInfo', objParam);
-
-// // 用户协议-金融
-// export const FinancialRegisterInfo = (objParam) => instance.post('/Agreement/FinancialRegisterInfo', objParam);
-
-// // 生成pdf文档
-// export const CreateRegisterAgreement = (objParam) => instance.post('/Agreement/CreateRegisterAgreement', objParam);
+//课程大纲模板
+export const CourseSyllabusTemplates = parameters => get(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus-templates`, parameters);

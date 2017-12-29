@@ -8,18 +8,24 @@
     <div class="outlinebox">
       <div class="outlinetit">请先为该课程大纲选择合适的结构模板</div>
       <div class="outlinedrop">
-        <div class="outlineitem">
+        <div class="outlineitem" @click="CourseSyllabusLevel(4)">
           <div class="outlineone">该课程大纲应用四级结构模块</div>
           <div class="outlinetwo">常用规范：章 > 节 > 知识点 > 学习资源</div>
         </div>
-        <div class="outlineitem">
+        <div class="outlineitem" @click="CourseSyllabusLevel(3)">
           <div class="outlineone">该课程大纲应用三级结构模块</div>
           <div class="outlinetwo">常用规范：章 > 节 > 学习资源</div>
         </div>
-        <div class="outlineitem">
+        <div class="outlineitem" @click="CourseSyllabusLevel(2)">
           <div class="outlineone">该课程大纲应用二级结构模块</div>
           <div class="outlinetwo">常用规范：节 > 学习资源</div>
         </div>
+
+        <!-- <div class="outlineitem" v-for="(rev,index) in modulelist" @click="CourseSyllabusLevel(rev.level)">
+          <div class="outlineone">{{rev.valone}}</div>
+          <div class="outlinetwo">{{rev.valtwo}}</div>
+        </div> -->
+        
       </div>
     </div>
 
@@ -55,6 +61,7 @@
 </style>
 <script>
   import Vue from 'vue';
+  import {CourseSyllabusTemplates} from '../../api/outline.js';
 
   export default {
     components: {},
@@ -69,7 +76,9 @@
             { required: true, message: '选择旧大纲', trigger: 'change' }
           ],
         },
-        uploaddialogVisible:false
+        uploaddialogVisible:false,
+        coursesyllid:'',
+        modulelist:[]
       }
     },
     methods: {
@@ -83,6 +92,26 @@
             return false;
           }
         });
+      },
+      CourseSyllabusLevel(level){
+        this.$router.push({
+          path:'/CourseoutlineManage/CourseModule/'+this.coursesyllid+'/'+level
+        })
+      },
+      async OutlineTemplates(){
+        let ret = await CourseSyllabusTemplates();
+        for(let o of ret.result){
+          let valcom = [];
+          let valone = [];
+          let valtwo = [];
+          let level = [];
+          valcom = o.description;
+          this.modulelist.push({
+            valone : valcom.substring(0,13),
+            valtwo : valcom.substring(13,),
+            level : o.level_max
+          })
+        }
       }
     },
     computed: {},
@@ -90,7 +119,8 @@
 
     },
     created() {
-
+      this.OutlineTemplates();
+      this.coursesyllid = this.$route.params.sid;
     }
   }
 </script>

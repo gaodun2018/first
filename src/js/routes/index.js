@@ -99,7 +99,7 @@ export const routes = [
 		{ path: '/ZhuantiList',meta:{ title:'专题列表' }, name:'610',component: ZhuantiList }, // 专题列表
 		{ path: '/BusinessList',meta:{ title:'商业列表' }, name:'620',component: BusinessList }, // 商业列表
 		{ path: '/CourseoutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
-		{ path: '/CourseoutlineManage/CourseModule/:sid',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
+		{ path: '/CourseoutlineManage/CourseModule/:sid/:level',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
 		{ path: '/CourseContent',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
 		{ path: '/addVideo',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
