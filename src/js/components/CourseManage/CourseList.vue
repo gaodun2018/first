@@ -38,8 +38,8 @@
         <el-col :sm="12">
           <el-row type="flex" justify="end">
             <div class="input-search">
-              <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
-                        :on-icon-click="handleIconClick"></el-input>
+              <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="searchinput"
+                        :on-icon-click="handleIconClick" @keydown.native.enter="handleIconClick"></el-input>
               <el-button type="primary" size="small" @click="dialogCourseVisible = true">新增一个课程</el-button>
             </div>
           </el-row>
@@ -144,6 +144,7 @@
     components: {},
     data() {
       return {
+        loading:false,
         selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
@@ -212,7 +213,7 @@
           course_type_id: '',
         },
         dialogCourseVisible: false,
-        input2: '',
+        searchinput: '',   //输入框搜索
         clver: "0",    //点击搜索所选项目
         clversm: "0",     //点击搜索所选科目
         videoList: [],
@@ -224,18 +225,18 @@
     computed: {},
     methods: {
       async searchCourse(){
+        this.loading = true;
         let ret = await searchCourse({
           project_id:this.clver,
-//          project_id:'2',
           subject_id:this.clversm,
-//          subject_id:'19',
           page:this.currentPage,
           page_size:this.pageSize,
-//          course_type:this.course_type,
           course_type:this.selectvalue,
+          course_id_name:this.searchinput
         });
         if(ret.status == 0){
 //          this. = ret.result.all_page;
+          this.loading = false;
           this.videoList = ret.result.item_list;
           this.eduTotal = ret.result.all_item_count;
         }
@@ -246,8 +247,12 @@
       },
       changesearch(val){   //选择器搜索
         if (this.selectfalg) {
+          this.searchinput = '';
           this.searchCourse();
         }
+      },
+      handleIconClick(){    //输入框搜索
+        this.searchCourse();
       },
       //新增下拉框选取项目后切换科目
       changeProject(val){
@@ -277,6 +282,7 @@
         this.clversm = '0';  //科目设置为0
         this.pageSize = 15;
         this.currentPage = 1;
+        this.searchinput = '';
         this.searchCourse();
       },
       //点击切换科目
@@ -284,6 +290,7 @@
         this.clversm = reid;
         this.pageSize = 15;
         this.currentPage = 1;
+        this.searchinput = '';
         this.searchCourse();
       },
       //关闭弹层
