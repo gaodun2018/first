@@ -27,10 +27,15 @@
 
 /*添加*/
 .add-resource .frombox{width: 70%;padding: 30px 0 0 0;}
-.add-resource .el-select{width: 100%;}
-.add-resource .displayinline .el-input{width: 20%;margin-right: 10px;}
-.add-resource .el-form-item.w_50 .el-select{width: 50%}
-.add-resource .el-form-item .el-input.w_50{width: 50%}
-.add-resource .el-form-item .el-input.w_60{width: 60%}
+.add-resource .frombox .el-select{width: 100%;}
+.add-resource .frombox .displayinline .el-input{width: 20%;margin-right: 10px;}
+.add-resource .frombox .el-form-item.w_50 .el-select{width: 50%}
+.add-resource .frombox .el-form-item .el-input.w_50{width: 50%}
+.add-resource .frombox .el-form-item .el-input.w_60{width: 60%}
 
-
+.add-resource .selectknowledge .el-dialog{width:76%;}
+.add-resource .selectknowledge .el-dialog{padding: 20px 20px 0;}
+.add-resource .selectknowledge .el-dialog .el-dialog__header{border-bottom: 1px solid #cbcbcb;padding-left:0;padding-right: 0;padding-top: 0;padding-bottom: 14px;}
+.add-resource .selectknowledge .el-dialog .el-dialog__body{padding-left:0;padding-right: 0;}
+.add-resource .selectknowledge .el-dialog .el-dialog__footer{padding-left:0;padding-right: 0;}
+.add-resource .selectknowledge .searchtools{height: 50px;}

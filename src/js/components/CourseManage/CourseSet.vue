@@ -11,7 +11,7 @@
     </el-row>
     <div class="formBox">
       <div v-show="active == 0">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm">
+        <el-form :model="ruleForm" label-position="left" :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm">
           <el-form-item label="课程名称" prop="name">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
@@ -39,7 +39,7 @@
         </el-form>
       </div>
       <div v-show="active == 1">
-        <el-form :model="kForm" :rules="kFormRules" ref="kForm" label-width="100px" class="kForm">
+        <el-form :model="kForm" label-position="left" :rules="kFormRules" ref="kForm" label-width="100px" class="kForm">
           <el-form-item label="内容制作状态" prop="ware_status">
             <el-select v-model="kForm.ware_status">
               <el-option :label="item[1]" :value="item[0]+''" v-for="(item,index) in ware_status_list" :key="index"></el-option>
