@@ -39,15 +39,8 @@
   </div>
 </template>
 <style>
-  .add-resource .frombox{width: 70%;padding: 30px 0 0 0;}
-  .add-resource .el-select{width: 100%;}
-  .add-resource .displayinline .el-input{width: 20%;margin-right: 10px;}
-  .add-resource .el-form-item.w_50 .el-select{width: 50%}
-  .add-resource .el-form-item .el-input.w_50{width: 50%}
-  .add-resource .el-form-item .el-input.w_60{width: 60%}
 </style>
 <script>
-
 
   export default {
     components: {},
