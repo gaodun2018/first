@@ -73,14 +73,19 @@
         <el-table-column prop="onlinecoursetype" label="网课类型" min-width="115">
         </el-table-column>
         <el-table-column prop="status" label="发布状态" min-width="150">
+          <template scope="scope">
+            <span v-if="scope.row.ware_status==0">完成</span>
+            <span v-if="scope.row.ware_status==1">更新中</span>
+            <span v-if="scope.row.ware_status==2">即将更新</span>
+          </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="200" align="center">
           <template scope="scope">
             <el-button type="text" style="margin: 0 10px;">
-              <router-link class="routerBtn" to="/CourseSet">基本设置</router-link>
+              <router-link class="routerBtn" :to="'/CourseSet/'+scope.row.course_id">基本设置</router-link>
             </el-button>
             <el-button type="text" style="margin: 0 10px;">
-              <router-link class="routerBtn" to="/CourseContent">课程内容</router-link>
+              <router-link class="routerBtn" :to="'/CourseContent/'+scope.row.course_id">课程内容</router-link>
             </el-button>
           </template>
         </el-table-column>
@@ -136,7 +141,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProject,searchCourse} from '../../api/course'
+  import {getProjectSubject,searchCourse} from '../../api/course'
   import {addCourse} from '../../api/fromAxios'
 
   export default {
@@ -260,7 +265,8 @@
         });
         if(ret.status == 0){
 //          this. = ret.result.all_page;
-          this.videoList = ret.result.item_list
+          this.videoList = ret.result.item_list;
+          this.eduTotal = ret.result.all_item_count;
         }
         console.log(ret);
       },
@@ -310,11 +316,11 @@
       //新增一个课程
       addCourse(ruleForm){
         addCourse({...ruleForm}).then(res=>{
-          if(res.data.status == 0){
+          if(res.status == 0){
             this.dialogCourseVisible = false;
             this.bSubject = false;
             this.$message({
-              message: res.data.message,
+              message: res.message,
               type: 'success'
             });
           }
@@ -343,13 +349,13 @@
         this.currentPage = page;
         this.searchCourse();
       },
-      async getProject(){
-        let ret = await getProject();
+      async getProjectSubject(){
+        let ret = await getProjectSubject();
         this.projectlist = ret.result;
       }
     },
     mounted() {
-      this.getProject();
+      this.getProjectSubject();
       this.searchCourse();
     },
     created() {

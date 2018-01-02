@@ -864,7 +864,7 @@
     "Title": "- 课程基本设置",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseSet",
+    "Url": "/CourseSet/:cid",
     "Path": "components/CourseManage/CourseSet",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",

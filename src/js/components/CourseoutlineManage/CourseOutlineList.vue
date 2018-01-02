@@ -196,7 +196,7 @@
       coursesubmit(ruleForm){
         // 添加一个课程大纲提交
         CourseSyllabus({...ruleForm}).then(res=>{
-          if(res.data.status == 0){
+          if(res.status == 0){
             this.dialogFormVisible = false;
             if(res.message == ""){
               res.message = "已添加"
