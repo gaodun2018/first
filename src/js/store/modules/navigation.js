@@ -34,7 +34,8 @@ const actions = {
   updateBreadcrumb({commit, state}, path){
     let formatMenu = JSON.parse(localStorage.getItem(FORMAT_MENU));
     for (let i in formatMenu) {
-      if (formatMenu[i]['Url'].indexOf(path) > -1) {
+      // if (formatMenu[i]['Url'].indexOf(path) > -1) {
+      if (path.indexOf(formatMenu[i]['Url']) > -1) {
         commit(Breadcrumb, formatMenu[i].parenttitle);
       }
     }
