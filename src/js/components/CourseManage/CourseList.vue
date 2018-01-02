@@ -28,12 +28,8 @@
         <el-col :sm="12">
           <el-row>
             <div class="select-search">
-              <el-select v-model="selectvalue" placeholder="请选择" size="small">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+              <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch" @visible-change="visibleChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </div>
@@ -61,13 +57,13 @@
         </el-table-column>
         <el-table-column prop="price" label="课程价格" min-width="125">
         </el-table-column>
-        <el-table-column prop="course_type" label="课程包类型" min-width="150">
+        <el-table-column prop="course_type" label="课程包类型" min-width="200">
           <template scope="scope">
             <span v-if="scope.row.course_type==0">普通网课</span>
             <span v-if="scope.row.course_type==1">任务制网课（选择考试时间）</span>
             <span v-if="scope.row.course_type==2">任务制网课（选择自主学习时间）</span>
             <span v-if="scope.row.course_type==3">自适应学习网课-EP</span>
-            <span v-if="scope.row.course_type==3">私播课-Glive+</span>
+            <span v-if="scope.row.course_type==4">私播课-Glive+</span>
           </template>
         </el-table-column>
         <el-table-column prop="onlinecoursetype" label="网课类型" min-width="115">
@@ -148,6 +144,7 @@
     components: {},
     data() {
       return {
+        selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
         selectedlist:[],   //新增课程科目列表
@@ -170,7 +167,7 @@
             name:'私播课-Glive+',
           }
         ],   //网课类型
-        selectvalue: '全部课程类型', //下拉搜索所选择的的网课类型
+        selectvalue: '', //下拉搜索所选择的的网课类型
         options: [
           {
             value: '',
@@ -218,33 +215,7 @@
         input2: '',
         clver: "0",    //点击搜索所选项目
         clversm: "0",     //点击搜索所选科目
-        videoList: [
-          {
-            courseid: '123',
-            coursename: 'CFA持证无忧123456789',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          }, {
-            courseid: '123',
-            coursename: 'CFA持证无忧12345672',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          }, {
-            courseid: '123',
-            coursename: 'CFA持证无忧123456789',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          },
-        ],
+        videoList: [],
         eduTotal: 0,       //总数
         currentPage: 1,     //默认当前页
         pageSize: 15,    //默认分页数量
@@ -261,7 +232,7 @@
           page:this.currentPage,
           page_size:this.pageSize,
 //          course_type:this.course_type,
-          course_type:'0',
+          course_type:this.selectvalue,
         });
         if(ret.status == 0){
 //          this. = ret.result.all_page;
@@ -269,6 +240,14 @@
           this.eduTotal = ret.result.all_item_count;
         }
         console.log(ret);
+      },
+      visibleChange(bool){  //开关函数
+        this.selectfalg = bool
+      },
+      changesearch(val){   //选择器搜索
+        if (this.selectfalg) {
+          this.searchCourse();
+        }
       },
       //新增下拉框选取项目后切换科目
       changeProject(val){
