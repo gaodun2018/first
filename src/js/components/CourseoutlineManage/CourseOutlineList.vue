@@ -63,8 +63,10 @@
         <el-table-column label="操作" min-width="155">
           <template scope="scope">
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">编辑课程大纲</el-button>
-            <!-- <el-button type="text"><router-link to="/CourseoutlineManage/CourseOutline">查看大纲</router-link></el-button> -->
-            <el-button type="text"><router-link to="/CourseoutlineManage/CourseModule">查看大纲</router-link></el-button>
+
+            <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseOutline/'+scope.row.id">查看大纲</router-link></el-button>
+            <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
+
           </template>
         </el-table-column>
       </el-table>
@@ -167,21 +169,27 @@
         currentIndex:'',
         substatus:'addoutline',
         outlineid:'',
-        dialogCourse:true
+        dialogCourse:true,
+        hhh:true
       }
     },
     methods: {
       checkproject(value){
-        console.log(value)
-        this.issubject = true;
         for(let reg of this.projectlist){
           if(reg.project_id == value){
+            this.issubject = true;
+            let sdsd = "0"
             let subjectall = [...reg.subject_list];
             subjectall.unshift({
               subject_id:'0',
               subject_name:'全部'
             })
             this.boxsubject = subjectall;
+            console.log(value)
+            if(value){
+              console.log("===============");
+              this.ruleForm.subject_id = '0';
+            }
           }
         }
       },
@@ -224,6 +232,7 @@
             if(res.message == ""){
               res.message = "已修改";
               this.getCourseSyllabuses(1,this.page_size)
+              this.outlineid = '';
             }
             this.$message({
               message: res.message,
@@ -273,6 +282,7 @@
             { required: false, message: '是否启用', trigger: 'change' }
           ]
         }
+
         this.dialogFormVisible = true;
         this.issubject = false;
       },
@@ -303,8 +313,9 @@
       async getProjectSubject(projectid){
         let ret = await getProjectSubject();
         if(ret.status == 0){
+          console.log(ret,'-------')
           this.projectlist = ret.result;
-          this.boxsubject = ret.result;
+          // this.boxsubject = ret.result;
         }
       },
       selectval(value){ // 状态搜索
@@ -364,24 +375,25 @@
         }
       },
       UpdateOutlineTitle(index, row){
-        // let arr = {...this.CourseLineList[index]}
-        // let status;
         this.substatus = 'updateoutline';
         this.dialogCourse = false;
         this.issubject = true;
-        if(row.status == 1){
-          status = "否"
-        }else if(row.status == 0){
-          status = "是"
-        }
-
         this.outlineid = row.id;
+
         this.ruleForm = {
           title:row.title,
           project_id:row.subject.project.id+'',
           subject_id:row.subject.id+'',
           status:row.status+'',
         }
+
+        for(var i = 0; i < this.projectlist.length; i++){
+          if(this.projectlist[i].project_id == row.subject.project.id){
+            this.boxsubject = this.projectlist[i]['subject_list'];
+          }
+        }
+
+        //this.ruleForm.subject_id = row.subject.id+'';
 
         this.currentIndex = index;
         this.dialogFormVisible = true;
