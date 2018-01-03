@@ -87,27 +87,6 @@
   </div>
 </template>
 <style>
-  .order-manage-dislog .el-dialog--small {
-    width: 30%;
-  }
-
-  .order-manage-dislog .el-dialog__body {
-    padding: 20px
-  }
-
-  .order-manage .cell-reset-padding {
-    margin-right: -12px
-  }
-
-  .clues-bnt-item .tracking-text-font .el-form-item__label {
-    padding: 11px 0 11px 0;
-  }
-
-  .el-dropdown {
-    font-size: 12px;
-    color: #20a0ff;
-  }
-
 </style>
 <script>
   import Vue from 'vue';

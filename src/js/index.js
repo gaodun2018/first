@@ -9,6 +9,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
 import '../css/main.less';
 import '../css/teaching.css';
+import '../css/resources.css';
 import '../css/home.css';
 import '../css/outline.css';
 import '../css/animate.min.css';

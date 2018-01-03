@@ -8,3 +8,4 @@ export const CURRENT_SUB_MENU = 'CURRENT_SUB_MENU'; // 电话呼入信息
 
 
 export const Breadcrumb = "Breadcrumb";     //面包屑
+export const PROJECTLIST = "PROJECTLIST";     //项目科目列表

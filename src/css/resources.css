@@ -1,0 +1,41 @@
+/*视频*/
+.order-manage-dislog .el-dialog--small {
+  width: 30%;
+}
+.order-manage-dislog .el-dialog__body {
+  padding: 20px
+}
+.order-manage .cell-reset-padding {
+  margin-right: -12px
+}
+.clues-bnt-item .tracking-text-font .el-form-item__label {
+  padding: 11px 0 11px 0;
+}
+.el-dropdown {
+  font-size: 12px;
+  color: #20a0ff;
+}
+
+/*讲义*/
+.roder-content-label .el-form-item {
+  margin-bottom: 10px;
+}
+
+.order-search-form .el-form-item {
+  margin-bottom: 10px;
+}
+
+/*添加*/
+.add-resource .frombox{width: 70%;padding: 30px 0 0 0;}
+.add-resource .frombox .el-select{width: 100%;}
+.add-resource .frombox .displayinline .el-input{width: 20%;margin-right: 10px;}
+.add-resource .frombox .el-form-item.w_50 .el-select{width: 50%}
+.add-resource .frombox .el-form-item .el-input.w_50{width: 50%}
+.add-resource .frombox .el-form-item .el-input.w_60{width: 60%}
+
+.add-resource .selectknowledge .el-dialog{width:76%;}
+.add-resource .selectknowledge .el-dialog{padding: 20px 20px 0;}
+.add-resource .selectknowledge .el-dialog .el-dialog__header{border-bottom: 1px solid #cbcbcb;padding-left:0;padding-right: 0;padding-top: 0;padding-bottom: 14px;}
+.add-resource .selectknowledge .el-dialog .el-dialog__body{padding-left:0;padding-right: 0;}
+.add-resource .selectknowledge .el-dialog .el-dialog__footer{padding-left:0;padding-right: 0;}
+.add-resource .selectknowledge .searchtools{height: 50px;}

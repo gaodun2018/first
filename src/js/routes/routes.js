@@ -93,7 +93,7 @@ export default[
     "parenttitle": [
       {name:"课程管理",url:''},
       {name:"课程列表",url:'/CourseList'},
-      {name:"课程基本设置",url:'/CourseSet'},
+      {name:"课程基本设置",url:''},
     ]
   },
   {

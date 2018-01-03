@@ -28,12 +28,8 @@
         <el-col :sm="12">
           <el-row>
             <div class="select-search">
-              <el-select v-model="selectvalue" placeholder="请选择" size="small">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+              <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch" @visible-change="visibleChange">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </div>
@@ -42,8 +38,8 @@
         <el-col :sm="12">
           <el-row type="flex" justify="end">
             <div class="input-search">
-              <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
-                        :on-icon-click="handleIconClick"></el-input>
+              <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="searchinput"
+                        :on-icon-click="handleIconClick" @keydown.native.enter="handleIconClick"></el-input>
               <el-button type="primary" size="small" @click="dialogCourseVisible = true">新增一个课程</el-button>
             </div>
           </el-row>
@@ -53,34 +49,37 @@
     <div class="edu_table">
       <el-table ref="multipleTable" border v-loading="loading" @selection-change="handleSelectionChange"
                 :data="videoList" style="width: 100%">
-        <el-table-column prop="course_id" label="课程id" min-width="100" fixed>
+        <el-table-column prop="course_id" label="课程id" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="course_name" label="课程名称" min-width="300">
+        <el-table-column prop="course_name" label="课程名称" min-width="360">
         </el-table-column>
-        <el-table-column prop="usefullife" label="课程有效期" min-width="150">
-        </el-table-column>
-        <el-table-column prop="price" label="课程价格" min-width="125">
-        </el-table-column>
-        <el-table-column prop="course_type" label="课程包类型" min-width="150">
+        <el-table-column prop="course_type" label="网课类型" min-width="260">
           <template scope="scope">
             <span v-if="scope.row.course_type==0">普通网课</span>
             <span v-if="scope.row.course_type==1">任务制网课（选择考试时间）</span>
             <span v-if="scope.row.course_type==2">任务制网课（选择自主学习时间）</span>
             <span v-if="scope.row.course_type==3">自适应学习网课-EP</span>
-            <span v-if="scope.row.course_type==3">私播课-Glive+</span>
+            <span v-if="scope.row.course_type==4">私播课-Glive+</span>
           </template>
         </el-table-column>
-        <el-table-column prop="onlinecoursetype" label="网课类型" min-width="115">
+        <el-table-column prop="" label="大包/单课" min-width="200">
+
         </el-table-column>
-        <el-table-column prop="status" label="发布状态" min-width="150">
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" min-width="200" align="center">
+
+        <!--<el-table-column prop="status" label="发布状态" min-width="150">
+          <template scope="scope">
+            <span v-if="scope.row.ware_status==0">完成</span>
+            <span v-if="scope.row.ware_status==1">更新中</span>
+            <span v-if="scope.row.ware_status==2">即将更新</span>
+          </template>
+        </el-table-column>-->
+        <el-table-column fixed="right" label="操作" width="200" align="center">
           <template scope="scope">
             <el-button type="text" style="margin: 0 10px;">
-              <router-link class="routerBtn" to="/CourseSet">基本设置</router-link>
+              <router-link class="routerBtn" :to="'/CourseSet/'+scope.row.course_id">基本设置</router-link>
             </el-button>
             <el-button type="text" style="margin: 0 10px;">
-              <router-link class="routerBtn" to="/CourseContent">课程内容</router-link>
+              <router-link class="routerBtn" :to="'/CourseContent/'+scope.row.course_id">课程内容</router-link>
             </el-button>
           </template>
         </el-table-column>
@@ -136,13 +135,15 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProject,searchCourse} from '../../api/course'
+  import {getProjectSubject,searchCourse} from '../../api/course'
   import {addCourse} from '../../api/fromAxios'
 
   export default {
     components: {},
     data() {
       return {
+        loading:false,
+        selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
         selectedlist:[],   //新增课程科目列表
@@ -165,7 +166,7 @@
             name:'私播课-Glive+',
           }
         ],   //网课类型
-        selectvalue: '全部课程类型', //下拉搜索所选择的的网课类型
+        selectvalue: '', //下拉搜索所选择的的网课类型
         options: [
           {
             value: '',
@@ -210,36 +211,10 @@
           course_type_id: '',
         },
         dialogCourseVisible: false,
-        input2: '',
+        searchinput: '',   //输入框搜索
         clver: "0",    //点击搜索所选项目
         clversm: "0",     //点击搜索所选科目
-        videoList: [
-          {
-            courseid: '123',
-            coursename: 'CFA持证无忧123456789',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          }, {
-            courseid: '123',
-            coursename: 'CFA持证无忧12345672',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          }, {
-            courseid: '123',
-            coursename: 'CFA持证无忧123456789',
-            usefullife: '36个月',
-            price: '99999.999',
-            coursetype: 'EP课',
-            onlinecoursetype: '大包',
-            status: '发布'
-          },
-        ],
+        videoList: [],
         eduTotal: 0,       //总数
         currentPage: 1,     //默认当前页
         pageSize: 15,    //默认分页数量
@@ -248,21 +223,34 @@
     computed: {},
     methods: {
       async searchCourse(){
+        this.loading = true;
         let ret = await searchCourse({
           project_id:this.clver,
-//          project_id:'2',
           subject_id:this.clversm,
-//          subject_id:'19',
           page:this.currentPage,
           page_size:this.pageSize,
-//          course_type:this.course_type,
-          course_type:'0',
+          course_type:this.selectvalue,
+          course_id_name:this.searchinput
         });
         if(ret.status == 0){
 //          this. = ret.result.all_page;
-          this.videoList = ret.result.item_list
+          this.loading = false;
+          this.videoList = ret.result.item_list;
+          this.eduTotal = ret.result.all_item_count;
         }
         console.log(ret);
+      },
+      visibleChange(bool){  //开关函数
+        this.selectfalg = bool
+      },
+      changesearch(val){   //选择器搜索
+        if (this.selectfalg) {
+          this.searchinput = '';
+          this.searchCourse();
+        }
+      },
+      handleIconClick(){    //输入框搜索
+        this.searchCourse();
       },
       //新增下拉框选取项目后切换科目
       changeProject(val){
@@ -292,6 +280,7 @@
         this.clversm = '0';  //科目设置为0
         this.pageSize = 15;
         this.currentPage = 1;
+        this.searchinput = '';
         this.searchCourse();
       },
       //点击切换科目
@@ -299,6 +288,7 @@
         this.clversm = reid;
         this.pageSize = 15;
         this.currentPage = 1;
+        this.searchinput = '';
         this.searchCourse();
       },
       //关闭弹层
@@ -310,11 +300,11 @@
       //新增一个课程
       addCourse(ruleForm){
         addCourse({...ruleForm}).then(res=>{
-          if(res.data.status == 0){
+          if(res.status == 0){
             this.dialogCourseVisible = false;
             this.bSubject = false;
             this.$message({
-              message: res.data.message,
+              message: res.message,
               type: 'success'
             });
           }
@@ -343,13 +333,13 @@
         this.currentPage = page;
         this.searchCourse();
       },
-      async getProject(){
-        let ret = await getProject();
+      async getProjectSubject(){
+        let ret = await getProjectSubject();
         this.projectlist = ret.result;
       }
     },
     mounted() {
-      this.getProject();
+      this.getProjectSubject();
       this.searchCourse();
     },
     created() {
