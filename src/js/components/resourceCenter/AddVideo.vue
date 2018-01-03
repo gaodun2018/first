@@ -34,7 +34,7 @@
           <el-input v-model="ruleForm.name" auto-complete="off"></el-input>分<el-input v-model="ruleForm.name" auto-complete="off" style="margin-left: 20px;"></el-input>秒
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
-          <el-button type="text" @click="">选择知识点</el-button>
+          <el-button type="text" @click="selectVideo">选择知识点</el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -43,6 +43,28 @@
       </el-form>
     </div>
 
+    <el-dialog title="请选择知识点关联" class="addvideo" :visible.sync="dialogFormVisible">
+      <div class="">
+        <el-row>
+          <el-col :sm="3">
+            <span>一级分类：</span>
+          </el-col>
+          <el-col :sm="6">
+            <el-select placeholder="第一个分类项">
+              <el-option v-for="(com,index) in boxlist" :label="com.name" :value="com.id"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :sm="3">
+            <span>二级分类：</span>
+          </el-col>
+          <el-col :sm="6">
+            <el-select placeholder="请选择">
+              <el-option v-for="(com,index) in boxlist" :label="com.name" :value="com.id"></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <style>
@@ -93,7 +115,19 @@
           desc: [
             { required: true, message: '请填写活动形式', trigger: 'blur' }
           ]
-        }
+        },
+        dialogFormVisible:false,
+        boxlist:[{
+          id:1,
+          name:"ACCA",
+          data:[{
+            id:11,
+            name:"F1"
+          },{
+            id:12,
+            name:"F2"
+          }]
+        }]
       }
     },
     methods: {
@@ -109,6 +143,9 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      selectVideo(){
+        this.dialogFormVisible = true;
       }
     },
     computed: {},

@@ -170,27 +170,26 @@
         substatus:'addoutline',
         outlineid:'',
         dialogCourse:true,
-        hhh:true
+        selectcur:true
       }
     },
     methods: {
       checkproject(value){
-        for(let reg of this.projectlist){
-          if(reg.project_id == value){
-            this.issubject = true;
-            let sdsd = "0"
-            let subjectall = [...reg.subject_list];
-            subjectall.unshift({
-              subject_id:'0',
-              subject_name:'全部'
-            })
-            this.boxsubject = subjectall;
-            console.log(value)
-            if(value){
-              console.log("===============");
+        console.log(this.selectcur)
+        if(this.selectcur){
+          for(let reg of this.projectlist){
+            if(reg.project_id == value){
+              this.issubject = true;
+              let subjectall = [...reg.subject_list];
+              subjectall.unshift({
+                subject_id:'0',
+                subject_name:'全部'
+              })
+              this.boxsubject = subjectall;
               this.ruleForm.subject_id = '0';
             }
           }
+          this.selectcur = true;
         }
       },
       coursesubmit(ruleForm){
@@ -198,11 +197,12 @@
         CourseSyllabus({...ruleForm}).then(res=>{
           if(res.data.status == 0){
             this.dialogFormVisible = false;
-            if(res.message == ""){
-              res.message = "已添加"
+            if(res.data.message == ""){
+              res.data.message = "已添加";
             }
+            this.getCourseSyllabuses(1,this.page_size);
             this.$message({
-              message: res.message,
+              message: res.data.message,
               type: 'success'
             });
           }
@@ -231,9 +231,9 @@
             this.dialogFormVisible = false;
             if(res.message == ""){
               res.message = "已修改";
-              this.getCourseSyllabuses(1,this.page_size)
-              this.outlineid = '';
             }
+            this.getCourseSyllabuses(1,this.page_size)
+            this.outlineid = '';
             this.$message({
               message: res.message,
               type: 'success'
@@ -248,7 +248,6 @@
         if(this.substatus == 'updateoutline'){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              console.log(this.ruleForm)
               this.courseupdate(this.outlineid,this.ruleForm)
               this.dialogFormVisible = false
             } else {
@@ -259,6 +258,7 @@
         }
       },
       addCourseOutline(){
+        // 新增一个课程大纲 弹出框
         this.substatus = 'addoutline';
         this.dialogCourse = true;
         this.ruleForm = {
@@ -282,7 +282,6 @@
             { required: false, message: '是否启用', trigger: 'change' }
           ]
         }
-
         this.dialogFormVisible = true;
         this.issubject = false;
       },
@@ -313,9 +312,7 @@
       async getProjectSubject(projectid){
         let ret = await getProjectSubject();
         if(ret.status == 0){
-          console.log(ret,'-------')
           this.projectlist = ret.result;
-          // this.boxsubject = ret.result;
         }
       },
       selectval(value){ // 状态搜索
@@ -324,7 +321,6 @@
         this.input2 = "";
       },
       handleIconClick(){   // 搜索框
-        console.log(this.input2)
         this.subjectlid = '0';
         this.projectlid = '0';
         this.clversm = '0';
@@ -366,7 +362,6 @@
         if(!this.flagtwo){
           this.getCourseSyllabuses(1,val);
         }
-        //flagtwo
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
@@ -375,26 +370,31 @@
         }
       },
       UpdateOutlineTitle(index, row){
+        // 修改一个课程大纲 弹出框
         this.substatus = 'updateoutline';
         this.dialogCourse = false;
         this.issubject = true;
         this.outlineid = row.id;
-
+        if(row){
+          this.selectcur = false;
+        }
         this.ruleForm = {
           title:row.title,
           project_id:row.subject.project.id+'',
           subject_id:row.subject.id+'',
           status:row.status+'',
         }
-
         for(var i = 0; i < this.projectlist.length; i++){
           if(this.projectlist[i].project_id == row.subject.project.id){
-            this.boxsubject = this.projectlist[i]['subject_list'];
+            let subjectall = [...this.projectlist[i]['subject_list']];
+            subjectall.unshift({
+              subject_id:'0',
+              subject_name:'全部'
+            })
+            this.boxsubject = subjectall;
           }
         }
-
-        //this.ruleForm.subject_id = row.subject.id+'';
-
+        this.selectcur = true;
         this.currentIndex = index;
         this.dialogFormVisible = true;
       }
