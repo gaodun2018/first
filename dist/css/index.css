@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2018-1-2 15:16:18 */
+/*! gaodun modified this file at 2018-1-3 15:10:25 */
 .w_1200{width: 1200px;margin:0 auto;height:100%;box-sizing: border-box;}
 .left{ float:left; _display:inline; }
 .right{ float:right; _display:inline; }
@@ -2418,7 +2418,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
-
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -2527,7 +2526,34 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .cloneinfo{color:#f60;margin:0 30px 50px 30px;}
 .tabplane .upload-demo{width:360px;margin:0 auto;}
 .tabplane .upload-demo .el-upload__tip em{font-style:normal;color:#20a0ff;display:inline-block;margin:4px 0 8px;}
-.clues-pagination{margin-top:30px;}@charset "UTF-8";
+.clues-pagination{margin-top:30px;}
+
+
+/* 资源视频 */
+.addvideo .el-dialog__header{border-bottom:1px solid #cbcbcb;margin:0 18px;padding:14px 0 15px 6px;}
+.addvideo .el-dialog__header .el-dialog__title{font-size:14px;}
+.addvideo .el-dialog__body{padding-top:14px;}
+.addvideo .el-row .el-col span{text-align:right;width:96%;line-height:30px;display:inline-block;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@charset "UTF-8";
 
 /*!
  * animate.css -http://daneden.me/animate

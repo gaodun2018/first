@@ -34,7 +34,7 @@
           秒
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
-          <el-button type="text" @click="">选择知识点</el-button>
+          <el-button type="text" @click="selectVideo">选择知识点</el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -85,7 +85,6 @@
         <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 <style>
