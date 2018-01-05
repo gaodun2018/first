@@ -51,3 +51,29 @@
 .tabplane .upload-demo{width:360px;margin:0 auto;}
 .tabplane .upload-demo .el-upload__tip em{font-style:normal;color:#20a0ff;display:inline-block;margin:4px 0 8px;}
 .clues-pagination{margin-top:30px;}
+
+
+/* 资源视频 */
+.addvideo .el-dialog__header{border-bottom:1px solid #cbcbcb;margin:0 18px;padding:14px 0 15px 6px;}
+.addvideo .el-dialog__header .el-dialog__title{font-size:14px;}
+.addvideo .el-dialog__body{padding-top:14px;}
+.addvideo .el-row .el-col span{text-align:right;width:96%;line-height:30px;display:inline-block;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
