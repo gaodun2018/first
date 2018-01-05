@@ -33,10 +33,76 @@
             </el-select>
           </el-form-item>
 
+         <!-- <el-form-item label="课程封面" class="pad_10">
+
+            <el-row>
+              <el-col :span="12">
+                <el-upload
+                  with-credentials
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+              </el-col>
+            </el-row>
+
+          </el-form-item>-->
+
+
+          <el-form-item label="课程简介" class="pad_10">
+            <div id="ed" type="text/plain"></div>
+          </el-form-item>
+
+          <el-form-item label="资源介绍"  class="res_intro pad_10">
+            <el-row>
+              <el-col :span="6" v-for="(item,index) in courseIntroList" :key="index">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span style="line-height: 26px;">{{item.title}}</span>
+                  </div>
+                  <div class="introItem">
+                    {{item.content}}
+                  </div>
+                  <div class="box-card-bottom">
+                    <el-button type="text" class="button" @click="openAddResDialog(index)">修改</el-button>
+                    <el-button type="text" class="button" @click="deleteResIntro(index)">删除</el-button>
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :span="6">
+                <el-card class="box-card add-card" @click.native="openAddResDialog">
+                  <i class="el-icon-plus"></i>
+                  <p>建议：添加3个</p>
+                </el-card>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item label="给新学员的介绍信" class="pad_10">
+            <el-row>
+              <el-radio-group v-model="ruleForm.bLetter" @change="changebLetter">
+                <el-radio label="0">通用模板内容</el-radio>
+                <el-radio label="1">自定义内容</el-radio>
+                <el-radio label="2">不启用欢迎信</el-radio>
+              </el-radio-group>
+            </el-row>
+            <el-row>
+              <el-input v-model="ruleForm.letterContent" autosize :disabled="ruleForm.bLetter==0?true:false" v-show="ruleForm.bLetter==2?false:true" type="textarea" class="coursetxt" auto-complete="off"></el-input>
+            </el-row>
+          </el-form-item>
+
+
           <el-form-item class="last-form-item">
             <el-button style="margin-top: 12px;" @click="next('ruleForm')">下一步</el-button>
           </el-form-item>
         </el-form>
+
+
       </div>
       <div v-show="active == 1">
         <el-form :model="kForm" label-position="left" :rules="kFormRules" ref="kForm" label-width="100px" class="kForm">
@@ -85,9 +151,20 @@
         </el-form>
       </div>
     </div>
-
-
-
+    <el-dialog title="新增资源介绍" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
+      <el-form :model="AddResForm" :rules="AddResFormRules" ref="AddResForm" >
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off" placeholder="示例：15章课程学习"></el-input>
+        </el-form-item>
+        <el-form-item label="详情" prop="content">
+          <el-input v-model="AddResForm.content" autosize type="textarea" class="coursetxt" auto-complete="off" placeholder="示例：每天按照计划完成学习，把握好学习节奏"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button @click="resetForm('AddResForm')">取 消</el-button>
+        <el-button type="primary" @click="saveAddResForm('AddResForm')">保 存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <style>
@@ -105,6 +182,60 @@
   }
   .courseset .el-form-item__content{
     margin-left: 150px !important;
+  }
+  .courseset .formBox .pad_10 .el-form-item__label{
+    padding-left: 10px;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6{
+    margin-right: 10px;
+    margin-bottom: 20px;
+    height: 180px;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card{
+    width: 100%;
+    height: 100%;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card{
+    position: relative;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header{
+    word-wrap:break-word ;
+    padding: 14px 10px;
+    font-size: 16px;
+    color:#3A3E4A;
+    font-weight: 600;
+    border-bottom: none;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .box-card-bottom{
+    position: absolute;
+    right: 0;
+    bottom:0;
+    width: 100%;
+    text-align: right;
+    padding-right: 20px;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body{
+    padding: 0 10px 10px 10px;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .introItem{
+    font-size: 14px;
+    line-height: 24px;
+    color:#3A3E4A;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body{
+    text-align: center;
+    cursor: pointer;
+    line-height: 120px;
+    vertical-align: top;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body .el-icon-plus{
+    font-size: 28px;
+    color: #8c939d;
+  }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body p{
+    line-height: 20px;
+    font-size: 16px;
+    color:#F09963;
   }
   .courseset .order-progress-bar {
     font-size: 12px;
@@ -149,11 +280,15 @@
 </style>
 <script>
   import {getCourseInfo,getProjectSubject} from '../../api/course'
-  import {SetCourse} from '../../api/fromAxios'
+  import {SetCourse,AddSourceIntro} from '../../api/fromAxios'
   export default {
     components: {},
     data() {
       return {
+        dialogImageUrl: '',
+        dialogVisible: false,
+        fileList: [],
+        editor:null,
         selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
         selectedlist:[],   //科目列表
@@ -216,6 +351,8 @@
           project_id: '',
           subject_id: '',
           course_type: '',
+          bLetter:'0',
+          letterContent:'同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，',
         },
         kForm:{
           ware_status:'',
@@ -225,11 +362,111 @@
           allow_exam:'0',
           allow_investigate:'0',
           investigate_url:''
-        }
+        },
+        dialogAddResVisible:false,   //新增资源介绍弹层
+        //新增资源介绍的表单
+        AddResForm:{
+          title:'',
+          content:'',
+        },
+        //新增资源介绍的表单的验证
+        AddResFormRules:{
+          title: [
+            {required: true, message: '请输入标题', trigger: 'blur'}
+          ],
+          content: [
+            {required: true, message: '请输入详情', trigger: 'blur'}
+          ],
+        },
+        courseIntroList:[
+          {title:'00000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
+          {title:'10000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
+          {title:'20000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
+          {title:'30000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
+          ],  //新增资源介绍列表
+      }
+    },
+    computed:{
+      course_id(){
+        return this.$route.params.cid;
       }
     },
     methods: {
-      visibleChange(bool){  //开关函数
+      //上传列表的控制
+
+      //openAddResDialog
+      openAddResDialog(index){
+        if(index>=0){
+          this.AddResForm = {
+            title:this.courseIntroList[index]['title'],
+            content:this.courseIntroList[index]['content'],
+          }
+        }else{
+          this.AddResForm={
+            title:'',
+            content:'',
+          }
+        }
+        this.dialogAddResVisible = true;
+      },
+      //是否启用介绍信
+      changebLetter(value){
+        console.log(value);
+        if(value == 0){
+          this.ruleForm.letterContent = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，'
+        }else if(value == 1){
+          this.ruleForm.letterContent = ''
+        }
+      },
+      //删除新增资源的介绍
+      deleteResIntro(index){
+        this.$confirm('此操作将删除该资源介绍, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.courseIntroList.splice(index, 1)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      },
+      //保存新增资源的介绍
+      saveAddResForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let course_id = this.course_id;
+            let params={...this.AddResForm}
+            AddSourceIntro(course_id,params).then((res)=>{
+              console.log(res);
+            })
+//            this.dialogAddResVisible = false;
+          } else {
+            return false;
+          }
+        });
+      },
+      //重置表单.新增资源介绍
+      resetForm(formName) {
+        this.dialogAddResVisible = false;
+        this.$refs[formName].resetFields();
+      },
+      //封面
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      //封面
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+      visibleChange(bool){  //选择器开关函数
         this.selectfalg = bool
       },
       //下拉框选取项目后切换科目
@@ -302,6 +539,9 @@
         this.getCourseInfo();
       },
       SetCourse(){
+        if(this.kForm.allow_investigate == 0){
+          this.kForm.investigate_url = "";
+        }
         let url = this.course_id;
         let fromData = {...this.ruleForm,...this.kForm}
         SetCourse(url,fromData).then((res)=>{
@@ -317,12 +557,44 @@
         })
       }
     },
-    computed: {
-      course_id(){
-        return this.$route.params.cid;
+    mounted() {
+      //富文本编辑器
+      this.editor = UE.getEditor('ed',{
+        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+        toolbars: [[
+          'fullscreen', 'source', '|', 'undo', 'redo', '|',
+          'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript','forecolor',   'cleardoc',
+          'lineheight','customstyle', 'paragraph', 'fontfamily', 'fontsize', '|','indent','justifyleft', 'justifycenter']],
+        //focus时自动清空初始化时的内容
+        autoClearinitialContent:true,
+        //关闭字数统计
+        wordCount:false,
+        //关闭elementPath
+        elementPathEnabled:false,
+        //默认的编辑区域高度
+        initialFrameHeight:160
+        //更多其他参数，请参考ueditor.config.js中的配置项
+      })
+      if(this.$route.query.emailId){
+        getEmailTpl({
+          pk_id:this.$route.query.emailId,
+          app_id:131555,
+          appid:131999
+        }).then(ret=>{
+          if(ret.data.status == "0"){
+            console.log(1111)
+            var result = ret.data.result.Template
+            this.emailTitle = result.TplName;
+            this.emailReasons = result.TplReasons;
+            setTimeout(()=>{
+              this.editor.setContent(result.TplContent)
+            },500)
+          }
+        })
       }
     },
-    mounted() {
+    destroyed() {
+      this.editor.destroy();
     },
     created() {
       this.getProjectSubject();

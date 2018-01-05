@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2018-1-2 15:16:18 */
+/*! Administrator modified this file at 2018-1-5 14:25:16 */
 .w_1200{width: 1200px;margin:0 auto;height:100%;box-sizing: border-box;}
 .left{ float:left; _display:inline; }
 .right{ float:right; _display:inline; }
@@ -2114,6 +2114,60 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .courseset .el-form-item__content{
   margin-left: 150px !important;
 }
+.courseset .formBox .pad_10 .el-form-item__label{
+  padding-left: 10px;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6{
+  margin-right: 10px;
+  margin-bottom: 20px;
+  height: 180px;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card{
+  width: 100%;
+  height: 100%;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card{
+  position: relative;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header{
+  word-wrap:break-word ;
+  padding: 14px 10px;
+  font-size: 16px;
+  color:#3A3E4A;
+  font-weight: 600;
+  border-bottom: none;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .box-card-bottom{
+  position: absolute;
+  right: 0;
+  bottom:0;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body{
+  padding: 0 10px 10px 10px;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .introItem{
+  font-size: 14px;
+  line-height: 24px;
+  color:#3A3E4A;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body{
+  text-align: center;
+  cursor: pointer;
+  line-height: 120px;
+  vertical-align: top;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body .el-icon-plus{
+  font-size: 28px;
+  color: #8c939d;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body p{
+  line-height: 20px;
+  font-size: 16px;
+  color:#F09963;
+}
 .courseset .order-progress-bar {
   font-size: 12px;
   color: #8d98a9;
@@ -2419,6 +2473,20 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -2475,7 +2543,8 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .add-resource .selectknowledge .el-dialog .el-dialog__body{padding-left:0;padding-right: 0;}
 .add-resource .selectknowledge .el-dialog .el-dialog__footer{padding-left:0;padding-right: 0;}
 .add-resource .selectknowledge .searchtools{height: 50px;}
-.permission-courseoutline .rowtype{color:#f00;}
+.add-resource .selectknowledge .select_tags{padding-top: 24px;}
+.add-resource .selectknowledge .select_tags span{margin-bottom: 8px;margin-right: 4px;}.permission-courseoutline .rowtype{color:#f00;}
 .edu_table .el-button--text a{color:#20a0ff;}
 .outlineeat{position:relative;font-size:16px;color:#2A2B2C;border-bottom:1px solid #CBCBCB;padding:14px 0;margin-right:20px;font-weight:bold;}
 .outlineeat .eaticon{width:14px;height:14px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAAXNSR0IArs4c6QAAATNJREFUKBVj/A8EF15/Z7j67gfD//8McMDIyMDgIsvDIM7FChebefktg7UUNwPTiRffGNrPvGJ48/0vw4efSPjHX4Y//+DqGWZfecuw/u5HBn42JgaGuVfe/l947R3IQpxg1uU3/13X3/1/98MPsBomJqAz8AGQDavvfGSY4SjNoMTPDlYKtAs3wKYBpJoFm5a///4zzL32jmEN2AYZoA1sYGXfgZ5kAToNq00PP/9m2Pf4C9RJEA0gXdMuvWU4CQw4rDbJ87IyLHKTZWBjRjXzIzB0wbZhcx4z0AnMDJghBIo7kCiqUdhMwCLGBPQzA6Fgh+ljBFoFim8WLWEOhnlX34FDiBWP7t9A028Ak1qoCj8Di4UEF8PnX38Zig49Z/iKnG5gxkNpTmZGhiYLCQZtoCUAYkeZ66Z9vsYAAAAASUVORK5CYII=) no-repeat center center;display:inline-block;vertical-align:middle;margin-left:4px;}

@@ -34,7 +34,7 @@
           秒
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
-          <el-button type="text" @click="">选择知识点</el-button>
+          <el-button type="text" @click="selectknowledge">选择知识点</el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -43,59 +43,20 @@
       </el-form>
     </div>
 
-    <el-dialog class="selectknowledge" title="请选择知识点关联" :visible.sync="dialogVisible" @close="closeDialog('ruleForm')">
-      <el-row class="searchtools">
-        <el-col :span="8">
-          <span>一级分类：</span>
-          <el-select v-model="groupVal" placeholder="请选择所属项目" class="group-search" @change="changesearch"
-                     @visible-change="visibleChange">
-            <el-option v-for="item in groupOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span>二级分类：</span>
-          <el-select v-model="completeVal" placeholder="请选择所属科目" class="complete-search" @change="changesearch"
-                     @visible-change="visibleChange">
-            <el-option v-for="item in efficiency" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="8">
-          <el-input placeholder="输入学员ID/手机号/昵称/学员姓名" icon="search" class="inputsearch" v-model="inuptVal"
-                    :on-icon-click="handleIconClick" @keydown.native.enter="handleIconClick">
-          </el-input>
-        </el-col>
-      </el-row>
-
-      <el-table ref="multipleTable" :data="tableData3" border tooltip-effect="dark" style="width: 100%"
-                @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column label="日期" width="30%">
-          <template scope="scope">{{ scope.row.date }}</template>
-        </el-table-column>
-        <el-table-column prop="name" label="姓名" width="30%">
-        </el-table-column>
-        <el-table-column prop="address" label="地址" show-overflow-tooltip>
-        </el-table-column>
-      </el-table>
-      <div slot="footer" class="dialog-footer last-form-item">
-        <el-button @click="closeDialog('ruleForm')">取消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-      </div>
-    </el-dialog>
+    <SelectKnowledge></SelectKnowledge>
 
   </div>
 </template>
 <style>
 </style>
 <script>
+  import SelectKnowledge from './SelectKnowledge.vue'
   export default {
-    components: {},
+    components: {
+      SelectKnowledge
+    },
     data() {
       return {
-        dialogVisible: true,
         ruleForm: {
           name: '',
           region: '',
@@ -149,6 +110,10 @@
       }
     },
     methods: {
+      //选择知识点
+      selectknowledge(){
+        this.$store.dispatch('changeDialog',true)
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

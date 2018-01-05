@@ -27,7 +27,7 @@
           <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button>
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
-          <el-button type="text" @click="">选择知识点</el-button>
+          <el-button type="text" @click="selectknowledge">选择知识点</el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -36,14 +36,17 @@
       </el-form>
     </div>
 
+    <SelectKnowledge></SelectKnowledge>
   </div>
 </template>
 <style>
 </style>
 <script>
-
+  import SelectKnowledge from './SelectKnowledge.vue'
   export default {
-    components: {},
+    components: {
+      SelectKnowledge
+    },
     data() {
       return {
         ruleForm: {
@@ -83,6 +86,10 @@
       }
     },
     methods: {
+      //选择知识点
+      selectknowledge(){
+        this.$store.dispatch('changeDialog',true)
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
