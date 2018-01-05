@@ -42,7 +42,7 @@
         </el-form-item>
       </el-form>
     </div>
-    
+
     <SelectKnowledge></SelectKnowledge>
 
   </div>
