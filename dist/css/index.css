@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2018-1-5 14:29:47 */
+/*! Administrator modified this file at 2018-1-5 15:01:33 */
 .w_1200{width: 1200px;margin:0 auto;height:100%;box-sizing: border-box;}
 .left{ float:left; _display:inline; }
 .right{ float:right; _display:inline; }
@@ -1292,13 +1292,19 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
-.course-manage .el-dialog__header {padding: 30px 20px 0;text-align: center;
+.course-manage .el-dialog__header {
+  padding: 30px 20px 0;
+  text-align: center;
 }
-.course-manage .el-form-item__label {color: #8f9aac;
+.course-manage .el-form-item__label {
+  color: #8f9aac;
 }
-.course-manage .last-form-item {text-align: center;margin-top: 40px;
+.course-manage .last-form-item {
+  text-align: center;
+  margin-top: 40px;
 }
-.course-manage .last-form-item .el-form-item__content {margin-left: 0 !important;
+.course-manage .last-form-item .el-form-item__content {
+  margin-left: 0 !important;
 }
 
 .order-manage-dislog .el-dialog--small {
