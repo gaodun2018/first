@@ -51,7 +51,11 @@
                 :data="videoList" style="width: 100%">
         <el-table-column prop="course_id" label="课程id" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="course_name" label="课程名称" min-width="360">
+        <el-table-column prop="course_name" label="课程名称" min-width="260">
+        </el-table-column>
+        <el-table-column prop="" label="项目" min-width="200">
+        </el-table-column>
+        <el-table-column prop="" label="科目" min-width="200">
         </el-table-column>
         <el-table-column prop="course_type" label="网课类型" min-width="260">
           <template scope="scope">
@@ -62,17 +66,7 @@
             <span v-if="scope.row.course_type==4">私播课-Glive+</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="大包/单课" min-width="200">
 
-        </el-table-column>
-
-        <!--<el-table-column prop="status" label="发布状态" min-width="150">
-          <template scope="scope">
-            <span v-if="scope.row.ware_status==0">完成</span>
-            <span v-if="scope.row.ware_status==1">更新中</span>
-            <span v-if="scope.row.ware_status==2">即将更新</span>
-          </template>
-        </el-table-column>-->
         <el-table-column fixed="right" label="操作" width="200" align="center">
           <template scope="scope">
             <el-button type="text" style="margin: 0 10px;">
@@ -303,10 +297,14 @@
           if(res.status == 0){
             this.dialogCourseVisible = false;
             this.bSubject = false;
+            this.clver = "0",    //点击搜索所选项目
+            this.clversm = "0",     //点击搜索所选科目
+            this.searchCourse();
             this.$message({
               message: res.message,
               type: 'success'
             });
+
           }
         }).catch( error => {
           console.log(error);
