@@ -33,31 +33,13 @@
             </el-select>
           </el-form-item>
 
-         <!-- <el-form-item label="课程封面" class="pad_10">
-
-            <el-row>
-              <el-col :span="12">
-                <el-upload
-                  with-credentials
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove">
-                  <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-              </el-col>
-            </el-row>
-
-          </el-form-item>-->
-
+          <el-form-item label="课程封面" class="pad_10">
+            <ImgUpload></ImgUpload>
+          </el-form-item>
 
           <el-form-item label="课程简介" class="pad_10">
             <div id="ed" type="text/plain"></div>
           </el-form-item>
-
           <el-form-item label="资源介绍"  class="res_intro pad_10">
             <el-row>
               <el-col :span="6" v-for="(item,index) in courseIntroList" :key="index">
@@ -82,27 +64,31 @@
               </el-col>
             </el-row>
           </el-form-item>
-
-          <el-form-item label="给新学员的介绍信" class="pad_10">
+          <el-form-item label="给新学员的欢迎信" class="pad_10">
+            <el-radio-group v-model="ruleForm.bLetter" @change="changebLetter">
+              <el-radio label="0">通用模板内容</el-radio>
+              <el-radio label="1">自定义内容</el-radio>
+              <el-radio label="2">不启用欢迎信</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="letterContent">
             <el-row>
-              <el-radio-group v-model="ruleForm.bLetter" @change="changebLetter">
-                <el-radio label="0">通用模板内容</el-radio>
-                <el-radio label="1">自定义内容</el-radio>
-                <el-radio label="2">不启用欢迎信</el-radio>
-              </el-radio-group>
-            </el-row>
-            <el-row>
-              <el-input v-model="ruleForm.letterContent" autosize :disabled="ruleForm.bLetter==0?true:false" v-show="ruleForm.bLetter==2?false:true" type="textarea" class="coursetxt" auto-complete="off"></el-input>
+              <el-col :span="24">
+                <el-input v-model="ruleForm.letterContent" type="textarea" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
+              </el-col>
             </el-row>
           </el-form-item>
-
-
+          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="teachername">
+            <el-row>
+              <el-col :span="6">
+                <el-input v-model="ruleForm.teachername" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
+              </el-col>
+            </el-row>
+          </el-form-item>
           <el-form-item class="last-form-item">
             <el-button style="margin-top: 12px;" @click="next('ruleForm')">下一步</el-button>
           </el-form-item>
         </el-form>
-
-
       </div>
       <div v-show="active == 1">
         <el-form :model="kForm" label-position="left" :rules="kFormRules" ref="kForm" label-width="100px" class="kForm">
@@ -117,24 +103,24 @@
               <el-radio label="1">是</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="可下载讲义" prop="allow_download">
+         <!-- <el-form-item label="可下载讲义" prop="allow_download">
             <el-radio-group v-model="kForm.allow_download">
               <el-radio label="0">否</el-radio>
               <el-radio label="1">是</el-radio>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="可制定学习计划" prop="allow_plan">
             <el-radio-group v-model="kForm.allow_plan">
               <el-radio label="0">否</el-radio>
               <el-radio label="1">是</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="可使用考试重点模式" prop="allow_exam">
+         <!-- <el-form-item label="可使用考试重点模式" prop="allow_exam">
             <el-radio-group v-model="kForm.allow_exam">
               <el-radio label="0">否</el-radio>
               <el-radio label="1">是</el-radio>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="可使用问卷调查" prop="allow_investigate">
             <el-radio-group v-model="kForm.allow_investigate">
               <el-radio label="0">否</el-radio>
@@ -281,13 +267,13 @@
 <script>
   import {getCourseInfo,getProjectSubject} from '../../api/course'
   import {SetCourse,AddSourceIntro} from '../../api/fromAxios'
+  import ImgUpload from './courseset/CourseModelUpload.vue'
   export default {
-    components: {},
+    components: {
+      ImgUpload
+    },
     data() {
       return {
-        dialogImageUrl: '',
-        dialogVisible: false,
-        fileList: [],
         editor:null,
         selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
@@ -339,6 +325,12 @@
           ],
           course_type: [
             {required: true, message: '请选择网课类型', trigger: 'change'}
+          ],
+          letterContent:[
+            {required: true, message: '请输入欢迎信内容', trigger: 'blur'}
+          ],
+          teachername:[
+            {required: true, message: '请输入老师姓名', trigger: 'blur'}
           ]
         },
         kFormRules:{
@@ -353,13 +345,14 @@
           course_type: '',
           bLetter:'0',
           letterContent:'同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，',
+          teachername:'',
         },
         kForm:{
           ware_status:'',
           allow_question:'0',
-          allow_download:'0',
+//          allow_download:'0',
           allow_plan:'0',
-          allow_exam:'0',
+//          allow_exam:'0',
           allow_investigate:'0',
           investigate_url:''
         },
@@ -392,8 +385,6 @@
       }
     },
     methods: {
-      //上传列表的控制
-
       //openAddResDialog
       openAddResDialog(index){
         if(index>=0){
@@ -413,9 +404,18 @@
       changebLetter(value){
         console.log(value);
         if(value == 0){
-          this.ruleForm.letterContent = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，'
+          this.ruleForm.letterContent = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，';
+          this.rules.letterContent[0]['required'] = true;
+          this.rules.teachername[0]['required'] = true;
         }else if(value == 1){
           this.ruleForm.letterContent = ''
+          this.rules.letterContent[0]['required'] = true;
+          this.rules.teachername[0]['required'] = true;
+        }else if(value == 2){
+          this.ruleForm.letterContent = '';
+          this.ruleForm.teachername = '';
+          this.rules.letterContent[0]['required'] = false;
+          this.rules.teachername[0]['required'] = false;
         }
       },
       //删除新增资源的介绍
@@ -456,15 +456,6 @@
       resetForm(formName) {
         this.dialogAddResVisible = false;
         this.$refs[formName].resetFields();
-      },
-      //封面
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      //封面
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
       },
       visibleChange(bool){  //选择器开关函数
         this.selectfalg = bool
@@ -525,9 +516,9 @@
           this.ware_status_list = ret.result.ware_status_list;
           this.kForm.ware_status = ret.result.ware_status;
           this.kForm.allow_question = ret.result.allow_question;
-          this.kForm.allow_download = ret.result.allow_download;
+//          this.kForm.allow_download = ret.result.allow_download;
           this.kForm.allow_plan = ret.result.allow_plan;
-          this.kForm.allow_exam = ret.result.allow_exam;
+//          this.kForm.allow_exam = ret.result.allow_exam;
           this.kForm.allow_investigate = ret.result.allow_investigate;
           this.kForm.investigate_url = ret.result.investigate_url;
         }
