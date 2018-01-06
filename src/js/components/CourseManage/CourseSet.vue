@@ -50,14 +50,14 @@
               <el-radio label="0">不启用欢迎信</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-show="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter">
+          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter">
             <el-row>
               <el-col :span="24">
                 <el-input v-model="ruleForm.welcome_letter" type="textarea" @change="changeWelcomeLetter" :autosize="{ minRows: 4}" :disabled="ruleForm.welcome_letter_type==1?true:false" class="coursetxt" auto-complete="off" placeholder="请输入欢迎信的正文内容（字数请控制在100-200字内）"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item v-show="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name">
+          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name">
             <el-row>
               <el-col :span="6">
                 <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
@@ -128,6 +128,33 @@
       ImgUpload,ResourceIntro
     },
     data() {
+      var validname= (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入课程名称'));
+        }else if(/^\s+$/g.test(value)){
+          return callback(new Error('输入的课程名称不能为空格'));
+        }else{
+          return callback();
+        }
+      };
+      var validwelcome = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入欢迎信内容'));
+        }else if(/^\s+$/g.test(value)){
+          return callback(new Error('欢迎信内容不能为空格'));
+        }else{
+          return callback();
+        }
+      };
+      var validurl = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入完成URL地址'));
+        }else if(/^\s+$/g.test(value)){
+          return callback(new Error('URL地址不能为空格'));
+        }else{
+          return callback();
+        }
+      };
       return {
         editor:null,
         selectfalg: false,     //选择器搜索开关
@@ -170,7 +197,7 @@
         ],
         rules: {
           name: [
-            {required: true, message: '请输入课程名称', trigger: 'blur'}
+            { required:true,validator: validname, trigger: 'blur' },
           ],
           project_id: [
             {required: true, message: '请选择所属项目', trigger: 'change'}
@@ -182,12 +209,12 @@
             {required: true, message: '请选择网课类型', trigger: 'change'}
           ],
           welcome_letter:[
-            {required: true, message: '请输入欢迎信内容', trigger: 'blur'}
+            { required:true,validator: validwelcome, trigger: 'blur' },
           ]
         },
         kFormRules:{
           investigate_url: [
-            {required: true, message: '请输入完成URL地址', trigger: 'blur'}
+            { required:true,validator: validurl, trigger: 'blur' },
           ],
         },
         ruleForm: {
@@ -224,12 +251,8 @@
         console.log(value);
         if(value == 1){
           this.ruleForm.welcome_letter = this.templateContent;
-          this.rules.welcome_letter[0]['required'] = true;
         }else if(value == 2){
           this.ruleForm.welcome_letter = this.userDefinedContent;
-          this.rules.welcome_letter[0]['required'] = true;
-        }else if(value == 0){
-          this.rules.welcome_letter[0]['required'] = false;
         }
       },
       //介绍信改变时
@@ -293,12 +316,13 @@
           this.ruleForm.subject_id= ret.result.subject_id;
           this.ruleForm.course_type= ret.result.course_type;
           this.ruleForm.welcome_letter= ret.result.welcome_letter;    //欢迎信
-          this.userDefinedContent = ret.result.welcome_letter;
+
           this.ruleForm.teacher_name= ret.result.teacher_name;
           this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type;   //欢迎信类型
           this.templateContent = ret.result.welcome_letter_template;  //通用模板
-          if(ret.result.welcome_letter_type == 0){
-            this.rules.welcome_letter[0]['required'] = false;
+          this.userDefinedContent = ret.result.welcome_letter; //自定义内容
+          if(ret.result.welcome_letter_type == 1){
+            this.userDefinedContent  = '';
           }
           this.coverImageUrl= ret.result.cover;    //封面图片
           this.ware_status_list = ret.result.ware_status_list;   //制作状态
@@ -327,6 +351,7 @@
         }
         if(this.ruleForm.welcome_letter_type == 0){
           this.ruleForm.welcome_letter = "";
+          this.ruleForm.teacher_name = "";
         }
         let url = this.course_id;
         let fromData = {...this.ruleForm,...this.kForm,brief_introduction:this.editor.getContent()};
