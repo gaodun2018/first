@@ -321,8 +321,9 @@
           this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type+'';   //欢迎信类型
           this.templateContent = ret.result.welcome_letter_template;  //通用模板
           this.userDefinedContent = ret.result.welcome_letter; //自定义内容
-          if(ret.result.welcome_letter_type == 1){
+          if(ret.result.welcome_letter_type == 1){    //默认的通用模板
             this.userDefinedContent  = '';
+            this.ruleForm.welcome_letter = ret.result.welcome_letter_template;  //默认的选1时，welcome_letter为空，将其设为通用模板
           }
           this.coverImageUrl= ret.result.cover;    //封面图片
           this.ware_status_list = ret.result.ware_status_list;   //制作状态
