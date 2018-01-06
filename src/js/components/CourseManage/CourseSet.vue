@@ -318,7 +318,7 @@
           this.ruleForm.welcome_letter= ret.result.welcome_letter;    //欢迎信
 
           this.ruleForm.teacher_name= ret.result.teacher_name;
-          this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type;   //欢迎信类型
+          this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type+'';   //欢迎信类型
           this.templateContent = ret.result.welcome_letter_template;  //通用模板
           this.userDefinedContent = ret.result.welcome_letter; //自定义内容
           if(ret.result.welcome_letter_type == 1){
