@@ -336,7 +336,9 @@
               type: 'success',
               message: res.message
             })
-            this.userDefinedContent = '';
+            setTimeout(()=>{
+              location.reload();
+            },1000)
           }else if(res.status == 2){
             this.$message.error('设置失败');
           }
