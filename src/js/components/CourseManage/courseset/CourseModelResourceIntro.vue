@@ -5,10 +5,14 @@
       <el-col :span="6" v-for="(item,index) in courseIntroList" :key="index">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span style="line-height: 26px;">{{item.title}}</span>
+            <el-tooltip effect="dark" :content="item.title" placement="top">
+              <span>{{item.title}}</span>
+            </el-tooltip>
           </div>
           <div class="introItem">
-            {{item.content}}
+            <div class="introItemscroll">
+              {{item.content}}
+            </div>
           </div>
           <div class="box-card-bottom">
             <el-button type="text" class="button" @click="openAddResDialog(index)">修改</el-button>

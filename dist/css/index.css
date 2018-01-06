@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2018-1-6 12:05:50 */
+/*! Administrator modified this file at 2018-1-6 16:47:17 */
 .w_1200{width: 1200px;margin:0 auto;height:100%;box-sizing: border-box;}
 .left{ float:left; _display:inline; }
 .right{ float:right; _display:inline; }
@@ -2123,6 +2123,12 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .courseset .formBox .pad_10 .el-form-item__label{
   padding-left: 10px;
 }
+.courseset .formBox .res_intro .resourceIntro .el-dialog--small{
+  width:40%;
+}
+.courseset .formBox .res_intro .resourceIntro .el-dialog--small .el-form-item{
+  margin-bottom: 22px!important;
+}
 .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6{
   margin-right: 10px;
   margin-bottom: 20px;
@@ -2136,12 +2142,20 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
   position: relative;
 }
 .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header{
-  word-wrap:break-word ;
-  padding: 14px 10px;
+  padding: 10px 10px;
   font-size: 16px;
   color:#3A3E4A;
   font-weight: 600;
   border-bottom: none;
+  line-height: 18px;
+}
+.courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header  .clearfix span{
+  display: inline-block;
+  width: 100%;
+  word-wrap:break-word ;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .box-card-bottom{
   position: absolute;
@@ -2150,6 +2164,7 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
   width: 100%;
   text-align: right;
   padding-right: 20px;
+  box-sizing: border-box;
 }
 .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body{
   padding: 0 10px 10px 10px;
@@ -2158,6 +2173,8 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
   font-size: 14px;
   line-height: 24px;
   color:#3A3E4A;
+  overflow-y: auto;
+  height: 110px;
 }
 .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body{
   text-align: center;
