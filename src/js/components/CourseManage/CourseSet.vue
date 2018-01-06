@@ -33,9 +33,9 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="课程封面" class="pad_10">
+         <!-- <el-form-item label="课程封面" class="pad_10">
             <ImgUpload :coverImageUrl="coverImageUrl"></ImgUpload>
-          </el-form-item>
+          </el-form-item>-->
 
           <el-form-item label="课程简介" class="pad_10">
             <div id="ed" type="text/plain"></div>
@@ -53,7 +53,7 @@
           <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="welcome_letter">
             <el-row>
               <el-col :span="24">
-                <el-input v-model="ruleForm.welcome_letter" type="textarea" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
+                <el-input v-model="ruleForm.welcome_letter" type="textarea" @change="changeWelcomeLetter" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
@@ -199,11 +199,11 @@
           subject_id: '',
           course_type: '',
           bLetter:'0',
-          welcome_letter:'同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，',
+          welcome_letter:'',
           teacher_name:'',
         },
         coverImageUrl:'',//封面图片
-        templateContent:'',//通用模块介绍
+        templateContent:'通用模块介绍通用模块介绍通用模块介绍',//通用模块介绍
         userDefinedContent:'',//自定义模块介绍
         kForm:{
           ware_status:'',
@@ -226,11 +226,11 @@
       changebLetter(value){
         console.log(value);
         if(value == 0){
-          this.ruleForm.welcome_letter = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，';
+          this.ruleForm.welcome_letter = this.templateContent;
           this.rules.welcome_letter[0]['required'] = true;
           this.rules.teacher_name[0]['required'] = true;
         }else if(value == 1){
-          this.ruleForm.welcome_letter = ''
+          this.ruleForm.welcome_letter = this.userDefinedContent;
           this.rules.welcome_letter[0]['required'] = true;
           this.rules.teacher_name[0]['required'] = true;
         }else if(value == 2){
@@ -239,6 +239,10 @@
           this.rules.welcome_letter[0]['required'] = false;
           this.rules.teacher_name[0]['required'] = false;
         }
+      },
+      //介绍信改变时
+      changeWelcomeLetter(value){
+        this.userDefinedContent = value;
       },
       visibleChange(bool){  //选择器开关函数
         this.selectfalg = bool
@@ -332,6 +336,7 @@
               type: 'success',
               message: res.message
             })
+            this.userDefinedContent = '';
           }else if(res.status == 2){
             this.$message.error('设置失败');
           }
