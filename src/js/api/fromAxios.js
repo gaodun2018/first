@@ -79,7 +79,7 @@ export const CourseSyllabus = params => post(`${getBaseUrl()}toc-service.gaodun.
 export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params)
 
 //新增资源介绍接口
-export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}toc-service.gaodun.com/course/${course_id}/source`, params)
+export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
 
 
 
