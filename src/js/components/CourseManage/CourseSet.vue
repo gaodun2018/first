@@ -44,20 +44,20 @@
             <ResourceIntro></ResourceIntro>
           </el-form-item>
           <el-form-item label="给新学员的欢迎信" class="pad_10">
-            <el-radio-group v-model="ruleForm.bLetter" @change="changebLetter">
-              <el-radio label="0">通用模板内容</el-radio>
-              <el-radio label="1">自定义内容</el-radio>
-              <!--<el-radio label="2">不启用欢迎信</el-radio>-->
+            <el-radio-group v-model="ruleForm.welcome_letter_type" @change="changeLetterType">
+              <el-radio label="1">通用模板内容</el-radio>
+              <el-radio label="2">自定义内容</el-radio>
+              <el-radio label="0">不启用欢迎信</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="welcome_letter">
+          <el-form-item v-show="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter">
             <el-row>
               <el-col :span="24">
-                <el-input v-model="ruleForm.welcome_letter" type="textarea" @change="changeWelcomeLetter" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
+                <el-input v-model="ruleForm.welcome_letter" type="textarea" @change="changeWelcomeLetter" :autosize="{ minRows: 4}" :disabled="ruleForm.welcome_letter_type==1?true:false" class="coursetxt" auto-complete="off" placeholder="请输入欢迎信的正文内容（字数请控制在100-200字内）"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="teacher_name">
+          <el-form-item v-show="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name">
             <el-row>
               <el-col :span="6">
                 <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
@@ -183,9 +183,6 @@
           ],
           welcome_letter:[
             {required: true, message: '请输入欢迎信内容', trigger: 'blur'}
-          ],
-          teacher_name:[
-            {required: true, message: '请输入老师姓名', trigger: 'blur'}
           ]
         },
         kFormRules:{
@@ -198,12 +195,12 @@
           project_id: '',
           subject_id: '',
           course_type: '',
-          bLetter:'0',
+          welcome_letter_type:'0',
           welcome_letter:'',
           teacher_name:'',
         },
         coverImageUrl:'',//封面图片
-        templateContent:'通用模块介绍通用模块介绍通用模块介绍',//通用模块介绍
+        templateContent:'',//通用模块介绍
         userDefinedContent:'',//自定义模块介绍
         kForm:{
           ware_status:'',
@@ -223,21 +220,16 @@
     },
     methods: {
       //是否启用介绍信
-      changebLetter(value){
+      changeLetterType(value){
         console.log(value);
-        if(value == 0){
+        if(value == 1){
           this.ruleForm.welcome_letter = this.templateContent;
           this.rules.welcome_letter[0]['required'] = true;
-          this.rules.teacher_name[0]['required'] = true;
-        }else if(value == 1){
+        }else if(value == 2){
           this.ruleForm.welcome_letter = this.userDefinedContent;
           this.rules.welcome_letter[0]['required'] = true;
-          this.rules.teacher_name[0]['required'] = true;
-        }else if(value == 2){
-          this.ruleForm.welcome_letter = '';
-          this.ruleForm.teacher_name = '';
+        }else if(value == 0){
           this.rules.welcome_letter[0]['required'] = false;
-          this.rules.teacher_name[0]['required'] = false;
         }
       },
       //介绍信改变时
@@ -300,8 +292,10 @@
           this.ruleForm.project_id= ret.result.project_id;
           this.ruleForm.subject_id= ret.result.subject_id;
           this.ruleForm.course_type= ret.result.course_type;
-          this.ruleForm.welcome_letter= ret.result.welcome_letter;
+          this.ruleForm.welcome_letter= ret.result.welcome_letter;    //欢迎信
           this.ruleForm.teacher_name= ret.result.teacher_name;
+          this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type;   //欢迎信类型
+          this.templateContent = ret.result.welcome_letter_template;  //通用模板
           this.coverImageUrl= ret.result.cover;    //封面图片
           this.ware_status_list = ret.result.ware_status_list;   //制作状态
           this.kForm.ware_status = ret.result.ware_status;
@@ -327,8 +321,11 @@
         if(this.kForm.allow_investigate == 0){
           this.kForm.investigate_url = "";
         }
+        if(this.ruleForm.welcome_letter_type == 0){
+          this.ruleForm.welcome_letter = "";
+        }
         let url = this.course_id;
-        let fromData = {...this.ruleForm,...this.kForm,brief_introduction:this.editor.getContent()}
+        let fromData = {...this.ruleForm,...this.kForm,brief_introduction:this.editor.getContent()};
         SetCourse(url,fromData).then((res)=>{
           console.log(res);
           if(res.status == 0){
@@ -392,6 +389,12 @@
   .courseset .formBox .pad_10 .el-form-item__label{
     padding-left: 10px;
   }
+  .courseset .formBox .res_intro .resourceIntro .el-dialog--small{
+    width:40%;
+  }
+  .courseset .formBox .res_intro .resourceIntro .el-dialog--small .el-form-item{
+    margin-bottom: 22px!important;
+  }
   .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6{
     margin-right: 10px;
     margin-bottom: 20px;
@@ -405,13 +408,22 @@
     position: relative;
   }
   .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header{
-    word-wrap:break-word ;
-    padding: 14px 10px;
+    padding: 10px 10px;
     font-size: 16px;
     color:#3A3E4A;
     font-weight: 600;
     border-bottom: none;
+    line-height: 18px;
   }
+  .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__header  .clearfix span{
+    display: inline-block;
+    width: 100%;
+    word-wrap:break-word ;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body .box-card-bottom{
     position: absolute;
     right: 0;
@@ -419,6 +431,7 @@
     width: 100%;
     text-align: right;
     padding-right: 20px;
+    box-sizing: border-box;
   }
   .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .box-card .el-card__body{
     padding: 0 10px 10px 10px;
@@ -427,7 +440,10 @@
     font-size: 14px;
     line-height: 24px;
     color:#3A3E4A;
+    overflow-y: auto;
+    height: 110px;
   }
+
   .courseset .formBox .res_intro .el-form-item__content .el-col.el-col-6 .add-card .el-card__body{
     text-align: center;
     cursor: pointer;
