@@ -195,7 +195,7 @@
           project_id: '',
           subject_id: '',
           course_type: '',
-          welcome_letter_type:'0',
+          welcome_letter_type:'1',
           welcome_letter:'',
           teacher_name:'',
         },
@@ -293,9 +293,13 @@
           this.ruleForm.subject_id= ret.result.subject_id;
           this.ruleForm.course_type= ret.result.course_type;
           this.ruleForm.welcome_letter= ret.result.welcome_letter;    //欢迎信
+          this.userDefinedContent = ret.result.welcome_letter;
           this.ruleForm.teacher_name= ret.result.teacher_name;
           this.ruleForm.welcome_letter_type= ret.result.welcome_letter_type;   //欢迎信类型
           this.templateContent = ret.result.welcome_letter_template;  //通用模板
+          if(ret.result.welcome_letter_type == 0){
+            this.rules.welcome_letter[0]['required'] = false;
+          }
           this.coverImageUrl= ret.result.cover;    //封面图片
           this.ware_status_list = ret.result.ware_status_list;   //制作状态
           this.kForm.ware_status = ret.result.ware_status;

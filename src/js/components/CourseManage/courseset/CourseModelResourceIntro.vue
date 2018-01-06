@@ -50,6 +50,24 @@
   export default {
     components: {},
     data() {
+      var validtitle = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入标题'));
+        }else if(/^\s+$/g.test(value)){
+          return callback(new Error('输入的标题不能为空格'));
+        }else{
+          return callback();
+        }
+      };
+      var validcontent = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入详情'));
+        }else if(/^\s+$/g.test(value)){
+          return callback(new Error('输入的详情不能为空格'));
+        }else{
+          return callback();
+        }
+      };
       return {
         dialogAddResVisible: false,   //新增资源介绍弹层
         //新增资源介绍的表单
@@ -60,10 +78,10 @@
         //新增资源介绍的表单的验证
         AddResFormRules: {
           title: [
-            {required: true, message: '请输入标题', trigger: 'blur'}
+            { required:true,validator: validtitle, trigger: 'blur' },
           ],
           content: [
-            {required: true, message: '请输入详情', trigger: 'blur'}
+            { required:true,validator: validcontent, trigger: 'blur' },
           ],
         },
         courseIntroList: [],  //新增资源介绍列表
