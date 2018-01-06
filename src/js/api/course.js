@@ -11,4 +11,7 @@ export const searchCourse = params => get(`${getBaseUrl()}course-service.gaodun.
 //课程基本设置拉取课程信息接口
 export const getCourseInfo = (url,params) => get(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params)
 
+//【saas】拉取课程下的资源介绍接口
+export const getCourseResourceIntro = (course_id,params) => get(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
+
 

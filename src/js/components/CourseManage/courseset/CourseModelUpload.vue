@@ -18,7 +18,7 @@
     </el-row>
     <el-row>
       <el-col :span="8" style="margin-top: 10px;">
-        <img v-if="imageUrl" style="max-width: 100%;" :src="imageUrl" class="avatar">
+        <img v-if="coverImageUrl" style="max-width: 100%;" :src="coverImageUrl" class="avatar">
       </el-col>
     </el-row>
   </div>
@@ -28,6 +28,9 @@
 
   export default {
     components: {},
+    prop:[
+      'coverImageUrl'
+    ],
     data() {
       return {
         fileList: [],
@@ -50,20 +53,17 @@
       },
       handleRemove(file, fileList) {
         this.fileList = fileList;
-        this.imageUrl = '';
+        this.coverImageUrl = '';
       },
       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+        this.coverImageUrl = URL.createObjectURL(file.raw);
       },
       handleAvatarError(err, file, fileList){
-        this.imageUrl = '';
+        this.coverImageUrl = '';
         this.$message.error('上传失败！');
       }
     },
     mounted() {
-      setInterval(()=>{
-        console.log(this.fileList);
-      },1000)
 
     },
     destroyed() {

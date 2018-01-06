@@ -34,54 +34,33 @@
           </el-form-item>
 
           <el-form-item label="课程封面" class="pad_10">
-            <ImgUpload></ImgUpload>
+            <ImgUpload :coverImageUrl="coverImageUrl"></ImgUpload>
           </el-form-item>
 
           <el-form-item label="课程简介" class="pad_10">
             <div id="ed" type="text/plain"></div>
           </el-form-item>
           <el-form-item label="资源介绍"  class="res_intro pad_10">
-            <el-row>
-              <el-col :span="6" v-for="(item,index) in courseIntroList" :key="index">
-                <el-card class="box-card">
-                  <div slot="header" class="clearfix">
-                    <span style="line-height: 26px;">{{item.title}}</span>
-                  </div>
-                  <div class="introItem">
-                    {{item.content}}
-                  </div>
-                  <div class="box-card-bottom">
-                    <el-button type="text" class="button" @click="openAddResDialog(index)">修改</el-button>
-                    <el-button type="text" class="button" @click="deleteResIntro(index)">删除</el-button>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="6">
-                <el-card class="box-card add-card" @click.native="openAddResDialog">
-                  <i class="el-icon-plus"></i>
-                  <p>建议：添加3个</p>
-                </el-card>
-              </el-col>
-            </el-row>
+            <ResourceIntro></ResourceIntro>
           </el-form-item>
           <el-form-item label="给新学员的欢迎信" class="pad_10">
             <el-radio-group v-model="ruleForm.bLetter" @change="changebLetter">
               <el-radio label="0">通用模板内容</el-radio>
               <el-radio label="1">自定义内容</el-radio>
-              <el-radio label="2">不启用欢迎信</el-radio>
+              <!--<el-radio label="2">不启用欢迎信</el-radio>-->
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="letterContent">
+          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="welcome_letter">
             <el-row>
               <el-col :span="24">
-                <el-input v-model="ruleForm.letterContent" type="textarea" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
+                <el-input v-model="ruleForm.welcome_letter" type="textarea" autosize :disabled="ruleForm.bLetter==0?true:false" class="coursetxt" auto-complete="off"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="teachername">
+          <el-form-item v-show="ruleForm.bLetter==2?false:true" prop="teacher_name">
             <el-row>
               <el-col :span="6">
-                <el-input v-model="ruleForm.teachername" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
+                <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
@@ -137,22 +116,256 @@
         </el-form>
       </div>
     </div>
-    <el-dialog title="新增资源介绍" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
-      <el-form :model="AddResForm" :rules="AddResFormRules" ref="AddResForm" >
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off" placeholder="示例：15章课程学习"></el-input>
-        </el-form-item>
-        <el-form-item label="详情" prop="content">
-          <el-input v-model="AddResForm.content" autosize type="textarea" class="coursetxt" auto-complete="off" placeholder="示例：每天按照计划完成学习，把握好学习节奏"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center;">
-        <el-button @click="resetForm('AddResForm')">取 消</el-button>
-        <el-button type="primary" @click="saveAddResForm('AddResForm')">保 存</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
+<script>
+  import {getCourseInfo,getProjectSubject} from '../../api/course'
+  import {SetCourse,AddSourceIntro} from '../../api/fromAxios'
+  import ImgUpload from './courseset/CourseModelUpload.vue'
+  import ResourceIntro from './courseset/CourseModelResourceIntro.vue'
+  export default {
+    components: {
+      ImgUpload,ResourceIntro
+    },
+    data() {
+      return {
+        editor:null,
+        selectfalg: false,     //选择器搜索开关
+        projectlist: [],    //项目列表
+        selectedlist:[],   //科目列表
+        ware_status_list:[],    //内容制作状态
+        course_type:[
+          {
+            course_type_id:'0',
+            name:'普通网课',
+          },{
+            course_type_id:'1',
+            name:'任务制网课（选择考试时间）',
+          },{
+            course_type_id:'2',
+            name:'任务制网课（选择自主学习时间）',
+          },{
+            course_type_id:'3',
+            name:'自适应学习网课-EP',
+          },{
+            course_type_id:'4',
+            name:'私播课-Glive+',
+          }
+        ],   //网课类型
+        active: 0,
+        progressText: [
+          {
+            text: '基本设置',
+            currentLine: 'bar-line-current',
+            currentDot: 'bar-dot-current',
+            currentText: 'current-text',
+            isCustomerConfirm: true
+          }, {
+            text: '功能模块',
+            currentLine: 'bar-line-current',
+            currentDot: 'bar-dot-current',
+            currentText: 'current-text',
+            isCustomerConfirm: false
+          }
+        ],
+        rules: {
+          name: [
+            {required: true, message: '请输入课程名称', trigger: 'blur'}
+          ],
+          project_id: [
+            {required: true, message: '请选择所属项目', trigger: 'change'}
+          ],
+          subject_id: [
+            {required: true, message: '请选择所属科目', trigger: 'change'}
+          ],
+          course_type: [
+            {required: true, message: '请选择网课类型', trigger: 'change'}
+          ],
+          welcome_letter:[
+            {required: true, message: '请输入欢迎信内容', trigger: 'blur'}
+          ],
+          teacher_name:[
+            {required: true, message: '请输入老师姓名', trigger: 'blur'}
+          ]
+        },
+        kFormRules:{
+          investigate_url: [
+            {required: true, message: '请输入完成URL地址', trigger: 'blur'}
+          ],
+        },
+        ruleForm: {
+          name: '',
+          project_id: '',
+          subject_id: '',
+          course_type: '',
+          bLetter:'0',
+          welcome_letter:'同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，',
+          teacher_name:'',
+        },
+        coverImageUrl:'',//封面图片
+        templateContent:'',//通用模块介绍
+        userDefinedContent:'',//自定义模块介绍
+        kForm:{
+          ware_status:'',
+          allow_question:'0',
+//          allow_download:'0',
+          allow_plan:'0',
+//          allow_exam:'0',
+          allow_investigate:'0',
+          investigate_url:''
+        },
+      }
+    },
+    computed:{
+      course_id(){
+        return this.$route.params.cid;
+      },
+    },
+    methods: {
+      //是否启用介绍信
+      changebLetter(value){
+        console.log(value);
+        if(value == 0){
+          this.ruleForm.welcome_letter = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，';
+          this.rules.welcome_letter[0]['required'] = true;
+          this.rules.teacher_name[0]['required'] = true;
+        }else if(value == 1){
+          this.ruleForm.welcome_letter = ''
+          this.rules.welcome_letter[0]['required'] = true;
+          this.rules.teacher_name[0]['required'] = true;
+        }else if(value == 2){
+          this.ruleForm.welcome_letter = '';
+          this.ruleForm.teacher_name = '';
+          this.rules.welcome_letter[0]['required'] = false;
+          this.rules.teacher_name[0]['required'] = false;
+        }
+      },
+      visibleChange(bool){  //选择器开关函数
+        this.selectfalg = bool
+      },
+      //下拉框选取项目后切换科目
+      changeProject(val){
+        for(var obj in this.projectlist){
+          if(this.projectlist[obj].project_id == val){
+            let subject_list = [...this.projectlist[obj].subject_list];
+            subject_list.unshift({
+              subject_id:'0',
+              subject_name:'全部'
+            })
+            this.selectedlist = subject_list;
+            if(this.selectfalg){
+              this.ruleForm.subject_id = '0';
+            }
+          }
+        }
+      },
+      next(formName) {
+        if(this.active >= this.progressText.length -1)return;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.active++;
+            this.progressText[this.active].isCustomerConfirm=true;
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
+      },
+      prev(){
+        if(this.active<=0)return
+        this.progressText[this.active].isCustomerConfirm=false;
+        this.active--;
+      },
+      submitForm(formName){
+        console.log(this.kForm);
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.SetCourse();
+          } else {
+            return false;
+          }
+        });
+      },
+      async getCourseInfo(){
+        let url = this.course_id;
+        let ret = await getCourseInfo(url);
+        if(ret.status == 0){
+
+          this.ruleForm.name = ret.result.course_name;
+          this.ruleForm.project_id= ret.result.project_id;
+          this.ruleForm.subject_id= ret.result.subject_id;
+          this.ruleForm.course_type= ret.result.course_type;
+          this.ruleForm.welcome_letter= ret.result.welcome_letter;
+          this.ruleForm.teacher_name= ret.result.teacher_name;
+          this.coverImageUrl= ret.result.cover;    //封面图片
+          this.ware_status_list = ret.result.ware_status_list;   //制作状态
+          this.kForm.ware_status = ret.result.ware_status;
+          this.kForm.allow_question = ret.result.allow_question;
+//          this.kForm.allow_download = ret.result.allow_download;
+          this.kForm.allow_plan = ret.result.allow_plan;
+//          this.kForm.allow_exam = ret.result.allow_exam;
+          this.kForm.allow_investigate = ret.result.allow_investigate;
+          this.kForm.investigate_url = ret.result.investigate_url;
+          setTimeout(()=>{
+            this.editor.setContent(ret.result.brief_introduction?ret.result.brief_introduction:'');
+            //brief_introduction  富文本
+          },500)
+        }
+        console.log(ret);
+      },
+      async getProjectSubject(){
+        let ret = await getProjectSubject();
+        this.projectlist = ret.result;
+        this.getCourseInfo();
+      },
+      SetCourse(){
+        if(this.kForm.allow_investigate == 0){
+          this.kForm.investigate_url = "";
+        }
+        let url = this.course_id;
+        let fromData = {...this.ruleForm,...this.kForm,brief_introduction:this.editor.getContent()}
+        SetCourse(url,fromData).then((res)=>{
+          console.log(res);
+          if(res.status == 0){
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+          }else if(res.status == 2){
+            this.$message.error('设置失败');
+          }
+        })
+      }
+    },
+    mounted() {
+      //富文本编辑器
+      this.editor = UE.getEditor('ed',{
+        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+        toolbars: [[
+          'fullscreen', 'source', '|', 'undo', 'redo', '|',
+          'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript','forecolor',   'cleardoc',
+          'lineheight','customstyle', 'paragraph', 'fontfamily', 'fontsize', '|','indent','justifyleft', 'justifycenter']],
+        //focus时自动清空初始化时的内容
+        autoClearinitialContent:true,
+        //关闭字数统计
+        wordCount:false,
+        //关闭elementPath
+        elementPathEnabled:false,
+        //默认的编辑区域高度
+        initialFrameHeight:160
+        //更多其他参数，请参考ueditor.config.js中的配置项
+      })
+
+    },
+    destroyed() {
+      this.editor.destroy();
+    },
+    created() {
+      this.getProjectSubject();
+    }
+  }
+</script>
 <style>
   .courseset{
     padding: 0 110px 0 0;
@@ -264,331 +477,3 @@
     color: #f09862;
   }
 </style>
-<script>
-  import {getCourseInfo,getProjectSubject} from '../../api/course'
-  import {SetCourse,AddSourceIntro} from '../../api/fromAxios'
-  import ImgUpload from './courseset/CourseModelUpload.vue'
-  export default {
-    components: {
-      ImgUpload
-    },
-    data() {
-      return {
-        editor:null,
-        selectfalg: false,     //选择器搜索开关
-        projectlist: [],    //项目列表
-        selectedlist:[],   //科目列表
-        ware_status_list:[],    //内容制作状态
-        course_type:[
-          {
-            course_type_id:'0',
-            name:'普通网课',
-          },{
-            course_type_id:'1',
-            name:'任务制网课（选择考试时间）',
-          },{
-            course_type_id:'2',
-            name:'任务制网课（选择自主学习时间）',
-          },{
-            course_type_id:'3',
-            name:'自适应学习网课-EP',
-          },{
-            course_type_id:'4',
-            name:'私播课-Glive+',
-          }
-        ],   //网课类型
-        active: 0,
-        progressText: [
-          {
-            text: '基本设置',
-            currentLine: 'bar-line-current',
-            currentDot: 'bar-dot-current',
-            currentText: 'current-text',
-            isCustomerConfirm: true
-          }, {
-            text: '功能模块',
-            currentLine: 'bar-line-current',
-            currentDot: 'bar-dot-current',
-            currentText: 'current-text',
-            isCustomerConfirm: false
-          }
-        ],
-        rules: {
-          name: [
-            {required: true, message: '请输入课程名称', trigger: 'blur'}
-          ],
-          project_id: [
-            {required: true, message: '请选择所属项目', trigger: 'change'}
-          ],
-          subject_id: [
-            {required: true, message: '请选择所属科目', trigger: 'change'}
-          ],
-          course_type: [
-            {required: true, message: '请选择网课类型', trigger: 'change'}
-          ],
-          letterContent:[
-            {required: true, message: '请输入欢迎信内容', trigger: 'blur'}
-          ],
-          teachername:[
-            {required: true, message: '请输入老师姓名', trigger: 'blur'}
-          ]
-        },
-        kFormRules:{
-          investigate_url: [
-            {required: true, message: '请输入完成URL地址', trigger: 'blur'}
-          ],
-        },
-        ruleForm: {
-          name: '',
-          project_id: '',
-          subject_id: '',
-          course_type: '',
-          bLetter:'0',
-          letterContent:'同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，',
-          teachername:'',
-        },
-        kForm:{
-          ware_status:'',
-          allow_question:'0',
-//          allow_download:'0',
-          allow_plan:'0',
-//          allow_exam:'0',
-          allow_investigate:'0',
-          investigate_url:''
-        },
-        dialogAddResVisible:false,   //新增资源介绍弹层
-        //新增资源介绍的表单
-        AddResForm:{
-          title:'',
-          content:'',
-        },
-        //新增资源介绍的表单的验证
-        AddResFormRules:{
-          title: [
-            {required: true, message: '请输入标题', trigger: 'blur'}
-          ],
-          content: [
-            {required: true, message: '请输入详情', trigger: 'blur'}
-          ],
-        },
-        courseIntroList:[
-          {title:'00000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
-          {title:'10000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
-          {title:'20000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
-          {title:'30000zhang',content:'做做祖宗做做做做组走走走走做足走走卒'},
-          ],  //新增资源介绍列表
-      }
-    },
-    computed:{
-      course_id(){
-        return this.$route.params.cid;
-      }
-    },
-    methods: {
-      //openAddResDialog
-      openAddResDialog(index){
-        if(index>=0){
-          this.AddResForm = {
-            title:this.courseIntroList[index]['title'],
-            content:this.courseIntroList[index]['content'],
-          }
-        }else{
-          this.AddResForm={
-            title:'',
-            content:'',
-          }
-        }
-        this.dialogAddResVisible = true;
-      },
-      //是否启用介绍信
-      changebLetter(value){
-        console.log(value);
-        if(value == 0){
-          this.ruleForm.letterContent = '同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，同学你好好学，';
-          this.rules.letterContent[0]['required'] = true;
-          this.rules.teachername[0]['required'] = true;
-        }else if(value == 1){
-          this.ruleForm.letterContent = ''
-          this.rules.letterContent[0]['required'] = true;
-          this.rules.teachername[0]['required'] = true;
-        }else if(value == 2){
-          this.ruleForm.letterContent = '';
-          this.ruleForm.teachername = '';
-          this.rules.letterContent[0]['required'] = false;
-          this.rules.teachername[0]['required'] = false;
-        }
-      },
-      //删除新增资源的介绍
-      deleteResIntro(index){
-        this.$confirm('此操作将删除该资源介绍, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.courseIntroList.splice(index, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      },
-      //保存新增资源的介绍
-      saveAddResForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            let course_id = this.course_id;
-            let params={...this.AddResForm}
-            AddSourceIntro(course_id,params).then((res)=>{
-              console.log(res);
-            })
-//            this.dialogAddResVisible = false;
-          } else {
-            return false;
-          }
-        });
-      },
-      //重置表单.新增资源介绍
-      resetForm(formName) {
-        this.dialogAddResVisible = false;
-        this.$refs[formName].resetFields();
-      },
-      visibleChange(bool){  //选择器开关函数
-        this.selectfalg = bool
-      },
-      //下拉框选取项目后切换科目
-      changeProject(val){
-        for(var obj in this.projectlist){
-          if(this.projectlist[obj].project_id == val){
-            let subject_list = [...this.projectlist[obj].subject_list];
-            subject_list.unshift({
-              subject_id:'0',
-              subject_name:'全部'
-            })
-            this.selectedlist = subject_list;
-            if(this.selectfalg){
-              this.ruleForm.subject_id = '0';
-            }
-          }
-        }
-      },
-      next(formName) {
-        if(this.active >= this.progressText.length -1)return;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.active++;
-            this.progressText[this.active].isCustomerConfirm=true;
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-
-      },
-      prev(){
-        if(this.active<=0)return
-        this.progressText[this.active].isCustomerConfirm=false;
-        this.active--;
-      },
-      submitForm(formName){
-        console.log(this.kForm);
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.SetCourse();
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      async getCourseInfo(){
-        let url = this.course_id;
-        let ret = await getCourseInfo(url);
-        if(ret.status == 0){
-          this.ruleForm.name = ret.result.course_name;
-          this.ruleForm.project_id= ret.result.project_id;
-          this.ruleForm.subject_id= ret.result.subject_id;
-          this.ruleForm.course_type= ret.result.course_type;
-          this.ware_status_list = ret.result.ware_status_list;
-          this.kForm.ware_status = ret.result.ware_status;
-          this.kForm.allow_question = ret.result.allow_question;
-//          this.kForm.allow_download = ret.result.allow_download;
-          this.kForm.allow_plan = ret.result.allow_plan;
-//          this.kForm.allow_exam = ret.result.allow_exam;
-          this.kForm.allow_investigate = ret.result.allow_investigate;
-          this.kForm.investigate_url = ret.result.investigate_url;
-        }
-        console.log(ret);
-      },
-      async getProjectSubject(){
-        let ret = await getProjectSubject();
-        this.projectlist = ret.result;
-        this.getCourseInfo();
-      },
-      SetCourse(){
-        if(this.kForm.allow_investigate == 0){
-          this.kForm.investigate_url = "";
-        }
-        let url = this.course_id;
-        let fromData = {...this.ruleForm,...this.kForm}
-        SetCourse(url,fromData).then((res)=>{
-          console.log(res);
-          if(res.status == 0){
-            this.$message({
-              type: 'success',
-              message: res.message
-            })
-          }else if(res.status == 2){
-            this.$message.error('设置失败');
-          }
-        })
-      }
-    },
-    mounted() {
-      //富文本编辑器
-      this.editor = UE.getEditor('ed',{
-        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-        toolbars: [[
-          'fullscreen', 'source', '|', 'undo', 'redo', '|',
-          'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript','forecolor',   'cleardoc',
-          'lineheight','customstyle', 'paragraph', 'fontfamily', 'fontsize', '|','indent','justifyleft', 'justifycenter']],
-        //focus时自动清空初始化时的内容
-        autoClearinitialContent:true,
-        //关闭字数统计
-        wordCount:false,
-        //关闭elementPath
-        elementPathEnabled:false,
-        //默认的编辑区域高度
-        initialFrameHeight:160
-        //更多其他参数，请参考ueditor.config.js中的配置项
-      })
-      if(this.$route.query.emailId){
-        getEmailTpl({
-          pk_id:this.$route.query.emailId,
-          app_id:131555,
-          appid:131999
-        }).then(ret=>{
-          if(ret.data.status == "0"){
-            console.log(1111)
-            var result = ret.data.result.Template
-            this.emailTitle = result.TplName;
-            this.emailReasons = result.TplReasons;
-            setTimeout(()=>{
-              this.editor.setContent(result.TplContent)
-            },500)
-          }
-        })
-      }
-    },
-    destroyed() {
-      this.editor.destroy();
-    },
-    created() {
-      this.getProjectSubject();
-    }
-  }
-</script>
