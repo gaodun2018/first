@@ -79,6 +79,7 @@
         AddResFormRules: {
           title: [
             { required:true,validator: validtitle, trigger: 'blur' },
+            { min: 1,  max: 10,  message: '长度在 1 到 10 个字符' }
           ],
           content: [
             { required:true,validator: validcontent, trigger: 'blur' },
@@ -157,6 +158,7 @@
         this.dialogAddResVisible = false;
         this.$refs[formName].resetFields();
       },
+      //获取资源介绍
       async getCourseResourceIntro(){
         let course_id = this.course_id;
         let ret = await getCourseResourceIntro(course_id);
