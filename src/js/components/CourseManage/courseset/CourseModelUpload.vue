@@ -4,7 +4,8 @@
       <el-col :span="12">
         <el-upload
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          with-credentials
+          :action="materialUpload"
           :on-change="handleChange"
           :on-remove="handleRemove"
           :on-success="handleAvatarSuccess"
@@ -25,20 +26,26 @@
 </template>
 
 <script>
-
+  import { getBaseUrl,getEnv } from '../../../util/config';
   export default {
     components: {},
-    prop:[
-      'coverImageUrl'
-    ],
     data() {
       return {
         fileList: [],
-        imageUrl: ''
+        imageUrl: '',
       }
     },
     computed:{
-
+      coverImageUrl(){
+        if(this.$store.state.course.course_cover){
+          return this.$store.state.course.course_cover;
+        }else{
+          return this.$store.state.course.course_default_cover;
+        }
+      },
+      materialUpload(){
+        return getBaseUrl() + 'course-api.gaodun.com/upload/picture';
+      }
     },
     methods: {
       beforeAvatarUpload(file) {
@@ -53,13 +60,20 @@
       },
       handleRemove(file, fileList) {
         this.fileList = fileList;
-        this.coverImageUrl = '';
+        this.$store.dispatch('changeCover',{
+          cover:'',
+        }) //封面图片
       },
       handleAvatarSuccess(res, file) {
-        this.coverImageUrl = URL.createObjectURL(file.raw);
+        console.log(res);
+        this.$store.dispatch('changeCover',{
+          cover:URL.createObjectURL(file.raw),
+        }) //封面图片
       },
       handleAvatarError(err, file, fileList){
-        this.coverImageUrl = '';
+        this.$store.dispatch('changeCover',{
+          cover:'',
+        }) //封面图片
         this.$message.error('上传失败！');
       }
     },

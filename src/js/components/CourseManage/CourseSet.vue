@@ -33,9 +33,9 @@
             </el-select>
           </el-form-item>
 
-         <!-- <el-form-item label="课程封面" class="pad_10">
-            <ImgUpload :coverImageUrl="coverImageUrl"></ImgUpload>
-          </el-form-item>-->
+          <el-form-item label="课程封面" class="pad_10">
+            <ImgUpload></ImgUpload>
+          </el-form-item>
 
           <el-form-item label="课程简介" class="pad_10">
             <div id="ed" type="text/plain"></div>
@@ -226,7 +226,6 @@
           welcome_letter:'',
           teacher_name:'',
         },
-        coverImageUrl:'',//封面图片
         templateContent:'',//通用模块介绍
         userDefinedContent:'',//自定义模块介绍
         kForm:{
@@ -325,7 +324,8 @@
             this.userDefinedContent  = '';
             this.ruleForm.welcome_letter = ret.result.welcome_letter_template;  //默认的选1时，welcome_letter为空，将其设为通用模板
           }
-          this.coverImageUrl= ret.result.cover;    //封面图片
+          this.$store.dispatch('changeCover',ret.result) //封面图片
+
           this.ware_status_list = ret.result.ware_status_list;   //制作状态
           this.kForm.ware_status = ret.result.ware_status;
           this.kForm.allow_question = ret.result.allow_question;
@@ -377,9 +377,8 @@
       this.editor = UE.getEditor('ed',{
         //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
         toolbars: [[
-          'fullscreen', 'source', '|', 'undo', 'redo', '|',
-          'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript','forecolor',   'cleardoc',
-          'lineheight','customstyle', 'paragraph', 'fontfamily', 'fontsize', '|','indent','justifyleft', 'justifycenter']],
+          'fullscreen', 'undo', 'redo', '|',
+          'bold', 'cleardoc']],
         //focus时自动清空初始化时的内容
         autoClearinitialContent:true,
         //关闭字数统计
