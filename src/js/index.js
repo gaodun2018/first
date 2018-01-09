@@ -25,8 +25,10 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
 import { setWindowNID } from './util/config';
 import { CRM_MENU } from './util/keys';
+import Validate from './util/filter_rules'
 Vue.use(ElementUI)
 Vue.use(VueRouter);
+Vue.use(Validate);
 const router = new VueRouter({
     routes
 });

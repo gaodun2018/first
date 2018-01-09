@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="box-card-bottom">
-            <el-button type="text" class="button" @click="openAddResDialog(index)">修改</el-button>
+            <el-button type="text" class="button" @click="openAddResDialog(index,item.id)">修改</el-button>
             <el-button type="text" class="button" @click="deleteResIntro(index)">删除</el-button>
           </div>
         </el-card>
@@ -29,16 +29,17 @@
     </el-row>
     <el-dialog title="新增资源介绍" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
       <el-form :model="AddResForm" :rules="AddResFormRules" ref="AddResForm" >
-        <el-form-item label="标题" prop="title">
+        <el-form-item label="标题" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:30})">
           <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off" placeholder="示例：15章课程学习"></el-input>
         </el-form-item>
-        <el-form-item label="详情" prop="content">
+        <el-form-item label="详情" prop="content" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input v-model="AddResForm.content" autosize type="textarea" class="coursetxt" auto-complete="off" placeholder="示例：每天按照计划完成学习，把握好学习节奏"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center;">
         <el-button @click="resetForm('AddResForm')">取 消</el-button>
-        <el-button type="primary" @click="saveAddResForm('AddResForm')">保 存</el-button>
+        <el-button v-if="Doing==1?true:false" type="primary" @click="saveResForm('AddResForm')">保存修改</el-button>
+        <el-button v-if="Doing==0?true:false" type="primary" @click="addResForm('AddResForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -50,24 +51,6 @@
   export default {
     components: {},
     data() {
-      var validtitle = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入标题'));
-        }else if(/^\s+$/g.test(value)){
-          return callback(new Error('输入的标题不能为空格'));
-        }else{
-          return callback();
-        }
-      };
-      var validcontent = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入详情'));
-        }else if(/^\s+$/g.test(value)){
-          return callback(new Error('输入的详情不能为空格'));
-        }else{
-          return callback();
-        }
-      };
       return {
         dialogAddResVisible: false,   //新增资源介绍弹层
         //新增资源介绍的表单
@@ -75,33 +58,34 @@
           title: '',
           content: '',
         },
-        //新增资源介绍的表单的验证
-        AddResFormRules: {
-          title: [
-            { required:true,validator: validtitle, trigger: 'blur' },
-            { min: 1,  max: 10,  message: '长度在 1 到 10 个字符' }
-          ],
-          content: [
-            { required:true,validator: validcontent, trigger: 'blur' },
-          ],
-        },
-        courseIntroList: [],  //新增资源介绍列表
+        Doing:'0',     //操作  0表示新增  1表示修改
+        reviseIndex:'',    //修改的索引
+        reviseID:'',    //修改的索引
       }
     },
     computed: {
       course_id(){
         return this.$route.params.cid;
+      },
+      courseIntroList(){
+        return this.$store.state.course.resource_intro;
       }
     },
     methods: {
       //openAddResDialog
-      openAddResDialog(index){
+      openAddResDialog(index,id){
         if (index >= 0) {
+          //修改
+          this.Doing = '1';
+          this.reviseIndex = index;
+          this.reviseID = id;
           this.AddResForm = {
             title: this.courseIntroList[index]['title'],
             content: this.courseIntroList[index]['content'],
           }
         } else {
+          //新增
+          this.Doing = '0';
           this.AddResForm = {
             title: '',
             content: '',
@@ -116,7 +100,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.courseIntroList.splice(index, 1)
+          this.$store.dispatch('deleteResourceIntro',index);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -128,8 +112,8 @@
           })
         })
       },
-      //保存新增资源的介绍
-      saveAddResForm(formName) {
+      //新增资源的介绍
+      addResForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let course_id = this.course_id;
@@ -142,11 +126,29 @@
                   message: res.message
                 })
                 this.dialogAddResVisible = false;
-                this.courseIntroList.push(res.result);
+                this.$store.dispatch('addResourceIntro',res.result);
               }else{
                 this.$message.error(res.message? res.message:'课程资源添加失败！');
               }
             })
+//            this.dialogAddResVisible = false;
+          } else {
+            return false;
+          }
+        });
+      },
+      //保存修改的资源介绍
+      saveResForm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.reviseIndex);
+            let resourceData={
+              ...this.AddResForm,
+              index:this.reviseIndex,
+              id:this.reviseID,
+            };
+            this.dialogAddResVisible = false;
+            this.$store.dispatch('changeResourceIntro',resourceData);
 //            this.dialogAddResVisible = false;
           } else {
             return false;
@@ -164,7 +166,7 @@
         let ret = await getCourseResourceIntro(course_id);
         console.log(ret);
         if(ret.status == 0){
-          this.courseIntroList = ret.result;
+          this.$store.dispatch('saveResourceIntro',ret.result);
         }
       }
     },
@@ -174,6 +176,7 @@
     },
     created() {
       this.getCourseResourceIntro();
+      console.log(this.filter_rules({required:true,type:'isAllSpace',maxLength:4}));
     }
   }
 </script>
