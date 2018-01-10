@@ -21,8 +21,8 @@
 .permission-outlinemodule .order-progress-bar .current-text{color:#f09862;}
 .permission-outlinemodule .coursebtn,.permission-outlinemodule .coursebtn .el-form-item__content{text-align:right;}
 .permission-outlinemodule .coursebtn{padding-top:40px;}
-.permission-outlinemodule .selectmodel{padding:0 50px 0 70px;}
-.permission-outlinemodule .selectmodel span{width:120px;height:90px;margin:20px 40px;background:#f4f6f8;border:none;border-radius:6px;display:inline-block;text-align:center;line-height:90px;cursor:pointer;}
+.permission-outlinemodule .selectmodel{padding:0 50px 0 70px;display: flex;justify-content: space-around;}
+.permission-outlinemodule .selectmodel span{width:120px;height:90px;background:#f4f6f8;border:none;border-radius:6px;display:inline-block;text-align:center;line-height:90px;cursor:pointer;}
 .permission-outlinemodule .selectmodel span.is-active{background:#42aedf;color:#fff;}
 .permission-outlinemodule .rulemodule{padding:0 20px;}
 .permission-outlinemodule .el-table--fit{border-right:0 none;}
@@ -60,7 +60,7 @@
 .addvideo .el-row .el-col span{text-align:right;width:96%;line-height:30px;display:inline-block;}
 
 
-
+.permission-outlinemodule .addResourceDialog .el-dialog--small{width: 60%;}
 
 
 
