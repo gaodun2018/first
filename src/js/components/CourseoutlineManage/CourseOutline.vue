@@ -8,23 +8,14 @@
     <div class="outlinebox">
       <div class="outlinetit">请先为该课程大纲选择合适的结构模板</div>
       <div class="outlinedrop">
-        <div class="outlineitem" @click="CourseSyllabusLevel(4)">
-          <div class="outlineone">该课程大纲应用四级结构模块</div>
-          <div class="outlinetwo">常用规范：章 > 节 > 知识点 > 学习资源</div>
-        </div>
-        <div class="outlineitem" @click="CourseSyllabusLevel(3)">
-          <div class="outlineone">该课程大纲应用三级结构模块</div>
-          <div class="outlinetwo">常用规范：章 > 节 > 学习资源</div>
-        </div>
-        <div class="outlineitem" @click="CourseSyllabusLevel(2)">
-          <div class="outlineone">该课程大纲应用二级结构模块</div>
-          <div class="outlinetwo">常用规范：节 > 学习资源</div>
-        </div>
-
-        <!-- <div class="outlineitem" v-for="(rev,index) in modulelist" @click="CourseSyllabusLevel(rev.level)">
-          <div class="outlineone">{{rev.valone}}</div>
-          <div class="outlinetwo">{{rev.valtwo}}</div>
-        </div> -->
+         <div
+           class="outlineitem"
+           v-for="(item,index) in modulelist"
+           :key="item.id"
+           @click="selectSyllabus(item.id)"
+           v-html="item.description"
+         >
+         </div>
         
       </div>
     </div>
@@ -61,7 +52,8 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {CourseSyllabusTemplates} from '../../api/outline.js';
+  import {CourseSyllabusTemplates,checkSyllabus} from '../../api/outline.js';
+  import {selectSyllabus} from '../../api/fromAxios';
 
   export default {
     components: {},
@@ -77,7 +69,7 @@
           ],
         },
         uploaddialogVisible:false,
-        coursesyllid:'',
+        coursesyllid:'',   //大纲id
         modulelist:[]
       }
     },
@@ -93,24 +85,35 @@
           }
         });
       },
-      CourseSyllabusLevel(level){
-        this.$router.push({
-          path:'/CourseoutlineManage/CourseModule/'+this.coursesyllid+'/'+level
-        })
+      //选择大纲模板
+      async selectSyllabus(template_id){
+        let ret = await selectSyllabus(this.coursesyllid,{'template_id':template_id});
+        console.log(ret);
+        if(ret.status == 0&& ret.result == true){
+          this.$router.push({
+           path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid
+           })
+        }
       },
+      //获取大纲的模板列表
       async OutlineTemplates(){
         let ret = await CourseSyllabusTemplates();
-        for(let o of ret.result){
-          let valcom = [];
-          let valone = [];
-          let valtwo = [];
-          let level = [];
-          valcom = o.description;
-          this.modulelist.push({
-            valone : valcom.substring(0,13),
-            valtwo : valcom.substring(13,),
-            level : o.level_max
-          })
+        console.log(ret);
+        if(ret.status == 0){
+          this.modulelist = ret.result;
+        }
+      },
+      //查看大纲的详情
+      async checkSyllabus(){
+        let ret = await checkSyllabus(this.coursesyllid);
+        console.log(ret);
+        if(ret.status == 0){
+          //当用户已经选择大纲时则直接跳转过去
+          if(ret.result.template&&ret.result.template.id){
+            this.$router.push({
+              path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid,
+            })
+          }
         }
       }
     },
@@ -119,8 +122,9 @@
 
     },
     created() {
-      this.OutlineTemplates();
       this.coursesyllid = this.$route.params.sid;
+      this.OutlineTemplates();
+      this.checkSyllabus();
     }
   }
 </script>

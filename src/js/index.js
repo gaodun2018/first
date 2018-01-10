@@ -32,6 +32,9 @@ Vue.use(Validate);
 const router = new VueRouter({
     routes
 });
+//引入全局过滤器
+import filters from './filters/index'
+Object.keys(filters).forEach(key=>Vue.filter(key,filters[key]));
 router.beforeEach((to, from, next) => {
     if (!window.CRMMENU) {
         window.CRMMENU = JSON.parse(localStorage.getItem(CRM_MENU));

@@ -6,86 +6,76 @@
     <div class="outlinebox">
       <div class="chapterbox">
 
-
-        <!-- <draggable v-model="tabledata" element="div">
-          <div v-for="(rev,index) in tabledata" :key="index">
-            <div class="chaptit">
-              <span class="chlft" :ref="'sid'+rev.id">{{rev.name}}</span>
-              <span class="chrgt" @click="editproject(rev.id)">修改</span>
-              <span class="chrgt" @click="deleteproject">删除</span>
-              <span class="chrgt1" @click="addproject">增加子目录</span>
-            </div>
-
-            <draggable v-model="rev.data" element="div">
-              <div v-for="(chap,index1) in rev.data" :key="index1">
-                <div class="chaptit chapsecd">
-                  <span class="chlft" :ref="'sid'+chap.id">{{chap.name}}</span>
-                  <span class="chrgt" @click="editproject(chap.id)">修改</span>
-                  <span class="chrgt" @click="deleteproject">删除</span>
-                  <span class="chrgt1" @click="addproject">增加子目录</span>
-                </div>
-
-                <draggable v-model="chap.data" element="div">
-                  <div v-for="(val,index2) in chap.data" :key="index2">
-                    <div class="knowledge">
-                      <span class="chlft"><i></i><span :ref="'sid'+val.id">{{val.name}}</span></span>
-                      <span class="chrgt" @click="editproject(val.id)">修改</span>
-                      <span class="chrgt" @click="deleteproject">删除</span>
-                      <span class="chrgt1 yellow" @click="dialogFormVisible = true">新增资源</span>
-                    </div>
-                    <draggable v-model="val.data" element="div">
-                      <div class="resourcebox">
-                        <div class="knowledge" v-for="(know,index3) in val.data" :key="index3">
-                          <span class="chlft">{{know.title}}<span class="chline">|</span>资源ID：{{know.sid}} 【{{know.type}}】，{{know.name}} </span>
-                          <span class="chrgt" @click="editprojectknow(index)">修改</span>
-                          <span class="chrgt" @click="deletedata">删除</span>
-                        </div>
-                      </div>
-                    </draggable>
-                  </div>
-                </draggable>
+        <template v-if="coursesylllevel == 3">
+          <draggable v-model="tabledata" element="div">
+            <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
+              <div class="chaptit">
+                <span class="chlft">第{{(index+1) | Arab2Chn}}章 {{firstItem.name}}</span>
+                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
+                <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
 
-            </draggable>
-          </div>
-        </draggable> -->
+              <draggable v-model="firstItem.children" element="div">
+                <div v-for="(secItem,index1) in firstItem.children" :key="secItem.id">
+                  <div class="chaptit chapsecd">
+                    <span class="chlft">第{{(index+1) | Arab2Chn}}节 {{secItem.name}}</span>
+                    <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
+                    <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
+                  </div>
+
+                  <draggable v-model="secItem.children" element="div">
+                    <div class="resourcebox" v-for="(thirdItem,index3) in secItem.children" :key="thirdItem.id">
+                      <div class="knowledge">
+                        <span class="chlft">{{thirdItem.name}}<span class="chline">|</span>资源ID：{{thirdItem.sid}} 【{{thirdItem.type}}】，{{thirdItem.name}} </span>
+                        <span class="chrgt" @click="editprojectknow(thirdItem.id,thirdItem.name)">修改</span>
+                        <span class="chrgt" @click="openDelResDialog">删除</span>
+                      </div>
+                    </div>
+                  </draggable>
 
 
+                </div>
+
+              </draggable>
+            </div>
+          </draggable>
+        </template>
 
         <template v-if="coursesylllevel == 4">
-          层级4
           <draggable v-model="tabledata" element="div">
-            <div v-for="(rev,index) in tabledata" :key="index">
+            <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
               <div class="chaptit">
-                <span class="chlft" :ref="'sid'+rev.id">{{rev.name}}</span>
-                <span class="chrgt" @click="editproject(rev.id)">修改</span>
-                <span class="chrgt" @click="deleteproject(rev.id)">删除</span>
-                <span class="chrgt1" @click="addproject(rev.id)">增加子目录</span>
+                <span class="chlft">第{{(index+1) | Arab2Chn}}章 {{firstItem.name}}</span>
+                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
+                <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
 
-              <draggable v-model="rev.data" element="div">
-                <div v-for="(chap,index1) in rev.data" :key="index1">
+              <draggable v-model="firstItem.children" element="div">
+                <div v-for="(secItem,index) in firstItem.children" :key="secItem.id">
                   <div class="chaptit chapsecd">
-                    <span class="chlft" :ref="'sid'+chap.id">{{chap.name}}</span>
-                    <span class="chrgt" @click="editproject(chap.id)">修改</span>
-                    <span class="chrgt" @click="deleteproject(chap.id)">删除</span>
-                    <span class="chrgt1" @click="addproject(chap.id)">增加子目录</span>
+                    <span class="chlft">第{{(index+1) | Arab2Chn}}节 {{secItem.name}}</span>
+                    <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
+                    <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt1" @click="openChildDialog(secItem.id)">增加子目录</span>
                   </div>
 
-                  <draggable v-model="chap.data" element="div">
-                    <div v-for="(val,index2) in chap.data" :key="index2">
+                  <draggable v-model="secItem.children" element="div">
+                    <div v-for="(thirdItem,index2) in secItem.children" :key="thirdItem.id">
                       <div class="knowledge">
-                        <span class="chlft"><i></i><span :ref="'sid'+val.id">{{val.name}}</span></span>
-                        <span class="chrgt" @click="editproject(val.id)">修改</span>
-                        <span class="chrgt" @click="deleteproject(val.id)">删除</span>
-                        <span class="chrgt1 yellow" @click="dialogFormVisible = true">新增资源</span>
+                        <span class="chlft"><i></i><span>{{thirdItem.name}}</span></span>
+                        <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
+                        <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
+                        <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                       </div>
-                      <draggable v-model="val.data" element="div">
-                        <div class="resourcebox">
-                          <div class="knowledge" v-for="(know,index3) in val.data" :key="index3">
-                            <span class="chlft">{{know.title}}<span class="chline">|</span>资源ID：{{know.sid}} 【{{know.type}}】，{{know.name}} </span>
-                            <span class="chrgt" @click="editprojectknow(index)">修改</span>
-                            <span class="chrgt" @click="deletedata">删除</span>
+                      <draggable v-model="thirdItem.children" element="div">
+                        <div class="resourcebox" v-for="(fourthItem,index3) in thirdItem.children" :key="fourthItem.id">
+                          <div class="knowledge">
+                            <span class="chlft">{{fourthItem.name}}<span class="chline">|</span>资源ID：{{fourthItem.sid}} 【{{fourthItem.type}}】，{{fourthItem.name}} </span>
+                            <span class="chrgt" @click="editprojectknow(fourthItem.id,fourthItem.name)">修改</span>
+                            <span class="chrgt" @click="openDelResDialog">删除</span>
                           </div>
                         </div>
                       </draggable>
@@ -97,102 +87,35 @@
             </div>
           </draggable>
         </template>
-        <template v-if="coursesylllevel == 3">
-          层级3
-          <draggable v-model="tabledata" element="div">
-            <div v-for="(rev,index) in tabledata" :key="index">
-              <div class="chaptit">
-                <span class="chlft" :ref="'sid'+rev.id">{{rev.name}}</span>
-                <span class="chrgt" @click="editproject(rev.id)">修改</span>
-                <span class="chrgt" @click="deleteproject(rev.id)">删除</span>
-                <span class="chrgt1" @click="addproject(rev.id)">增加子目录</span>
-              </div>
 
-              <draggable v-model="rev.data" element="div">
-                <div v-for="(chap,index1) in rev.data" :key="index1">
-                  <div class="chaptit chapsecd">
-                    <span class="chlft" :ref="'sid'+chap.id">{{chap.name}}</span>
-                    <span class="chrgt" @click="editproject(chap.id)">修改</span>
-                    <span class="chrgt" @click="deleteproject(chap.id)">删除</span>
-                    <span class="chrgt1" @click="addproject(chap.id)">增加子目录</span>
-                  </div>
-
-                  <draggable v-model="chap.data" element="div">
-                    <div v-for="(val,index2) in chap.data" :key="index2">
-                      <div class="knowledge">
-                        <span class="chlft"><i></i><span :ref="'sid'+val.id">{{val.name}}</span></span>
-                        <span class="chrgt" @click="editproject(val.id)">修改</span>
-                        <span class="chrgt" @click="deleteproject(val.id)">删除</span>
-                        <span class="chrgt1 yellow" @click="dialogFormVisible = true">新增资源</span>
-                      </div>
-                      <draggable v-model="val.data" element="div">
-                        <div class="resourcebox">
-                          <div class="knowledge" v-for="(know,index3) in val.data" :key="index3">
-                            <span class="chlft">{{know.title}}<span class="chline">|</span>资源ID：{{know.sid}} 【{{know.type}}】，{{know.name}} </span>
-                            <span class="chrgt" @click="editprojectknow(index)">修改</span>
-                            <span class="chrgt" @click="deletedata">删除</span>
-                          </div>
-                        </div>
-                      </draggable>
-                    </div>
-                  </draggable>
-                </div>
-
-              </draggable>
-            </div>
-          </draggable>
-        </template>
         <template v-if="coursesylllevel == 2">
-          层级2
           <draggable v-model="tabledata" element="div">
-            <div v-for="(rev,index) in tabledata" :key="index">
+            <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
               <div class="chaptit">
-                <span class="chlft" :ref="'sid'+rev.id">{{rev.name}}</span>
-                <span class="chrgt" @click="editproject(rev.id)">修改</span>
-                <span class="chrgt" @click="deleteproject(rev.id)">删除</span>
-                <span class="chrgt1" @click="addproject(rev.id)">增加子目录</span>
+                <span class="chlft">第{{(index+1) | Arab2Chn}}节 {{firstItem.name}}</span>
+                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
+                <span class="chrgt1 yellow" @click="openAddResDialog(firstItem.id)">新增资源</span>
               </div>
-
-              <draggable v-model="rev.data" element="div">
-                <div v-for="(chap,index1) in rev.data" :key="index1">
-                  <div class="chaptit chapsecd">
-                    <span class="chlft" :ref="'sid'+chap.id">{{chap.name}}</span>
-                    <span class="chrgt" @click="editproject(chap.id)">修改</span>
-                    <span class="chrgt" @click="deleteproject(chap.id)">删除</span>
-                    <span class="chrgt1" @click="addproject(chap.id)">增加子目录</span>
+              <draggable v-model="firstItem.children" element="div">
+                <div class="resourcebox" v-for="(secItem,index3) in firstItem.children" :key="secItem.id">
+                  <div class="knowledge">
+                    <span class="chlft">{{secItem.name}}<span class="chline">|</span>资源ID：{{secItem.sid}} 【{{secItem.type}}】，{{secItem.name}} </span>
+                    <span class="chrgt" @click="editprojectknow(secItem.id,secItem.name)">修改</span>
+                    <span class="chrgt" @click="openDelResDialog">删除</span>
                   </div>
-
-                  <draggable v-model="chap.data" element="div">
-                    <div v-for="(val,index2) in chap.data" :key="index2">
-                      <div class="knowledge">
-                        <span class="chlft"><i></i><span :ref="'sid'+val.id">{{val.name}}</span></span>
-                        <span class="chrgt" @click="editproject(val.id)">修改</span>
-                        <span class="chrgt" @click="deleteproject(val.id)">删除</span>
-                        <span class="chrgt1 yellow" @click="dialogFormVisible = true">新增资源</span>
-                      </div>
-                      <draggable v-model="val.data" element="div">
-                        <div class="resourcebox">
-                          <div class="knowledge" v-for="(know,index3) in val.data" :key="index3">
-                            <span class="chlft">{{know.title}}<span class="chline">|</span>资源ID：{{know.sid}} 【{{know.type}}】，{{know.name}} </span>
-                            <span class="chrgt" @click="editprojectknow(index)">修改</span>
-                            <span class="chrgt" @click="deletedata">删除</span>
-                          </div>
-                        </div>
-                      </draggable>
-                    </div>
-                  </draggable>
                 </div>
-
               </draggable>
             </div>
           </draggable>
         </template>
-        <div class="chaptit additem"><span @click="addbig">新增一级大纲目录</span></div>
+        <div class="chaptit additem"><span @click="openFirLvDialog">新增一级大纲目录</span></div>
       </div>
     </div>
 
-    <!-- <el-button @click="dialogFormVisible = true" type="primary" size="small">新建一个课程大纲</el-button> -->
-    <el-dialog title="选择学习资源" class="tabplane" :visible.sync="dialogFormVisible">
+    <!-- -----------------弹层---------------- -->
+
+    <el-dialog title="选择学习资源" class="tabplane addResourceDialog" :visible.sync="dialogFormVisible">
       <el-col v-for="item in progressText" :key="item.text" :sm="8">
         <div class="order-progress-bar">
           <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
@@ -200,11 +123,13 @@
           <span :class="item.isCustomerConfirm ? item.currentText : ''">{{item.text}}</span>
         </div>
       </el-col>
-      <el-form :model="ruleForms" :rules="rules" ref="ruleForms" v-show="module1" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="显示名称" prop="name">
-          <el-input class="coursetxt" v-model="ruleForms.name"></el-input>
+      <!-- ----------第一步----------- -->
+      <el-form :model="addResFirFrom" ref="addResFirFrom" v-show="module1" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:1000})">
+          <el-input class="coursetxt" v-model="addResFirFrom.name"></el-input>
         </el-form-item>
-        <el-form-item label="性质标签" prop="region">
+        <!--标签-->
+        <!--<el-form-item label="性质标签" prop="region">
           <el-radio-group v-model="radio1">
             <el-radio :label="1">不显示标签</el-radio>
             <el-radio :label="2">必修</el-radio>
@@ -218,26 +143,33 @@
             <el-radio :label="6">课中</el-radio>
             <el-radio :label="7">课后</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item class="coursebtn">
           <!-- <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button> -->
-          <el-button style="margin-top:12px;" v-show="nextclk" @click="submitForm('ruleForms')">下一步</el-button>
+          <!--<el-button style="margin-top:12px;" v-show="nextclk" @click="submitForm('addResFirFrom')">下一步</el-button>-->
+          <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
           <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
-          <!-- <el-button type="primary" @click="submitForm('ruleForms')">确 定</el-button> -->
+          <!-- <el-button type="primary" @click="submitForm('addResFirFrom')">确 定</el-button> -->
         </el-form-item>
       </el-form>
+      <!-- -----------第二步---------- -->
       <el-form label-width="100px" v-show="module2" class="demo-ruleForm">
         <div class="selectmodel">
+          <span :class="[selcurrent === 1 ? 'is-active' : '']" @click="selectclk(1)" v-for="(item,index) in resourceTypeList" :key="index">{{item.label}}</span>
+
+
+<!--
           <span :class="[selcurrent === 1 ? 'is-active' : '']" @click="selectclk(1)">视频</span>
           <span :class="[selcurrent === 2 ? 'is-active' : '']" @click="selectclk(2)">讲义</span>
-          <span :class="[selcurrent === 3 ? 'is-active' : '']" @click="selectclk(3)">试卷</span>
+          <span :class="[selcurrent === 3 ? 'is-active' : '']" @click="selectclk(3)">试卷</span>-->
         </div>
         <el-form-item class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
           <el-button style="margin-top:12px;" v-show="nextclk" @click="submitForm">下一步</el-button>
-          <!-- <el-button type="primary" @click="submitForm('ruleForms')">确 定</el-button> -->
+          <!-- <el-button type="primary" @click="submitForm('addResFirFrom')">确 定</el-button> -->
         </el-form-item>
       </el-form>
+      <!-- -----------第三步---------- -->
       <div class="rulemodule" v-show="module3">
         <el-input :placeholder="txtcomt" size="small" icon="search" v-model="input2" :on-icon-click="handleIconClick"></el-input>
         <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
@@ -268,14 +200,14 @@
       <span>{{deleteModule ? '确定要删除该课程大纲目录吗？删除后，该目录下的子目录及资源关系均将被删除！' : '确定要删除已选择的资源吗？'}}</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="deleteOK">确 定</el-button>
+        <el-button type="primary" @click="confirmDelete">确 定</el-button>
       </span>
     </el-dialog>
 
 
     <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" :visible.sync="adddialogVisible" size="tiny" :before-close="handleClose">
-      <el-form :model="ruleProject" :rules="rulesject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="显示名称" prop="name">
+      <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
         </el-form-item>
         <el-form-item>
@@ -294,8 +226,8 @@
 <script>
   import Vue from 'vue';
   import draggable from 'vuedraggable';
-  import {CourseSyllabusItem} from '../../api/outline.js'
-
+  import {CourseSyllabusItem,ChangeSyllabusItem} from '../../api/fromAxios'
+  import {getSyllabusItems,checkSyllabus,DeleteSyllabusItem} from '../../api/outline'
   export default {
     components: {
       draggable,
@@ -306,53 +238,7 @@
         radio:'',
         radio1:1,
         radio2:4,
-        tabledata:[{  // 层级4
-          id:1,
-          name:"第一章  公司战略的基本概念",
-          data:[{
-            id:2,
-            name:"第一节  公司战略的基本概念 菁英",
-            data:[{
-              id:3,
-              name:"导入",
-              data:[{
-                id:4,
-                title:"第一节 章节预习",
-                sid:1234,
-                type:"视频",
-                name:"level1"
-              }]
-            },{
-              id:5,
-              name:"前导",
-              data:[{
-                id:6,
-                title:"第二节 章节预习",
-                sid:4578,
-                type:"练习",
-                name:"level3"
-              }]
-            }]
-          }]
-        },{
-          id:7,
-          name:"第一章  公司战略的基本概念2",
-          data:[{
-            id:8,
-            name:"第一节  公司战略的基本概念嘎嘎嘎",
-            data:[{
-              id:9,
-              name:"导入2",
-              data:[{
-                id:10,
-                title:"第一节 章节预习2",
-                sid:2542,
-                type:"视频",
-                name:"level2"
-              }]
-            }]
-          }]
-        }],
+        tabledata:[],
         progressText: [
           {
             text: '资源设置',
@@ -374,30 +260,19 @@
             isCustomerConfirm: false
           }
         ],
-        ruleForms: {
+        addResFirFrom: {
           name: ''
         },
         ruleProject:{
           name: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: '显示名称', trigger: 'blur' },
-            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
-          ]
-        },
-        rulesject:{
-          name: [
-            { required: true, message: '显示名称', trigger: 'blur' },
-            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
-          ]
         },
         dialogFormVisible: false,
         model1:'视频',
         module1:true,
         module2:false,
         module3:false,
-        tableData3: [{
+        tableData3: [
+          {
           rid: '7533',
           type: '视频',
           cname: 'ACCA-F3课程 chapter1'
@@ -422,8 +297,8 @@
         prevclk:false,
         nextclk:true,
         dialogVisible:false,
-        adddialogVisible:false,
-        Moduledialog:true,
+        adddialogVisible:false,    //新增和修改大纲目录的弹层
+        Moduledialog:true,    //增加子目录的弹层的标题
         bigdislog:false,
         deleteModule:true,
         selcurrent:1,
@@ -433,13 +308,61 @@
         refname:'',
         coursesylllevel:'',
         coursesyllid:'',
-        pid:''
+        pid:'0',    //0 是最外层父级大纲
+        resourceTypeList:[
+          {
+            "discriminator": "video",
+            "label": "视频"
+          },
+          {
+            "discriminator": "lecture_note",
+            "label": "讲义"
+          },
+          {
+            "discriminator": "paper",
+            "label": "试卷"
+          },
+          {
+            "discriminator": "question",
+            "label": "题目"
+          },
+          {
+            "discriminator": "live",
+            "label": "直播"
+          }
+        ],
       }
     },
     methods: {
       selectclk(oi){
         console.log(oi);
         this.selcurrent = oi;
+      },
+      //打开新增资源的弹层
+      openAddResDialog(id){
+        this.pid = id;
+        this.dialogFormVisible = true;
+      },
+      firstNextSubmit(formName){
+        this.$refs[formName].validate(async(valid) => {
+          if (valid) {
+            console.log(this.pid);
+            let ret = await CourseSyllabusItem({
+              name:this.addResFirFrom.name,
+              pid:this.pid,
+              course_syllabus_id:this.coursesyllid
+            });
+            if(ret.status == 0){
+              if(this.active >= this.progressText.length-1)return;
+              this.active++;
+              this.progressText[this.active].isCustomerConfirm=true;
+              this.showitem();
+              this.getSyllabusItems();
+            }
+          } else {
+            return false;
+          }
+        });
       },
       submitForm(formName) {
         if(this.active == 0){
@@ -510,36 +433,51 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deletedata(){
-        // 弹出资源删除框
+      // 弹出资源删除框
+      openDelResDialog(id){
+        this.pid = id;
         this.dialogVisible = true;
         this.deleteModule = false;
       },
-      deleteproject(){
-        // 弹出大纲删除框
+      // 弹出大纲删除框
+      openDelOutlineDialog(id){
+        this.pid = id;
         this.dialogVisible = true;
         this.deleteModule = true;
       },
-      deleteOK(){
-        // 删除确定
+      // 删除确定
+      async confirmDelete(){
+        let id = this.pid;
+        let ret = await DeleteSyllabusItem(id);
+        console.log(ret);
+        if(ret.status == 0){
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.getSyllabusItems();
+        }else{
+
+        }
         this.dialogVisible = false;
       },
-      addproject(pid){
-        // 新增课程大纲子目录
+      // 新增课程大纲子目录的弹层
+      openChildDialog(pid){
         this.adddialogVisible = true;
         this.Moduledialog = true;
         this.bigdislog = false;
         this.ruleProject.name = "";
-        this.pid = pid;
+        this.pid = pid;     //父级大纲条目id
       },
-      addbig(){
-        // 新增一级大纲
+      // 新增一级大纲的弹层
+      openFirLvDialog(){
         this.adddialogVisible = true;
         this.Moduledialog = true;
         this.bigdislog = true;
         this.ruleProject.name = "";
         this.pid = '0';
       },
+      //确定增加一个子目录
       addruleProject(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -556,17 +494,18 @@
           }
         });
       },
-      async addbigCourse(){  // 添加大纲目录
-        console.log(this.pid);
+      // 添加大纲目录
+      async addbigCourse(){
         let ret = await CourseSyllabusItem({
-          title:this.ruleProject.name,
+          name:this.ruleProject.name,
           pid:this.pid,
-          level:this.coursesylllevel,
+//          level:this.coursesylllevel,
           course_syllabus_id:this.coursesyllid
         });
         if(ret.status == 0){
           ret.message = "添加成功！";
           this.pid = '0';
+          this.getSyllabusItems();
         }else{
           ret.message = "添加失败！";
         }
@@ -575,20 +514,53 @@
           type: 'success'
         });
       },
-      updateruleProject(){  // 修改大纲目录
-        console.log(this.pid);
+      // 修改大纲目录
+      async updateruleProject(){
+        let id = this.pid;
+        let name = {
+          name:this.ruleProject.name
+        };
+        let ret = await ChangeSyllabusItem(id,name);
+        console.log(ret);
+        if(ret.status == 0){
+          this.$message({
+            message: '修改成功！',
+            type: 'success'
+          });
+          this.adddialogVisible = false;
+          this.getSyllabusItems();
+        }else{
+          this.$message.error('修改失败！')
+        }
       },
-      editproject(pid){
-        // 修改课程大纲名称
-        this.refname = 'sid'+pid;
-        console.log(this.$refs[this.refname])
-        //这个是获取当前revref值，用index来区分当前元素是v-for 产生的数组中的第几个数
-        
-        this.ruleProject.name = this.$refs[this.refname][0].innerText;
+      // 弹出修改课程大纲名称的弹层
+      editproject(pid,name){
+        console.log(pid,name);
+        this.pid = pid;
+        this.ruleProject.name = name;
         this.adddialogVisible = true;
         this.Moduledialog = false;
-        this.pid = pid;
       },
+      //拉取这个大纲的条目
+      async getSyllabusItems(){
+        let course_syllabus_id = {
+          course_syllabus_id:this.coursesyllid
+        };
+        let ret = await getSyllabusItems(course_syllabus_id);
+        if(ret.status == 0){
+          this.tabledata = ret.result;
+        }
+        console.log(ret);
+      },
+      //查看大纲的详情
+      async checkSyllabus(){
+        let ret = await checkSyllabus(this.coursesyllid);
+        console.log(ret);
+        if(ret.status == 0){
+          this.coursesylllevel = ret.result.template.level_max;    //大纲的层级
+          console.log(this.coursesylllevel,'大纲的层级');
+        }
+      }
     },
     computed: {},
     mounted() {
@@ -596,7 +568,8 @@
     },
     created() {
       this.coursesyllid = this.$route.params.sid;
-      this.coursesylllevel = this.$route.params.level;
+      this.getSyllabusItems();
+      this.checkSyllabus();
     }
   }
 </script>

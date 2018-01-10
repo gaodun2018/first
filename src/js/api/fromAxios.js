@@ -7,6 +7,7 @@ var instance = axios.create({
     'Content-Type': 'application/x-www-form-urlencoded'
 //  	"origin":"gaodun.com"
   },
+  withCredentials : true,
   transformRequest(data,headers){
     let strData = queryString.stringify(data);
     return strData;
@@ -81,7 +82,12 @@ export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaod
 //新增资源介绍接口
 export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
 
+//选择大纲模板接口
+export const selectSyllabus = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/${id}/template`, params);
 
+//添加大纲条目
+export const CourseSyllabusItem = params => post(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item`, params);
 
-
+//修改大纲条目
+export const ChangeSyllabusItem = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 

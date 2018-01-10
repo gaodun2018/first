@@ -38,7 +38,7 @@ import HandoutList from '../components/resourceCenter/HandoutList.vue';
 // 知识点列表
 import KnowledgeList from '../components/resourceCenter/KnowledgeList.vue';
 // 课程大纲列表
-import CourseOutlineList from '../components/CourseoutlineManage/CourseOutlineList.vue';
+import CourseOutlineList from '../components/CourseOutlineManage/CourseOutlineList.vue';
 // 课程列表
 import CourseList from '../components/CourseManage/CourseList.vue';
 // 产品列表
@@ -58,9 +58,9 @@ import UpdatePwd from '../containers/UpdatePwd.vue';
 // - 财经云
 import Home from '../containers/Home.vue';
 // - 编辑课程大纲
-import CourseOutline from '../components/CourseoutlineManage/CourseOutline.vue';
+import CourseOutline from '../components/CourseOutlineManage/CourseOutline.vue';
 // - 课程大纲模块
-import CourseModule from '../components/CourseoutlineManage/CourseModule.vue';
+import CourseModule from '../components/CourseOutlineManage/CourseModule.vue';
 // - 课程基本设置
 import CourseSet from '../components/CourseManage/CourseSet.vue';
 // - 课程内容
@@ -98,8 +98,8 @@ export const routes = [
 		{ path: '/StatisticAnalysis',meta:{ title:'统计分析' }, name:'601',component: StatisticAnalysis }, // 统计分析
 		{ path: '/ZhuantiList',meta:{ title:'专题列表' }, name:'610',component: ZhuantiList }, // 专题列表
 		{ path: '/BusinessList',meta:{ title:'商业列表' }, name:'620',component: BusinessList }, // 商业列表
-		{ path: '/CourseoutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
-		{ path: '/CourseoutlineManage/CourseModule/:sid/:level',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
+		{ path: '/CourseOutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
+		{ path: '/CourseOutlineManage/CourseModule/:sid',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet/:cid',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
 		{ path: '/CourseContent/:cid',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
 		{ path: '/addVideo',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
