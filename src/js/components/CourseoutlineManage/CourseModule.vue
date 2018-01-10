@@ -7,7 +7,6 @@
       <div class="chapterbox">
 
         <template v-if="coursesylllevel == 3">
-          层级3
           <draggable v-model="tabledata" element="div">
             <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
               <div class="chaptit">
@@ -45,7 +44,6 @@
         </template>
 
         <template v-if="coursesylllevel == 4">
-          层级4
           <draggable v-model="tabledata" element="div">
             <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
               <div class="chaptit">
@@ -91,7 +89,6 @@
         </template>
 
         <template v-if="coursesylllevel == 2">
-          层级2
           <draggable v-model="tabledata" element="div">
             <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
               <div class="chaptit">
