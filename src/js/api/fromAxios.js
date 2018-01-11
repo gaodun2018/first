@@ -91,3 +91,18 @@ export const CourseSyllabusItem = params => post(`${getBaseUrl()}toc-service.gao
 //修改大纲条目
 export const ChangeSyllabusItem = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 
+//新增一个阶段接口
+export const AddCourseStage = params => post(`${getBaseUrl()}course-service.gaodun.com/gradation`, params);
+
+//修改一个阶段接口
+export const changeStage = (gradation_id,params) => put(`${getBaseUrl()}course-service.gaodun.com/gradation/${gradation_id}`, params);
+
+
+
+
+
+
+
+
+
+
