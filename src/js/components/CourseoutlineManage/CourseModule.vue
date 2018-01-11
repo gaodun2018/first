@@ -1,7 +1,7 @@
 <template>
   <div class="module-edu-content permission-outlinemodule">
     <div class="outlineeat">
-      课程大纲：CFA持证无忧Level1 - 2018年6月 - 基础精讲<span class="eaticon"></span>
+      课程大纲：{{title}}<!--<span class="eaticon"></span>-->
     </div>
     <div class="outlinebox">
       <div class="chapterbox">
@@ -29,8 +29,8 @@
                     <div class="resourcebox" v-for="(thirdItem,index3) in secItem.children" :key="thirdItem.id">
                       <div class="knowledge">
                         <span class="chlft">{{thirdItem.name}}<span class="chline">|</span>资源ID：{{thirdItem.sid}} 【{{thirdItem.type}}】，{{thirdItem.name}} </span>
-                        <span class="chrgt" @click="editprojectknow(thirdItem.id,thirdItem.name)">修改</span>
-                        <span class="chrgt" @click="openDelResDialog">删除</span>
+                        <span class="chrgt" @click="openeEditResource(thirdItem.id,thirdItem.name)">修改</span>
+                        <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
                       </div>
                     </div>
                   </draggable>
@@ -74,8 +74,8 @@
                         <div class="resourcebox" v-for="(fourthItem,index3) in thirdItem.children" :key="fourthItem.id">
                           <div class="knowledge">
                             <span class="chlft">{{fourthItem.name}}<span class="chline">|</span>资源ID：{{fourthItem.sid}} 【{{fourthItem.type}}】，{{fourthItem.name}} </span>
-                            <span class="chrgt" @click="editprojectknow(fourthItem.id,fourthItem.name)">修改</span>
-                            <span class="chrgt" @click="openDelResDialog">删除</span>
+                            <span class="chrgt" @click="openeEditResource(fourthItem.id,fourthItem.name)">修改</span>
+                            <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
                           </div>
                         </div>
                       </draggable>
@@ -101,8 +101,8 @@
                 <div class="resourcebox" v-for="(secItem,index3) in firstItem.children" :key="secItem.id">
                   <div class="knowledge">
                     <span class="chlft">{{secItem.name}}<span class="chline">|</span>资源ID：{{secItem.sid}} 【{{secItem.type}}】，{{secItem.name}} </span>
-                    <span class="chrgt" @click="editprojectknow(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt" @click="openDelResDialog">删除</span>
+                    <span class="chrgt" @click="openeEditResource(secItem.id,secItem.name)">修改</span>
+                    <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
                   </div>
                 </div>
               </draggable>
@@ -155,13 +155,14 @@
       <!-- -----------第二步---------- -->
       <el-form label-width="100px" v-show="module2" class="demo-ruleForm">
         <div class="selectmodel">
-          <span :class="[selcurrent === 1 ? 'is-active' : '']" @click="selectclk(1)" v-for="(item,index) in resourceTypeList" :key="index">{{item.label}}</span>
-
-
-<!--
-          <span :class="[selcurrent === 1 ? 'is-active' : '']" @click="selectclk(1)">视频</span>
-          <span :class="[selcurrent === 2 ? 'is-active' : '']" @click="selectclk(2)">讲义</span>
-          <span :class="[selcurrent === 3 ? 'is-active' : '']" @click="selectclk(3)">试卷</span>-->
+          <span
+            :class="[selcurrent == item.discriminator ? 'is-active' : '']"
+            @click="selectclk(item.discriminator,item.label)"
+            v-for="(item,index) in resourceTypeList"
+            :key="index"
+          >
+            {{item.label}}
+          </span>
         </div>
         <el-form-item class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
@@ -171,7 +172,7 @@
       </el-form>
       <!-- -----------第三步---------- -->
       <div class="rulemodule" v-show="module3">
-        <el-input :placeholder="txtcomt" size="small" icon="search" v-model="input2" :on-icon-click="handleIconClick"></el-input>
+        <el-input :placeholder="inputPlaceholder" size="small" icon="search" v-model="input2" :on-icon-click="handleIconClick"></el-input>
         <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
           <el-table-column label="资源ID" width="120">
             <template scope="scope">
@@ -191,7 +192,7 @@
         <div class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
           <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
-          <el-button type="primary">确 定</el-button>
+          <el-button type="primary" @click="addSyllabusResource">确 定</el-button>
         </div>
       </div>
     </el-dialog>
@@ -226,7 +227,7 @@
 <script>
   import Vue from 'vue';
   import draggable from 'vuedraggable';
-  import {CourseSyllabusItem,ChangeSyllabusItem} from '../../api/fromAxios'
+  import {CourseSyllabusItem,ChangeSyllabusItem,addSyllabusResource} from '../../api/fromAxios'
   import {getSyllabusItems,checkSyllabus,DeleteSyllabusItem} from '../../api/outline'
   export default {
     components: {
@@ -301,14 +302,15 @@
         Moduledialog:true,    //增加子目录的弹层的标题
         bigdislog:false,
         deleteModule:true,
-        selcurrent:1,
-        txtcomt:'请输入视频资源ID / 名称',
+        selcurrent:'video',
+        inputPlaceholder:'请输入视频资源ID / 名称',
         ddd:'',
         indexs:'',
         refname:'',
         coursesylllevel:'',
         coursesyllid:'',
         pid:'0',    //0 是最外层父级大纲
+        title:'',   //课程大纲标题
         resourceTypeList:[
           {
             "discriminator": "video",
@@ -334,9 +336,9 @@
       }
     },
     methods: {
-      selectclk(oi){
-        console.log(oi);
-        this.selcurrent = oi;
+      selectclk(discriminator,label){
+        this.selcurrent = discriminator;
+        this.inputPlaceholder = `请输入${label}资源ID / 名称`
       },
       //打开新增资源的弹层
       openAddResDialog(id){
@@ -346,52 +348,33 @@
       firstNextSubmit(formName){
         this.$refs[formName].validate(async(valid) => {
           if (valid) {
+
+            if(this.active >= this.progressText.length-1)return;
+            this.active++;
+            this.progressText[this.active].isCustomerConfirm=true;
+            this.showitem();
+
             console.log(this.pid);
-            let ret = await CourseSyllabusItem({
+           /* let ret = await CourseSyllabusItem({
               name:this.addResFirFrom.name,
               pid:this.pid,
               course_syllabus_id:this.coursesyllid
-            });
-            if(ret.status == 0){
-              if(this.active >= this.progressText.length-1)return;
-              this.active++;
-              this.progressText[this.active].isCustomerConfirm=true;
-              this.showitem();
-              this.getSyllabusItems();
-            }
+            });*/
+//            if(ret.status == 0){
+
+//              this.getSyllabusItems();
+//            }
           } else {
             return false;
           }
         });
       },
       submitForm(formName) {
-        if(this.active == 0){
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              console.log('submit!');
-              if(this.active >= this.progressText.length-1)return;
-              this.active++;
-              this.progressText[this.active].isCustomerConfirm=true;
-              this.showitem();
-            } else {
-              console.log('error submit!!');
-              return false;
-            }
-          });
-        }else{
-          if(this.active >= this.progressText.length-1)return;
-          this.active++;
-          this.progressText[this.active].isCustomerConfirm=true;
-          this.showitem();
-        }
 
-        if(this.selcurrent == 1){
-          this.txtcomt = "请输入视频资源ID / 名称"
-        }else if(this.selcurrent == 2){
-          this.txtcomt = "请输入讲义资源ID / 名称"
-        }else if(this.selcurrent == 3){
-          this.txtcomt = "请输入试卷资源ID / 名称"
-        }
+        if(this.active >= this.progressText.length-1)return;
+        this.active++;
+        this.progressText[this.active].isCustomerConfirm=true;
+        this.showitem();
       },
       prev(){
         if(this.active<=0)return
@@ -432,6 +415,26 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },
+      //新增大纲资源
+      async addSyllabusResource(){
+        //先走新增资源名字
+         let ret = await CourseSyllabusItem({
+           name:this.addResFirFrom.name,
+           pid:this.pid,
+           course_syllabus_id:this.coursesyllid
+         });
+        if(ret.status == 0){
+
+          this.getSyllabusItems();
+        }
+        //再走新增大纲资源
+       /* let ret = await addSyllabusResource();
+        console.log(ret);*/
+      },
+      //弹层修改资源的弹层
+      openeEditResource(){
+
       },
       // 弹出资源删除框
       openDelResDialog(id){
@@ -557,8 +560,8 @@
         let ret = await checkSyllabus(this.coursesyllid);
         console.log(ret);
         if(ret.status == 0){
+          this.title = ret.result.title;
           this.coursesylllevel = ret.result.template.level_max;    //大纲的层级
-          console.log(this.coursesylllevel,'大纲的层级');
         }
       }
     },
