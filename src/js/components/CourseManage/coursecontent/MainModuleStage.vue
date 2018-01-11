@@ -19,7 +19,7 @@
         </el-table-column>
         <el-table-column label="阶段课程大纲 " width="400">
           <template scope="scope">
-            <span>{{scope.row.title}}</span>
+            <span>{{scope.row.syllabus_name}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -109,8 +109,9 @@
           })
           this.dialogVisible = false;
           this.getStageAndOutline();
-        }else if(ret.status == 2){
-          this.$message.error('添加失败！');
+        }else if(ret.status > 0){
+          ret.message ? ret.message : '添加失败！'
+          this.$message.error(ret.message);
         }
       },
       //更新数据

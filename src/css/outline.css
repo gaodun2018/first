@@ -44,7 +44,7 @@
 .chapterbox .resourcebox .knowledge{border:0 none;margin-left:0;padding:6px 0 6px 98px;}
 .chapterbox .resourcebox .knowledge:hover{background:#E6F7FF;}
 .chapterbox .resourcebox .knowledge .chlft{font-weight:normal;}
-.chapterbox .resourcebox .knowledge .chlft .chline{display:inline-block;margin:0 20px;vertical-align:middle;}
+.chapterbox .resourcebox .knowledge .chlft .chline{display:inline-block;margin:0 14px;vertical-align:middle;}
 
 .clonetab .el-select{width:90%;}
 .cloneinfo{color:#f60;margin:0 30px 50px 30px;}
