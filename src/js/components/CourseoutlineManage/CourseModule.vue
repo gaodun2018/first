@@ -597,6 +597,8 @@
             return false;
           }
         });
+
+
       },
       // 弹出修改课程大纲名称的弹层
       editproject(currentId, name){

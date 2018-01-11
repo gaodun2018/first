@@ -348,7 +348,7 @@
       checkSyllabus(index,row){
         console.log(row);
         if(row.template == null){
-          this.$router.push({
+          this.$router.replace({
             path:'/CourseOutlineManage/CourseOutline/'+row.id,
           })
         }else{
