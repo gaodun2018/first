@@ -29,7 +29,7 @@
                     <div class="resourcebox" v-for="(thirdItem,index3) in secItem.children" :key="thirdItem.id">
                       <div class="knowledge">
                         <span class="chlft">{{thirdItem.name}}<span
-                          class="chline">|</span>资源ID：{{thirdItem.resource.id}} 【{{thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource.title}} </span>
+                          class="chline">|</span>资源ID：{{thirdItem.resource&&thirdItem.resource.id}} 【{{thirdItem.resource&&thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource&&thirdItem.resource.title}} </span>
                         <span class="chrgt"
                               @click="openeEditResource(thirdItem.name,thirdItem.id,thirdItem.resource.id,thirdItem.resource.discriminator)">修改</span>
                         <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
@@ -76,7 +76,7 @@
                         <div class="resourcebox" v-for="(fourthItem,index3) in thirdItem.children" :key="fourthItem.id">
                           <div class="knowledge">
                             <span class="chlft">{{fourthItem.name}}<span
-                              class="chline">|</span>资源ID：{{fourthItem.resource.id}} 【{{fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource.title}} </span>
+                              class="chline">|</span>资源ID：{{fourthItem.resource&&fourthItem.resource.id}} 【{{fourthItem.resource&&fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource&&fourthItem.resource.title}} </span>
                             <span class="chrgt"
                                   @click="openeEditResource(fourthItem.name,fourthItem.id,fourthItem.resource.id,fourthItem.resource.discriminator)">修改</span>
                             <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
@@ -105,7 +105,7 @@
                 <div class="resourcebox" v-for="(secItem,index3) in firstItem.children" :key="secItem.id">
                   <div class="knowledge">
                     <span class="chlft">{{secItem.name}}<span
-                      class="chline">|</span>资源ID：{{secItem.resource.id}} 【{{secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource.title}} </span>
+                      class="chline">|</span>资源ID：{{secItem.resource&&secItem.resource.id}} 【{{secItem.resource&&secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource&&secItem.resource.title}} </span>
                     <span class="chrgt" @click="openeEditResource(secItem.id,secItem.name)">修改</span>
                     <span class="chrgt"
                           @click="openDelResDialog(secItem.name,secItem.id,secItem.resource.id,secItem.resource.discriminator)">删除</span>
