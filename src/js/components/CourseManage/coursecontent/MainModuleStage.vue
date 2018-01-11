@@ -97,6 +97,7 @@
                     if (valid) {
                         this.AddCourseStage();
                     } else {
+                        console.log('error submit!!');
                         return false;
                     }
                 });
@@ -146,8 +147,8 @@
                     this.dialogVisible = false;
                     this.getStageAndOutline();
                 } else if (ret.status > 0) {
-                    ret.message ? ret.message : '修改失败！'
-                    this.$message.error(ret.result);
+                    ret.message ? ret.message :'修改失败！'
+                    this.$message.error(ret.message)
                 }
             },
             handleDelete(index, row) {
@@ -177,7 +178,7 @@
                     })
                     this.getStageAndOutline();
                 } else if (ret.status > 0) {
-                    ret.message ? ret.message : '删除失败！'
+                    ret.message ? ret.message :'删除失败！'
                     this.$message.error(ret.message)
                 }
             },

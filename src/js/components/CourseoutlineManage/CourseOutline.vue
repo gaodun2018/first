@@ -89,7 +89,7 @@
         let ret = await selectSyllabus(this.coursesyllid,{'template_id':template_id});
         console.log(ret);
         if(ret.status == 0&& ret.result == true){
-          this.$router.push({
+          this.$router.replace({
            path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid
            })
         }
