@@ -1,5 +1,7 @@
-import {COURSE_COVER,RESOURCE_INTRO,RESOURCE_UPDATE} from '../mutation-types';
+import {COURSE_INFO,COURSE_SYLLABUSES,COURSE_COVER,RESOURCE_INTRO,RESOURCE_UPDATE} from '../mutation-types';
 const state = {
+  course_info:'',    //课程的所有信息
+  course_Syllabuses:'',    //课程下的大纲
   course_cover: "",   //课程封面
   course_default_cover: "",   //课程默认封面
   resource_intro:[],   //所有资源介绍的信息
@@ -11,6 +13,14 @@ const state = {
 const getters = {}
 // 方法调用逻辑
 const actions = {
+  //保存课程的所有信息
+  saveCourseInfo({commit, state}, data){
+    commit(COURSE_INFO, data);
+  },
+  //保存课程下的大纲
+  saveCourseSyllabuses({commit, state}, data){
+    commit(COURSE_SYLLABUSES, data);
+  },
   //保存课程封面
   changeCover({commit, state}, data){
     commit(COURSE_COVER, data);
@@ -43,6 +53,12 @@ const actions = {
 };
 // 逻辑代码
 const mutations = {
+  [COURSE_INFO](state, data) {
+    state.course_info = data;
+  },
+  [COURSE_SYLLABUSES](state, data) {
+    state.course_Syllabuses = data;
+  },
   [COURSE_COVER](state, data) {
     state.course_cover = data.cover;
     state.course_default_cover = data.cover_default?data.cover_default:state.course_default_cover;

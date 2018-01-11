@@ -62,10 +62,10 @@
         </el-table-column>
         <el-table-column label="操作" min-width="200" fixed="right" align="center">
           <template scope="scope">
-            <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">编辑课程大纲</el-button>
+            <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">基本设置</el-button>
 
             <!--<el-button type="text"><router-link :to="'/CourseOutlineManage/CourseOutline/'+scope.row.id">查看大纲</router-link></el-button>-->
-            <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)">查看大纲</el-button>
+            <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)">编辑大纲内容</el-button>
             <!-- <el-button type="text"><router-link :to="'/CourseOutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
@@ -254,9 +254,9 @@
       outlinechange(reid,index){
         this.clver = reid;
         if (reid == '0') {
-          this.subtablist = [];
+          this.subjectlist = [];
         } else {
-          this.subtablist = this.projectlist[index].subject_list;
+          this.subjectlist = this.projectlist[index].subject_list;
         }
         this.clversm = '0';  //科目设置为0
         this.pageSize = 15;

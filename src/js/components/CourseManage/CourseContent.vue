@@ -14,6 +14,62 @@
     </el-tabs>
   </div>
 </template>
+<script>
+  import MainCourse from './coursecontent/ContentModuleMain.vue'
+  import Glive from './coursecontent/ContentModuleGlive.vue'
+  import {getCourseInfo} from '../../api/course'
+  import {CourseSyllabuses} from '../../api/outline'
+  export default {
+    components: {
+      MainCourse,Glive
+    },
+    data() {
+      return {
+        activeName: 'main',
+      }
+    },
+    methods: {
+      handleClick(tab, event) {
+        console.log(tab);
+        console.log(this.activeName);
+      },
+      //获取课程的基本设置 拿到项目 科目id
+      async getCourseInfo(){
+        let url = this.course_id;
+        let ret = await getCourseInfo(url);
+        if(ret.status == 0){
+          this.$store.dispatch('saveCourseInfo',ret.result);
+          this.CourseSyllabuses();
+        }
+      },
+      //获取课程下的大纲 根据项目科目id
+      async CourseSyllabuses(){
+        let ret = await CourseSyllabuses({
+          page:'',
+          page_size:'',
+          project_id:this.$store.state.course.course_info&&this.$store.state.course.course_info.project_id,
+          subject_id:this.$store.state.course.course_info&&this.$store.state.course.course_info.subject_id,
+          status:'',
+          keyword:'',
+        });
+        console.log(ret);
+        if(ret.status == 0){
+          this.$store.dispatch('saveCourseSyllabuses',ret.result.list);
+        }
+      }
+    },
+    computed: {
+      course_id(){
+        return this.$route.params.cid;
+      }
+    },
+    mounted() {
+    },
+    created() {
+      this.getCourseInfo();
+    }
+  }
+</script>
 <style>
   .coursecontent .el-tabs__header {
     margin: 0;
@@ -129,28 +185,3 @@
   .module-edu-content.coursecontent .addContent.tabplane .el-dialog__body .el-form-item__content{margin-left: 150px !important;}
   .module-edu-content.coursecontent .addContent.tabplane .coursebtn .el-form-item__content{margin-left: 0!important;}
 </style>
-<script>
-  import MainCourse from './coursecontent/ContentModuleMain.vue'
-  import Glive from './coursecontent/ContentModuleGlive.vue'
-  export default {
-    components: {
-      MainCourse,Glive
-    },
-    data() {
-      return {
-        activeName: 'glive',
-      }
-    },
-    methods: {
-      handleClick(tab, event) {
-        console.log(tab);
-        console.log(this.activeName);
-      },
-    },
-    computed: {},
-    mounted() {
-    },
-    created() {
-    }
-  }
-</script>

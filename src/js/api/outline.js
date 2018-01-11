@@ -24,3 +24,4 @@ export const getSyllabusItems = (params) => get(`${getBaseUrl()}toc-service.gaod
 //删除大纲条目
 export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 
+

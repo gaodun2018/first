@@ -22,7 +22,7 @@
                     <span class="chlft">第{{(index+1) | Arab2Chn}}节 {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                     <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
-                    <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
+                    <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
                   </div>
 
                   <draggable v-model="secItem.children" element="div">
