@@ -49,7 +49,7 @@
           page_size:'',
           project_id:this.$store.state.course.course_info&&this.$store.state.course.course_info.project_id,
           subject_id:this.$store.state.course.course_info&&this.$store.state.course.course_info.subject_id,
-          status:'',
+          status:'0',    //获取启用的大纲
           keyword:'',
         });
         console.log(ret);

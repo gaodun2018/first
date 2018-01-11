@@ -98,10 +98,7 @@ export const AddCourseStage = params => post(`${getBaseUrl()}course-service.gaod
 export const changeStage = (gradation_id,params) => put(`${getBaseUrl()}course-service.gaodun.com/gradation/${gradation_id}`, params);
 
 //大纲条目上挂资源
-export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
-
-
-
+export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
 
 
 

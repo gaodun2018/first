@@ -1,4 +1,4 @@
-/*! Administrator modified this file at 2018-1-11 14:09:14 */
+/*! Administrator modified this file at 2018-1-11 17:42:58 */
 /*视频*/
 .order-manage-dislog .el-dialog--small {
   width: 30%;
@@ -1129,10 +1129,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
-
-
-
-
 .course-manage .el-dialog__header {
   padding: 30px 20px 0;
   text-align: center;
@@ -1276,6 +1272,18 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
     font-size: 12px;
     padding: 25px 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2538,7 +2546,7 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .chapterbox .resourcebox .knowledge{border:0 none;margin-left:0;padding:6px 0 6px 98px;}
 .chapterbox .resourcebox .knowledge:hover{background:#E6F7FF;}
 .chapterbox .resourcebox .knowledge .chlft{font-weight:normal;}
-.chapterbox .resourcebox .knowledge .chlft .chline{display:inline-block;margin:0 20px;vertical-align:middle;}
+.chapterbox .resourcebox .knowledge .chlft .chline{display:inline-block;margin:0 14px;vertical-align:middle;}
 
 .clonetab .el-select{width:90%;}
 .cloneinfo{color:#f60;margin:0 30px 50px 30px;}

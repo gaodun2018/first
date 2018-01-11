@@ -63,11 +63,7 @@
         <el-table-column label="操作" min-width="200" fixed="right" align="center">
           <template scope="scope">
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">基本设置</el-button>
-
-            <!--<el-button type="text"><router-link :to="'/CourseOutlineManage/CourseOutline/'+scope.row.id">查看大纲</router-link></el-button>-->
             <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)">编辑大纲内容</el-button>
-            <!-- <el-button type="text"><router-link :to="'/CourseOutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
-
           </template>
         </el-table-column>
       </el-table>
@@ -148,8 +144,6 @@
         boxsubject:[],
         currentPage:1,   //第几页 当前页码
         page_size:15,    //一页显示多少
-        flag:true,
-        flagtwo:true,
         currentIndex:'',
         substatus:'addoutline',
         outlineid:'',
@@ -294,13 +288,9 @@
         }
         this.getCourseSyllabuses();
       },
-      async getCourseSyllabuses(currentPage,page_size){
-        if(!currentPage){        //不传页面  切换科目  查看回放
-          this.flag = false;
-          this.flagtwo = false;
-          this.currentPage = 1;
-        }
-        this.page_size = page_size ? page_size : '15';
+      //拉去大纲列表
+      async getCourseSyllabuses(){
+        console.log(this.currentPage);
         let ret = await CourseSyllabuses({
           page:this.currentPage,
           page_size:this.page_size,
@@ -309,8 +299,6 @@
           status:this.selectvalue,
           keyword:this.searchinput
         });
-        this.flag = true;
-        this.flagtwo = true;
         if(ret.status == 0){
           this.CourseLineList = ret.result.list;
           this.courselinenum = ret.result.total;
@@ -318,17 +306,14 @@
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.currentPage = 0;
         this.page_size = val;
-        if(!this.flagtwo){
-          this.getCourseSyllabuses(1,val);
-        }
+        this.currentPage = 1;
+//        this.getCourseSyllabuses();
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        if(this.flag){
-          this.getCourseSyllabuses(val,this.page_size);
-        }
+        this.currentPage = val;
+        this.getCourseSyllabuses();
       },
       UpdateOutlineTitle(index, row){
         // 修改一个课程大纲 弹出框
