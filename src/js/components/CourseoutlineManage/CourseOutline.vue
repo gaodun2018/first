@@ -1,7 +1,7 @@
 <template>
   <div class="module-edu-content permission-outlineeat">
     <div class="outlineeat">
-      课程大纲：CFA持证无忧Level1 - 2018年6月 - 基础精讲<span class="eaticon"></span>
+      课程大纲：{{title}}<!--<span class="eaticon"></span>-->
       <span class="cloneoutline" @click="clonedialogVisible = true">克隆旧课程大纲</span>
       <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>
     </div>
@@ -70,17 +70,16 @@
         },
         uploaddialogVisible:false,
         coursesyllid:'',   //大纲id
-        modulelist:[]
+        modulelist:[],
+        title:'',    //大纲标题
       }
     },
     methods: {
       cloneruleProject(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //alert('submit!');
             this.clonedialogVisible = false;
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -108,6 +107,7 @@
         let ret = await checkSyllabus(this.coursesyllid);
         console.log(ret);
         if(ret.status == 0){
+          this.title = ret.result.title;
           //当用户已经选择大纲时则直接跳转过去
           if(ret.result.template&&ret.result.template.id){
             this.$router.push({
