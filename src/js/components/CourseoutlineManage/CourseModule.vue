@@ -292,6 +292,27 @@
                         isCustomerConfirm: false
                     }
                 ],
+                progress2Text:[
+                    {
+                        text: '资源设置',
+                        currentLine: 'bar-line-current',
+                        currentDot: 'bar-dot-current',
+                        currentText: 'current-text',
+                        isCustomerConfirm: true
+                    }, {
+                        text: '资源类型',
+                        currentLine: 'bar-line-current',
+                        currentDot: 'bar-dot-current',
+                        currentText: 'current-text',
+                        isCustomerConfirm: false
+                    }, {
+                        text: '资源选择',
+                        currentLine: 'bar-line-current',
+                        currentDot: 'bar-dot-current',
+                        currentText: 'current-text',
+                        isCustomerConfirm: false
+                    }
+                ],
                 addResFirFrom: {
                     name: ''
                 },
@@ -356,11 +377,20 @@
             openAddResDialog(id){
                 this.currentId = id;
                 this.active = 0;
+                this.progressText.forEach((item,index)=>{
+                    if(index == 0){
+                        item.isCustomerConfirm = true;
+                    }else{
+                        item.isCustomerConfirm = false;
+                    }
+                })
+                console.log(this.progress2Text);
                 this.showitem();
                 this.addResFirFrom.name = '';
                 this.resourceRadio = '';
                 this.dialogFormVisible = true;
             },
+            //第一步往下一步
             firstNextSubmit(formName){
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
@@ -449,8 +479,7 @@
                     //再走新增大纲资源
                     let id = ret.result.id;
                     let params = {
-//            resource_id:this.resourceRadio,
-                        resource_id: 1,
+                        resource_id:this.resourceRadio,
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
@@ -508,6 +537,13 @@
             //弹出修改资源的弹层
             openeEditResource(name, id, resourceId, resourceDiscriminator){
                 this.active = 0;
+                this.progressText.forEach((item,index)=>{
+                    if(index == 0){
+                        item.isCustomerConfirm = true;
+                    }else{
+                        item.isCustomerConfirm = false;
+                    }
+                })
                 this.showitem();
                 this.addResFirFrom.name = name;
                 this.currentId = id;
@@ -682,6 +718,9 @@
             this.coursesyllid = this.$route.params.sid;
             this.getSyllabusItems();
             this.checkSyllabus();
+            setInterval(()=>{
+                console.log(this.progress2Text[1].isCustomerConfirm,this.progressText[1].isCustomerConfirm);
+            },500)
         }
     }
 </script>
