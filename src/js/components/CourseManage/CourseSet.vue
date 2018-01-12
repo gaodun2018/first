@@ -63,10 +63,10 @@
               </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name">
+          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name" :rules="filter_rules({type:'isAllSpace',maxLength:20})">
             <el-row>
               <el-col :span="6">
-                <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" :rules="filter_rules({maxLength:20})" placeholder="请输入老师名字"></el-input>
+                <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
               </el-col>
             </el-row>
           </el-form-item>
