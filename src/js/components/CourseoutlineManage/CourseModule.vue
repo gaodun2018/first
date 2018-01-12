@@ -11,7 +11,7 @@
                                @end="dragEnd(tabledata)" :move="checkMove">
                         <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
                             <div class="chaptit">
-                                <span class="chlft">第{{(index + 1) | Arab2Chn}}章 {{firstItem.name}}</span>
+                                <span class="chlft">{{firstItem.name}}</span>
                                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -20,7 +20,7 @@
                             <draggable v-model="firstItem.children" :options="{group:'secItem'}" element="div">
                                 <div v-for="(secItem,index1) in firstItem.children" :key="secItem.id">
                                     <div class="chaptit chapsecd">
-                                        <span class="chlft">第{{(index + 1) | Arab2Chn}}节 {{secItem.name}}</span>
+                                        <span class="chlft">{{secItem.name}}</span>
                                         <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                                         <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                                         <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
@@ -30,8 +30,8 @@
                                         <div class="resourcebox" v-for="(thirdItem,index3) in secItem.children"
                                              :key="thirdItem.id">
                                             <div class="knowledge">
-                        <span class="chlft">{{thirdItem.name}}<span
-                            class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}} </span>
+                                                <span class="chlft">
+                                                    {{thirdItem.name}}<span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}} </span>
                                                 <span class="chrgt"
                                                       @click="openeEditResource(thirdItem.name,thirdItem.id,thirdItem.resource.id,thirdItem.resource.discriminator)">修改</span>
                                                 <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
@@ -51,7 +51,7 @@
                     <draggable v-model="tabledata" :options="{group:'firstItem'}" element="div">
                         <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
                             <div class="chaptit">
-                                <span class="chlft">第{{(index + 1) | Arab2Chn}}章 {{firstItem.name}}</span>
+                                <span class="chlft">{{firstItem.name}}</span>
                                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -60,7 +60,7 @@
                             <draggable v-model="firstItem.children" :options="{group:'secItem'}" element="div">
                                 <div v-for="(secItem,index) in firstItem.children" :key="secItem.id">
                                     <div class="chaptit chapsecd">
-                                        <span class="chlft">第{{(index + 1) | Arab2Chn}}节 {{secItem.name}}</span>
+                                        <span class="chlft">{{secItem.name}}</span>
                                         <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                                         <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                                         <span class="chrgt1" @click="openChildDialog(secItem.id)">增加子目录</span>
@@ -83,8 +83,8 @@
                                                      v-for="(fourthItem,index3) in thirdItem.children"
                                                      :key="fourthItem.id">
                                                     <div class="knowledge">
-                            <span class="chlft">{{fourthItem.name}}<span
-                                class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </span>
+                                                        <span class="chlft">
+                                                            {{fourthItem.name}}<span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </span>
                                                         <span class="chrgt"
                                                               @click="openeEditResource(fourthItem.name,fourthItem.id,fourthItem.resource.id,fourthItem.resource.discriminator)">修改</span>
                                                         <span class="chrgt"
@@ -105,7 +105,7 @@
                     <draggable v-model="tabledata" :options="{group:'firstItem'}" element="div">
                         <div v-for="(firstItem,index) in tabledata" :key="firstItem.id">
                             <div class="chaptit">
-                                <span class="chlft">第{{(index + 1) | Arab2Chn}}节 {{firstItem.name}}</span>
+                                <span class="chlft">{{firstItem.name}}</span>
                                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                                 <span class="chrgt1 yellow" @click="openAddResDialog(firstItem.id)">新增资源</span>
@@ -114,8 +114,8 @@
                                 <div class="resourcebox" v-for="(secItem,index3) in firstItem.children"
                                      :key="secItem.id">
                                     <div class="knowledge">
-                    <span class="chlft">{{secItem.name}}<span
-                        class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </span>
+                                        <span class="chlft">
+                                            {{secItem.name}}<span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </span>
                                         <span class="chrgt"
                                               @click="openeEditResource(secItem.id,secItem.name)">修改</span>
                                         <span class="chrgt"
