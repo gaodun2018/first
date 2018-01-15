@@ -33,7 +33,7 @@
                                                 <span class="chlft">
                                                     {{thirdItem.name}}<span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}} </span>
                                                 <span class="chrgt"
-                                                      @click="openeEditResource(thirdItem.name,thirdItem.id,thirdItem.resource.id,thirdItem.resource.discriminator)">修改</span>
+                                                      @click="openeEditResource(thirdItem)">修改</span>
                                                 <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                                         <span class="chlft">
                                                             {{fourthItem.name}}<span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </span>
                                                         <span class="chrgt"
-                                                              @click="openeEditResource(fourthItem.name,fourthItem.id,fourthItem.resource.id,fourthItem.resource.discriminator)">修改</span>
+                                                              @click="openeEditResource(fourthItem)">修改</span>
                                                         <span class="chrgt"
                                                               @click="openDelResDialog(fourthItem.id)">删除</span>
                                                     </div>
@@ -117,7 +117,7 @@
                                         <span class="chlft">
                                             {{secItem.name}}<span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </span>
                                         <span class="chrgt"
-                                              @click="openeEditResource(secItem.id,secItem.name)">修改</span>
+                                              @click="openeEditResource(secItem)">修改</span>
                                         <span class="chrgt"
                                               @click="openDelResDialog(secItem.name,secItem.id,secItem.resource.id,secItem.resource.discriminator)">删除</span>
                                     </div>
@@ -535,7 +535,8 @@
                 }
             },
             //弹出修改资源的弹层
-            openeEditResource(name, id, resourceId, resourceDiscriminator){
+            openeEditResource(item){
+                console.log(item);
                 this.active = 0;
                 this.progressText.forEach((item,index)=>{
                     if(index == 0){
@@ -545,10 +546,10 @@
                     }
                 })
                 this.showitem();
-                this.addResFirFrom.name = name;
-                this.currentId = id;
-                this.resourceRadio = String(resourceId);
-                this.selcurrent = resourceDiscriminator;
+                this.addResFirFrom.name = item.name;
+                this.currentId = item.id;
+                this.resourceRadio = item.resource&&String(item.resource.id);
+                this.selcurrent = item.resource&&item.resource.discriminator;
                 this.dialogFormVisible = true;
                 this.resourceAction = 'update';
             },
@@ -718,9 +719,6 @@
             this.coursesyllid = this.$route.params.sid;
             this.getSyllabusItems();
             this.checkSyllabus();
-            setInterval(()=>{
-                console.log(this.progress2Text[1].isCustomerConfirm,this.progressText[1].isCustomerConfirm);
-            },500)
         }
     }
 </script>
