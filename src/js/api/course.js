@@ -1,4 +1,4 @@
-import { post, get } from '../util/zeusAxios';
+import { post, get,DELETE } from '../util/zeusAxios';
 import { Message } from 'element-ui';
 import {getBaseUrl} from '../util/config'
 
@@ -13,5 +13,12 @@ export const getCourseInfo = (url,params) => get(`${getBaseUrl()}course-service.
 
 //拉取课程下的资源介绍接口
 export const getCourseResourceIntro = (course_id,params) => get(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
+
+
+//拉取课程下所有阶段和大纲接口
+export const getStageAndOutline= (course_id,params) => get(`${getBaseUrl()}course-api.gaodun.com/course/${course_id}/gradation`, params)
+
+//删除一个阶段接口
+export const DeleteStage = (gradation_id,params) => DELETE(`${getBaseUrl()}course-service.gaodun.com/gradation/${gradation_id}`, params);
 
 

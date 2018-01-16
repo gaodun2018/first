@@ -66,9 +66,16 @@
       },
       handleAvatarSuccess(res, file) {
         console.log(res);
-        this.$store.dispatch('changeCover',{
-          cover:URL.createObjectURL(file.raw),
-        }) //封面图片
+        if(res.status == 0){
+          this.$store.dispatch('changeCover',{
+//          cover:URL.createObjectURL(file.raw),
+            cover:res.filePath,
+          }) //封面图片
+          this.$message({
+            type: 'success',
+            message:('上传成功！')
+          })
+        }
       },
       handleAvatarError(err, file, fileList){
         this.$store.dispatch('changeCover',{

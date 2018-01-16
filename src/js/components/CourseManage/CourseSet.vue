@@ -11,23 +11,23 @@
     </el-row>
     <div class="formBox">
       <div v-show="active == 0">
-        <el-form :model="ruleForm" label-position="left" :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm">
-          <el-form-item label="课程名称" prop="name">
+        <el-form :model="ruleForm" label-position="left" ref="ruleForm" label-width="100px" class="ruleForm">
+          <el-form-item label="课程名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="所属项目" prop="project_id">
+          <el-form-item label="所属项目" prop="project_id" :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
             <el-select v-model="ruleForm.project_id" placeholder="请选择所属项目" @change="changeProject" @visible-change="visibleChange">
               <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist" :key="item.project_id"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="所属科目" prop="subject_id">
+          <el-form-item label="所属科目" prop="subject_id" :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
             <el-select v-model="ruleForm.subject_id" placeholder="请选择所属科目">
               <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist" :key="item.subject_id"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="网课类型" prop="course_type">
+          <el-form-item label="网课类型" prop="course_type" :rules="[{required: true, message: '请选择网课类型', trigger: 'change'}]">
             <el-select v-model="ruleForm.course_type" placeholder="请选择网课类型">
               <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type" :key="item.course_type_id"></el-option>
             </el-select>
@@ -40,7 +40,7 @@
           <el-form-item label="课程简介" class="pad_10">
             <div id="ed" type="text/plain"></div>
           </el-form-item>
-          <el-form-item label="资源介绍"  class="res_intro pad_10">
+          <el-form-item label="资源介绍" class="res_intro pad_10">
             <ResourceIntro></ResourceIntro>
           </el-form-item>
           <el-form-item label="给新学员的欢迎信" class="pad_10">
@@ -50,14 +50,20 @@
               <el-radio label="0">不启用欢迎信</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter">
+          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:1000})">
             <el-row>
               <el-col :span="24">
-                <el-input v-model="ruleForm.welcome_letter" type="textarea" @change="changeWelcomeLetter" :autosize="{ minRows: 4}" :disabled="ruleForm.welcome_letter_type==1?true:false" class="coursetxt" auto-complete="off" placeholder="请输入欢迎信的正文内容（字数请控制在100-200字内）"></el-input>
+                <el-input v-model="ruleForm.welcome_letter"
+                          type="textarea" @change="changeWelcomeLetter"
+                          :autosize="{ minRows: 4}" :disabled="ruleForm.welcome_letter_type==1?true:false"
+                          class="coursetxt" auto-complete="off"
+                          placeholder="请输入欢迎信的正文内容（字数请控制在100-200字内）"
+                >
+                </el-input>
               </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name">
+          <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name" :rules="filter_rules({type:'isAllSpace',maxLength:20})">
             <el-row>
               <el-col :span="6">
                 <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off" placeholder="请输入老师名字"></el-input>
@@ -70,7 +76,7 @@
         </el-form>
       </div>
       <div v-show="active == 1">
-        <el-form :model="kForm" label-position="left" :rules="kFormRules" ref="kForm" label-width="100px" class="kForm">
+        <el-form :model="kForm" label-position="left" ref="kForm" label-width="100px" class="kForm">
           <el-form-item label="内容制作状态" prop="ware_status">
             <el-select v-model="kForm.ware_status">
               <el-option :label="item[1]" :value="item[0]+''" v-for="(item,index) in ware_status_list" :key="index"></el-option>
@@ -106,7 +112,7 @@
               <el-radio label="1">是</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="问卷地址" prop="investigate_url" v-if="kForm.allow_investigate=='1'?true:false">
+          <el-form-item label="问卷地址" prop="investigate_url" :rules="filter_rules({required:true,type:'isAllSpace'})" v-if="kForm.allow_investigate=='1'?true:false">
             <el-input v-model="kForm.investigate_url"></el-input>
           </el-form-item>
           <el-form-item class="last-form-item">
@@ -128,33 +134,6 @@
       ImgUpload,ResourceIntro
     },
     data() {
-      var validname= (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入课程名称'));
-        }else if(/^\s+$/g.test(value)){
-          return callback(new Error('输入的课程名称不能为空格'));
-        }else{
-          return callback();
-        }
-      };
-      var validwelcome = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入欢迎信内容'));
-        }else if(/^\s+$/g.test(value)){
-          return callback(new Error('欢迎信内容不能为空格'));
-        }else{
-          return callback();
-        }
-      };
-      var validurl = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入完成URL地址'));
-        }else if(/^\s+$/g.test(value)){
-          return callback(new Error('URL地址不能为空格'));
-        }else{
-          return callback();
-        }
-      };
       return {
         editor:null,
         selectfalg: false,     //选择器搜索开关
@@ -195,28 +174,6 @@
             isCustomerConfirm: false
           }
         ],
-        rules: {
-          name: [
-            { required:true,validator: validname, trigger: 'blur' },
-          ],
-          project_id: [
-            {required: true, message: '请选择所属项目', trigger: 'change'}
-          ],
-          subject_id: [
-            {required: true, message: '请选择所属科目', trigger: 'change'}
-          ],
-          course_type: [
-            {required: true, message: '请选择网课类型', trigger: 'change'}
-          ],
-          welcome_letter:[
-            { required:true,validator: validwelcome, trigger: 'blur' },
-          ]
-        },
-        kFormRules:{
-          investigate_url: [
-            { required:true,validator: validurl, trigger: 'blur' },
-          ],
-        },
         ruleForm: {
           name: '',
           project_id: '',
@@ -284,7 +241,6 @@
             this.active++;
             this.progressText[this.active].isCustomerConfirm=true;
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -354,8 +310,18 @@
           this.ruleForm.welcome_letter = "";
           this.ruleForm.teacher_name = "";
         }
+
         let url = this.course_id;
-        let fromData = {...this.ruleForm,...this.kForm,brief_introduction:this.editor.getContent()};
+        let fromData = {
+          ...this.ruleForm,
+          ...this.kForm,
+          brief_introduction:this.editor.getContent(),
+          'course_source_ids[]':this.$store.state.course.resource_intro_id,
+          'course_update_ids[]':this.$store.state.course.course_update_ids,
+          'course_update_titles[]':this.$store.state.course.course_update_titles,
+          'course_update_contents[]':this.$store.state.course.course_update_contents,
+          cover:this.$store.state.course.course_cover,
+        };
         SetCourse(url,fromData).then((res)=>{
           console.log(res);
           if(res.status == 0){

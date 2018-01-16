@@ -55,8 +55,14 @@
         <el-table-column prop="course_name" label="课程名称" min-width="260">
         </el-table-column>
         <el-table-column prop="" label="项目" min-width="200">
+            <template scope="scope">
+                <span>{{scope.row.project&&scope.row.project.project_name}}</span>
+            </template>
         </el-table-column>
         <el-table-column prop="" label="科目" min-width="200">
+            <template scope="scope">
+                <span>{{scope.row.subject&&scope.row.subject.subject_name}}</span>
+            </template>
         </el-table-column>
         <el-table-column prop="course_type" label="网课类型" min-width="260">
           <template scope="scope">
