@@ -328,7 +328,7 @@
                 prevclk: false,
                 nextclk: true,
                 dialogVisible: false,
-                adddialogVisible: false,    //新增和修改大纲目录的弹层
+                adddialogVisible: false,  //新增和修改大纲目录的弹层
                 Moduledialog: true,    //增加子目录的弹层的标题
                 bigdislog: false,
                 deleteModule: true,
