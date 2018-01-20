@@ -119,7 +119,7 @@
                                         <span class="chrgt"
                                               @click="openeEditResource(secItem)">修改</span>
                                         <span class="chrgt"
-                                              @click="openDelResDialog(secItem.name,secItem.id,secItem.resource.id,secItem.resource.discriminator)">删除</span>
+                                              @click="openDelResDialog(secItem.id)">删除</span>
                                     </div>
                                 </div>
                             </draggable>
@@ -554,6 +554,7 @@
             },
             // 弹出资源删除框
             openDelResDialog(id){
+                console.log(id);
                 this.currentId = id;
                 this.dialogVisible = true;
                 this.deleteModule = false;
