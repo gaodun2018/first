@@ -216,8 +216,7 @@
                     <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
                     <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
                     <el-button type="primary" v-if="resourceAction=='add'" @click="addSyllabusResource">确 定</el-button>
-                    <el-button type="primary" v-if="resourceAction=='update'" @click="updateSyllabusResource">确 定
-                    </el-button>
+                    <el-button type="primary" v-if="resourceAction=='update'" @click="updateSyllabusResource">确 定</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -389,6 +388,7 @@
                 this.addResFirFrom.name = '';
                 this.resourceRadio = '';
                 this.dialogFormVisible = true;
+                this.resourceAction = 'add';
             },
             //第一步往下一步
             firstNextSubmit(formName){
@@ -504,7 +504,7 @@
                     this.$message.error('请选择资源');
                     return;
                 }
-                //先走新增资源名字
+                //先走修改大纲条目名字
                 let id = this.currentId;
                 let name = {
                     name: this.addResFirFrom.name
@@ -512,10 +512,9 @@
                 let ret = await ChangeSyllabusItem(id, name);
                 if (ret.status == 0) {
                     //再走新增大纲资源
-                    let id = ret.result.id;
+                    let id = ret.result.id?ret.result.id:this.currentId;
                     let params = {
-//            resource_id:this.resourceRadio,
-                        resource_id: 1,
+                        resource_id:this.resourceRadio,
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
