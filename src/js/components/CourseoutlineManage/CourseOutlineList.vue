@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="title" label="课程大纲名称" min-width="200">
         </el-table-column>
-        <el-table-column prop="subject.project.name" label="所属项目" min-width="100">
+        <el-table-column prop="project.name" label="所属项目" min-width="100">
         </el-table-column>
         <el-table-column prop="subject.name" label="所属科目" min-width="125">
         </el-table-column>
@@ -317,6 +317,7 @@
       },
       UpdateOutlineTitle(index, row){
         // 修改一个课程大纲 弹出框
+          console.log(row);
         this.substatus = 'updateoutline';
         this.dialogCourse = false;
         this.issubject = true;
@@ -326,12 +327,12 @@
         }
         this.ruleForm = {
           title:row.title,
-          project_id:row.subject.project.id+'',
+          project_id:row.project.id+'',
           subject_id:row.subject.id+'',
           status:row.status+'',
         }
         for(var i = 0; i < this.projectlist.length; i++){
-          if(this.projectlist[i].project_id == row.subject.project.id){
+          if(this.projectlist[i].project_id == row.project.id){
             let subjectall = [...this.projectlist[i]['subject_list']];
             subjectall.unshift({
               subject_id:'0',
