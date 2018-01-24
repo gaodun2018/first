@@ -781,5 +781,37 @@ export default [
       7
     ],
     "ChildNavigations": null
-  }
+  },
+
+
+  {
+    "AppId": 130555,
+    "NavigationId": 15,
+    "Title": "班级管理",
+    "Url": "0.5624345345634",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      15
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 16,
+        "Title": "班级列表",
+        "Url": "/ClassList",
+        "Path": "components/ClassManageSys/ClassList",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          16
+        ],
+        "ChildNavigations": null
+      }
+    ]
+  },
 ]

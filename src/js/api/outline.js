@@ -15,3 +15,6 @@ export const CourseSyllabusItem = parameters => post(`${getBaseUrl()}toc-service
 
 //课程大纲模板
 export const CourseSyllabusTemplates = parameters => get(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus-templates`, parameters);
+
+// 班级列表
+export const getClassList = parameters => get(`${getBaseUrl()}plan-api.gaodun.com/class/lists`, parameters);
