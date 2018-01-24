@@ -597,9 +597,9 @@ export default [
       {
         "AppId": 130555,
         "NavigationId": 10,
-        "Title": "课程大纲管理",
+        "Title": "课程大纲列表",
         "Url": "/CourseOutlineList",
-        "Path": "components/CourseoutlineManage/CourseOutlineList",
+        "Path": "components/CourseOutlineManage/CourseOutlineList",
         "ParentID": 1,
         "Iconurl": "",
         "CreateTime": "2017-11-17 10:21:30",

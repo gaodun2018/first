@@ -583,6 +583,36 @@
   },
   {
     "AppId": 130555,
+    "NavigationId": 1,
+    "Title": "课程大纲管理",
+    "Url": "0.5624345345634",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      1
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 10,
+        "Title": "课程大纲列表",
+        "Url": "/CourseOutlineList",
+        "Path": "components/CourseOutlineManage/CourseOutlineList",
+        "ParentID": 1,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          1,
+          10
+        ],
+        "ChildNavigations": null
+      }
+    ]
+  },
+  {
+    "AppId": 130555,
     "NavigationId": 8,
     "Title": "课程管理",
     "Url": "0.453243242143543",
@@ -840,8 +870,8 @@
     "Title": "- 编辑课程大纲",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseoutlineManage/CourseOutline/:sid",
-    "Path": "components/CourseoutlineManage/CourseOutline",
+    "Url": "/CourseOutlineManage/CourseOutline/:sid",
+    "Path": "components/CourseOutlineManage/CourseOutline",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
@@ -852,8 +882,8 @@
     "Title": "- 课程大纲模块",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseoutlineManage/CourseModule/:sid/:level",
-    "Path": "components/CourseoutlineManage/CourseModule",
+    "Url": "/CourseOutlineManage/CourseModule/:sid",
+    "Path": "components/CourseOutlineManage/CourseModule",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
@@ -875,7 +905,7 @@
     "Title": "- 课程内容",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseContent",
+    "Url": "/CourseContent/:cid",
     "Path": "components/CourseManage/CourseContent",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",

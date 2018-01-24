@@ -39,3 +39,5 @@
 .add-resource .selectknowledge .el-dialog .el-dialog__body{padding-left:0;padding-right: 0;}
 .add-resource .selectknowledge .el-dialog .el-dialog__footer{padding-left:0;padding-right: 0;}
 .add-resource .selectknowledge .searchtools{height: 50px;}
+.add-resource .selectknowledge .select_tags{padding-top: 24px;}
+.add-resource .selectknowledge .select_tags span{margin-bottom: 8px;margin-right: 4px;}

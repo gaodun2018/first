@@ -17,10 +17,10 @@
             <span> 科 目:</span>
             <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']"
                   @click="mulchange('0')">全部</span>
-              <template v-for="(revs,index) in subtablist">
+            <template v-for="(revs,index) in subtablist">
                 <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']"
                       @click="mulchange(revs.subject_id)">{{revs.subject_name}}</span>
-              </template>
+            </template>
           </div>
         </el-col>
       </el-row>
@@ -28,7 +28,8 @@
         <el-col :sm="12">
           <el-row>
             <div class="select-search">
-              <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch" @visible-change="visibleChange">
+              <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch"
+                         @visible-change="visibleChange">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -51,7 +52,17 @@
                 :data="videoList" style="width: 100%">
         <el-table-column prop="course_id" label="课程id" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="course_name" label="课程名称" min-width="360">
+        <el-table-column prop="course_name" label="课程名称" min-width="260">
+        </el-table-column>
+        <el-table-column prop="" label="项目" min-width="200">
+            <template scope="scope">
+                <span>{{scope.row.project&&scope.row.project.project_name}}</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="" label="科目" min-width="200">
+            <template scope="scope">
+                <span>{{scope.row.subject&&scope.row.subject.subject_name}}</span>
+            </template>
         </el-table-column>
         <el-table-column prop="course_type" label="网课类型" min-width="260">
           <template scope="scope">
@@ -62,17 +73,7 @@
             <span v-if="scope.row.course_type==4">私播课-Glive+</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="大包/单课" min-width="200">
 
-        </el-table-column>
-
-        <!--<el-table-column prop="status" label="发布状态" min-width="150">
-          <template scope="scope">
-            <span v-if="scope.row.ware_status==0">完成</span>
-            <span v-if="scope.row.ware_status==1">更新中</span>
-            <span v-if="scope.row.ware_status==2">即将更新</span>
-          </template>
-        </el-table-column>-->
         <el-table-column fixed="right" label="操作" width="200" align="center">
           <template scope="scope">
             <el-button type="text" style="margin: 0 10px;">
@@ -99,71 +100,87 @@
     </div>
 
     <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="课程名称" prop="course_name">
-            <el-input v-model="ruleForm.course_name"></el-input>
-          </el-form-item>
-          <el-form-item label="所属项目" prop="project_id">
-            <el-select v-model="ruleForm.project_id" placeholder="请选择所属项目" @change="changeProject">
-              <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist" :key="item.project_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="所属科目" prop="subject_id">
-            <el-select v-model="ruleForm.subject_id" :disabled="!bSubject" placeholder="请选择所属科目">
-              <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist" :key="item.subject_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="网课类型" prop="course_type_id">
-            <el-select v-model="ruleForm.course_type_id" placeholder="请选择网课类型">
-              <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type" :key="item.course_type_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item class="last-form-item">
-            <el-button @click="closeDialog('ruleForm')">取消</el-button>
-            <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-          </el-form-item>
-        </el-form>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="课程名称" prop="course_name">
+          <el-input v-model="ruleForm.course_name"></el-input>
+        </el-form-item>
+        <el-form-item label="所属项目" prop="project_id">
+          <el-select v-model="ruleForm.project_id" placeholder="请选择所属项目" @change="changeProject">
+            <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist"
+                       :key="item.project_id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属科目" prop="subject_id">
+          <el-select v-model="ruleForm.subject_id" :disabled="!bSubject" placeholder="请选择所属科目">
+            <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist"
+                       :key="item.subject_id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="网课类型" prop="course_type_id">
+          <el-select v-model="ruleForm.course_type_id" placeholder="请选择网课类型">
+            <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type"
+                       :key="item.course_type_id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="last-form-item">
+          <el-button @click="closeDialog('ruleForm')">取消</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
   </div>
 </template>
 <style>
-  .course-manage .el-dialog__header {padding: 30px 20px 0;text-align: center;}
-  .course-manage .el-form-item__label {color: #8f9aac;}
-  .course-manage .last-form-item {text-align: center;margin-top: 40px;}
-  .course-manage .last-form-item .el-form-item__content {margin-left: 0 !important;}
+  .course-manage .el-dialog__header {
+    padding: 30px 20px 0;
+    text-align: center;
+  }
+
+  .course-manage .el-form-item__label {
+    color: #8f9aac;
+  }
+
+  .course-manage .last-form-item {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .course-manage .last-form-item .el-form-item__content {
+    margin-left: 0 !important;
+  }
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject,searchCourse} from '../../api/course'
+  import {getProjectSubject, searchCourse} from '../../api/course'
   import {addCourse} from '../../api/fromAxios'
 
   export default {
     components: {},
     data() {
       return {
-        loading:false,
+        loading: false,
         selectfalg: false,     //选择器搜索开关
         projectlist: [],    //项目列表
         subtablist: [],  //按钮组科目列表
-        selectedlist:[],   //新增课程科目列表
-        bSubject:false,    //是否可以选择科目
-        course_type:[
+        selectedlist: [],   //新增课程科目列表
+        bSubject: false,    //是否可以选择科目
+        course_type: [
           {
-            course_type_id:'0',
-            name:'普通网课',
-          },{
-            course_type_id:'1',
-            name:'任务制网课（选择考试时间）',
-          },{
-            course_type_id:'2',
-            name:'任务制网课（选择自主学习时间）',
-          },{
-            course_type_id:'3',
-            name:'自适应学习网课-EP',
-          },{
-            course_type_id:'4',
-            name:'私播课-Glive+',
+            course_type_id: '0',
+            name: '普通网课',
+          }, {
+            course_type_id: '1',
+            name: '任务制网课（选择考试时间）',
+          }, {
+            course_type_id: '2',
+            name: '任务制网课（选择自主学习时间）',
+          }, {
+            course_type_id: '3',
+            name: '自适应学习网课-EP',
+          }, {
+            course_type_id: '4',
+            name: '私播课-Glive+',
           }
         ],   //网课类型
         selectvalue: '', //下拉搜索所选择的的网课类型
@@ -172,20 +189,20 @@
             value: '',
             label: '全部课程类型'
           }, {
-            value:'0',
-            label:'普通网课',
-          },{
-            value:'1',
-            label:'任务制网课（选择考试时间）',
-          },{
-            value:'2',
-            label:'任务制网课（选择自主学习时间）',
-          },{
-            value:'3',
-            label:'自适应学习网课-EP',
-          },{
-            value:'4',
-            label:'私播课-Glive+',
+            value: '0',
+            label: '普通网课',
+          }, {
+            value: '1',
+            label: '任务制网课（选择考试时间）',
+          }, {
+            value: '2',
+            label: '任务制网课（选择自主学习时间）',
+          }, {
+            value: '3',
+            label: '自适应学习网课-EP',
+          }, {
+            value: '4',
+            label: '私播课-Glive+',
           }
         ],     //下拉搜索的网课类型列表
         //表单验证
@@ -225,14 +242,14 @@
       async searchCourse(){
         this.loading = true;
         let ret = await searchCourse({
-          project_id:this.clver,
-          subject_id:this.clversm,
-          page:this.currentPage,
-          page_size:this.pageSize,
-          course_type:this.selectvalue,
-          course_id_name:this.searchinput
+          project_id: this.clver,
+          subject_id: this.clversm,
+          page: this.currentPage,
+          page_size: this.pageSize,
+          course_type: this.selectvalue,
+          course_id_name: this.searchinput
         });
-        if(ret.status == 0){
+        if (ret.status == 0) {
 //          this. = ret.result.all_page;
           this.loading = false;
           this.videoList = ret.result.item_list;
@@ -250,18 +267,20 @@
         }
       },
       handleIconClick(){    //输入框搜索
+        this.clver = "0";    //点击搜索所选项目
+        this.clversm = "0";    //点击搜索所选科目
+        this.selectvalue = '';//下拉搜索所选择的的网课类型
         this.searchCourse();
       },
       //新增下拉框选取项目后切换科目
       changeProject(val){
-        for(var obj in this.projectlist){
-          if(this.projectlist[obj].project_id == val){
-
+        for (var obj in this.projectlist) {
+          if (this.projectlist[obj].project_id == val) {
             this.bSubject = true;
             let subject_list = [...this.projectlist[obj].subject_list];
             subject_list.unshift({
-              subject_id:'0',
-              subject_name:'全部'
+              subject_id: '0',
+              subject_name: '全部'
             })
             this.selectedlist = subject_list;
             this.ruleForm.subject_id = '0';
@@ -270,11 +289,11 @@
         }
       },
       //点击项目切换科目
-      outlinechange(reid,index){
+      outlinechange(reid, index){
         this.clver = reid;
-        if(reid == '0'){
+        if (reid == '0') {
           this.subtablist = [];
-        }else{
+        } else {
           this.subtablist = this.projectlist[index].subject_list;
         }
         this.clversm = '0';  //科目设置为0
@@ -299,16 +318,20 @@
       },
       //新增一个课程
       addCourse(ruleForm){
-        addCourse({...ruleForm}).then(res=>{
-          if(res.status == 0){
+        addCourse({...ruleForm}).then(res => {
+          if (res.status == 0) {
             this.dialogCourseVisible = false;
             this.bSubject = false;
+            this.clver = "0";    //点击搜索所选项目
+              this.clversm = "0";     //点击搜索所选科目
+              this.searchCourse();
             this.$message({
               message: res.message,
               type: 'success'
             });
+
           }
-        }).catch( error => {
+        }).catch(error => {
           console.log(error);
         });
 

@@ -7,6 +7,7 @@ var instance = axios.create({
     'Content-Type': 'application/x-www-form-urlencoded'
 //  	"origin":"gaodun.com"
   },
+  withCredentials : true,
   transformRequest(data,headers){
     let strData = queryString.stringify(data);
     return strData;
@@ -77,4 +78,30 @@ export const CourseSyllabus = params => post(`${getBaseUrl()}toc-service.gaodun.
 
 //课程基本设置
 export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params)
+
+//新增资源介绍接口
+export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
+
+//选择大纲模板接口
+export const selectSyllabus = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/${id}/template`, params);
+
+//添加大纲条目
+export const CourseSyllabusItem = params => post(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item`, params);
+
+//修改大纲条目
+export const ChangeSyllabusItem = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
+
+//新增一个阶段接口
+export const AddCourseStage = params => post(`${getBaseUrl()}course-service.gaodun.com/gradation`, params);
+
+//修改一个阶段接口
+export const changeStage = (gradation_id,params) => put(`${getBaseUrl()}course-service.gaodun.com/gradation/${gradation_id}`, params);
+
+//大纲条目上挂资源
+export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
+
+
+
+
+
 
