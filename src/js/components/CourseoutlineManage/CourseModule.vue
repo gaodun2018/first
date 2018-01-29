@@ -713,7 +713,6 @@
         },
         computed: {},
         mounted() {
-
         },
         created() {
             this.coursesyllid = this.$route.params.sid;

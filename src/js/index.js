@@ -26,6 +26,9 @@ import 'echarts/lib/component/title';
 import { setWindowNID } from './util/config';
 import { CRM_MENU } from './util/keys';
 import Validate from './util/filter_rules'
+import VueJsonp from 'vue-jsonp'
+Vue.use(VueJsonp)
+
 Vue.use(ElementUI)
 Vue.use(VueRouter);
 Vue.use(Validate);
