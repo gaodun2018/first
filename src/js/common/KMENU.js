@@ -811,6 +811,36 @@ export default [
           16
         ],
         "ChildNavigations": null
+      },
+      {
+        "AppId": 130555,
+        "NavigationId": 17,
+        "Title": "学员列表",
+        "Url": "/StudentLista",
+        "Path": "components/ClassManageSys/StudentLista",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          17
+        ],
+        "ChildNavigations": null
+      },
+      {
+        "AppId": 130555,
+        "NavigationId": 18,
+        "Title": "课程列表",
+        "Url": "/CourseLista",
+        "Path": "components/ClassManageSys/CourseLista",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          18
+        ],
+        "ChildNavigations": null
       }
     ]
   },

@@ -37,8 +37,6 @@ import ExerciseList from '../components/resourceCenter/ExerciseList.vue';
 import HandoutList from '../components/resourceCenter/HandoutList.vue';
 // 知识点列表
 import KnowledgeList from '../components/resourceCenter/KnowledgeList.vue';
-// 课程大纲列表
-import CourseOutlineList from '../components/CourseOutlineManage/CourseOutlineList.vue';
 // 课程列表
 import CourseList from '../components/CourseManage/CourseList.vue';
 // 产品列表
@@ -73,6 +71,10 @@ import AddVideo from '../components/resourceCenter/AddVideo.vue';
 import AddHandout from '../components/resourceCenter/AddHandout.vue';
 // 班级列表
 import ClassList from '../components/ClassManageSys/ClassList.vue';
+// 学员列表
+import StudentLista from '../components/ClassManageSys/StudentLista.vue';
+// 课程列表
+import CourseLista from '../components/ClassManageSys/CourseLista.vue';
 
 
 export const routes = [
@@ -96,7 +98,6 @@ export const routes = [
 		{ path: '/ExerciseList',meta:{ title:'题目列表' }, name:'520',component: ExerciseList }, // 题目列表
 		{ path: '/HandoutList',meta:{ title:'讲义列表' }, name:'530',component: HandoutList }, // 讲义列表
 		{ path: '/KnowledgeList',meta:{ title:'知识点列表' }, name:'540',component: KnowledgeList }, // 知识点列表
-		{ path: '/CourseOutlineList',meta:{ title:'课程大纲列表' }, name:'10',component: CourseOutlineList }, // 课程大纲列表
 		{ path: '/CourseList',meta:{ title:'课程列表' }, name:'80',component: CourseList }, // 课程列表
 		{ path: '/ProjectList',meta:{ title:'产品列表' }, name:'600',component: ProjectList }, // 产品列表
 		{ path: '/StatisticAnalysis',meta:{ title:'统计分析' }, name:'601',component: StatisticAnalysis }, // 统计分析
@@ -110,6 +111,8 @@ export const routes = [
 		{ path: '/addVideo',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
 		{ path: '/addHandout',meta:{ title:'- 新增讲义' }, name:'10000',component: AddHandout }, // - 新增讲义
 		{ path: '/ClassList',meta:{ title:'班级列表' }, name:'16',component: ClassList }, // 班级列表
+		{ path: '/StudentLista',meta:{ title:'学员列表' }, name:'17',component: StudentLista }, // 学员列表
+		{ path: '/CourseLista',meta:{ title:'课程列表' }, name:'18',component: CourseLista }, // 课程列表
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10009',component: Page404 }, // 404

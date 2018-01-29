@@ -25,3 +25,32 @@ export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}toc-serv
 
 // 班级列表
 export const getClassList = parameters => get(`${getBaseUrl()}plan-api.gaodun.com/class/lists`, parameters);
+
+// 班级列表
+export const teachermin = parameters => get(`${getBaseUrl()}school-api.gaodun.com/school/teacher`, parameters);
+
+//查看大纲
+export const checkcoursemit = (projectId,subjectId,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/class/get/${projectId}/course/${subjectId}`, params);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 班级列表
+// export const getStudentList = parameters => get(`${getBaseUrl()}jerusalemapi.gaodun.com/Student/getStudentList`, parameters);
