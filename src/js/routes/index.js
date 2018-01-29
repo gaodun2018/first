@@ -39,8 +39,6 @@ import HandoutList from '../components/resourceCenter/HandoutList.vue';
 import KnowledgeList from '../components/resourceCenter/KnowledgeList.vue';
 // 考试大纲
 import ExaminationSyllabus from '../components/resourceCenter/ExaminationSyllabus.vue';
-// 课程大纲列表
-import CourseOutlineList from '../components/CourseOutlineManage/CourseOutlineList.vue';
 // 课程列表
 import CourseList from '../components/CourseManage/CourseList.vue';
 // 产品列表
@@ -51,6 +49,12 @@ import StatisticAnalysis from '../components/productManagement/StatisticAnalysis
 import ZhuantiList from '../components/productManagement/ZhuantiList.vue';
 // 商业列表
 import BusinessList from '../components/productManagement/BusinessList.vue';
+// 班级列表
+import ClassList from '../components/ClassManageSys/ClassList.vue';
+// 学员列表
+import StudentLista from '../components/ClassManageSys/StudentLista.vue';
+// 课程列表
+import CourseLista from '../components/ClassManageSys/CourseLista.vue';
 // 登陆
 import Login from '../containers/Login.vue';
 // 404
@@ -59,6 +63,8 @@ import Page404 from '../components/Page404.vue';
 import UpdatePwd from '../containers/UpdatePwd.vue';
 // - 财经云
 import Home from '../containers/Home.vue';
+// 课程大纲管理
+import CourseOutlineList from '../components/CourseoutlineManage/CourseOutlineList.vue';
 // - 编辑课程大纲
 import CourseOutline from '../components/CourseOutlineManage/CourseOutline.vue';
 // - 课程大纲模块
@@ -99,12 +105,15 @@ export const routes = [
 		{ path: '/HandoutList',meta:{ title:'讲义列表' }, name:'530',component: HandoutList }, // 讲义列表
 		{ path: '/KnowledgeList',meta:{ title:'知识点汇总' }, name:'540',component: KnowledgeList }, // 知识点汇总
 		{ path: '/ExaminationSyllabus',meta:{ title:'考试大纲' }, name:'541',component: ExaminationSyllabus }, // 考试大纲
-		{ path: '/CourseOutlineList',meta:{ title:'课程大纲列表' }, name:'10',component: CourseOutlineList }, // 课程大纲列表
 		{ path: '/CourseList',meta:{ title:'课程列表' }, name:'80',component: CourseList }, // 课程列表
 		{ path: '/ProjectList',meta:{ title:'产品列表' }, name:'600',component: ProjectList }, // 产品列表
 		{ path: '/StatisticAnalysis',meta:{ title:'统计分析' }, name:'601',component: StatisticAnalysis }, // 统计分析
 		{ path: '/ZhuantiList',meta:{ title:'专题列表' }, name:'610',component: ZhuantiList }, // 专题列表
 		{ path: '/BusinessList',meta:{ title:'商业列表' }, name:'620',component: BusinessList }, // 商业列表
+		{ path: '/ClassList',meta:{ title:'班级列表' }, name:'16',component: ClassList }, // 班级列表
+		{ path: '/StudentLista',meta:{ title:'学员列表' }, name:'17',component: StudentLista }, // 学员列表
+		{ path: '/CourseLista',meta:{ title:'课程列表' }, name:'18',component: CourseLista }, // 课程列表
+		{ path: '/CourseOutlineList',meta:{ title:'课程大纲管理' }, name:'10',component: CourseOutlineList }, // 课程大纲管理
 		{ path: '/CourseOutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
 		{ path: '/CourseOutlineManage/CourseModule/:sid',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet/:cid',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置

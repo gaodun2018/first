@@ -2,20 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c42f9b0d-6895-48c1-90e9-d8a2c43465ab" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/resourceCenter/AddKnowledge.vue" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/resourceCenter/EditKnowledge.vue" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/resourceCenter/ExaminationSyllabus.vue" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/api/OrderSplit.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/ClassManageSys/ClassList.vue" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/ClassManageSys/CourseLista.vue" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/ClassManageSys/CourseModule.vue" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/ClassManageSys/CourseOutline.vue" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/js/components/ClassManageSys/StudentLista.vue" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/dist/css/index.css" afterPath="$PROJECT_DIR$/dist/css/index.css" />
       <change beforePath="$PROJECT_DIR$/dist/js/common.js" afterPath="$PROJECT_DIR$/dist/js/common.js" />
       <change beforePath="$PROJECT_DIR$/dist/js/index.js" afterPath="$PROJECT_DIR$/dist/js/index.js" />
-      <change beforePath="$PROJECT_DIR$/dist/js/passwordModify.2d5ad470082b47bfd498.min.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/dist/js/passwordModify.60353c4ac65919b88878.min.js" afterPath="$PROJECT_DIR$/dist/js/passwordModify.60353c4ac65919b88878.min.js" />
       <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change beforePath="$PROJECT_DIR$/src/js/api/fromAxios.js" afterPath="$PROJECT_DIR$/src/js/api/fromAxios.js" />
+      <change beforePath="$PROJECT_DIR$/src/js/api/outline.js" afterPath="$PROJECT_DIR$/src/js/api/outline.js" />
+      <change beforePath="$PROJECT_DIR$/src/js/common/1.json" afterPath="" />
       <change beforePath="$PROJECT_DIR$/src/js/common/KMENU.js" afterPath="$PROJECT_DIR$/src/js/common/KMENU.js" />
-      <change beforePath="$PROJECT_DIR$/src/js/common/KMENU.json" afterPath="$PROJECT_DIR$/src/js/common/KMENU.json" />
+      <change beforePath="$PROJECT_DIR$/src/js/common/KMENU.json" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" afterPath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" />
+      <change beforePath="$PROJECT_DIR$/src/js/index.js" afterPath="$PROJECT_DIR$/src/js/index.js" />
       <change beforePath="$PROJECT_DIR$/src/js/routes/index.js" afterPath="$PROJECT_DIR$/src/js/routes/index.js" />
       <change beforePath="$PROJECT_DIR$/src/js/routes/index.json" afterPath="$PROJECT_DIR$/src/js/routes/index.json" />
-      <change beforePath="$PROJECT_DIR$/src/js/routes/routes.js" afterPath="$PROJECT_DIR$/src/js/routes/routes.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,21 +36,76 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="KMENU.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="KMENU.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="989">
-              <caret line="594" column="11" lean-forward="true" selection-start-line="594" selection-start-column="11" selection-end-line="594" selection-end-column="11" />
+            <state relative-caret-position="189">
+              <caret line="799" column="4" lean-forward="false" selection-start-line="799" selection-start-column="4" selection-end-line="799" selection-end-column="4" />
               <folding>
                 <element signature="e#19#1837#0" expanded="false" />
                 <element signature="e#1841#4093#0" expanded="false" />
                 <element signature="e#4097#5994#0" expanded="false" />
                 <element signature="e#5998#10090#0" expanded="false" />
+                <element signature="e#10094#14789#0" expanded="false" />
                 <element signature="e#14793#15455#0" expanded="false" />
                 <element signature="e#15459#16098#0" expanded="false" />
                 <element signature="e#16102#19217#0" expanded="false" />
                 <element signature="e#19221#19492#0" expanded="false" />
+                <element signature="e#19496#20879#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/routes/index.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="933" column="4" lean-forward="false" selection-start-line="933" selection-start-column="4" selection-end-line="933" selection-end-column="4" />
+              <folding>
+                <element signature="e#4#1822#0" expanded="false" />
+                <element signature="e#1826#4078#0" expanded="false" />
+                <element signature="e#4082#5979#0" expanded="false" />
+                <element signature="e#5983#10075#0" expanded="false" />
+                <element signature="e#10079#14774#0" expanded="false" />
+                <element signature="e#14778#15417#0" expanded="false" />
+                <element signature="e#15421#18536#0" expanded="false" />
+                <element signature="e#18540#18811#0" expanded="false" />
+                <element signature="e#18815#20198#0" expanded="false" />
+                <element signature="e#20204#20453#0" expanded="false" />
+                <element signature="e#20457#20682#0" expanded="false" />
+                <element signature="e#20686#20923#0" expanded="false" />
+                <element signature="e#20928#21178#0" expanded="false" />
+                <element signature="e#21182#21844#0" expanded="false" />
+                <element signature="e#21848#22148#0" expanded="false" />
+                <element signature="e#22153#22451#0" expanded="false" />
+                <element signature="e#22455#22720#0" expanded="false" />
+                <element signature="e#22724#22995#0" expanded="false" />
+                <element signature="e#22999#23257#0" expanded="false" />
+                <element signature="e#23261#23523#0" expanded="false" />
+                <element signature="e#23527#23794#0" expanded="false" />
+                <element signature="e#23798#24067#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/common/common.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -51,8 +113,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="100" column="31" lean-forward="false" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="31" />
+            <state relative-caret-position="627">
+              <caret line="106" column="37" lean-forward="false" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -68,31 +130,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/js/routes/index.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="782">
-              <caret line="583" column="40" lean-forward="false" selection-start-line="583" selection-start-column="40" selection-end-line="583" selection-end-column="40" />
-              <folding>
-                <element signature="e#4#1822#0" expanded="false" />
-                <element signature="e#1826#4078#0" expanded="false" />
-                <element signature="e#4082#5979#0" expanded="false" />
-                <element signature="e#5983#10075#0" expanded="false" />
-                <element signature="e#14778#15440#0" expanded="false" />
-                <element signature="e#15444#16083#0" expanded="false" />
-                <element signature="e#16087#19202#0" expanded="false" />
-                <element signature="e#19206#19477#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/routes/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="725">
-              <caret line="179" column="48" lean-forward="false" selection-start-line="179" selection-start-column="48" selection-end-line="179" selection-end-column="48" />
-              <folding />
+            <state relative-caret-position="493">
+              <caret line="181" column="5" lean-forward="false" selection-start-line="175" selection-start-column="8" selection-end-line="181" selection-end-column="5" />
+              <folding>
+                <element signature="e#21#312#0" expanded="false" />
+                <element signature="e#318#607#0" expanded="false" />
+                <element signature="e#613#914#0" expanded="false" />
+                <element signature="e#920#1212#0" expanded="false" />
+                <element signature="e#1218#1753#0" expanded="false" />
+                <element signature="e#1760#2294#0" expanded="false" />
+                <element signature="e#2300#2756#0" expanded="false" />
+                <element signature="e#2762#3222#0" expanded="false" />
+                <element signature="e#3228#3727#0" expanded="false" />
+                <element signature="e#3733#4240#0" expanded="false" />
+                <element signature="e#4246#4762#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -103,6 +158,7 @@
     <findStrings>
       <find>UpdateOutlineTitle</find>
       <find>subject.project.id</find>
+      <find>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -114,8 +170,10 @@
         <option value="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue" />
         <option value="$PROJECT_DIR$/src/js/common/KMENU.json" />
         <option value="$PROJECT_DIR$/src/js/routes/routes.js" />
-        <option value="$PROJECT_DIR$/src/js/common/KMENU.js" />
+        <option value="$PROJECT_DIR$/src/js/common/1.json" />
         <option value="$PROJECT_DIR$/src/js/routes/index.json" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/src/js/common/KMENU.js" />
       </list>
     </option>
   </component>
@@ -270,18 +328,18 @@
       <updated>1516691430712</updated>
       <workItem from="1516691432722" duration="2568000" />
       <workItem from="1517025945144" duration="33000" />
-      <workItem from="1517208386478" duration="1188000" />
+      <workItem from="1517208386478" duration="2028000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3789000" />
+    <option name="totallyTimeSpent" value="4629000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26080084" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17123288" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -318,13 +376,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/1.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/containers/Entry.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-748">
@@ -332,34 +383,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/common.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/containers/Home.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="528">
           <caret line="134" column="34" lean-forward="true" selection-start-line="134" selection-start-column="34" selection-end-line="134" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="562" column="28" lean-forward="true" selection-start-line="562" selection-start-column="28" selection-end-line="562" selection-end-column="28" />
-          <folding>
-            <element signature="e#4#1822#0" expanded="false" />
-            <element signature="e#1826#4078#0" expanded="false" />
-            <element signature="e#4082#5979#0" expanded="false" />
-            <element signature="e#5983#10075#0" expanded="false" />
-            <element signature="e#14783#15445#0" expanded="false" />
-            <element signature="e#15449#16088#0" expanded="false" />
-            <element signature="e#16092#19207#0" expanded="false" />
-            <element signature="e#19211#19482#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -395,31 +422,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/routes/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="725">
-          <caret line="179" column="48" lean-forward="false" selection-start-line="179" selection-start-column="48" selection-end-line="179" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="989">
-          <caret line="594" column="11" lean-forward="true" selection-start-line="594" selection-start-column="11" selection-end-line="594" selection-end-column="11" />
-          <folding>
-            <element signature="e#19#1837#0" expanded="false" />
-            <element signature="e#1841#4093#0" expanded="false" />
-            <element signature="e#4097#5994#0" expanded="false" />
-            <element signature="e#5998#10090#0" expanded="false" />
-            <element signature="e#14793#15455#0" expanded="false" />
-            <element signature="e#15459#16098#0" expanded="false" />
-            <element signature="e#16102#19217#0" expanded="false" />
-            <element signature="e#19221#19492#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/resourceCenter/ExaminationSyllabus.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -430,25 +432,110 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="100" column="31" lean-forward="false" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="31" />
+        <state relative-caret-position="627">
+          <caret line="106" column="37" lean-forward="false" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/routes/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="181" column="5" lean-forward="false" selection-start-line="175" selection-start-column="8" selection-end-line="181" selection-end-column="5" />
+          <folding>
+            <element signature="e#21#312#0" expanded="false" />
+            <element signature="e#318#607#0" expanded="false" />
+            <element signature="e#613#914#0" expanded="false" />
+            <element signature="e#920#1212#0" expanded="false" />
+            <element signature="e#1218#1753#0" expanded="false" />
+            <element signature="e#1760#2294#0" expanded="false" />
+            <element signature="e#2300#2756#0" expanded="false" />
+            <element signature="e#2762#3222#0" expanded="false" />
+            <element signature="e#3228#3727#0" expanded="false" />
+            <element signature="e#3733#4240#0" expanded="false" />
+            <element signature="e#4246#4762#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3498">
+          <caret line="562" column="28" lean-forward="true" selection-start-line="562" selection-start-column="28" selection-end-line="562" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/common/common.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/common/1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/routes/index.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="583" column="40" lean-forward="false" selection-start-line="583" selection-start-column="40" selection-end-line="583" selection-end-column="40" />
+        <state relative-caret-position="340">
+          <caret line="933" column="4" lean-forward="false" selection-start-line="933" selection-start-column="4" selection-end-line="933" selection-end-column="4" />
           <folding>
             <element signature="e#4#1822#0" expanded="false" />
             <element signature="e#1826#4078#0" expanded="false" />
             <element signature="e#4082#5979#0" expanded="false" />
             <element signature="e#5983#10075#0" expanded="false" />
-            <element signature="e#14778#15440#0" expanded="false" />
-            <element signature="e#15444#16083#0" expanded="false" />
-            <element signature="e#16087#19202#0" expanded="false" />
-            <element signature="e#19206#19477#0" expanded="false" />
+            <element signature="e#10079#14774#0" expanded="false" />
+            <element signature="e#14778#15417#0" expanded="false" />
+            <element signature="e#15421#18536#0" expanded="false" />
+            <element signature="e#18540#18811#0" expanded="false" />
+            <element signature="e#18815#20198#0" expanded="false" />
+            <element signature="e#20204#20453#0" expanded="false" />
+            <element signature="e#20457#20682#0" expanded="false" />
+            <element signature="e#20686#20923#0" expanded="false" />
+            <element signature="e#20928#21178#0" expanded="false" />
+            <element signature="e#21182#21844#0" expanded="false" />
+            <element signature="e#21848#22148#0" expanded="false" />
+            <element signature="e#22153#22451#0" expanded="false" />
+            <element signature="e#22455#22720#0" expanded="false" />
+            <element signature="e#22724#22995#0" expanded="false" />
+            <element signature="e#22999#23257#0" expanded="false" />
+            <element signature="e#23261#23523#0" expanded="false" />
+            <element signature="e#23527#23794#0" expanded="false" />
+            <element signature="e#23798#24067#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="799" column="4" lean-forward="false" selection-start-line="799" selection-start-column="4" selection-end-line="799" selection-end-column="4" />
+          <folding>
+            <element signature="e#19#1837#0" expanded="false" />
+            <element signature="e#1841#4093#0" expanded="false" />
+            <element signature="e#4097#5994#0" expanded="false" />
+            <element signature="e#5998#10090#0" expanded="false" />
+            <element signature="e#10094#14789#0" expanded="false" />
+            <element signature="e#14793#15455#0" expanded="false" />
+            <element signature="e#15459#16098#0" expanded="false" />
+            <element signature="e#16102#19217#0" expanded="false" />
+            <element signature="e#19221#19492#0" expanded="false" />
+            <element signature="e#19496#20879#0" expanded="false" />
           </folding>
         </state>
       </provider>
