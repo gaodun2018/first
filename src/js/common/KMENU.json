@@ -1,7 +1,7 @@
 [
   {
     "AppId": 130555,
-    "NavigationId": 1,
+    "NavigationId": 9,
     "Title": "控制台",
     "Url": "0.7838098591980818",
     "Path": "",
@@ -9,12 +9,12 @@
     "Iconurl": "",
     "CreateTime": "2017-07-14 10:05:05",
     "ParentPath": [
-      1
+      9
     ],
     "ChildNavigations": [
       {
         "AppId": 130555,
-        "NavigationId": 10,
+        "NavigationId": 90,
         "Title": "主面板",
         "Url": "0.2132131412424",
         "Path": "",
@@ -22,23 +22,23 @@
         "Iconurl": "#icon-gongzuotai",
         "CreateTime": "2017-08-14 16:04:31",
         "ParentPath": [
-          1,
-          10
+          9,
+          90
         ],
         "ChildNavigations": [
           {
             "AppId": 130555,
-            "NavigationId": 100,
+            "NavigationId": 900,
             "Title": "面板详情",
             "Url": "/index",
             "Path": "components/home/HomeIndex",
-            "ParentID": 10,
+            "ParentID": 90,
             "Iconurl": "",
             "CreateTime": "2017-07-14 17:03:20",
             "ParentPath": [
-              1,
-              10,
-              100
+              9,
+              90,
+              900
             ],
             "ChildNavigations": null
           }
@@ -46,31 +46,31 @@
       },
       {
         "AppId": 130555,
-        "NavigationId": 11,
+        "NavigationId": 91,
         "Title": "操作日志",
         "Url": "0.4342435435435",
         "Path": "",
-        "ParentID": 1,
+        "ParentID": 9,
         "Iconurl": "#icon-gongzuotai",
         "CreateTime": "2017-08-14 16:04:31",
         "ParentPath": [
-          1,
-          11
+          9,
+          91
         ],
         "ChildNavigations": [
           {
             "AppId": 130555,
-            "NavigationId": 110,
+            "NavigationId": 910,
             "Title": "操作日志",
             "Url": "/OperationLog",
             "Path": "",
-            "ParentID": 11,
+            "ParentID": 91,
             "Iconurl": "",
             "CreateTime": "2017-07-14 17:03:20",
             "ParentPath": [
-              1,
-              11,
-              110
+              9,
+              91,
+              910
             ],
             "ChildNavigations": null
           }
@@ -199,8 +199,8 @@
             "AppId": 130555,
             "NavigationId": 300,
             "Title": "学员列表",
-            "Url": "/sales/SaleNewClueindex",
-            "Path": "components/SalesManage/SaleNewClueList",
+            "Url": "/StudentList",
+            "Path": "components/educationManage/StudentList",
             "ParentID": 30,
             "Iconurl": "",
             "CreateTime": "2017-07-14 17:03:20",
@@ -231,8 +231,8 @@
             "AppId": 130555,
             "NavigationId": 310,
             "Title": "班级管理",
-            "Url": "/RecommendClue",
-            "Path": "components/SalesManage/RecommendClueList",
+            "Url": "/ClassManagement ",
+            "Path": "components/educationManage/ClassManage",
             "ParentID": 31,
             "Iconurl": "",
             "CreateTime": "2017-07-14 17:04:09",
@@ -564,9 +564,9 @@
           {
             "AppId": 130555,
             "NavigationId": 540,
-            "Title": "知识点列表",
+            "Title": "知识点汇总",
             "Url": "/KnowledgeList",
-            "Path": "components/resourceCenter/KnowledgeList",
+            "Path": "components/resourceCenter/Knowledge/KnowledgeList",
             "ParentID": 54,
             "Iconurl": "",
             "CreateTime": "2017-08-01 11:36:20",
@@ -576,8 +576,84 @@
               540
             ],
             "ChildNavigations": null
-          }
+          },
+          {
+            "AppId": 130555,
+            "NavigationId": 541,
+            "Title": "考试大纲",
+            "Url": "/KnowledgeList",
+            "Path": "components/resourceCenter/ExaminationSyllabus",
+            "ParentID": 54,
+            "Iconurl": "",
+            "CreateTime": "2017-08-01 11:36:20",
+            "ParentPath": [
+              5,
+              54,
+              540
+            ],
+            "ChildNavigations": null
+          },
         ]
+      }
+    ]
+  },
+  {
+    "AppId": 130555,
+    "NavigationId": 1,
+    "Title": "课程大纲管理",
+    "Url": "0.5624345345634",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      1
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 10,
+        "Title": "课程大纲列表",
+        "Url": "/CourseOutlineList",
+        "Path": "components/CourseOutlineManage/CourseOutlineList",
+        "ParentID": 1,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          1,
+          10
+        ],
+        "ChildNavigations": null
+      }
+    ]
+  },
+  {
+    "AppId": 130555,
+    "NavigationId": 8,
+    "Title": "课程管理",
+    "Url": "0.453243242143543",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      8
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 80,
+        "Title": "课程列表",
+        "Url": "/CourseList",
+        "Path": "components/CourseManage/CourseList",
+        "ParentID": 8,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          8,
+          80
+        ],
+        "ChildNavigations": null
       }
     ]
   },

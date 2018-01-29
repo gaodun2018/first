@@ -564,9 +564,25 @@
           {
             "AppId": 130555,
             "NavigationId": 540,
-            "Title": "知识点列表",
+            "Title": "知识点汇总",
             "Url": "/KnowledgeList",
             "Path": "components/resourceCenter/KnowledgeList",
+            "ParentID": 54,
+            "Iconurl": "",
+            "CreateTime": "2017-08-01 11:36:20",
+            "ParentPath": [
+              5,
+              54,
+              540
+            ],
+            "ChildNavigations": null
+          },
+          {
+            "AppId": 130555,
+            "NavigationId": 541,
+            "Title": "考试大纲",
+            "Url": "/ExaminationSyllabus",
+            "Path": "components/resourceCenter/ExaminationSyllabus",
             "ParentID": 54,
             "Iconurl": "",
             "CreateTime": "2017-08-01 11:36:20",
@@ -899,6 +915,28 @@
     "ParentID": 0,
     "Url": "/addHandout",
     "Path": "components/resourceCenter/AddHandout",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增知识点",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addKnowledge",
+    "Path": "components/resourceCenter/AddKnowledge",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 编辑知识点",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/editKnowledge",
+    "Path": "components/resourceCenter/EditKnowledge",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
