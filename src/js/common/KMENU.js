@@ -564,9 +564,25 @@ export default [
           {
             "AppId": 130555,
             "NavigationId": 540,
-            "Title": "知识点列表",
+            "Title": "知识点汇总",
             "Url": "/KnowledgeList",
             "Path": "components/resourceCenter/KnowledgeList",
+            "ParentID": 54,
+            "Iconurl": "",
+            "CreateTime": "2017-08-01 11:36:20",
+            "ParentPath": [
+              5,
+              54,
+              540
+            ],
+            "ChildNavigations": null
+          },
+          {
+            "AppId": 130555,
+            "NavigationId": 541,
+            "Title": "考试大纲",
+            "Url": "/ExaminationSyllabus",
+            "Path": "components/resourceCenter/ExaminationSyllabus",
             "ParentID": 54,
             "Iconurl": "",
             "CreateTime": "2017-08-01 11:36:20",
@@ -782,8 +798,6 @@ export default [
     ],
     "ChildNavigations": null
   },
-
-
   {
     "AppId": 130555,
     "NavigationId": 15,
