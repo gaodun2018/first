@@ -1,4 +1,4 @@
-/*! gaodun modified this file at 2018-1-30 09:16:06 */
+/*! gaodun modified this file at 2018-1-30 09:17:38 */
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -15,29 +15,20 @@
 .teaching-manage-style .addVideo .el-dialog .chooseVideo{overflow: hidden;}
 .teaching-manage-style .addVideo .el-dialog__body .button_group{float: left}
 .teaching-manage-style .addVideo .el-dialog__body .search_input{float: right}
-.order-manage-dislog .el-dialog--small {
-  width: 30%;
+.course-manage .el-dialog__header {
+  padding: 30px 20px 0;
+  text-align: center;
 }
-.order-manage-dislog .el-dialog__body {
-  padding: 20px
+.course-manage .el-form-item__label {
+  color: #8f9aac;
 }
-.roder-content-label .el-form-item {
-  margin-bottom: 10px;
+.course-manage .last-form-item {
+  text-align: center;
+  margin-top: 40px;
 }
-.order-search-form .el-form-item {
-  margin-bottom: 10px;
+.course-manage .last-form-item .el-form-item__content {
+  margin-left: 0 !important;
 }
-.order-manage .cell-reset-padding {
-  margin-right: -12px
-}
-.clues-bnt-item .tracking-text-font .el-form-item__label {
-  padding: 11px 0 11px 0;
-}
-.el-dropdown {
-  font-size: 12px;
-  color: #20a0ff;
-}
-
 
 
 
@@ -577,6 +568,54 @@
 
 
 
+.order-manage-dislog .el-dialog--small {
+  width: 30%;
+}
+.order-manage-dislog .el-dialog__body {
+  padding: 20px
+}
+.roder-content-label .el-form-item {
+  margin-bottom: 10px;
+}
+.order-search-form .el-form-item {
+  margin-bottom: 10px;
+}
+.order-manage .cell-reset-padding {
+  margin-right: -12px
+}
+.clues-bnt-item .tracking-text-font .el-form-item__label {
+  padding: 11px 0 11px 0;
+}
+.el-dropdown {
+  font-size: 12px;
+  color: #20a0ff;
+}
+
+
+.order-manage-dislog .el-dialog--small {
+  width: 30%;
+}
+.order-manage-dislog .el-dialog__body {
+  padding: 20px
+}
+.roder-content-label .el-form-item {
+  margin-bottom: 10px;
+}
+.order-search-form .el-form-item {
+  margin-bottom: 10px;
+}
+.order-manage .cell-reset-padding {
+  margin-right: -12px
+}
+.clues-bnt-item .tracking-text-font .el-form-item__label {
+  padding: 11px 0 11px 0;
+}
+.el-dropdown {
+  font-size: 12px;
+  color: #20a0ff;
+}
+
+
 nav {
   margin-bottom: 10px;
 }
@@ -995,21 +1034,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
         transform: translate3d(-2000px, -2000px, 0)
     }
 }
-.course-manage .el-dialog__header {
-  padding: 30px 20px 0;
-  text-align: center;
-}
-.course-manage .el-form-item__label {
-  color: #8f9aac;
-}
-.course-manage .last-form-item {
-  text-align: center;
-  margin-top: 40px;
-}
-.course-manage .last-form-item .el-form-item__content {
-  margin-left: 0 !important;
-}
-
 .order-manage-dislog .el-dialog--small {
   width: 30%;
 }
@@ -1105,6 +1129,235 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
   color: #20a0ff;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.teachtxt{
+}
+.teachtxt span{float:left;margin:8px 4px 0 0;
+}
+.teachtxt .el-input--small{width:220px;
+}
+.teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
+}
+
+.teachtxt{
+}
+.teachtxt span{float:left;margin:8px 4px 0 0;
+}
+.teachtxt .el-input--small{width:220px;
+}
+.teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
+}
 
 .login-wrap .el-input__inner:focus {
     outline: 0; 
@@ -2357,151 +2610,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.teachtxt{
-}
-.teachtxt span{float:left;margin:8px 4px 0 0;
-}
-.teachtxt .el-input--small{width:220px;
-}
-.teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
-}
-
-.teachtxt{
-}
-.teachtxt span{float:left;margin:8px 4px 0 0;
-}
-.teachtxt .el-input--small{width:220px;
-}
-.teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
-}
 /*视频*/
 .order-manage-dislog .el-dialog--small {
   width: 30%;
