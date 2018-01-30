@@ -103,7 +103,11 @@ export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}toc-servic
 //添加班级
 export const addClassList = (params) => post(`${getBaseUrl()}plan-api.gaodun.com/class`, params);
 
+//学员入班
+export const OrginClassStudent = (params) => post(`${getBaseUrl()}plan-api.gaodun.com/class/student`, params);
 
+//修改班级
+export const updateinfoClass = (params) => post(`${getBaseUrl()}school-service.gaodun.com/class/${class_id}`, params);
 
 
 
