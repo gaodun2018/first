@@ -1,5 +1,5 @@
 <template>
-  <div class="module-edu-content permission-courseoutline">
+  <div class="module-edu-content permission-outlinemodule">
 
     <div class="search_tools" style="overflow: hidden;margin-bottom: 22px;">
       <el-row>
@@ -45,7 +45,7 @@
         <el-col :sm="6">
           <div class="button_group_t">
             <el-button type="primary" size="small" @click="addClassModel">新建班级</el-button>
-            <el-button type="primary" size="small" @click="addCourseOutline">学员入班</el-button>
+            <el-button type="primary" size="small" @click="addPelOrign">学员入班</el-button>
           </div>
         </el-col>
       </el-row>
@@ -53,17 +53,20 @@
 
     <div class="edu_table">
       <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" border :data="mmClassList" style="width: 100%">
-        <el-table-column prop="class_id" label="班级ID" min-width="60">
+        <el-table-column prop="class_id" label="班级ID" min-width="40">
         </el-table-column>
-        <el-table-column prop="class_name" label="班级名称" min-width="280">
+        <el-table-column prop="class_name" label="班级名称" min-width="200">
         </el-table-column>
-        <el-table-column prop="student_number" label="班级学员" min-width="80">
+        <el-table-column prop="student_number" label="班级学员" min-width="50">
         </el-table-column>
-        <el-table-column prop="course_name" label="课程名称" min-width="240">
+        <el-table-column label="课程名称" min-width="230">
+          <template scope="scope">
+            【课程ID：{{scope.row.course_id}}】{{scope.row.course_name}}
+          </template>
         </el-table-column>
-        <el-table-column prop="teacher_name" label="学管师" min-width="100">
+        <el-table-column prop="teacher_name" label="学管师" min-width="60">
         </el-table-column>
-        <el-table-column label="操作" min-width="155">
+        <el-table-column label="操作">
           <template scope="scope">
             <el-button type="text" @click="UpdateClassTitle(scope.$index, scope.row)">基本设置</el-button>
 
@@ -85,7 +88,7 @@
           <el-input class="coursetxt" v-model="ruleForm.class_name"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="teachid">
-          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @change="checkproject" placeholder="请选择所属项目">
+          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @change="checkproject" placeholder="请选择班主任">
             <el-option v-for="(rev,index) in teachrulelist" :key="rev.id" :label="rev.name" :value="rev.id"></el-option>
           </el-select>
         </el-form-item>
@@ -121,6 +124,87 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+
+    <el-dialog title="学员入班" class="tabplane" :visible.sync="dialogFormVisiblePel">
+      <el-col v-for="item in progressText" :key="item.text" :sm="12">
+        <div class="order-progress-bar">
+          <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
+          <i class="progress-bar-dot" :class="item.isCustomerConfirm ? item.currentDot : ''"></i>
+          <span :class="item.isCustomerConfirm ? item.currentText : ''">{{item.text}}</span>
+        </div>
+      </el-col>
+      <div class="peldrop" v-show="module1">
+        <div class="pelclass">
+          <el-input :placeholder="txtcomt" size="small" icon="search" v-model="inputstudent" placeholder="请输入学员ID / 手机号 / 邮箱 / 昵称 / 姓名" @keyup.native.enter="handleIconClickChrad" :on-icon-click="handleIconClickChrad"></el-input>
+        </div>
+
+        <el-table ref="multipleTable" :data="tableDatamin1" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
+          <el-table-column label="学员ID" width="120">
+            <template scope="scope">
+              <el-radio-group class="radio" @change="handClkStudent(scope.row)" v-model="radio">
+                <el-radio :label="scope.row.id">{{scope.row.id}}</el-radio>
+              </el-radio-group>
+
+
+              <!-- <el-radio class="radio" @change="handClkStudent" v-model="radio" :label="scope.row.id"></el-radio> -->
+            </template>
+          </el-table-column>
+          <el-table-column prop="name" label="姓名" width="120">            
+          </el-table-column>
+          <el-table-column prop="phone" label="手机" show-overflow-tooltip>            
+          </el-table-column>
+          <el-table-column prop="user_email" label="邮箱" show-overflow-tooltip>            
+          </el-table-column>
+          <el-table-column prop="nickname" label="昵称" show-overflow-tooltip>            
+          </el-table-column>
+        </el-table>
+
+        <div class="pageclass">
+          <el-pagination @size-change="handleSizeChangepel" @current-change="handleCurrentChangepel" :page-sizes="[10,20,30]" :page-size="page_sizepel" :current-page="pagenumpel" :current-page.sync="pagenumpel" layout="total, sizes, prev, pager, next, jumper" :total="courselinenumpel">
+          </el-pagination>
+        </div>
+
+        <div class="coursebtn" style="margin-top:10px;padding-top:20px;">
+          <el-button style="margin-top:12px;" @click="next">下一步</el-button>
+        </div>
+      </div>
+
+      <div class="rulemodule" v-show="module2">
+        <el-input :placeholder="txtcomt" size="small" icon="search" v-model="inputClass" placeholder="请输入班级ID / 名称" @keyup.native.enter="handleIconClickClass" :on-icon-click="handleIconClickClass"></el-input>
+        <el-table ref="multipleTable" :data="tableDataclass" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" class="selection" prop='uuid' :selectable='checkboxInit' @selection-change="changeFun"></el-table-column>
+          <el-table-column label="班级ID" width="120">
+            <template scope="scope">
+
+              <!-- <el-radio-group class="radio" @change="handClkClass(scope.row)" v-model="radio">
+                <el-radio :label="scope.row.id">{{scope.row.id}}</el-radio>
+              </el-radio-group> -->
+
+              <!-- <el-checkbox-group v-model="checkList" @change="handClkClass(scope.row)">
+                <el-checkbox :label="scope.row.id">{{scope.row.id}}</el-checkbox>
+              </el-checkbox-group> -->
+<!-- list  [1,2,3,4].indexOf(1)> -1 slice([1,2,3,4].indexOf(1),1)    .push()-->
+
+              <el-checkbox @change="handClkClass(scope.row)" :label="scope.row.id">{{scope.row.id}}</el-checkbox>
+
+              <!-- <el-radio class="radio" v-model="radio" :label="scope.row.rid"></el-radio> -->
+            </template>
+          </el-table-column>
+          <el-table-column prop="class_name" label="班级名称" width="220">            
+          </el-table-column>
+          <el-table-column prop="teacher_name" label="班主任" width="100">            
+          </el-table-column>
+          <el-table-column prop="course_name" label="课程">            
+          </el-table-column>
+        </el-table>
+        <div class="coursebtn">
+          <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
+          <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
+          <el-button type="primary" @click="orginpel">确 定</el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <style>
@@ -128,7 +212,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassList,teachermin,checkcoursemit} from '../../api/outline.js';
+  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassList,teachermin,checkcoursemit,checkstudent,checkclass} from '../../api/outline.js';
   import {CourseSyllabus,addClassList} from '../../api/fromAxios';
 
   export default {
@@ -138,8 +222,7 @@
         input2:'',
         CourseLineList:[],
         ruleForm: {
-          class_name:'',
-          teacher_id:'',
+          class_name:'',          teacher_id:'',
           project_id:'',
           subject_id:'',
           course_id:''
@@ -209,7 +292,40 @@
         courselinenum:'',
         pagenum:'',
         page_size:'',
-        teachtop:''
+        teachtop:'',
+        dialogFormVisiblePel:false,
+        progressText: [
+          {
+            text: '第一步：搜索学员',
+            currentLine: 'bar-line-current',
+            currentDot: 'bar-dot-current',
+            currentText: 'current-text',
+            isCustomerConfirm: true
+          }, {
+            text: '第二步：为学员选择班级（可选择多个班级）',
+            currentLine: 'bar-line-current',
+            currentDot: 'bar-dot-current',
+            currentText: 'current-text',
+            isCustomerConfirm: false
+          }
+        ],
+        module1:true,
+        module2:false,
+        active:0,
+        inputstudent:'',
+        tableDatamin1:[],
+        radio:'',
+        orginstudent_id:'',
+        orginmobile:'',
+        orginstudent_name:'',
+        orginclass_id:'',
+        inputClass:'',
+        tableDataclass:[],
+        page_sizepel:'',
+        pagenumpel:'',
+        courselinenumpel:'',
+        tableDataclass:[],
+        checkList:''
       }
     },
     mounted() {
@@ -227,16 +343,12 @@
     },
     methods: {
       checkprojectlist(val){
-        console.log(this.searchTree,val)
         this.projecttop = val;
-        console.log(this.flag,"dddddddooooooooooo")
-        console.log(this.searchTree,"11222222")
         if(val){
           for(let reg of this.searchTree){
             if(reg.project_id == val){
               this.issubject = true;
               let subjectall = [...reg.subject_list];
-              console.log(subjectall,"fffffffffdddd")
               subjectall.unshift({
                 subject_id:'0',
                 subject_name:'全部'
@@ -482,8 +594,6 @@
           setTimeout(() => {
             // this.loading = false;
 
-            console.log(this.ruleForm.course_id,"ddddddddddddddddddd")
-
             this.list = this.states.map(item => {
               return { course_id: item.course_id, course_name: item.course_name };
               // return { value: item.id, label: item.name }
@@ -514,8 +624,104 @@
           this.states = ret.result;
         }
         console.log(ret,"kecheng")
+      },
+      addPelOrign(){
+        this.dialogFormVisiblePel = true;
+      },
+      prev(){
+        if(this.active<=0)return
+        this.progressText[this.active].isCustomerConfirm=false;
+        this.active--;
+        console.log(this.active);
+        this.showitem();
+      },
+      next(){
+        if(this.orginstudent_id){
+          if(this.active == 0){
+            if(this.active >= this.progressText.length-1)return;
+            this.active++;
+            this.progressText[this.active].isCustomerConfirm=true;
+            this.showitem();
+          }else{
+            if(this.active >= this.progressText.length-1)return;
+            this.active++;
+            this.progressText[this.active].isCustomerConfirm=true;
+            this.showitem();
+          }
+        }else{
+          this.$message({
+            message: '选择学生ID',
+            type: 'warning'
+          });
+        }
+      },
+      showitem(){
+        if(this.active == 0){
+          this.module1 = true;
+          this.module2 = false;
+          this.prevclk = false;
+          this.nextclk = true;
+        }else if(this.active == 1){
+          this.module1 = false;
+          this.module2 = true;
+          this.prevclk = true;
+          this.nextclk = true;
+        }
+      },
+      handleIconClickChrad(){
+        console.log(this.inputstudent);
+        this.checkstudent();
+      },
+      async checkstudent(){
+        this.page_sizepel = this.page_sizepel ? this.page_sizepel : '20';
+        this.pagenumpel = this.pagenumpel ? this.pagenumpel :'1';
+        // this.pagenumpel,
+        let ret = await checkstudent({search_info:this.inputstudent})
+        if(ret.status == 0){
+          this.tableDatamin1 = ret.result.student_list;
+          this.courselinenumpel = ret.result.student_sum;
+        }
+      },
+      handClkStudent(val){
+        this.orginstudent_id = val.id;
+        this.orginmobile = val.phone;
+        this.orginstudent_name = val.name;
+      },
+      handleIconClickClass(){
+        console.log(this.inputClass);
+        this.checkclass();
+      },
+      handleSizeChangepel(val){
+        console.log(`每页 ${val} 条`);
+        this.page_sizepel = val;
+        this.pagenumpel = 1;
+      },
+      handleCurrentChangepel(val){
+        console.log(`当前页: ${val}`);
+        this.pagenumpel = val;
+        this.checkstudent();
+      },
+      async checkclass(){
+        console.log(this.orginstudent_id,"wwwwwwwwwwwwwwqqqqqqqqqqqqqq")
+        let ret = await checkclass(this.orginstudent_id,{search_info:this.inputClass})
+        if(ret.status == 0){
+          this.tableDataclass = ret.result.all_class;
+        }
+      },
+      handClkClass(val){
+        console.log(val,"wwwwwwwwwwwwwwqqqqqqqqqqqqqq")
+        this.orginclass_id = val.id;
+      },
+      orginpel(){
+        let params = {
+          student_id:this.orginstudent_id,
+          mobile:this.orginmobile,
+          student_name:this.orginstudent_name,
+          class_id:this.orginclass_id
+        }
+
+        console.log(params,"dddddddddeeeeeeeeeeeee")
       }
-      // states
     },
     computed: {},
     created() {

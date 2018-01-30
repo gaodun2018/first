@@ -31,17 +31,16 @@
         </el-col>
         <el-col :sm="6">
           <div class="button_group_t teachtxt">
-            <span>学管师:</span>
             <el-input placeholder="学员ID,手机,姓名,邮箱,昵称" size="small" icon="search" v-model="searchinput"
                         :on-icon-click="handleIconClick" @keyup.native.enter="handleIconClick"></el-input>
           </div>
         </el-col>
-        <el-col :sm="6">
+        <!-- <el-col :sm="6">
           <div class="button_group_t">
             <el-button type="primary" size="small" @click="addClassModel">新建班级</el-button>
             <el-button type="primary" size="small" @click="addCourseOutline">学员入班</el-button>
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
 
@@ -72,39 +71,6 @@
         </el-pagination>
       </div>
     </div>
-
-    <el-dialog :title="dialogClass ? '创建班级' : '编辑班级'" class="tabplane" :visible.sync="dialogFormVisible" :before-close="handleClose">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="班级名称" prop="class_name">
-          <el-input class="coursetxt" v-model="ruleForm.class_name"></el-input>
-        </el-form-item>
-        <el-form-item label="班主任" prop="teachid">
-          <el-select v-model="ruleForm.teacher_id" @change="checkproject" placeholder="请选择所属项目">
-            <el-option v-for="(rev,index) in projectlist" :key="rev.teacher_name" :label="rev.teacher_name" :value="rev.teachid"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="项目" prop="project_id">
-          <el-select v-model="ruleForm.project_id" @change="checkproject" placeholder="请选择所属项目">
-            <el-option v-for="(rev,index) in projectlist" :key="rev.project_name" :label="rev.project_name" :value="rev.project_id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="科目" prop="subject_id">
-          <el-select v-model="ruleForm.subject_id" :disabled="!issubject" placeholder="请选择所属科目">
-            <el-option v-for="(com,index) in boxsubject" :label="com.subject_name" :value="com.subject_id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="课程" prop="course_id">
-          <el-select v-model="ruleForm.course_id" :disabled="!issubject" placeholder="请选择所属科目">
-            <el-option v-for="(com,index) in boxsubject" :label="com.course_name" :value="com.course_id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item class="coursebtn">
-          <el-button type="primary" v-if="substatus == 'addoutline'" @click="submitForm('ruleForm')">确 定</el-button>
-          <el-button type="primary" v-if="substatus == 'updateoutline'" @click="updateForm('ruleForm')">保 存</el-button>
-          <el-button @click="resetForm('ruleForm')">重 置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 <style>
@@ -115,156 +81,23 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,   getClassList,getStudentList} from '../../api/outline.js';
-  import {CourseSyllabus} from '../../api/fromAxios';
+  import {getStudentList} from '../../api/outline.js';
   import {getEnv} from '../../util/config';
 
   export default {
     components: {},
     data() {
       return {
-        input2:'',
-        CourseLineList:[],
         courselinenum:'',
-        ruleForm: {
-          class_name:'',
-          teacher_id:'',
-          project_id:'',
-          subject_id:'',
-          course_id:''
-        },
-        rules: {
-          class_name: [
-            { required: true, message: '班级名称', trigger: 'blur' }
-          ],
-          teacher_id: [
-            { required: true, message: '班主任', trigger: 'change' }
-          ],
-          project_id: [
-            { required: true, message: '所属项目', trigger: 'change' }
-          ],
-          subject_id: [
-            { required: true, message: '所属科目', trigger: 'change' }
-          ],
-          course_id: [
-            { required: true, message: '课程名称', trigger: 'change' }
-          ]
-        },
-        rulesback:{},
-        dialogFormVisible: false,
-        options: [{
-          value: '',
-          label: '全部状态'
-        }, {
-          value: '0',
-          label: '启用'
-        }, {
-          value: '1',
-          label: '禁用'
-        }],
-        selectvalue:'',
-        clver:"0",
-        clversm:"0",
-        projectlist:[{
-          project_id: "1",
-          project_name: "ACCA",
-          subject_list: [
-          {
-            subject_id: "1",
-            subject_name: "F1",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9001】CMA-中文P1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9002】CMA-中文P2"
-            }]
-          },
-          {
-            subject_id: "2",
-            subject_name: "F2",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9003】CMA-中文m1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9004】CMA-中文m2"
-            }]
-          }]
-        },{
-          project_id: "2",
-          project_name: "CMA",
-          subject_list: [{
-            subject_id: "19",
-            subject_name: "英文Part 1",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9005】CMA-中文P1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9006】CMA-中文P2"
-            }]
-          },
-          {
-            subject_id: "20",
-            subject_name: "英文Part 2",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9007】CMA-中文P1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9008】CMA-中文P2"
-            }]
-          },
-          {
-            subject_id: "21",
-            subject_name: "Part3",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9009】CMA-中文P1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9010】CMA-中文P2"
-            }]
-          },
-          {
-            subject_id: "76",
-            subject_name: "新纲 中文Part 1",
-            courseitem:[{
-              course_id:"3",
-              course_name:"【课程ID：9011】CMA-中文P1"
-            },{
-              course_id:"4",
-              course_name:"【课程ID：9012】CMA-中文P2"
-            }]
-          }]
-        }],
+        projectlist:[],
         subjectlist:[],
         issubject:false,
-        boxsubject:[],
         pagenum:'',
         page_size:'',
         flag:true,
-        flagtwo:true,
-        projectlid:'',
-        subjectlid:'',
-        currentIndex:'',
-        substatus:'addoutline',
-        outlineid:'',
-        dialogCourse:true,
-        selectcur:true,
-
-
-
-
         selproject:"",
-        selprojectcur:"2",
         selsubject:'',
-        selteach:'',
-        courselist:[],
         mmStudentList:[],
-        reformval:'',
-        dialogClass:true,
         baseUrl: getEnv(),
         projecttop:'',
         subjecttop:'',
@@ -280,7 +113,6 @@
               if(reg.id == val){
                 this.issubject = true;
                 let subjectall = [...reg.subject];
-                console.log(subjectall,"fffffffffdddd")
                 subjectall.unshift({
                   id:'0',
                   name:'全部'
