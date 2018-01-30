@@ -511,7 +511,7 @@
                 };
                 let ret = await ChangeSyllabusItem(id, name);
                 if (ret.status == 0) {
-                    //再走新增大纲资源
+                    //再走修改大纲资源
                     let id = ret.result.id?ret.result.id:this.currentId;
                     let params = {
                         resource_id:this.resourceRadio,
@@ -522,15 +522,15 @@
                     if (retv.status == 0) {
                         this.$message({
                             type: 'success',
-                            message: '新增资源成功！'
+                            message: '修改资源成功！'
                         })
                         this.dialogFormVisible = false;
                         this.getSyllabusItems();
                     } else if (retv.status == 2) {
-                        this.$message.error('添加失败！')
+                        this.$message.error('修改资源失败！')
                     }
                 } else if (ret.status == 2) {
-                    this.$message.error('添加失败！')
+                    this.$message.error('修改资源失败！')
                 }
             },
             //弹出修改资源的弹层

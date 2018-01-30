@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column prop="" label="科目" min-width="200">
             <template scope="scope">
-                <span>{{scope.row.subject&&scope.row.subject.subject_name}}</span>
+                <span>{{scope.row.subject&&scope.row.subject.subject_name?scope.row.subject.subject_name:'全部'}}</span>
             </template>
         </el-table-column>
         <el-table-column prop="course_type" label="网课类型" min-width="260">

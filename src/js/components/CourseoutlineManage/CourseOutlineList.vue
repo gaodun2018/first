@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <el-dialog :title="dialogCourse ? '新建课程大纲' : '编辑课程大纲'" class="tabplane" :visible.sync="dialogFormVisible">
+    <el-dialog :title="dialogCourse ? '新建课程大纲' : '编辑课程大纲'" class="tabplane" :visible.sync="dialogFormVisible" @close="resetForm('ruleForm')">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="课程大纲名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
@@ -347,9 +347,8 @@
       },
       //查看大纲按钮
       checkSyllabus(index,row){
-        console.log(row);
         if(row.template == null){
-          this.$router.replace({
+          this.$router.push({
             path:'/CourseOutlineManage/CourseOutline/'+row.id,
           })
         }else{
