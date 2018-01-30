@@ -1,4 +1,4 @@
-/*! gaodun modified this file at 2018-1-29 13:13:43 */
+/*! gaodun modified this file at 2018-1-30 09:16:06 */
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -2401,6 +2401,90 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .teachtxt{
 }
 .teachtxt span{float:left;margin:8px 4px 0 0;
@@ -2410,122 +2494,14 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.teachtxt{
+}
+.teachtxt span{float:left;margin:8px 4px 0 0;
+}
+.teachtxt .el-input--small{width:220px;
+}
+.teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
+}
 /*视频*/
 .order-manage-dislog .el-dialog--small {
   width: 30%;
@@ -2833,13 +2809,13 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 .permission-outlinemodule .addResourceDialog .el-dialog--small{width: 60%;}
+.peldrop{}
+.peldrop .pelclass{padding:0 20px;}
 
-
-
-
-
-
-
+.pageclass{padding-top:20px;text-align:right;}
+.pricecourse{padding:8px 0;}
+.pricecourse em{font-style:normal;}
+.pricecourse em.cp2{color:#999;}
 
 
 

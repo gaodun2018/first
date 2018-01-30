@@ -32,6 +32,11 @@ export const teachermin = parameters => get(`${getBaseUrl()}school-api.gaodun.co
 //查看大纲
 export const checkcoursemit = (projectId,subjectId,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/class/get/${projectId}/course/${subjectId}`, params);
 
+//搜索学员
+export const checkstudent = (params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/search/student`, params);// /${page}
+
+//搜索班级
+export const checkclass = (studentId,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/${studentId}/search/class`, params);
 
 
 
