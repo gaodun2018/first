@@ -179,5 +179,20 @@ export default [
             {name: "知识点汇总", url: '/KnowledgeList'},
             {name: "编辑知识点", url: '/editKnowledge'},
         ]
+    },
+    {
+        "AppId": 130555,
+        "Title": "EP课程学习数据统计",
+        "NavigationId": 10000,
+        "ParentID": 0,
+        "Url": "/EducationalClass",
+        "Path": "containers/EducationalClass",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null,
+        "parenttitle": [
+            {name: "班级列表", url: ''},
+            {name: "班级列表1", url: '/EducationalClass'},
+        ]
     }
 ]

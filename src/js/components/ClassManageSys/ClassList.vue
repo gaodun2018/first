@@ -72,7 +72,9 @@
           <template scope="scope">
             <el-button type="text" @click="UpdateClassTitle(scope.$index, scope.row)">基本设置</el-button>
 
-            <el-button type="text"><router-link :to="'//'+baseUrl+'gcloud.gaodun.com/edata/#/EducationalClass/'+scope.row.course_id+'/'+scope.row.class_id">查看详情</router-link></el-button>
+            <el-button type="text"><router-link :to="'/EducationalClass/'+scope.row.course_id+'/'+scope.row.class_id" tag="a" target="_blank">查看详情</router-link></el-button>
+
+
             <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
@@ -90,12 +92,14 @@
           <el-input class="coursetxt" v-model="ruleForm.class_name"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="teachid">
-          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @change="checkproject" placeholder="请选择班主任">
+          <!-- <el-input v-if="teachtrue" v-model="teacher_name" :disabled="!isidentity" @click="handleClkteach"></el-input> -->
+
+          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @click="handleClkteach" placeholder="请选择班主任"><!--  v-if="!teachtrue"   :disabled="!isidentity"-->
             <el-option v-for="(rev,index) in teachrulelist" :key="rev.id" :label="rev.name" :value="rev.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="项目" prop="project_id">
-          <el-select v-model="ruleForm.project_id" @change="checkproject" placeholder="请选择所属项目">
+          <el-select v-model="ruleForm.project_id" :disabled="!isproject" @change="checkproject" placeholder="请选择所属项目">
             <el-option v-for="(rev,index) in projectlist" :key="rev.project_name" :label="rev.project_name" :value="rev.project_id"></el-option>
           </el-select>
         </el-form-item>
@@ -203,6 +207,12 @@
           <el-table-column prop="course_name" label="课程">            
           </el-table-column>
         </el-table>
+
+        <div class="pageclass" v-if="courselinenumclass > 0">
+          <el-pagination @size-change="handleSizeChangeclass" @current-change="handleCurrentChangeclass" :page-sizes="[10,20,30]" :page-size="page_sizeclass" :current-page="pagenumclass" :current-page.sync="pagenumclass" layout="total, sizes, prev, pager, next, jumper" :total="courselinenumclass">
+          </el-pagination>
+        </div>
+
         <div class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
           <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
@@ -217,7 +227,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassList,teachermin,checkcoursemit,checkstudent,checkclass} from '../../api/outline.js';
+  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassListout,teachermin,checkcoursemit,checkstudent,checkclass} from '../../api/outline.js';
   import {CourseSyllabus,addClassList,OrginClassStudent,updateinfoClass} from '../../api/fromAxios';
   import {getEnv} from '../../util/config';
 
@@ -335,7 +345,13 @@
         selmodulelist:[],
         baseUrl: getEnv(),
         selother:false,
-        overflag:true
+        overflag:true,
+        teachtrue:true,
+        teacher_name:'',
+        isproject:true,
+        teacher_sid:'',
+        pagenumclass:'',
+        page_sizeclass:''
       }
     },
     mounted() {
@@ -400,7 +416,7 @@
           pagenum:this.page_size
         }
 
-        let ret = await getClassList(params);
+        let ret = await getClassListout(params);
         this.flag = true;
         if(ret.status == 0){
           this.mmClassList = ret.result.lists;
@@ -457,7 +473,9 @@
         // 新增一个班级 弹出框
         this.dialogFormVisible = true;
         this.dialogClass = true;
-        this.substatus == 'addoutline'
+        this.substatus = 'addoutline';
+
+        // console.log(this.$ref('ruleForm'),"添加表单")
       },
       submitForm(formName) {
         // 添加一个课程大纲
@@ -505,47 +523,80 @@
         }
       },
       handleClose(done) {
-        // if(this.ruleForm.course_id){
-          // this.ruleForm.resetFields();
-          this.addCloseClass();
-        // }
+        this.issubject = false;
+        this.iscourse = false;
+        this.isproject = true;
+
+        this.teacher_name = "";
+        console.log(this.ruleForm,"ruleForm kkk")
+
+        this.ruleForm = {
+          class_id:'',
+          class_name:'',
+          student_number:'',
+          course_name:'',
+          teacher_name:'',
+          course_id:'',
+          project_id:'',
+          subject_id:''
+
+
+          // course_id:'请输入课程ID、课程名称',
+          // project_id:'请选择所属项目',
+          // subject_id:'请选择所属科目'
+        }
+
+        this.$refs['ruleForm'].resetFields();
         done();
       },
       addCloseClass(){
         console.log(this.ruleForm.course_id);
         // if(this.ruleForm.course_id){
-          this.ruleForm.class_name = '';
+          // this.ruleForm.class_name = '';
           this.issubject = false;
           this.iscourse = false;
+          this.teacher_name = "";
+          this.isproject = true;
 
-          this.ruleForm.project_id = '全部';
-          this.ruleForm.subject_id = '0';
-          this.ruleForm.course_id = '';
+          // this.ruleForm.project_id = '全部';
+          // this.ruleForm.subject_id = '0';
+          // this.ruleForm.course_id = '';
         // }
       },
       UpdateClassTitle(row,data){
         // 修改班级 弹出框
-        console.log(row,data);
+        console.log(row,data,"dddddd");
         let rult = {
           class_id:data.class_id,
           class_name:data.class_name,
-          course_id:data.course_id+'',
-          course_name:data.course_name,
           student_number:data.student_number,
-          teacher_id:data.teacher_id,
-          teacher_name:data.teacher_name
-        }
-        this.ruleForm = rult;
+          course_name:data.course_name,
+          teacher_name:data.teacher_name+'',
+          course_id:data.course_name+'',
+          teacher_id:data.teacher_name+'',
+          project_id:data.project_name+'',
+          subject_id:data.subject_name+''
 
+          // course_id:data.course_name,
+          // teacher_id:data.teacher_name,
+          // project_id:data.project_name,
+          // subject_id:data.subject_name
+        }
+        this.teacher_sid = data.teacher_id;
+        this.ruleForm = rult;
+        console.log(this.ruleForm)
         console.log(this.ruleForm,"kkkkkk")
         this.dialogFormVisible = true;
         this.dialogClass = false;
-        this.substatus == 'updateoutline';
-
+        this.substatus = 'updateoutline';
+        this.teacher_name = data.teacher_name;
         this.overflag = false;
+        this.isproject = false;
+        this.issubject = false;
+        this.iscourse = false;
      },
       updateForm(formName) {
-        // 添加一个课程大纲
+        // 修改班级
         if(this.substatus == 'updateoutline'){
           this.reformval = this.$refs[formName];
           this.$refs[formName].validate((valid) => {
@@ -558,9 +609,39 @@
           });
         }
       },
-      async updateinfo(ruleForm){
+      async updateinfo(ruleForm){  // 修改班级
         console.log(ruleForm,"dsddddddddd")
-        // let ret = await updateinfoClass();
+        let ret = await updateinfoClass(this.ruleForm.class_id,{
+          class_name:ruleForm.class_name,
+          teacher_id:this.teacher_sid,
+          teacher_name:ruleForm.teacher_name
+        });
+
+        if(ret.status == 0){
+          this.$message({
+            message:'修改成功！',
+            type:'success'
+          })
+          this.dialogFormVisible = false;
+          this.getClassList();
+
+          this.ruleForm = {
+            class_id:'',
+            class_name:'全部',
+            student_number:'',
+            course_name:'',
+            teacher_name:'',
+            teacher_id:'0',
+            course_id:'0',
+            project_id:'全部',
+            subject_id:'全部'
+          }
+        }else{
+          this.$message({
+            message:'修改失败！',
+            type:'error'
+          })
+        }
       },
       async getProjectSubject(){
         let ret = await getProjectSubject()
@@ -629,7 +710,7 @@
           }
         }
       },
-      async getcheckcoursemit(query){
+      async getcheckcoursemit(query){  // 创建班级时的课程搜索
         let courseinfo = {
           search_info:query
         }
@@ -709,6 +790,7 @@
         console.log(`每页 ${val} 条`);
         this.page_sizepel = val;
         this.pagenumpel = 1;
+        this.checkstudent();
       },
       handleCurrentChangepel(val){
         console.log(`当前页: ${val}`);
@@ -717,20 +799,26 @@
       },
       async checkclass(){
 
-        // this.page_sizepel = this.page_sizepel ? this.page_sizepel : '10';
-        // this.pagenumpel = this.pagenumpel ? this.pagenumpel :'1';
+        this.page_sizeclass = this.page_sizeclass ? this.page_sizeclass : '10';
+        this.pagenumclass = this.pagenumclass ? this.pagenumclass :'1';
 
-        let ret = await checkclass(this.orginstudent_id,{search_info:this.inputClass})
+        let ret = await checkclass(this.orginstudent_id,this.pagenumclass,this.page_sizeclass,{search_info:this.inputClass})
         if(ret.status == 0){
           this.tableDataclass = ret.result.all_class;
           this.selmodulelist = ret.result.exists_class;
+          this.courselinenumclass = ret.result.all_class_sum;
         }
       },
       handClkClass(val){
         this.orginclass_id = val.id;
       },
       handleSelectionChange(val){
-        this.selmodulelist = [...val];
+        // console.log(val[0])
+        this.selmodulelist = [...val[0]];
+        // let jj = val[0];
+        // jj = this.selmodulelist.push({val[0].class_id,val[0].class_name})
+        // this.selmodulelist = [...this.selmodulelist].push({class_id:jj['class_id'],class_name:jj['class_name']});
+        console.log(this.selmodulelist,"sssssssssssss000000")
       },
       async orginpel(){
         let classid = [];
@@ -766,6 +854,19 @@
           })
         }
       },
+
+      courselinenumclass(val){
+        console.log(`每页 ${val} 条`);
+        this.page_sizeclass = val;
+        this.pagenumclass = 1;
+        this.checkclass();
+      },
+      handleCurrentChangeclass(val){
+        console.log(`当前页: ${val}`);
+        this.pagenumclass = val;
+        this.checkclass();
+      },
+
       handleCloseStudent(done){
         this.examSet();
         done();
@@ -791,6 +892,9 @@
         this.progressText[0].isCustomerConfirm=true;
         this.progressText[1].isCustomerConfirm=false;
         this.showitem();
+      },
+      handleClkteach(){
+
       }
     },
     computed: {},
