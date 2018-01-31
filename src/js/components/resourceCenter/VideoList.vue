@@ -40,7 +40,7 @@
     </div>
 
     <div class="edu_table">
-      <el-table ref="multipleTable" border v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" :data="this.resource.resources" style="width: 100%">
+      <el-table ref="multipleTable" border v-loading="loading" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange" :data="resource.resources" style="width: 100%">
 
         <el-table-column prop="id" label="视频id" min-width="100"  fixed>
         </el-table-column>
@@ -73,7 +73,7 @@
                 @size-change="didChangePageSize"
                 @current-change="didChangePage"
                 :current-page="currentPage"
-                :page-sizes="[1, 200, 300, 400]"
+                :page-sizes="[50, 200, 300, 400]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="paginationTotal"
@@ -97,7 +97,13 @@
         radio: '全部',
         radio2: '全部',
         input2:'',
-        resourceDTO: [],
+        resource: {
+          resources: [],
+          pagination: {
+            total: 0,
+            current_page: 1
+          }
+        },
         clver:"0",
         clversm:"0",
         tags:[],
@@ -116,8 +122,8 @@
 
       fetchResources() {
         let parameters = {
-          page_size: pageSize,
-          page: currentPage,
+          page_size: this.pageSize,
+          page: this.currentPage,
           discriminator: 'video'
         }
 
@@ -134,11 +140,14 @@
     },
     computed: {},
     mounted() {
-
+      console.error(this.resource)
     },
     async created() {
-      this.resource = (this.fetchResources()).result
-
+      let resourceResponse = await this.fetchResources()
+        console.error(resourceResponse)
+      this.resource = resourceResponse.result
+      console.error(this.resource)
+      console.error(this.resource.pagination)
       this.paginationTotal = this.resource.pagination.total
       this.currentPage = this.resource.pagination.current_page
         this.tags = this.resource.tags

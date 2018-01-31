@@ -5,32 +5,29 @@
     </div>
     <div class="frombox">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="项目" prop="region" class="w_50">
-          <el-select v-model="ruleForm.region">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="视频类型" prop="region" class="w_50">
-          <el-select v-model="ruleForm.region">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="视频名称" prop="name">
-          <el-input v-model="ruleForm.name" auto-complete="off" class="w_50"></el-input>
+          <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
+        </el-form-item>
+        <el-form-item label="项目" prop="region" class="">
+          <el-select v-model="ruleForm.project" style="width: 150px;" :change="didChangeProjectSelection()">
+            <el-option :label="tag.name" :value="tag.id" v-for="tag in tags"></el-option>
+          </el-select>
+          <el-select v-model="ruleForm.subject" style="width: 150px;">
+            <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注说明" prop="name">
-          <el-input v-model="ruleForm.name" auto-complete="off" class="w_50"></el-input>
+          <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
         </el-form-item>
         <el-form-item label="视频地址" prop="name">
-          <el-input v-model="ruleForm.name" auto-complete="off" class="w_60"></el-input>
-          <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button>
+          <el-input v-model="ruleForm.video_id" auto-complete="off" class="w_60"></el-input>
+          <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长" prop="name" class="displayinline">
-          <el-input v-model="ruleForm.name" auto-complete="off"></el-input>
+          <el-input v-model="ruleForm.duration_minute" auto-complete="off"></el-input>
           分
-          <el-input v-model="ruleForm.name" auto-complete="off" style="margin-left: 20px;"></el-input>
+          <el-input v-model="ruleForm.duration_second" auto-complete="off" style="margin-left: 20px;"></el-input>
           秒
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
@@ -51,44 +48,41 @@
 </style>
 <script>
   import SelectKnowledge from './SelectKnowledge.vue'
+  import { getTags } from '../../api/resource.js'
   export default {
     components: {
       SelectKnowledge
     },
     data() {
       return {
+        tags: [],
         ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          title: '',
+          project: '',
+          subject: '',
+          video_id: '',
+          duration_minute: '',
+          duration_second: '',
         },
         rules: {
-          name: [
-            {required: true, message: '请输入活动名称', trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          title: [
+            {required: true, message: '请输入资源名称', trigger: 'blur'},
+            {min: 3, max: 5, message: '长度在 3 到 50 个字符', trigger: 'blur'}
           ],
-          region: [
-            {required: true, message: '请选择活动区域', trigger: 'change'}
+          project: [
+            {required: true, message: '请选择项目', trigger: 'change'}
           ],
-          date1: [
-            {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
+          subject: [
+            {required: true, message: '请选择科目', trigger: 'change'}
           ],
-          date2: [
-            {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
+          video_id: [
+            {required: true, message: '请输入视频ID', trigger: 'change'}
           ],
-          type: [
-            {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
+          duration_minute: [
+            {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
           ],
-          resource: [
-            {required: true, message: '请选择活动资源', trigger: 'change'}
-          ],
-          desc: [
-            {required: true, message: '请填写活动形式', trigger: 'blur'}
+          duration_second: [
+            {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
           ]
         },
         tableData3: [
@@ -110,6 +104,20 @@
       }
     },
     methods: {
+      getSubjectByProjectId(projectId) {
+        var subjects = null
+        for (var project of this.tags) {
+          if (project.id == projectId) {
+            subjects = project.children;
+          }
+        }
+        return subjects
+      },
+
+      didChangeProjectSelection() {
+        console.error(this.ruleForm)
+        this.subjects = this.getSubjectByProjectId(this.ruleForm.project)
+      },
       //选择知识点
       selectknowledge(){
         this.$store.dispatch('changeDialog',true)
@@ -150,8 +158,8 @@
     mounted() {
 
     },
-    created() {
-
+    async created() {
+      this.tags = (await getTags('project', {partner_id: 1})).result
     }
   }
 </script>

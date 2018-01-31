@@ -959,7 +959,7 @@
     "Title": "- 新增视频",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/addVideo",
+    "Url": "/resource/video/create",
     "Path": "components/resourceCenter/AddVideo",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",

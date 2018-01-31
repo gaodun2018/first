@@ -117,7 +117,7 @@ export default [
         "Title": "- 新增视频",
         "NavigationId": 10000,
         "ParentID": 0,
-        "Url": "/addVideo",
+        "Url": "/resource/video/create",
         "Path": "components/resourceCenter/addVideo",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
@@ -126,7 +126,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "视频管理", url: ''},
             {name: "视频列表", url: '/VideoList'},
-            {name: "新增视频", url: '/AddVideo'},
+            {name: "新增视频", url: '/resource/video/create'},
         ]
     },
     {
