@@ -79,13 +79,14 @@
           <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
         </el-form-item>
         <el-form-item label="所属项目" prop="project_id" :rules="[ { required: true, message: '请选择所属项目', trigger: 'change' }]">
-          <el-select v-model="ruleForm.project_id" @change="checkproject" placeholder="请选择所属项目">
-            <el-option v-for="(rev,index) in projectlist" :key="rev.project_name" :label="rev.project_name" :value="rev.project_id"></el-option>
+          <el-select v-model="ruleForm.project_id" @change="checkproject" @visible-change="visibleChange" placeholder="请选择所属项目">
+            <el-option v-for="(rev,index) in projectlist" :key="rev.project_name" :label="rev.project_name" :value="String(rev.project_id)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属科目" prop="subject_id" :rules="[ { required: true, message: '请选择所属科目', trigger: 'change' }]">
           <el-select v-model="ruleForm.subject_id" :disabled="!issubject" placeholder="请选择所属科目">
-            <el-option v-for="(com,index) in boxsubject" :label="com.subject_name" :value="com.subject_id"></el-option>
+            <el-option label="全部" value="0"></el-option>
+            <el-option v-for="(com,index) in boxsubject" :label="com.subject_name" :value="String(com.subject_id)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="是否启用" prop="status" :rules="[ { required: true, message: '请选择是否启用', trigger: 'change' }]">
@@ -148,26 +149,29 @@
         substatus:'addoutline',
         outlineid:'',
         dialogCourse:true,
-        selectcur:true
+        selectcur:false   //项目选择器开关
       }
     },
     methods: {
+        //项目选择器开关
+        visibleChange(bool){
+            this.selectcur = bool;
+        },
       checkproject(value){
-        console.log(this.selectcur)
         if(this.selectcur){
+            console.log('checkproject   checkproject   checkproject')
           for(let reg of this.projectlist){
             if(reg.project_id == value){
               this.issubject = true;
               let subjectall = [...reg.subject_list];
-              subjectall.unshift({
+              /*subjectall.unshift({
                 subject_id:'0',
                 subject_name:'全部'
-              })
+              })*/
               this.boxsubject = subjectall;
               this.ruleForm.subject_id = '0';
             }
           }
-          this.selectcur = true;
         }
       },
       async coursesubmit(ruleForm){
@@ -242,7 +246,15 @@
         this.dialogFormVisible = true;
         this.issubject = false;
       },
+        //关闭新建、编辑大纲弹层
       resetForm(formName) {
+          this.ruleForm = {
+              title:"",
+              project_id:"",
+              subject_id:"",
+              status:"",
+          }
+        this.dialogFormVisible = false;
         this.$refs[formName].resetFields();
       },
       outlinechange(reid,index){
@@ -322,26 +334,24 @@
         this.dialogCourse = false;
         this.issubject = true;
         this.outlineid = row.id;
-        if(row){
-          this.selectcur = false;
-        }
+
         this.ruleForm = {
           title:row.title,
-          project_id:row.project.id+'',
-          subject_id:row.subject.id+'',
-          status:row.status+'',
+          project_id:String(row.project.id),
+          subject_id:String(row.subject.id),
+          status:String(row.status),
         }
         for(var i = 0; i < this.projectlist.length; i++){
           if(this.projectlist[i].project_id == row.project.id){
             let subjectall = [...this.projectlist[i]['subject_list']];
-            subjectall.unshift({
-              subject_id:'0',
+            /*subjectall.unshift({
+              subject_id:String('0'),
               subject_name:'全部'
-            })
+            })*/
             this.boxsubject = subjectall;
           }
         }
-        this.selectcur = true;
+
         this.currentIndex = index;
         this.dialogFormVisible = true;
       },
