@@ -23,20 +23,27 @@ export const getSyllabusItems = (params) => get(`${getBaseUrl()}toc-service.gaod
 //删除大纲条目
 export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 
+
+
+
+
+
+
+
 // 班级列表
-export const getClassListout = parameters => get(`${getBaseUrl()}plan-api.gaodun.com/class/lists`, parameters);
+export const getClassListout = parameters => get(`${getBaseUrl()}school-service.gaodun.com/class/lists`, parameters);
 
 // 班级列表
 export const teachermin = parameters => get(`${getBaseUrl()}school-api.gaodun.com/school/teacher`, parameters);
 
-//查看大纲
-export const checkcoursemit = (projectId,subjectId,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/class/get/${projectId}/course/${subjectId}`, params);
+//创建班级时的课程搜索
+export const checkcoursemit = (projectId,subjectId,params) => get(`${getBaseUrl()}school-service.gaodun.com/plan/class/get/${projectId}/course/${subjectId}`, params);
 
 //搜索学员
-export const checkstudent = (page,pageSize,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/search/${page}/student/${pageSize}`, params);// /${page}
+export const checkstudent = (page,pageSize,params) => get(`${getBaseUrl()}school-service.gaodun.com/plan/search/${page}/student/${pageSize}`, params);// /${page}
 
 //搜索班级
-export const checkclass = (studentId,page,pageSize,params) => get(`${getBaseUrl()}plan-api.gaodun.com/plan/${studentId}/search/${page}/class/${pageSize}`, params);
+export const checkclass = (studentId,page,pageSize,params) => get(`${getBaseUrl()}school-service.gaodun.com/plan/${studentId}/search/${page}/class/${pageSize}`, params);
 
 
 
