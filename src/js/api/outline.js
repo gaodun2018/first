@@ -27,7 +27,7 @@ export const getSyllabusItems = (params) => get(`${getBaseUrl()}toc-service.gaod
 export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 
 // 班级列表
-export const getClassList = parameters => get(`${getBaseUrl()}plan-api.gaodun.com/class/lists`, parameters);
+export const getClassListout = parameters => get(`${getBaseUrl()}plan-api.gaodun.com/class/lists`, parameters);
 
 // 班级列表
 export const teachermin = parameters => get(`${getBaseUrl()}school-api.gaodun.com/school/teacher`, parameters);
