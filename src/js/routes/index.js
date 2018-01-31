@@ -81,6 +81,16 @@ import AddHandout from '../components/resourceCenter/AddHandout.vue';
 import AddKnowledge from '../components/resourceCenter/AddKnowledge.vue';
 // - 编辑知识点
 import EditKnowledge from '../components/resourceCenter/EditKnowledge.vue';
+// - EP课程学习数据统计
+import EducationalClass from '../containers/EducationalClass.vue';
+// - EP定制标杆计划
+import CustomizedPlan from '../containers/CustomizedPlan.vue';
+// - EP选择标杆计划
+import ChoosePlan from '../containers/ChoosePlan.vue';
+// - 查看完整计划
+import EducationalPlanAll from '../containers/EducationalPlanAll.vue';
+// - 全部学员详情
+import EducationalClasslist from '../containers/EducationalClasslist.vue';
 
 
 export const routes = [
@@ -127,4 +137,9 @@ export const routes = [
 	{ path: '*',meta:{ title:'404' }, name:'10009',component: Page404 }, // 404
 	{ path: '/updatePwd',meta:{ title:'修改密码' }, name:'10001',component: UpdatePwd }, // 修改密码
 	{ path: '/home',meta:{ title:'- 财经云' }, name:'10000',component: Home }, // - 财经云
+	{ path: '/EducationalClass/:cid/:sid',meta:{ title:'- EP课程学习数据统计' }, name:'10000',component: EducationalClass }, // - EP课程学习数据统计
+	{ path: '/customizedPlan/:cid/:clid',meta:{ title:'- EP定制标杆计划' }, name:'10000',component: CustomizedPlan }, // - EP定制标杆计划
+	{ path: '/choosePlan/:cid/:clid',meta:{ title:'- EP选择标杆计划' }, name:'10000',component: ChoosePlan }, // - EP选择标杆计划
+	{ path: '/EducationalPlanAll/:cid/:clid/:tabnum',meta:{ title:'- 查看完整计划' }, name:'10000',component: EducationalPlanAll }, // - 查看完整计划
+	{ path: '/EducationalClasslist/:cid/:clid/',meta:{ title:'- 全部学员详情' }, name:'10000',component: EducationalClasslist }, // - 全部学员详情
 ]

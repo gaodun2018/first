@@ -997,6 +997,65 @@
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP课程学习数据统计",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalClass/:cid/:sid",
+    "Path": "containers/EducationalClass",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP定制标杆计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/customizedPlan/:cid/:clid",
+    "Path": "containers/CustomizedPlan",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP选择标杆计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/choosePlan/:cid/:clid",
+    "Path": "containers/ChoosePlan",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 查看完整计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalPlanAll/:cid/:clid/:tabnum",
+    "Path": "containers/EducationalPlanAll",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 全部学员详情",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalClasslist/:cid/:clid/",
+    "Path": "containers/EducationalClasslist",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
   }
-
 ]
