@@ -207,6 +207,12 @@
           <el-table-column prop="course_name" label="课程">            
           </el-table-column>
         </el-table>
+
+        <div class="pageclass" v-if="courselinenumclass > 0">
+          <el-pagination @size-change="handleSizeChangeclass" @current-change="handleCurrentChangeclass" :page-sizes="[10,20,30]" :page-size="page_sizeclass" :current-page="pagenumclass" :current-page.sync="pagenumclass" layout="total, sizes, prev, pager, next, jumper" :total="courselinenumclass">
+          </el-pagination>
+        </div>
+
         <div class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
           <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
@@ -590,7 +596,7 @@
         this.iscourse = false;
      },
       updateForm(formName) {
-        // 添加一个课程大纲
+        // 修改班级
         if(this.substatus == 'updateoutline'){
           this.reformval = this.$refs[formName];
           this.$refs[formName].validate((valid) => {
@@ -603,7 +609,7 @@
           });
         }
       },
-      async updateinfo(ruleForm){
+      async updateinfo(ruleForm){  // 修改班级
         console.log(ruleForm,"dsddddddddd")
         let ret = await updateinfoClass(this.ruleForm.class_id,{
           class_name:ruleForm.class_name,
@@ -704,7 +710,7 @@
           }
         }
       },
-      async getcheckcoursemit(query){
+      async getcheckcoursemit(query){  // 创建班级时的课程搜索
         let courseinfo = {
           search_info:query
         }
@@ -784,6 +790,7 @@
         console.log(`每页 ${val} 条`);
         this.page_sizepel = val;
         this.pagenumpel = 1;
+        this.checkstudent();
       },
       handleCurrentChangepel(val){
         console.log(`当前页: ${val}`);
@@ -799,6 +806,7 @@
         if(ret.status == 0){
           this.tableDataclass = ret.result.all_class;
           this.selmodulelist = ret.result.exists_class;
+          this.courselinenumclass = ret.result.all_class_sum;
         }
       },
       handClkClass(val){
@@ -846,6 +854,19 @@
           })
         }
       },
+
+      courselinenumclass(val){
+        console.log(`每页 ${val} 条`);
+        this.page_sizeclass = val;
+        this.pagenumclass = 1;
+        this.checkclass();
+      },
+      handleCurrentChangeclass(val){
+        console.log(`当前页: ${val}`);
+        this.pagenumclass = val;
+        this.checkclass();
+      },
+
       handleCloseStudent(done){
         this.examSet();
         done();
