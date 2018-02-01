@@ -229,7 +229,8 @@
   import base from 'base';
   import {getEnv} from '../util/config';
 
-  import {ProgressStatics,PlanProgress,TopoProgress} from '../api/plan.js'
+  import {PlanProgress,TopoProgress} from '../api/plan.js'
+  import {ProgressStatics} from '../api/plantop.js'
 
   export default {
     components: {
