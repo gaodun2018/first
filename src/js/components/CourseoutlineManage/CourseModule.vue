@@ -257,7 +257,7 @@
     import Vue from 'vue';
     import draggable from 'vuedraggable';
     import {CourseSyllabusItem, ChangeSyllabusItem, addSyllabusResource} from '../../api/fromAxios'
-    import {getSyllabusItems, checkSyllabus, DeleteSyllabusItem} from '../../api/outline'
+    import {getSyllabusItems, checkSyllabus, DeleteSyllabusItem,checkResIsInOutline} from '../../api/outline'
     import {getResource} from '../../api/resource'
     export default {
         components: {
@@ -267,6 +267,8 @@
             return {
                 active: 0,
                 resourceRadio: '',    //选择的资源
+                nativeResourceRadio: '',    //修改之前本来选择的资源
+                ResIsInOutline:false,  //检查该资源是否已经挂载
                 radio1: 1,
                 radio2: 4,
                 tabledata: [],
@@ -469,6 +471,18 @@
                     this.$message.error('请选择资源');
                     return;
                 }
+                //先查询时候挂载了该资源
+                let res = await  checkResIsInOutline(this.coursesyllid,this.resourceRadio);
+                if(res.status == 0){
+                    if(res.result.length > 0){
+                        this.resourceRadio = '';
+                        this.$message({
+                            type:'error',
+                            message :"该资源已经挂载在这个大纲上！",
+                        })
+                        return;
+                    }
+                }
                 //先走新增资源名字
                 let ret = await CourseSyllabusItem({
                     name: this.addResFirFrom.name,
@@ -503,6 +517,20 @@
                 if (!this.resourceRadio) {
                     this.$message.error('请选择资源');
                     return;
+                }
+                if(this.nativeResourceRadio != this.resourceRadio){
+                    //先查询时候挂载了该资源
+                     let res = await  checkResIsInOutline(this.coursesyllid,this.resourceRadio);
+                     if(res.status == 0){
+                         if(res.result.length > 0){
+                             this.resourceRadio = '';
+                             this.$message({
+                                 type:'error',
+                                 message :"该资源已经挂载在这个大纲上！",
+                             })
+                             return;
+                         }
+                     }
                 }
                 //先走修改大纲条目名字
                 let id = this.currentId;
@@ -548,6 +576,7 @@
                 this.addResFirFrom.name = item.name;
                 this.currentId = item.id;
                 this.resourceRadio = item.resource&&String(item.resource.id);
+                this.nativeResourceRadio = item.resource&&String(item.resource.id);   //原来的选项
                 this.selcurrent = item.resource&&item.resource.discriminator;
                 this.dialogFormVisible = true;
                 this.resourceAction = 'update';

@@ -100,23 +100,23 @@
     </div>
 
     <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="课程名称" prop="course_name">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="课程名称" prop="course_name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:50})">
           <el-input v-model="ruleForm.course_name"></el-input>
         </el-form-item>
-        <el-form-item label="所属项目" prop="project_id">
+        <el-form-item label="所属项目" prop="project_id" :rules="[ { required: true, message: '请选择所属项目', trigger: 'change' }]">
           <el-select v-model="ruleForm.project_id" placeholder="请选择所属项目" @change="changeProject">
             <el-option :label="item.project_name" :value="item.project_id" v-for="(item,index) in projectlist"
                        :key="item.project_id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属科目" prop="subject_id">
+        <el-form-item label="所属科目" prop="subject_id" :rules="[ { required: true, message: '请选择所属科目', trigger: 'change' }]">
           <el-select v-model="ruleForm.subject_id" :disabled="!bSubject" placeholder="请选择所属科目">
             <el-option :label="item.subject_name" :value="item.subject_id" v-for="(item,index) in selectedlist"
                        :key="item.subject_id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="网课类型" prop="course_type_id">
+        <el-form-item label="网课类型" prop="course_type_id" :rules="[ { required: true, message: '请选择网课类型', trigger: 'change' }]">
           <el-select v-model="ruleForm.course_type_id" placeholder="请选择网课类型">
             <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type"
                        :key="item.course_type_id"></el-option>
@@ -205,21 +205,6 @@
             label: '私播课-Glive+',
           }
         ],     //下拉搜索的网课类型列表
-        //表单验证
-        rules: {
-          course_name: [
-            {required: true, message: '请输入课程名称', trigger: 'blur'}
-          ],
-          project_id: [
-            {required: true, message: '请选择所属项目', trigger: 'change'}
-          ],
-          subject_id: [
-            {required: true, message: '请选择所属科目', trigger: 'change'}
-          ],
-          course_type_id: [
-            {required: true, message: '请选择网课类型', trigger: 'change'}
-          ]
-        },
         //新增课程的表单
         ruleForm: {
           course_name: '',

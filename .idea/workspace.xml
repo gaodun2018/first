@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c42f9b0d-6895-48c1-90e9-d8a2c43465ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue" afterPath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue" />
+      <change beforePath="$PROJECT_DIR$/src/js/api/outline.js" afterPath="$PROJECT_DIR$/src/js/api/outline.js" />
+      <change beforePath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" afterPath="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -16,40 +17,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="CourseOutlineList.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CourseModule.vue" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="235" column="24" lean-forward="true" selection-start-line="235" selection-start-column="24" selection-end-line="235" selection-end-column="24" />
+            <state relative-caret-position="464">
+              <caret line="519" column="17" lean-forward="false" selection-start-line="519" selection-start-column="17" selection-end-line="519" selection-end-column="17" />
               <folding>
-                <element signature="e#7661#8130#0" expanded="false" />
-                <element signature="e#8159#8444#0" expanded="false" />
-                <element signature="e#8472#8998#0" expanded="false" />
-                <element signature="e#9027#9303#0" expanded="false" />
-                <element signature="e#9955#10355#0" expanded="false" />
-                <element signature="e#10378#10541#0" expanded="false" />
-                <element signature="e#10583#10717#0" expanded="false" />
-                <element signature="e#10741#10875#0" expanded="false" />
-                <element signature="e#10900#11195#0" expanded="false" />
-                <element signature="e#11245#11692#0" expanded="false" />
-                <element signature="e#11722#11865#0" expanded="false" />
-                <element signature="e#11898#12011#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CourseList.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="461">
-              <caret line="101" column="59" lean-forward="false" selection-start-line="101" selection-start-column="54" selection-end-line="101" selection-end-column="59" />
-              <folding>
-                <element signature="n#style#0;n#!!top" expanded="false" />
-                <element signature="e#7087#7509#0" expanded="false" />
-                <element signature="e#7578#8026#0" expanded="false" />
-                <element signature="e#8076#8509#0" expanded="false" />
+                <element signature="n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form#1;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="e#16728#17596#0" expanded="false" />
+                <element signature="e#17628#18496#0" expanded="false" />
+                <element signature="e#19569#20261#0" expanded="false" />
+                <element signature="e#20624#21243#0" expanded="false" />
+                <element signature="e#21304#21767#0" expanded="false" />
+                <element signature="e#24071#25893#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -68,6 +50,9 @@
       <find>selectcur</find>
       <find>resetForm</find>
       <find>addCourseOutline</find>
+      <find>Account</find>
+      <find>submitForm</find>
+      <find>resourceRadio</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -82,29 +67,31 @@
         <option value="$PROJECT_DIR$/src/js/routes/index.json" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/src/js/common/KMENU.js" />
-        <option value="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" />
-        <option value="$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue" />
         <option value="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue" />
+        <option value="$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue" />
+        <option value="$PROJECT_DIR$/src/js/containers/Login.vue" />
+        <option value="$PROJECT_DIR$/src/js/api/outline.js" />
+        <option value="$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue" />
       </list>
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsFlowSettings">
-    <service-enabled>false</service-enabled>
+    <service-enabled>true</service-enabled>
     <exe-path />
-    <annotation-enable>false</annotation-enable>
-    <other-services-enabled>false</other-services-enabled>
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
   </component>
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2" />
-    <option name="y" value="87" />
-    <option name="width" value="1600" />
-    <option name="height" value="860" />
+    <option name="x" value="591" />
+    <option name="y" value="66" />
+    <option name="width" value="1654" />
+    <option name="height" value="1013" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -154,6 +141,13 @@
               <item name="zeus-console.gaodun.com" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="zeus-console.gaodun.com" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zeus-console.gaodun.com" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="zeus-console.gaodun.com" type="b2602c69:ProjectViewProjectNode" />
@@ -216,7 +210,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="C:/Program Files/nodejs/node" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -225,6 +219,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\www\resource-common\zeus-console.gaodun.com\src\js\containers" />
       <recent name="C:\www\resource-common\zeus-console.gaodun.com\src\js\components\resourceCenter" />
     </key>
   </component>
@@ -255,18 +250,19 @@
       <updated>1516691430712</updated>
       <workItem from="1516691432722" duration="2568000" />
       <workItem from="1517025945144" duration="33000" />
-      <workItem from="1517208386478" duration="12077000" />
+      <workItem from="1517208386478" duration="19615000" />
+      <workItem from="1517453401605" duration="1651000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14678000" />
+    <option name="totallyTimeSpent" value="23867000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.031085353" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11275026" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -296,6 +292,31 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form#1;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#16728#17596#0" expanded="false" />
+            <element signature="e#17628#18496#0" expanded="false" />
+            <element signature="e#19569#20261#0" expanded="false" />
+            <element signature="e#20624#21243#0" expanded="false" />
+            <element signature="e#21304#21767#0" expanded="false" />
+            <element signature="e#24071#25893#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/outline.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="26" column="59" lean-forward="false" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/js/containers/Entry.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-748">
@@ -314,7 +335,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -322,7 +342,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -330,7 +349,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -338,7 +356,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -362,27 +379,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3498">
-          <caret line="562" column="28" lean-forward="true" selection-start-line="562" selection-start-column="28" selection-end-line="562" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/common/1.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/common/KMENU.json" />
+    <entry file="file://$PROJECT_DIR$/src/js/common/1.json" />
     <entry file="file://$PROJECT_DIR$/src/js/components/resourceCenter/ExaminationSyllabus.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -398,7 +400,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -406,7 +407,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -445,18 +445,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="799" column="4" lean-forward="false" selection-start-line="799" selection-start-column="4" selection-end-line="799" selection-end-column="4" />
-          <folding>
-            <element signature="e#19#1837#0" expanded="false" />
-            <element signature="e#1841#4093#0" expanded="false" />
-            <element signature="e#4097#5994#0" expanded="false" />
-            <element signature="e#5998#10090#0" expanded="false" />
-            <element signature="e#10094#14789#0" expanded="false" />
-            <element signature="e#14793#15455#0" expanded="false" />
-            <element signature="e#15459#16098#0" expanded="false" />
-            <element signature="e#16102#19217#0" expanded="false" />
-            <element signature="e#19221#19492#0" expanded="false" />
-            <element signature="e#19496#20879#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -464,7 +452,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-206">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -476,39 +463,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue">
+    <entry file="file://$PROJECT_DIR$/src/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1233">
-          <caret line="532" column="45" lean-forward="false" selection-start-line="532" selection-start-column="45" selection-end-line="532" selection-end-column="45" />
-          <folding>
-            <element signature="n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="e#16597#17465#0" expanded="false" />
-            <element signature="e#17497#18365#0" expanded="false" />
-            <element signature="e#19438#20130#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="92">
+          <caret line="32" column="19" lean-forward="true" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/CourseManage/CourseList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="101" column="59" lean-forward="false" selection-start-line="101" selection-start-column="54" selection-end-line="101" selection-end-column="59" />
-          <folding>
-            <element signature="n#style#0;n#!!top" expanded="false" />
-            <element signature="e#7087#7509#0" expanded="false" />
-            <element signature="e#7578#8026#0" expanded="false" />
-            <element signature="e#8076#8509#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="424">
+          <caret line="106" column="99" lean-forward="false" selection-start-line="106" selection-start-column="99" selection-end-line="106" selection-end-column="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/containers/Loginbaiyi.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2646">
+          <caret line="134" column="23" lean-forward="false" selection-start-line="134" selection-start-column="8" selection-end-line="134" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseOutlineList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="235" column="24" lean-forward="true" selection-start-line="235" selection-start-column="24" selection-end-line="235" selection-end-column="24" />
+        <state relative-caret-position="592">
+          <caret line="193" column="25" lean-forward="false" selection-start-line="193" selection-start-column="17" selection-end-line="193" selection-end-column="25" />
           <folding>
             <element signature="e#7661#8130#0" expanded="false" />
-            <element signature="e#8159#8444#0" expanded="false" />
             <element signature="e#8472#8998#0" expanded="false" />
             <element signature="e#9027#9303#0" expanded="false" />
             <element signature="e#9955#10355#0" expanded="false" />
@@ -519,6 +507,45 @@
             <element signature="e#11245#11692#0" expanded="false" />
             <element signature="e#11722#11865#0" expanded="false" />
             <element signature="e#11898#12011#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/containers/Login.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="656">
+          <caret line="40" column="23" lean-forward="false" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/fromAxios.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1937">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/api/outline.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="26" column="59" lean-forward="false" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/components/CourseoutlineManage/CourseModule.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="519" column="17" lean-forward="false" selection-start-line="519" selection-start-column="17" selection-end-line="519" selection-end-column="17" />
+          <folding>
+            <element signature="n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form#1;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#16728#17596#0" expanded="false" />
+            <element signature="e#17628#18496#0" expanded="false" />
+            <element signature="e#19569#20261#0" expanded="false" />
+            <element signature="e#20624#21243#0" expanded="false" />
+            <element signature="e#21304#21767#0" expanded="false" />
+            <element signature="e#24071#25893#0" expanded="false" />
           </folding>
         </state>
       </provider>

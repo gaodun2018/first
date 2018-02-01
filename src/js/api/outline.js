@@ -26,7 +26,8 @@ export const getSyllabusItems = (params) => get(`${getBaseUrl()}toc-service.gaod
 //删除大纲条目
 export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
 
-
+//检查大纲下是否已有该资源
+export const checkResIsInOutline = (syllabus_id,resource_id,params) => get(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/${syllabus_id}/resources/${resource_id}`, params);
 
 
 
