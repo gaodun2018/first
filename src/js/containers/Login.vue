@@ -9,17 +9,17 @@
                 </div>
                 <div class="box-conten">
                     <el-form :model="ruleForm" autoComplete="on" ref="ruleForm" style="text-align: center">
-                        <el-form-item prop="Account" :rules="filter_rules({required:true,type:'isAllSpace'})">
+                        <el-form-item prop="user" :rules="filter_rules({required:true,type:'isAllSpace'})">
                             <span class="container_login">
                                 <img src="../../images/login/user-icon.png"></img>
                             </span>
-                            <el-input  class="login_bnt" type="text" v-model="ruleForm.Account"  autoComplete="on" placeholder="手机／邮箱"></el-input>
+                            <el-input  class="login_bnt" type="text" v-model="ruleForm.user"  autoComplete="on" placeholder="手机／邮箱"></el-input>
                         </el-form-item>
-                        <el-form-item prop="Password" :rules="filter_rules({required:true,type:'isAllSpace'})">
+                        <el-form-item prop="password" :rules="filter_rules({required:true,type:'isAllSpace'})">
                             <span class="container_login">
                                 <img style="width: 13px" src="../../images/login/password-icon.png"></img>
                             </span>
-                            <el-input class="login_bnt" type="Password" v-model="ruleForm.Password" autoComplete="on" placeholder="密码"></el-input>
+                            <el-input class="login_bnt" type="password" v-model="ruleForm.password" autoComplete="on" placeholder="密码"></el-input>
                         </el-form-item>
                         <div style="margin-bottom: 0">
                             <el-button type="primary" class="login-btn" :loading="loading" @click.native.prevent="submitForm('ruleForm')">{{loading ? '登录中' : '登录'}}</el-button>
@@ -33,30 +33,48 @@
 </template>
 
 <script>
-import { getCookie, setCookie } from 'cookieUtils';
+import { userLogin } from "../api/loginFrom.js";
+import {appid} from "../common/config.js";
+
 export default {
     data: function() {
         return {
             isRest: false,
             ruleForm: {
-                Account: '',
-                Password: ''
+                user: '',
+                password: '',
+                appid:appid
             },
             loading: false
         }
     },
     methods: {
-        async submitForm(formName){
-
-            this.$refs[formName].validate((valid) => {
+        submitForm(formName){
+            this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    console.log("提交");
+                    let response = await userLogin(this.ruleForm);
+                    console.log(response);
+                    if (response.data.status == 0) {
+                        console.info("token=" + response.headers.accesstoken + "; ");
+                        this.setCookie("token", response.headers.accesstoken, 2)
+                        this.$router.push({path: '/home'});
+                    } else {
+                        this.$message({
+                            message: result.info,
+                            type: 'warning'
+                        });
+                    }
                 } else {
 
                 }
             });
 
 
+        },
+        setCookie(name, value, hour) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() + hour * 60 * 60 * 1000);
+            document.cookie = name + "=" + value + ";expires=" + exp.toGMTString() + ";";
         }
     },
     async created() {

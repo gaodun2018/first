@@ -17,6 +17,9 @@ axios.defaults.baseURL = '//';
 axios.defaults.headers.post['Content-Type'] = "application/json";
 axios.defaults.headers.put['Content-Type'] = "application/json";
 axios.interceptors.request.use(function (config) {
+  let token = getCookie("token");
+  console.log(`${token}`);
+  config.headers.common['Authentication'] = `Basic ${token}`;
   /* let GDSID = getCookie(`${prefix}GDSID`);
    let token = getCookie(CRM_TOKEN);
    // 非登录和获取login接口
@@ -34,6 +37,9 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 axios.interceptors.response.use(function (response) {
+  if (response.data.status == 553649409 || response.data.status == 553650183) {
+    location.href = '/#/login';
+  }
   /*// 获取token接口不校验，直接返回
    if (response.config.url.indexOf('token') !== -1) {
    return Promise.resolve(response.data);
