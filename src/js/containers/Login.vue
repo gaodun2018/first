@@ -53,7 +53,6 @@ export default {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     let response = await userLogin(this.ruleForm);
-                    console.log(response);
                     if (response.data.status == 0) {
                         console.info("token=" + response.headers.accesstoken + "; ");
                         this.setCookie("token", response.headers.accesstoken, 2)
