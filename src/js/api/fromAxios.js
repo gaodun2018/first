@@ -71,34 +71,34 @@ let {get,post,put} = instance;
 
 
 //新增一个课程
-export const addCourse = params => post(`${getBaseUrl()}course-service.gaodun.com/course`, params);
+export const addCourse = params => post(`${getBaseUrl()}saas-service.gaodun.com/course`, params);
 
 //创建课程大纲
-export const CourseSyllabus = params => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, params);
+export const CourseSyllabus = params => post(`${getBaseUrl()}saas-service.gaodun.com/course-syllabus`, params);
 
 //课程基本设置
-export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params);
+export const SetCourse = (url,params) => put(`${getBaseUrl()}saas-service.gaodun.com/course/${url}`, params);
 
 //新增资源介绍接口
-export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params);
+export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}saas-service.gaodun.com/course/${course_id}/source`, params);
 
 //选择大纲模板接口
-export const selectSyllabus = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/${id}/template`, params);
+export const selectSyllabus = (id,params) => put(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/${id}/template`, params);
 
 //添加大纲条目
-export const CourseSyllabusItem = params => post(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item`, params);
+export const CourseSyllabusItem = params => post(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item`, params);
 
 //修改大纲条目
-export const ChangeSyllabusItem = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}`, params);
+export const ChangeSyllabusItem = (id,params) => put(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}`, params);
 
 //新增一个阶段接口
-export const AddCourseStage = params => post(`${getBaseUrl()}course-service.gaodun.com/gradation`, params);
+export const AddCourseStage = params => post(`${getBaseUrl()}saas-service.gaodun.com/gradation`, params);
 
 //修改一个阶段接口
-export const changeStage = (gradation_id,params) => put(`${getBaseUrl()}course-service.gaodun.com/gradation/${gradation_id}`, params);
+export const changeStage = (gradation_id,params) => put(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
 
 //大纲条目上挂资源
-export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
+export const addSyllabusResource = (id,params) => put(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
 
 
 

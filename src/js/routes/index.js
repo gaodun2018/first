@@ -94,7 +94,7 @@ import EducationalClasslist from '../containers/EducationalClasslist.vue';
 
 
 export const routes = [
-	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
+	{ path: '/', name:'5500',component: Entry ,redirect: '/login',children: [
 		{ path: '/index',meta:{ title:'面板详情' }, name:'900',component: HomeIndex }, // 面板详情
 		{ path: '/UserManagement',meta:{ title:'用户管理' }, name:'20',component: UserManagement }, // 用户管理
 		{ path: '/OrganizationalManagement',meta:{ title:'组织管理' }, name:'21',component: OrganizationalManagement }, // 组织管理
