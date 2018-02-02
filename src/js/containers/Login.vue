@@ -59,7 +59,7 @@ export default {
                         this.$router.push({path: '/home'});
                     } else {
                         this.$message({
-                            message: result.info,
+                            message: response.data.info,
                             type: 'warning'
                         });
                     }
