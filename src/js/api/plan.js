@@ -38,8 +38,6 @@ export const getClassList = (class_id,params) => get(`/class/${class_id}/student
 
 export const PlaneList = (url, params) => get(url, params); //教务端后台班级下的全部整体计划
 
-export const ProgressStatics = (cid,clid, params) => get(`/gcloud/course/${cid}/class/${clid}/progress/statics`, params); //教务端后台班级下的全部整体计划
-
 export const PlanProgress = (clid, params) => get(`/plan/class/${clid}/progress`, params); //教务统计查看本班各阶段的完成情况
 
 export const CheckAllPlan = (clid,cid, params) => get(`/plan/whole/all/class/${clid}/course/${cid}`, params); //教务统计查看完整计划
