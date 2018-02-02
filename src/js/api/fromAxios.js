@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {getBaseUrl} from '../util/config'
 import queryString from 'queryString';
+import {getCookie, setCookie} from 'cookieUtils';
+
 var instance = axios.create({
   baseURL: '//',
   headers :{
@@ -14,18 +16,8 @@ var instance = axios.create({
   },
 });
 instance.interceptors.request.use(function (config) {
-  /* let GDSID = getCookie(`${prefix}GDSID`);
-   let token = getCookie(CRM_TOKEN);
-   // 非登录和获取login接口
-   if (config.url.indexOf('UserLogin') === -1 && config.url.indexOf('token') === -1 && token == undefined) {
-   localStorage.clear();
-   location.href = '/#/login';
-   location.reload();
-   }
-   if (config.url.indexOf('UserLogin') === -1) {
-   config.headers.common['Authorization'] = `Bearer ${token}`;
-   }
-   config.headers.common[`GDSID`] = GDSID;*/
+  let token = getCookie("token");
+   config.headers.common['Authentication'] = `Basic ${token}`;
   return Promise.resolve(config);
 }, function (error) {
   return Promise.reject(error);
