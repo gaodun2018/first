@@ -178,9 +178,9 @@
 
       <div class="rulemodule" v-show="module2">
         <el-input :placeholder="txtcomt" size="small" icon="search" v-model="inputClass" placeholder="请输入班级ID / 名称" @keyup.native.enter="handleIconClickClass" :on-icon-click="handleIconClickClass"></el-input>
-        <div class="selmodule">已选择：<span v-for="(item,index) in selmodulelist">【班级ID：{{item.id}}】{{item.class_name}}</span></div>
-        <el-table ref="multipleTable" :data="tableDataclass" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="35" class="selection" prop="id" :selectable='checkboxInit' @selection-change="changeFun(scope.row)">
+        <div class="selmodule">已选择：<span v-for="(item,index) in selmodulelist">【班级ID：{{item.class_id}}】{{item.class_name}}</span></div>
+        <el-table ref="multipleTable" :data="tableDataclass" tooltip-effect="dark" style="width:100%;margin-top:20px;"> <!-- @selection-change="handleSelectionChange" -->
+          <!-- <el-table-column type="selection" width="35" class="selection" prop="id" :selectable='checkboxInit' @selection-change="changeFun(scope.row)"> -->
           </el-table-column>
           <el-table-column label="班级ID" width="100">
             <template scope="scope">
@@ -193,11 +193,9 @@
                 <el-checkbox :label="scope.row.id">{{scope.row.id}}</el-checkbox>
               </el-checkbox-group> -->
 <!-- list  [1,2,3,4].indexOf(1)> -1 slice([1,2,3,4].indexOf(1),1)    .push()-->
-              
-              <!-- <el-checkbox @change="handClkClass(scope.row)" :label="scope.row.id">{{scope.row.id}}</el-checkbox> -->
-              {{scope.row.id}}
-
-              <!-- <el-radio class="radio" v-model="radio" :label="scope.row.rid"></el-radio> -->
+               <!-- @change="handClkStudent(scope.row)" -->
+              <el-checkbox @change="handClkClass(scope.row)" :label="scope.row.class_id">{{scope.row.class_id}}</el-checkbox>
+              <!-- {{scope.row.class_id}} -->
             </template>
           </el-table-column>
           <el-table-column prop="class_name" label="班级名称" width="230">            
@@ -242,7 +240,8 @@
           teacher_id:'',
           project_id:'',
           subject_id:'',
-          course_id:''
+          course_id:'',
+          course_name:''
         },
         rules: {
           class_name: [
@@ -257,7 +256,7 @@
           subject_id: [
             { required: true, message: '所属科目', trigger: 'change' }
           ],
-          course_id: [
+          course_name: [
             { required: true, message: '课程ID、课程名称', trigger: 'change' }
           ]
         },
@@ -809,15 +808,79 @@
           this.courselinenumclass = ret.result.all_class_sum;
         }
       },
-      handClkClass(val){
-        this.orginclass_id = val.id;
+      handClkClass(val){  // 学员入班 搜索班级 添加班级
+        console.log(val)
+        this.orginclass_id = val.class_id;
+        // let checklist;
+        console.log(this.selmodulelist.indexOf(val.class_id),val.class_id,"indexOf")
+        var flag = true;  //标记循环完毕后是否有这个选项
+        if(this.selmodulelist.length > 0){
+            for(let i = 0; i < this.selmodulelist.length; i++){
+              if(this.selmodulelist[i].class_id == val.class_id){
+                flag = false;
+                console.log(i,"indexnum",this.selmodulelist.splice(i,1))
+                this.selmodulelist.splice(i,1);
+                // this.selmodulelist.shift(i);
+                console.log(this.selmodulelist)
+              }
+            }
+          if(flag){
+            this.selmodulelist.push(val);
+          }
+          
+        }else{
+          this.selmodulelist.push(val);
+        }
+        console.log(this.selmodulelist,'    this.selmodulelist')
       },
-      handleSelectionChange(val){
-        // console.log(val[0])
-        this.selmodulelist = [...val[0]];
-        // let jj = val[0];
-        // jj = this.selmodulelist.push({val[0].class_id,val[0].class_name})
-        // this.selmodulelist = [...this.selmodulelist].push({class_id:jj['class_id'],class_name:jj['class_name']});
+      handleSelectionChange(val){   //  学员入班 搜索班级
+        // console.log(this.selmodulelist,val[0].class_id,val[0].class_name,"很累");
+        
+        // if(this.selmodulelist.length > 0){
+        //   for(let o of this.selmodulelist){
+        //     if(val){
+        //       if(o.class_id == val[0].class_id){
+        //         this.$message({
+        //           message:"已存在此班级！",
+        //           type:"warning"
+        //         })
+        //       }
+        //     }
+        //   }
+        // }
+
+        // let checked = [];
+        // if(val){
+        //   for(let o of this.selmodulelist){
+        //     for(let j of val){
+        //       if(o.class_id != j.class_id){
+        //         checked.push({
+        //           class_id:j.class_id,
+        //           class_name:j.class_name
+        //         })
+        //       }
+        //     }
+        //   }
+        // }
+
+        // // console.log(checked,[...val])
+
+        // this.selmodulelist = [...checked]
+
+
+        // if(val){
+        //   if(this.selmodulelist.length > 0){
+        //     for(let o of this.selmodulelist){
+        //       for(let j of val){
+        //         if(o.class_id != j.class_id){
+        //           this.selmodulelist.push([...val]);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+
+        this.selmodulelist = [...val];
         console.log(this.selmodulelist,"sssssssssssss000000")
       },
       async orginpel(){
@@ -893,8 +956,8 @@
         this.progressText[1].isCustomerConfirm=false;
         this.showitem();
       },
-      handleClkteach(){
-
+      handleClkteach(data){
+        console.log(data)
       }
     },
     computed: {},
