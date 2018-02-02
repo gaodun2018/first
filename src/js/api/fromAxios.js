@@ -71,16 +71,16 @@ let {get,post,put} = instance;
 
 
 //新增一个课程
-export const addCourse = params => post(`${getBaseUrl()}course-service.gaodun.com/course`, params)
+export const addCourse = params => post(`${getBaseUrl()}course-service.gaodun.com/course`, params);
 
 //创建课程大纲
-export const CourseSyllabus = params => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, params)
+export const CourseSyllabus = params => post(`${getBaseUrl()}toc-service.gaodun.com/course-syllabus`, params);
 
 //课程基本设置
-export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params)
+export const SetCourse = (url,params) => put(`${getBaseUrl()}course-service.gaodun.com/course/${url}`, params);
 
 //新增资源介绍接口
-export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params)
+export const AddSourceIntro = (course_id,params) => post(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/source`, params);
 
 //选择大纲模板接口
 export const selectSyllabus = (id,params) => put(`${getBaseUrl()}toc-service.gaodun.com/course/syllabus/${id}/template`, params);
