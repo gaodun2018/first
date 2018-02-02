@@ -11,6 +11,11 @@
         <Glive></Glive>
 
       </el-tab-pane>
+      <el-tab-pane label="批量讲义" name="notes">
+
+      <Notes></Notes>
+
+    </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -19,9 +24,10 @@
   import Glive from './coursecontent/ContentModuleGlive.vue'
   import {getCourseInfo} from '../../api/course'
   import {CourseSyllabuses} from '../../api/outline'
+  import Notes from './coursecontent/NotesModuleFlipped.vue'
   export default {
     components: {
-      MainCourse,Glive
+      MainCourse,Glive,Notes
     },
     data() {
       return {
