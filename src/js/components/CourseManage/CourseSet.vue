@@ -341,14 +341,13 @@
                 //关闭字数统计
                 wordCount: true,
                 //允许的最大字符数
-                maximumWords : 30,
+                maximumWords : 1000,
                 //关闭elementPath
                 elementPathEnabled: false,
                 //默认的编辑区域高度
                 initialFrameHeight: 160
                 //更多其他参数，请参考ueditor.config.js中的配置项
             })
-
         },
         destroyed() {
             this.editor.destroy();
