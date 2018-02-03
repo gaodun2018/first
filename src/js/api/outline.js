@@ -1,5 +1,6 @@
-import { post, get, put,DELETE } from '../util/zeusAxios';
+import { post, get, put,DELETE } from '../util/zeusAxios.js';
 import { getBaseUrl } from '../util/config'
+import {formPost, formPut} from "../util/zeusFormAxios";
 
 //获取项目和科目
 export const getProjectSubject = params => get(`${getBaseUrl()}saas-service.gaodun.com/course/manage/get/project/subject/list`, params);
@@ -29,6 +30,20 @@ export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}saas-ser
 //检查大纲下是否已有该资源
 export const checkResIsInOutline = (syllabus_id,resource_id,params) => get(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/${syllabus_id}/resources/${resource_id}`, params);
 
+//创建课程大纲
+export const CourseSyllabus = params => formPost(`${getBaseUrl()}saas-service.gaodun.com/course-syllabus`, params);
+
+//选择大纲模板接口
+export const selectSyllabus = (id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/${id}/template`, params);
+
+//添加大纲条目
+export const CourseSyllabusItem = params => formPost(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item`, params);
+
+//修改大纲条目
+export const ChangeSyllabusItem = (id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}`, params);
+
+//大纲条目上挂资源
+export const addSyllabusResource = (id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}/resource`, params);
 
 
 

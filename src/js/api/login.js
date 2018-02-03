@@ -1,4 +1,4 @@
-import { post, get } from '../util/zeusAxios';
+import { post, get } from '../util/zeusAxios.js';
 import { Message } from 'element-ui';
 import { getBaseUrl } from '../util/config'
 // 登录
