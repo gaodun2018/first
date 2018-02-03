@@ -1,4 +1,5 @@
-import { post, get,DELETE } from '../util/zeusAxios';
+import { post, get,DELETE } from '../util/zeusAxios.js';
+import {formPost,formPut} from '../util/zeusFormAxios.js';
 import { Message } from 'element-ui';
 import {getBaseUrl} from '../util/config'
 
@@ -14,11 +15,24 @@ export const getCourseInfo = (url,params) => get(`${getBaseUrl()}saas-service.ga
 //拉取课程下的资源介绍接口
 export const getCourseResourceIntro = (course_id,params) => get(`${getBaseUrl()}saas-service.gaodun.com/course/${course_id}/source`, params)
 
-
 //拉取课程下所有阶段和大纲接口
 export const getStageAndOutline= (course_id,params) => get(`${getBaseUrl()}course-api.gaodun.com/course/${course_id}/gradation`, params)
 
 //删除一个阶段接口
 export const DeleteStage = (gradation_id,params) => DELETE(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
 
+//新增一个课程
+export const addCourse = params => formPost(`${getBaseUrl()}saas-service.gaodun.com/course`, params);
+
+//课程基本设置
+export const SetCourse = (url,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/course/${url}`, params);
+
+//新增资源介绍接口
+export const AddSourceIntro = (course_id,params) => formPost(`${getBaseUrl()}saas-service.gaodun.com/course/${course_id}/source`, params);
+
+//新增一个阶段接口
+export const AddCourseStage = params => formPost(`${getBaseUrl()}saas-service.gaodun.com/gradation`, params);
+
+//修改一个阶段接口
+export const changeStage = (gradation_id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
 

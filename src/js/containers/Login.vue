@@ -13,13 +13,13 @@
                             <span class="container_login">
                                 <img src="../../images/login/user-icon.png"></img>
                             </span>
-                            <el-input  class="login_bnt" type="text" v-model="ruleForm.user"  autoComplete="on" placeholder="手机／邮箱"></el-input>
+                            <el-input  class="login_bnt" type="text" v-model="ruleForm.user" @keyup.enter.native="submitForm('ruleForm')" autofocus="true" auto-complete="on" placeholder="手机／邮箱"></el-input>
                         </el-form-item>
                         <el-form-item prop="password" :rules="filter_rules({required:true,type:'isAllSpace'})">
                             <span class="container_login">
                                 <img style="width: 13px" src="../../images/login/password-icon.png"></img>
                             </span>
-                            <el-input class="login_bnt" type="password" v-model="ruleForm.password" autoComplete="on" placeholder="密码"></el-input>
+                            <el-input class="login_bnt" type="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')" auto-complete="on" placeholder="密码"></el-input>
                         </el-form-item>
                         <div style="margin-bottom: 0">
                             <el-button type="primary" class="login-btn" :loading="loading" @click.native.prevent="submitForm('ruleForm')">{{loading ? '登录中' : '登录'}}</el-button>
