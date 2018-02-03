@@ -4,12 +4,12 @@
       新增视频
     </div>
     <div class="frombox">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-loading.fullscreen.lock="loading">
+      <el-form :model="ruleForm" :rules="resourceFormRules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-loading.fullscreen.lock="loading">
 
-        <el-form-item label="视频名称" prop="name">
+        <el-form-item label="视频名称" prop="title">
           <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
         </el-form-item>
-        <el-form-item label="项目" prop="region" class="">
+        <el-form-item label="项目" prop="project" class="">
           <el-select v-model="ruleForm.project" style="width: 150px;" :change="didChangeProjectSelection()">
             <el-option :label="tag.name" :value="tag.id" v-for="tag in tags"></el-option>
           </el-select>
@@ -17,17 +17,19 @@
             <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注说明" prop="name">
+        <el-form-item label="备注说明" prop="description">
           <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
         </el-form-item>
-        <el-form-item label="视频地址" prop="name">
+        <el-form-item label="视频地址" prop="video_id">
           <el-input v-model="ruleForm.video_id" auto-complete="off" class="w_60"></el-input>
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
-        <el-form-item label="视频时长" prop="name" class="displayinline">
+        <el-form-item label="视频时长（分）" prop="duration_minute" class="displayinline">
           <el-input v-model="ruleForm.duration_minute" auto-complete="off"></el-input>
           分
-          <el-input v-model="ruleForm.duration_second" auto-complete="off" style="margin-left: 20px;"></el-input>
+        </el-form-item>
+        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
+          <el-input v-model="ruleForm.duration_second" auto-complete="off"></el-input>
           秒
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
@@ -65,13 +67,13 @@
           duration_minute: '',
           duration_second: '',
         },
-        rules: {
+        resourceFormRules: {
           title: [
             {required: true, message: '请输入资源名称', trigger: 'blur'},
             {min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur'}
           ],
           project: [
-            {required: true, message: '请选择项目', trigger: 'change'}
+            {required: true, message: '请选择项目', trigger: 'change', type: 'number'}
           ],
           subject: [
             {required: true, message: '请选择科目', trigger: 'change'}
@@ -121,19 +123,19 @@
         }
       },
 
-      submitForm(formName) {
+      async submitForm(formName) {
         console.error('submit form')
         console.error(this.$refs[formName])
         this.$refs[formName].validate((valid) => {
           console.error(`form valid ${valid}`)
           this.loading = true
           if (valid) {
-//            console.error('form creation')
-//            console.error(this.createResourceForm())
-//            let createResponse = storeResource(
-//              this.createResourceForm()
-//            )
-//            console.error(createResponse)
+            console.error('form creation')
+            console.error(this.createResourceForm())
+            let createResponse = storeResource(
+              this.createResourceForm()
+            )
+            console.error(createResponse)
           } else {
             console.log('error submit!!');
           }
