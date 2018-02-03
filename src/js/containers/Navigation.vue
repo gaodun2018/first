@@ -30,7 +30,7 @@
               </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="passwordModify">修改密码</el-dropdown-item>
-            <el-dropdown-item command="logout">退出</el-dropdown-item>
+            <el-dropdown-item command="logout"  >退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -146,7 +146,7 @@
         if (command == 'logout') {
           let exp = new Date();
           exp.setTime(exp.getTime() - 1);
-          setCookie(CRM_TOKEN, undefined, {
+          setCookie("token", undefined, {
             expires: exp
           });
           setCookie(`${prefix}GDSID`, undefined, {
@@ -156,7 +156,7 @@
           localStorage.clear();
           this.$store.state.navigation.currentLevelOneId = 488;
           window.crmSocket && window.crmSocket.disconnect();
-          this.$router.push({path: '/home'});
+          this.$router.push({path: '/login'});
         } else if (command == 'passwordModify') {
           require.ensure([], (require) => {
             let PasswordModify = require("./PasswordModify.vue");
@@ -169,7 +169,7 @@
             });
           }, 'passwordModify');
         }
-      },
+      }
     }
   }
 </script>
@@ -187,6 +187,7 @@
 
   .crm-navigation .el-tabs {
     float: left;
+    clear:none;
   }
 
   .crm-navigation .el-dropdown-menu__item {
@@ -228,5 +229,6 @@
 
   .crm-navigation .el-tabs__header {
     border: 0 none;
+    margin-bottom: 0;
   }
 </style>

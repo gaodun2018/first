@@ -52,8 +52,7 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {CourseSyllabusTemplates,checkSyllabus} from '../../api/outline.js';
-  import {selectSyllabus} from '../../api/fromAxios';
+  import {CourseSyllabusTemplates,checkSyllabus,selectSyllabus} from '../../api/outline.js';
 
   export default {
     components: {},

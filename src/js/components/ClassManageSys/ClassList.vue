@@ -32,7 +32,9 @@
         <el-col :sm="6">
           <div class="button_group_t">
             <span>学管师:</span>
-            <el-select v-model="selteach" @change="checkteachlist" placeholder="请选择">
+            <el-input class="selother" size="small" v-if="!selother" :disabled="true" v-model="stopsearchinput"></el-input>
+
+            <el-select v-model="selteach" @change="checkteachlist" v-if="selother" placeholder="请选择">
               <el-option
                 v-for="(revs,index) in teachalllist"
                 :key="revs.teacher_id"
@@ -70,7 +72,9 @@
           <template scope="scope">
             <el-button type="text" @click="UpdateClassTitle(scope.$index, scope.row)">基本设置</el-button>
 
-            <el-button type="text"><router-link to="">查看详情</router-link></el-button>
+            <el-button type="text"><router-link :to="'/EducationalClass/'+scope.row.course_id+'/'+scope.row.class_id" tag="a" target="_blank">查看详情</router-link></el-button>
+
+
             <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
@@ -88,12 +92,14 @@
           <el-input class="coursetxt" v-model="ruleForm.class_name"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="teachid">
-          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @change="checkproject" placeholder="请选择班主任">
+          <!-- <el-input v-if="teachtrue" v-model="teacher_name" :disabled="!isidentity" @click="handleClkteach"></el-input> -->
+
+          <el-select v-model="ruleForm.teacher_id" :disabled="!isidentity" @click="handleClkteach" placeholder="请选择班主任"><!--  v-if="!teachtrue"   :disabled="!isidentity"-->
             <el-option v-for="(rev,index) in teachrulelist" :key="rev.id" :label="rev.name" :value="rev.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="项目" prop="project_id">
-          <el-select v-model="ruleForm.project_id" @change="checkproject" placeholder="请选择所属项目">
+          <el-select v-model="ruleForm.project_id" :disabled="!isproject" @change="checkproject" placeholder="请选择所属项目">
             <el-option v-for="(rev,index) in projectlist" :key="rev.project_name" :label="rev.project_name" :value="rev.project_id"></el-option>
           </el-select>
         </el-form-item>
@@ -120,13 +126,13 @@
         <el-form-item class="coursebtn">
           <el-button type="primary" v-if="substatus == 'addoutline'" @click="submitForm('ruleForm')">确 定</el-button>
           <el-button type="primary" v-if="substatus == 'updateoutline'" @click="updateForm('ruleForm')">保 存</el-button>
-          <el-button @click="resetForm('ruleForm')">重 置</el-button>
+          <el-button @click="resetForm('ruleForm')">取 消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
 
-    <el-dialog title="学员入班" class="tabplane" :visible.sync="dialogFormVisiblePel">
+    <el-dialog title="学员入班" class="tabplane" :visible.sync="dialogFormVisiblePel" :before-close="handleCloseStudent">
       <el-col v-for="item in progressText" :key="item.text" :sm="12">
         <div class="order-progress-bar">
           <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
@@ -160,7 +166,7 @@
           </el-table-column>
         </el-table>
 
-        <div class="pageclass">
+        <div class="pageclass" v-if="courselinenumpel > 0">
           <el-pagination @size-change="handleSizeChangepel" @current-change="handleCurrentChangepel" :page-sizes="[10,20,30]" :page-size="page_sizepel" :current-page="pagenumpel" :current-page.sync="pagenumpel" layout="total, sizes, prev, pager, next, jumper" :total="courselinenumpel">
           </el-pagination>
         </div>
@@ -172,9 +178,11 @@
 
       <div class="rulemodule" v-show="module2">
         <el-input :placeholder="txtcomt" size="small" icon="search" v-model="inputClass" placeholder="请输入班级ID / 名称" @keyup.native.enter="handleIconClickClass" :on-icon-click="handleIconClickClass"></el-input>
-        <el-table ref="multipleTable" :data="tableDataclass" tooltip-effect="dark" style="width:100%;margin-top:20px;" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" class="selection" prop='uuid' :selectable='checkboxInit' @selection-change="changeFun"></el-table-column>
-          <el-table-column label="班级ID" width="120">
+        <div class="selmodule">已选择：<span v-for="(item,index) in selmodulelist">【班级ID：{{item.class_id}}】{{item.class_name}}</span></div>
+        <el-table ref="multipleTable" :data="tableDataclass" tooltip-effect="dark" style="width:100%;margin-top:20px;"> <!-- @selection-change="handleSelectionChange" -->
+          <!-- <el-table-column type="selection" width="35" class="selection" prop="id" :selectable='checkboxInit' @selection-change="changeFun(scope.row)"> -->
+          </el-table-column>
+          <el-table-column label="班级ID" width="100">
             <template scope="scope">
 
               <!-- <el-radio-group class="radio" @change="handClkClass(scope.row)" v-model="radio">
@@ -185,19 +193,24 @@
                 <el-checkbox :label="scope.row.id">{{scope.row.id}}</el-checkbox>
               </el-checkbox-group> -->
 <!-- list  [1,2,3,4].indexOf(1)> -1 slice([1,2,3,4].indexOf(1),1)    .push()-->
-
-              <el-checkbox @change="handClkClass(scope.row)" :label="scope.row.id">{{scope.row.id}}</el-checkbox>
-
-              <!-- <el-radio class="radio" v-model="radio" :label="scope.row.rid"></el-radio> -->
+               <!-- @change="handClkStudent(scope.row)" -->
+              <el-checkbox @change="handClkClass(scope.row)" :label="scope.row.class_id">{{scope.row.class_id}}</el-checkbox>
+              <!-- {{scope.row.class_id}} -->
             </template>
           </el-table-column>
-          <el-table-column prop="class_name" label="班级名称" width="220">            
+          <el-table-column prop="class_name" label="班级名称" width="230">            
           </el-table-column>
           <el-table-column prop="teacher_name" label="班主任" width="100">            
           </el-table-column>
           <el-table-column prop="course_name" label="课程">            
           </el-table-column>
         </el-table>
+
+        <div class="pageclass" v-if="courselinenumclass > 0">
+          <el-pagination @size-change="handleSizeChangeclass" @current-change="handleCurrentChangeclass" :page-sizes="[10,20,30]" :page-size="page_sizeclass" :current-page="pagenumclass" :current-page.sync="pagenumclass" layout="total, sizes, prev, pager, next, jumper" :total="courselinenumclass">
+          </el-pagination>
+        </div>
+
         <div class="coursebtn">
           <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
           <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
@@ -212,8 +225,9 @@
 </style>
 <script>
   import Vue from 'vue';
-  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassList,teachermin,checkcoursemit,checkstudent,checkclass} from '../../api/outline.js';
-  import {CourseSyllabus,addClassList} from '../../api/fromAxios';
+  import {getProjectSubject,CourseSyllabuses,UpdateCourseSyllabus,getClassListout,teachermin,checkcoursemit,checkstudent,checkclass} from '../../api/outline.js';
+  import {CourseSyllabus,addClassList,OrginClassStudent,updateinfoClass} from '../../api/fromAxios';
+  import {getEnv} from '../../util/config';
 
   export default {
     components: {},
@@ -222,10 +236,12 @@
         input2:'',
         CourseLineList:[],
         ruleForm: {
-          class_name:'',          teacher_id:'',
+          class_name:'',
+          teacher_id:'',
           project_id:'',
           subject_id:'',
-          course_id:''
+          course_id:'',
+          course_name:''
         },
         rules: {
           class_name: [
@@ -240,9 +256,9 @@
           subject_id: [
             { required: true, message: '所属科目', trigger: 'change' }
           ],
-          // course_id: [
-          //   { required: true, message: '课程ID、课程名称', trigger: 'change' }
-          // ]
+          course_name: [
+            { required: true, message: '课程ID、课程名称', trigger: 'change' }
+          ]
         },
         rulesback:{},
         dialogFormVisible: false,
@@ -324,22 +340,23 @@
         page_sizepel:'',
         pagenumpel:'',
         courselinenumpel:'',
-        tableDataclass:[],
-        checkList:''
+        checkList:'',
+        selmodulelist:[],
+        baseUrl: getEnv(),
+        selother:false,
+        overflag:true,
+        teachtrue:true,
+        teacher_name:'',
+        isproject:true,
+        teacher_sid:'',
+        pagenumclass:'',
+        page_sizeclass:''
       }
     },
     mounted() {
-      // this.projectLoad();
       this.getProjectSubject();
       this.getClassList();
       this.teachmin();
-
-      // this.list = this.states.map(item => {
-      //   console.log(item,"kkkllljjjhhh")
-      //   return { course_id: item.course_id, course_name: item.course_name };
-      //   // return { value: item.id, label: item.name }
-      //   // return item;
-      // });
     },
     methods: {
       checkprojectlist(val){
@@ -362,21 +379,6 @@
         }
         
       },
-      // projectLoad(){   // 科目选项
-      //   for(let reg of this.projectlist){
-      //     // if(reg.project_id == this.selprojectcur){
-      //       // this.selproject = reg.project_name;
-      //       this.issubject = true;
-      //       let subjectall = [...reg.subject_list];
-      //       subjectall.unshift({
-      //         subject_id:'0',
-      //         subject_name:'全部'
-      //       })
-      //       this.subjectlist = subjectall;
-      //       // this.selsubject = '0';
-      //     // }
-      //   }
-      // },
       checksubjectlist(val){
         this.subjecttop = val;
         if(val != 0){
@@ -413,14 +415,12 @@
           pagenum:this.page_size
         }
 
-        let ret = await getClassList(params);
+        let ret = await getClassListout(params);
         this.flag = true;
         if(ret.status == 0){
           this.mmClassList = ret.result.lists;
-          // console.log(ret.result.searchTree,"retererer")
           this.searchTree = [];
           this.searchTree = ret.result.searchTree;
-          // console.log(this.searchTree,"oooooooooooooooijj9jsidfsdfn")
           this.courselinenum = Number(ret.result.pages.total);
           // this.pagenum = ret.result.pages.current_page;
           // this.page_size = ret.result.pages.current_page;
@@ -439,9 +439,20 @@
           // }
           this.selprojectlist = [];
           this.selprojectlist = ret.result.searchTree;
-
-          // console.log(this.selprojectlist,this.selsubjectlist);
-          // this.selprojectlist = ;
+          // this.teachtop = ret.result.userId;
+          
+          if(ret.result.identily == 1){
+            this.selother = false;
+            for(let i of ret.result.searchTree){
+              for(let j of i.subject_list){
+                for(let o of j.teacher_list){
+                  this.stopsearchinput = o.teacher_name;
+                }
+              }
+            }
+          }else{
+            this.selother = true;
+          }
         }
       },
       handleSizeChange(val) {
@@ -461,7 +472,9 @@
         // 新增一个班级 弹出框
         this.dialogFormVisible = true;
         this.dialogClass = true;
-        this.substatus == 'addoutline'
+        this.substatus = 'addoutline';
+
+        // console.log(this.$ref('ruleForm'),"添加表单")
       },
       submitForm(formName) {
         // 添加一个课程大纲
@@ -505,45 +518,128 @@
           });
           this.getClassList();
           this.dialogFormVisible = false;
+          this.addCloseClass();
         }
       },
       handleClose(done) {
-        if(this.reformval){
-          this.reformval.resetFields();
+        this.issubject = false;
+        this.iscourse = false;
+        this.isproject = true;
+
+        this.teacher_name = "";
+        console.log(this.ruleForm,"ruleForm kkk")
+
+        this.ruleForm = {
+          class_id:'',
+          class_name:'',
+          student_number:'',
+          course_name:'',
+          teacher_name:'',
+          course_id:'',
+          project_id:'',
+          subject_id:''
+
+
+          // course_id:'请输入课程ID、课程名称',
+          // project_id:'请选择所属项目',
+          // subject_id:'请选择所属科目'
         }
+
+        this.$refs['ruleForm'].resetFields();
         done();
+      },
+      addCloseClass(){
+        console.log(this.ruleForm.course_id);
+        // if(this.ruleForm.course_id){
+          // this.ruleForm.class_name = '';
+          this.issubject = false;
+          this.iscourse = false;
+          this.teacher_name = "";
+          this.isproject = true;
+
+          // this.ruleForm.project_id = '全部';
+          // this.ruleForm.subject_id = '0';
+          // this.ruleForm.course_id = '';
+        // }
       },
       UpdateClassTitle(row,data){
         // 修改班级 弹出框
-        console.log(row,data);
+        console.log(row,data,"dddddd");
         let rult = {
           class_id:data.class_id,
           class_name:data.class_name,
-          course_id:data.course_id+'',
-          course_name:data.course_name,
           student_number:data.student_number,
-          teacher_id:data.teacher_id,
-          teacher_name:data.teacher_name
-        }
-        this.ruleForm = rult;
+          course_name:data.course_name,
+          teacher_name:data.teacher_name+'',
+          course_id:data.course_name+'',
+          teacher_id:data.teacher_name+'',
+          project_id:data.project_name+'',
+          subject_id:data.subject_name+''
 
+          // course_id:data.course_name,
+          // teacher_id:data.teacher_name,
+          // project_id:data.project_name,
+          // subject_id:data.subject_name
+        }
+        this.teacher_sid = data.teacher_id;
+        this.ruleForm = rult;
         console.log(this.ruleForm)
+        console.log(this.ruleForm,"kkkkkk")
         this.dialogFormVisible = true;
         this.dialogClass = false;
-        this.substatus == 'updateoutline'
-      },
+        this.substatus = 'updateoutline';
+        this.teacher_name = data.teacher_name;
+        this.overflag = false;
+        this.isproject = false;
+        this.issubject = false;
+        this.iscourse = false;
+     },
       updateForm(formName) {
-        // 添加一个课程大纲
+        // 修改班级
         if(this.substatus == 'updateoutline'){
           this.reformval = this.$refs[formName];
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              // this.coursesubmit(this.ruleForm)
+              this.updateinfo(this.ruleForm)
             } else {
               console.log('error submit!!');
               return false;
             }
           });
+        }
+      },
+      async updateinfo(ruleForm){  // 修改班级
+        console.log(ruleForm,"dsddddddddd")
+        let ret = await updateinfoClass(this.ruleForm.class_id,{
+          class_name:ruleForm.class_name,
+          teacher_id:this.teacher_sid,
+          teacher_name:ruleForm.teacher_name
+        });
+
+        if(ret.status == 0){
+          this.$message({
+            message:'修改成功！',
+            type:'success'
+          })
+          this.dialogFormVisible = false;
+          this.getClassList();
+
+          this.ruleForm = {
+            class_id:'',
+            class_name:'全部',
+            student_number:'',
+            course_name:'',
+            teacher_name:'',
+            teacher_id:'0',
+            course_id:'0',
+            project_id:'全部',
+            subject_id:'全部'
+          }
+        }else{
+          this.$message({
+            message:'修改失败！',
+            type:'error'
+          })
         }
       },
       async getProjectSubject(){
@@ -557,6 +653,8 @@
         for(let reg of this.projectlist){
           if(reg.project_id == val){
             this.issubject = true;
+            this.iscourse = true;
+            this.ruleForm.course_id = "";
             let subjectall = [...reg.subject_list];
             subjectall.unshift({
               subject_id:'0',
@@ -570,11 +668,6 @@
       },
       checksubject(val){
         this.checksubjectname = val;
-        if(val != 0){
-          this.iscourse = true;
-          this.ruleForm.course_id = "";
-          // this.course_name = "";
-        }
       },
       async teachmin(){
         let ret = await teachermin();
@@ -587,36 +680,37 @@
         }
       },
       remoteMethod(query) {
-        this.search_info = query;
-        if (query !== '') {
-          // this.loading = true;
-          this.getcheckcoursemit(query);
-          setTimeout(() => {
-            // this.loading = false;
+        if(this.overflag){
+          this.search_info = query;
+          if (query !== '') {
+            // this.loading = true;
+            this.getcheckcoursemit(query);
+            setTimeout(() => {
+              // this.loading = false;
 
-            this.list = this.states.map(item => {
-              return { course_id: item.course_id, course_name: item.course_name };
-              // return { value: item.id, label: item.name }
-              // return item;
-            });
+              this.list = this.states.map(item => {
+                return { course_id: item.course_id, course_name: item.course_name };
+                // return { value: item.id, label: item.name }
+                // return item;
+              });
 
-            this.courselistitem = this.list.filter(item => {
-              // return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
-              return item.course_name.toLowerCase().indexOf(query.toLowerCase()) > -1;
-              // return item.course_name.indexOf(query) > -1
-            });
-          }, 200);
-        } else {
-          this.courselistitem = [];
-        }
+              this.courselistitem = this.list.filter(item => {
+                // return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+                return item.course_name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+                // return item.course_name.indexOf(query) > -1
+              });
+            }, 200);
+          } else {
+            this.courselistitem = [];
+          }
 
-        if(this.reformval){
-          this.reformval.resetFields();
+          if(this.reformval){
+            this.reformval.resetFields();
+          }
         }
       },
-      async getcheckcoursemit(query){
+      async getcheckcoursemit(query){  // 创建班级时的课程搜索
         let courseinfo = {
-          // search_info:this.search_info
           search_info:query
         }
         let ret = await checkcoursemit(this.checkprojectname,this.checksubjectname,courseinfo);
@@ -673,10 +767,10 @@
         this.checkstudent();
       },
       async checkstudent(){
-        this.page_sizepel = this.page_sizepel ? this.page_sizepel : '20';
-        this.pagenumpel = this.pagenumpel ? this.pagenumpel :'1';
-        // this.pagenumpel,
-        let ret = await checkstudent({search_info:this.inputstudent})
+        this.page_sizepel = this.page_sizepel ? this.page_sizepel : '10';
+        this.pagenumpel ? this.pagenumpel : this.pagenumpel = '1';
+
+        let ret = await checkstudent(this.pagenumpel,this.page_sizepel,{search_info:this.inputstudent})
         if(ret.status == 0){
           this.tableDatamin1 = ret.result.student_list;
           this.courselinenumpel = ret.result.student_sum;
@@ -695,6 +789,7 @@
         console.log(`每页 ${val} 条`);
         this.page_sizepel = val;
         this.pagenumpel = 1;
+        this.checkstudent();
       },
       handleCurrentChangepel(val){
         console.log(`当前页: ${val}`);
@@ -702,25 +797,167 @@
         this.checkstudent();
       },
       async checkclass(){
-        console.log(this.orginstudent_id,"wwwwwwwwwwwwwwqqqqqqqqqqqqqq")
-        let ret = await checkclass(this.orginstudent_id,{search_info:this.inputClass})
+
+        this.page_sizeclass = this.page_sizeclass ? this.page_sizeclass : '10';
+        this.pagenumclass = this.pagenumclass ? this.pagenumclass :'1';
+
+        let ret = await checkclass(this.orginstudent_id,this.pagenumclass,this.page_sizeclass,{search_info:this.inputClass})
         if(ret.status == 0){
           this.tableDataclass = ret.result.all_class;
+          this.selmodulelist = ret.result.exists_class;
+          this.courselinenumclass = ret.result.all_class_sum;
         }
       },
-      handClkClass(val){
-        console.log(val,"wwwwwwwwwwwwwwqqqqqqqqqqqqqq")
-        this.orginclass_id = val.id;
-      },
-      orginpel(){
-        let params = {
-          student_id:this.orginstudent_id,
-          mobile:this.orginmobile,
-          student_name:this.orginstudent_name,
-          class_id:this.orginclass_id
+      handClkClass(val){  // 学员入班 搜索班级 添加班级
+        console.log(val)
+        this.orginclass_id = val.class_id;
+        // let checklist;
+        console.log(this.selmodulelist.indexOf(val.class_id),val.class_id,"indexOf")
+        var flag = true;  //标记循环完毕后是否有这个选项
+        if(this.selmodulelist.length > 0){
+            for(let i = 0; i < this.selmodulelist.length; i++){
+              if(this.selmodulelist[i].class_id == val.class_id){
+                flag = false;
+                console.log(i,"indexnum",this.selmodulelist.splice(i,1))
+                this.selmodulelist.splice(i,1);
+                // this.selmodulelist.shift(i);
+                console.log(this.selmodulelist)
+              }
+            }
+          if(flag){
+            this.selmodulelist.push(val);
+          }
+          
+        }else{
+          this.selmodulelist.push(val);
         }
+        console.log(this.selmodulelist,'    this.selmodulelist')
+      },
+      handleSelectionChange(val){   //  学员入班 搜索班级
+        // console.log(this.selmodulelist,val[0].class_id,val[0].class_name,"很累");
+        
+        // if(this.selmodulelist.length > 0){
+        //   for(let o of this.selmodulelist){
+        //     if(val){
+        //       if(o.class_id == val[0].class_id){
+        //         this.$message({
+        //           message:"已存在此班级！",
+        //           type:"warning"
+        //         })
+        //       }
+        //     }
+        //   }
+        // }
 
-        console.log(params,"dddddddddeeeeeeeeeeeee")
+        // let checked = [];
+        // if(val){
+        //   for(let o of this.selmodulelist){
+        //     for(let j of val){
+        //       if(o.class_id != j.class_id){
+        //         checked.push({
+        //           class_id:j.class_id,
+        //           class_name:j.class_name
+        //         })
+        //       }
+        //     }
+        //   }
+        // }
+
+        // // console.log(checked,[...val])
+
+        // this.selmodulelist = [...checked]
+
+
+        // if(val){
+        //   if(this.selmodulelist.length > 0){
+        //     for(let o of this.selmodulelist){
+        //       for(let j of val){
+        //         if(o.class_id != j.class_id){
+        //           this.selmodulelist.push([...val]);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+
+        this.selmodulelist = [...val];
+        console.log(this.selmodulelist,"sssssssssssss000000")
+      },
+      async orginpel(){
+        let classid = [];
+        if(this.selmodulelist.length > 0){
+          for(let o of this.selmodulelist){
+            classid.push(o.class_id);
+          }
+          console.log(classid)
+          let params = {
+            'student_id':this.orginstudent_id,
+            'class_id[]':classid
+          }
+          console.log(params)
+
+          let ret = await OrginClassStudent(params);
+          if(ret.status == 0){
+            this.$message({
+              message:'添加成功！',
+              type:'success'
+            })
+            this.examSet();
+            this.dialogFormVisiblePel = false;
+          }else{
+            this.$message({
+              message:'添加失败！',
+              type:'error'
+            })
+          }
+        }else{
+          this.$message({
+            message:'没有选择班级列表！',
+            type:'warning'
+          })
+        }
+      },
+
+      courselinenumclass(val){
+        console.log(`每页 ${val} 条`);
+        this.page_sizeclass = val;
+        this.pagenumclass = 1;
+        this.checkclass();
+      },
+      handleCurrentChangeclass(val){
+        console.log(`当前页: ${val}`);
+        this.pagenumclass = val;
+        this.checkclass();
+      },
+
+      handleCloseStudent(done){
+        this.examSet();
+        done();
+      },
+      resetForm(formName){
+        this.$refs[formName].resetFields();
+        this.dialogFormVisible = false;
+      },
+      examSet(){
+        this.module1 = true;
+        this.module2 = false;
+        this.inputClass = '';
+        this.inputstudent = '';
+        this.tableDatamin1 = [];
+        this.radio = '';
+        this.courselinenumpel = 0;
+        this.selmodulelist = [];
+        this.tableDataclass = [];
+        this.orginstudent_id = '';
+        this.orginmobile = '';
+        this.orginstudent_name = '';
+        this.active = 0;
+        this.progressText[0].isCustomerConfirm=true;
+        this.progressText[1].isCustomerConfirm=false;
+        this.showitem();
+      },
+      handleClkteach(data){
+        console.log(data)
       }
     },
     computed: {},
