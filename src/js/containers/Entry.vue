@@ -88,6 +88,7 @@
       return {}
     },
     created() {
+        console.log('Entry.vue loaded')
       this.mapMenuToWindow();
       this.mapPageIdToWindow();
     },

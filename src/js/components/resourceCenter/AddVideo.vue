@@ -4,7 +4,7 @@
       新增视频
     </div>
     <div class="frombox">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-loading.fullscreen.lock="loading">
 
         <el-form-item label="视频名称" prop="name">
           <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
@@ -48,7 +48,7 @@
 </style>
 <script>
   import SelectKnowledge from './SelectKnowledge.vue'
-  import { getTags } from '../../api/resource.js'
+  import { getTags, storeResource } from '../../api/resource.js'
   export default {
     components: {
       SelectKnowledge
@@ -56,6 +56,7 @@
     data() {
       return {
         tags: [],
+        loading: false,
         ruleForm: {
           title: '',
           project: '',
@@ -67,7 +68,7 @@
         rules: {
           title: [
             {required: true, message: '请输入资源名称', trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 3 到 50 个字符', trigger: 'blur'}
+            {min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur'}
           ],
           project: [
             {required: true, message: '请选择项目', trigger: 'change'}
@@ -85,21 +86,6 @@
             {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
           ]
         },
-        tableData3: [
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }
-        ],
         multipleSelection: []
       }
     },
@@ -122,14 +108,36 @@
       selectknowledge(){
         this.$store.dispatch('changeDialog',true)
       },
+
+
+      createResourceForm()
+      {
+        return {
+          title: this.ruleForm.title,
+          description: this.ruleForm.description,
+          tag_id: this.ruleForm.subject,
+          duration: `${this.ruleForm.duration_minute}:${this.ruleForm.duration_second}`,
+          video_id: this.ruleForm.video_id
+        }
+      },
+
       submitForm(formName) {
+        console.error('submit form')
+        console.error(this.$refs[formName])
         this.$refs[formName].validate((valid) => {
+          console.error(`form valid ${valid}`)
+          this.loading = true
           if (valid) {
-            alert('submit!');
+//            console.error('form creation')
+//            console.error(this.createResourceForm())
+//            let createResponse = storeResource(
+//              this.createResourceForm()
+//            )
+//            console.error(createResponse)
           } else {
             console.log('error submit!!');
-            return false;
           }
+          this.loading = false
         });
       },
       resetForm(formName) {

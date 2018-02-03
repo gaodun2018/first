@@ -151,6 +151,8 @@
       formatRoute(menu, Title){
         let menuarr = [];
         function createRoutes(menu, Item) {
+            console.log('create routes')
+            console.log(menu)
           for (let i in menu) {
             menu[i].parenttitle = menu[i].parenttitle ? menu[i].parenttitle : [{name:menu[i].Title,url:menu[i].Url}];
             if (Item) {
@@ -164,6 +166,7 @@
           }
         }
 
+        console.log('format route')
         console.log(menuarr);
         createRoutes(menu, Title)
         localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
