@@ -148,16 +148,16 @@
         color: #666666;
     }
     .login-wrap{
-        position: absolute;
-        top: 226px;
-        right: 0;
-        width: 380px;
-        height: 450px;
-        background: #FFFFFF;
-        box-sizing: border-box;
-        padding: 48px 20px 0 20px;
-        z-index: 9999;
-        box-shadow: 0 6px 12px 0 rgba(153,55, 16, 0.3);
+        position: absolute!important;
+        top: 226px!important;
+        right: 0!important;
+        width: 380px!important;
+        height: 450px!important;
+        background: #FFFFFF!important;
+        box-sizing: border-box!important;
+        padding: 48px 20px 0 20px!important;
+        z-index: 9999!important;
+        box-shadow: 0 6px 12px 0 rgba(153,55, 16, 0.3)!important;
     }
     .login-wrap .el-input__inner:focus {
         outline: 0;
