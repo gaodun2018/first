@@ -1,4 +1,4 @@
-/*! Gaodun modified this file at 2018-2-3 16:26:14 */
+/*! Gaodun modified this file at 2018-2-6 10:36:58 */
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -1433,17 +1433,71 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .teachtxt .el-input--small .el-input__inner{padding:6px 20px 6px 10px;height:36px;
 }
 
+.login-box{
+    overflow:hidden;
+    width: 100%;
+    height: 100%;
+}
+.login-left {
+    position: absolute;
+    top: 0;
+    left: -388px;
+    height: 100%;
+    width: 1342px;
+    z-index: 100;
+    background: url(/dist/images/left_bg-9320627bca37f72dd851797275032878.jpg) no-repeat center;
+}
+.login-right{
+    position: absolute;
+    top: 0;left: 954px;
+    height: 100%;
+    width: 575px;
+    z-index: 100;
+    background: url(/dist/images/right_bg-59fa5738dfd648619c7d3dae856f6611.jpg) repeat-x center;
+}
+.login-title{
+    z-index: 999;
+    width: 658px;
+    letter-spacing: 5px;
+    position: absolute;
+    top: 320px;
+    left: 0;
+}
+.login-title .login-title-t{
+    font-size: 36px;
+    line-height: 54px;
+    color: #666666;
+    border-bottom: 1px solid #666666;
+    margin-bottom: 24px;
+}
+.login-title .login-title-b{
+    font-size: 16px;
+    line-height: 32px;
+    color: #666666;
+}
+.login-wrap{
+    position: absolute;
+    top: 226px;
+    right: 0;
+    width: 380px;
+    height: 450px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    padding: 48px 20px 0 20px;
+    z-index: 9999;
+    box-shadow: 0 6px 12px 0 rgba(153,55, 16, 0.3);
+}
 .login-wrap .el-input__inner:focus {
-    outline: 0; 
+    outline: 0;
     border-radius: 5px;
-     -webkit-box-shadow: 0px 0px 8px rgba(232,237,250,0.6), 0 0px 4px 0 rgba(232,237,250,0.5);
-    -moz-box-shadow: 0px 0px 8px rgba(232,237,250,0.6), 0 0px 4px 0 rgba(232,237,250,0.5);
-    box-shadow: 0px 0px 8px rgba(232,237,250,0.6), 0 0px 4px 0 rgba(232,237,250,0.5);
+    -webkit-box-shadow: 0px 0px 8px rgba(232, 237, 250, 0.6), 0 0px 4px 0 rgba(232, 237, 250, 0.5);
+    -moz-box-shadow: 0px 0px 8px rgba(232, 237, 250, 0.6), 0 0px 4px 0 rgba(232, 237, 250, 0.5);
+    box-shadow: 0px 0px 8px rgba(232, 237, 250, 0.6), 0 0px 4px 0 rgba(232, 237, 250, 0.5);
     border: 1px solid #888787;
 }
 .login-wrap .el-input__inner {
-    height: 36px !important;
-    line-height: 36px !important;
+    height: 46px !important;
+    line-height: 46px !important;
 }
 .login-wrap .Copyright {
     text-align: center;
@@ -1451,6 +1505,15 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
     bottom: 50px;
     left: 0;
     right: 0;
+}
+.login-wrap .login-box{
+    height: 310px;
+}
+.login-wrap .login-btn{
+    background: #f9ae3a;
+    color: #fff;
+    border: 1px solid #f9ae3a;
+    margin-top: 14px;
 }
 
 .update-pwd[data-v-81d2fc54] {

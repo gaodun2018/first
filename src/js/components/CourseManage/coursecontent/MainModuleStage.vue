@@ -44,11 +44,11 @@
 
             <el-form :model="NewTableForm" ref="NewTableForm" label-width="100px">
                 <el-form-item label="阶段名称" prop="name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:20})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:10})">
                     <el-input v-model="NewTableForm.name" class="coursetxt"></el-input>
                 </el-form-item>
                 <el-form-item label="阶段介绍" prop="description"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:40})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:20})">
                     <el-input v-model="NewTableForm.description" class="coursetxt"></el-input>
                 </el-form-item>
                 <el-form-item label="阶段课程大纲" prop="syllabus_id"
