@@ -1,5 +1,5 @@
 <template>
-    <div class="login-box">
+    <div class="login-page">
         <div style="max-width: 1140px;height:100%;margin: 0 auto;position: relative;">
             <div class="login-left"></div>
             <div class="login-wrap">
@@ -105,7 +105,7 @@
 </script>
 
 <style>
-    .login-box{
+    .login-page{
         overflow:hidden;
         width: 100%;
         height: 100%;
@@ -147,18 +147,7 @@
         line-height: 32px;
         color: #666666;
     }
-    .login-wrap{
-        position: absolute!important;
-        top: 226px!important;
-        right: 0!important;
-        width: 380px!important;
-        height: 450px!important;
-        background: #FFFFFF!important;
-        box-sizing: border-box!important;
-        padding: 48px 20px 0 20px!important;
-        z-index: 9999!important;
-        box-shadow: 0 6px 12px 0 rgba(153,55, 16, 0.3)!important;
-    }
+
     .login-wrap .el-input__inner:focus {
         outline: 0;
         border-radius: 5px;
@@ -180,13 +169,5 @@
         left: 0;
         right: 0;
     }
-    .login-wrap .login-box{
-        height: 310px;
-    }
-    .login-wrap .login-btn{
-        background: #f9ae3a;
-        color: #fff;
-        border: 1px solid #f9ae3a;
-        margin-top: 14px;
-    }
+
 </style>
