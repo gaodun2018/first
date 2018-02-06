@@ -123,7 +123,7 @@
         }
       },
 
-      async submitForm(formName) {
+      submitForm(formName) {
         console.error('submit form')
         console.error(this.$refs[formName])
         this.$refs[formName].validate((valid) => {
@@ -132,14 +132,15 @@
           if (valid) {
             console.error('form creation')
             console.error(this.createResourceForm())
-            let createResponse = storeResource(
-              this.createResourceForm()
-            )
+            let createResponse = storeResource(this.createResourceForm())
+              createResponse.then((resolve, reject) => {
+                this.loading = false
+                this.$router.go(-1)
+              })
             console.error(createResponse)
           } else {
             console.log('error submit!!');
           }
-          this.loading = false
         });
       },
       resetForm(formName) {
@@ -169,7 +170,9 @@
 
     },
     async created() {
+      this.loading = true
       this.tags = (await getTags('project', {partner_id: 1})).result
+      this.loading = false
     }
   }
 </script>

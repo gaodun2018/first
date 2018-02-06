@@ -72,8 +72,8 @@
         <el-pagination
                 @size-change="didChangePageSize"
                 @current-change="didChangePage"
-                :current-page="currentPage"
-                :page-sizes="[50, 200, 300, 400]"
+                :current-page.sync="currentPage"
+                :page-sizes="[1, 200, 300, 400]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="paginationTotal"
@@ -109,7 +109,8 @@
         tags:[],
         currentPage: 1,
         paginationTotal: 0,
-        pageSize: 50
+        pageSize: 1,
+        loading: false
       }
     },
     methods: {
@@ -130,8 +131,27 @@
         return getResource(parameters)
       },
 
-      didChangePage () {
+       async loadResources() {
+          this.loading = true
+            let resourceResponse = await this.fetchResources()
+            console.log(resourceResponse)
+            this.resource = resourceResponse.result
+            console.log(this.resource)
+            console.log(this.resource.pagination)
+           let total = this.resource.pagination.total;
+          if (this.paginationTotal == 0)
+             this.paginationTotal = total
+            // this.currentPage = this.resource.pagination.current_page
+            this.tags = this.resource.tags
+           this.loading = false
+        },
 
+      async didChangePage(page) {
+//          if (page === this.currentPage)
+        console.log(arguments)
+           console.log(this.currentPage)
+//          this.currentPage = page
+          this.loadResources()
       },
 
       didChangePageSize() {
@@ -140,17 +160,9 @@
     },
     computed: {},
     mounted() {
-      console.error(this.resource)
     },
     async created() {
-      let resourceResponse = await this.fetchResources()
-        console.error(resourceResponse)
-      this.resource = resourceResponse.result
-      console.error(this.resource)
-      console.error(this.resource.pagination)
-      this.paginationTotal = this.resource.pagination.total
-      this.currentPage = this.resource.pagination.current_page
-        this.tags = this.resource.tags
+      this.loadResources()
     }
   }
 </script>
