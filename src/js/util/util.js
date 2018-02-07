@@ -111,7 +111,13 @@ export function isAllSpace(value) {
     return true;
   }
 }
-
+export function maxLength(value,maxlength) {
+    if (value.replace(/[^\x00-\xff]/g,"aa").length > maxlength) {
+        return false;
+    } else {
+        return true;
+    }
+}
 /** 
  * 获取本周、本季度、本月、上月的开端日期、停止日期 
  */

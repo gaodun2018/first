@@ -73,8 +73,7 @@
 </template>
 
 <script>
-    import {getStageAndOutline, DeleteStage} from '../../../api/course'
-    import {AddCourseStage, changeStage} from '../../../api/fromAxios'
+    import {getStageAndOutline, DeleteStage,AddCourseStage, changeStage} from '../../../api/course'
     export default {
         components: {},
         data() {

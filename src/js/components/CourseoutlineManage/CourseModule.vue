@@ -5,7 +5,6 @@
         </div>
         <div class="outlinebox">
             <div class="chapterbox">
-
                 <template v-if="coursesylllevel == 3">
                     <draggable v-model="tabledata" :options="{group:'firstItem'}" element="div"
                                @end="dragEnd(tabledata)" :move="checkMove">
@@ -132,7 +131,7 @@
 
         <!--弹层 -->
 
-        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" :visible.sync="dialogFormVisible">
+        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="10%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
             <el-col v-for="item in progressText" :key="item.text" :sm="8">
                 <div class="order-progress-bar">
                     <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
@@ -190,6 +189,7 @@
                           :on-icon-click="handleIconClick"></el-input>
                 <el-table ref="multipleTable" :data="resourceTable" tooltip-effect="dark"
                           style="width:100%;margin-top:20px;"
+                          max-height="400"
                           @selection-change="handleSelectionChange">
                     <el-table-column label="资源ID" width="120">
                         <template scope="scope">
@@ -215,8 +215,8 @@
                 <div class="coursebtn">
                     <el-button style="margin-top:12px;" v-show="prevclk" @click="prev">上一步</el-button>
                     <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
-                    <el-button type="primary" v-if="resourceAction=='add'" @click="addSyllabusResource">确 定</el-button>
-                    <el-button type="primary" v-if="resourceAction=='update'" @click="updateSyllabusResource">确 定</el-button>
+                    <el-button type="primary" v-if="resourceAction=='add'" :loading="btnLoading" @click="addSyllabusResource">{{btnLoading?'新增中':'确 定'}}</el-button>
+                    <el-button type="primary" v-if="resourceAction=='update'" :loading="btnLoading" @click="updateSyllabusResource">{{btnLoading?'新增中':'确 定'}}</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -231,7 +231,6 @@
       </span>
         </el-dialog>
 
-
         <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane"
                    :visible.sync="adddialogVisible" size="tiny" :before-close="handleClose">
             <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
@@ -241,9 +240,9 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="adddialogVisible = false">取 消</el-button>
-                    <el-button type="primary" v-if="Moduledialog == true" @click="addruleProject('ruleProject')">确 定
+                    <el-button type="primary" v-if="Moduledialog == true" :loading="btnLoading" @click="addruleProject('ruleProject')">{{btnLoading?'新增中':'确 定'}}
                     </el-button>
-                    <el-button type="primary" v-else @click="updateruleProject('ruleProject')">保 存</el-button>
+                    <el-button type="primary" v-else :loading="btnLoading" @click="updateruleProject('ruleProject')">{{btnLoading?'保存中':'保 存'}}</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -254,17 +253,25 @@
 
 </style>
 <script>
-    import Vue from 'vue';
     import draggable from 'vuedraggable';
-    import {CourseSyllabusItem, ChangeSyllabusItem, addSyllabusResource} from '../../api/fromAxios'
-    import {getSyllabusItems, checkSyllabus, DeleteSyllabusItem,checkResIsInOutline} from '../../api/outline'
+    import {
+        getSyllabusItems,
+        checkSyllabus,
+        DeleteSyllabusItem,
+        checkResIsInOutline,
+        CourseSyllabusItem,
+        ChangeSyllabusItem,
+        addSyllabusResource
+    } from '../../api/outline'
     import {getResource} from '../../api/resource'
+    import {progressText,resourceTypeList} from '../../common/outlineConfig.js'
     export default {
         components: {
             draggable,
         },
         data() {
             return {
+                btnLoading: false,  //按钮loading
                 active: 0,
                 resourceRadio: '',    //选择的资源
                 nativeResourceRadio: '',    //修改之前本来选择的资源
@@ -272,48 +279,7 @@
                 radio1: 1,
                 radio2: 4,
                 tabledata: [],
-                progressText: [
-                    {
-                        text: '资源设置',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: true
-                    }, {
-                        text: '资源类型',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: false
-                    }, {
-                        text: '资源选择',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: false
-                    }
-                ],
-                progress2Text:[
-                    {
-                        text: '资源设置',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: true
-                    }, {
-                        text: '资源类型',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: false
-                    }, {
-                        text: '资源选择',
-                        currentLine: 'bar-line-current',
-                        currentDot: 'bar-dot-current',
-                        currentText: 'current-text',
-                        isCustomerConfirm: false
-                    }
-                ],
+                progressText: progressText,
                 addResFirFrom: {
                     name: ''
                 },
@@ -343,28 +309,7 @@
                 coursesyllid: '',
                 currentId: '0',    //0是最外层父级大纲   pid也表示当前需要操作的id
                 title: '',   //课程大纲标题
-                resourceTypeList: [
-                    {
-                        "discriminator": "video",
-                        "label": "视频"
-                    },
-                    {
-                        "discriminator": "lecture_note",
-                        "label": "讲义"
-                    },
-                    {
-                        "discriminator": "paper",
-                        "label": "试卷"
-                    },
-                    {
-                        "discriminator": "question",
-                        "label": "题目"
-                    },
-                    {
-                        "discriminator": "live",
-                        "label": "直播"
-                    }
-                ],
+                resourceTypeList:resourceTypeList,
                 tag_id: '',    //标签id
                 resourceAction: 'add',   //资源弹层的操作
             }
@@ -373,6 +318,13 @@
             selectclk(discriminator, label){
                 this.selcurrent = discriminator;
                 this.inputPlaceholder = `请输入${label}资源ID / 名称`
+            },
+            //关闭新增资源的弹层
+            closeDialog(formName){
+                this.addResFirFrom= {
+                    name: ''
+                };
+                this.$refs[formName].resetFields();
             },
             //打开新增资源的弹层
             openAddResDialog(id){
@@ -385,7 +337,6 @@
                         item.isCustomerConfirm = false;
                     }
                 })
-                console.log(this.progress2Text);
                 this.showitem();
                 this.addResFirFrom.name = '';
                 this.resourceRadio = '';
@@ -472,6 +423,7 @@
                     return;
                 }
                 //先查询时候挂载了该资源
+                this.btnLoading = true;
                 let res = await  checkResIsInOutline(this.coursesyllid,this.resourceRadio);
                 if(res.status == 0){
                     if(res.result.length > 0){
@@ -480,8 +432,12 @@
                             type:'error',
                             message :"该资源已经挂载在这个大纲上！",
                         })
+                        this.btnLoading = false;
                         return;
                     }
+                }else{
+                    this.btnLoading = false;
+                    return;
                 }
                 //先走新增资源名字
                 let ret = await CourseSyllabusItem({
@@ -498,6 +454,7 @@
                     }
                     let retv = await addSyllabusResource(id, params);
                     console.log(retv);
+                    this.btnLoading = false;
                     if (retv.status == 0) {
                         this.$message({
                             type: 'success',
@@ -510,6 +467,7 @@
                     }
                 } else if (ret.status == 2) {
                     this.$message.error('添加失败！')
+                    this.btnLoading = false;
                 }
             },
             //修改大纲的资源 包含名称&挂载资源
@@ -645,12 +603,14 @@
             },
             // 添加大纲目录
             async addbigCourse(){
+                this.btnLoading = true;
                 let ret = await CourseSyllabusItem({
                     name: this.ruleProject.name,
                     pid: this.currentId,
 //          level:this.coursesylllevel,
                     course_syllabus_id: this.coursesyllid
                 });
+                this.btnLoading = false;
                 if (ret.status == 0) {
                     ret.message = "添加成功！";
                     this.currentId = '0';
@@ -671,8 +631,10 @@
                         let name = {
                             name: this.ruleProject.name
                         };
+                        this.btnLoading = true;
                         let ret = await ChangeSyllabusItem(id, name);
                         console.log(ret);
+                        this.btnLoading = false;
                         if (ret.status == 0) {
                             this.$message({
                                 message: '修改成功！',
