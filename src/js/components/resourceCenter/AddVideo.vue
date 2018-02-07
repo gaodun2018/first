@@ -1,5 +1,11 @@
 <template>
     <div class="module-clues-content add-resource">
+        <div>
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/VideoList' }">视频列表</el-breadcrumb-item>
+                <el-breadcrumb-item>添加视频</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="outlineeat">
             新增视频
         </div>
