@@ -1,7 +1,7 @@
 <template>
     <div class="FilesUpload">
-        <el-row>
-
+        <el-row style="position: relative;">
+            <el-button style="position: absolute;top: 5px;left: 100px;" size="small" type="" v-if="isShow(2)">下载</el-button>
             <el-col :span="12">
                 <el-upload
                         class="upload-demo"
@@ -15,9 +15,7 @@
                         :file-list="fileList">
                     <el-button size="small" type="primary" v-if="isShow(1)">点击上传文件</el-button>
                     <el-button size="small" type="primary" v-if="isShow(2)">重新上传</el-button>
-                    <el-button size="small" type="" v-if="isShow(2)">下载</el-button>
                     <!--<div slot="tip" class="el-upload__tip">只能上传zip/rar文件</div>-->
-
                 </el-upload>
             </el-col>
         </el-row>
