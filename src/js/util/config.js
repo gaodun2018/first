@@ -18,7 +18,7 @@ export const getBaseUrl = () => {
     let host = location.host;
     // 开发环境
     if (host.indexOf('localhost') > -1 || host.indexOf('192') > -1) {
-        return '//t-'
+        return '//dev-'
     }
     // let pre = location.host.match(/^.*-/);
     let pre = location.host.match(/(^.*?)-/);

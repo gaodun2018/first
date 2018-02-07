@@ -160,6 +160,7 @@
     .login-wrap .el-input__inner {
         height: 46px !important;
         line-height: 46px !important;
+        color: #333!important;
     }
 
     .login-wrap .Copyright {

@@ -1,4 +1,4 @@
-/*! Gaodun modified this file at 2018-2-6 18:04:22 */
+/*! Gaodun modified this file at 2018-2-7 13:43:45 */
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -369,6 +369,12 @@
   font-size: 12px;
   color: #20a0ff;
 }
+
+
+
+
+
+
 
 
 
@@ -1486,6 +1492,7 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 .login-wrap .el-input__inner {
     height: 46px !important;
     line-height: 46px !important;
+    color: #333!important;
 }
 .login-wrap .Copyright {
     text-align: center;
@@ -1508,6 +1515,9 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
     font-size: 12px;
     padding: 25px 0;
 }
+
+
+
 
 
 
@@ -2515,6 +2525,16 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
+
+.handouts-form-item{
+    width: 89%;
+}
+.handouts-form-item .el-form-item__content{
+    width: 100%;
+}
+.handouts-form-item .el-form-item__content .addhandout{
+    float: right;
+}
 
 
 
