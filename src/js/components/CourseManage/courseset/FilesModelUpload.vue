@@ -1,8 +1,8 @@
 <template>
     <div class="FilesUpload">
         <el-row>
-            <el-item>CMA 2018年1月考季.zip{{imageUrl}}</el-item>
-            <el-button @click="">下载</el-button>
+            
+            <el-button size="small" type="" v-if="isShow(2)">下载</el-button>  
             <el-col :span="12">
                 <el-upload
                         class="upload-demo"
@@ -14,12 +14,14 @@
                         :on-error="handleAvatarError"
                         :before-upload="beforeAvatarUpload"
                         :file-list="fileList">
-                    <el-button size="small" type="primary">点击上传文件</el-button>
+                    <el-button size="small" type="primary" v-if="isShow(1)">点击上传文件</el-button>
+                    <el-button size="small" type="primary" v-if="isShow(2)">重新上传</el-button>
                     <!--<div slot="tip" class="el-upload__tip">只能上传zip/rar文件</div>-->
 
                 </el-upload>
             </el-col>
         </el-row>
+        <el-row><el-item v-if="isShow(2)">{{file.file_name}}</el-item></el-row>
         <el-row>
             <!--<el-col :span="8" style="margin-top: 10px;">-->
                 <!--<img v-if="coverImageUrl" style="max-width: 100%;" :src="coverImageUrl" class="avatar">-->
@@ -30,11 +32,12 @@
 
 <script>
     import { getBaseUrl,getEnv } from '../../../util/config';
+    import vue from '../../../common/vue.js'
     export default {
         components: {},
-        props: {
-
-        },
+        props:[
+            'file'
+        ],
         data() {
             return {
                 fileList: [],
@@ -50,10 +53,18 @@
                 }
             },
             materialUpload(){
-                return getBaseUrl() + 'course-api.gaodun.com/upload/picture';
+                return getBaseUrl() + 'course-api.gaodun.com/upload/handout';
             }
         },
         methods: {
+            isShow(flag) {
+               if(flag ==1){
+                  return  this.file == null || this.file =='null' ? true : false;
+               }
+               if(flag ==2){
+                  return  this.file == null || this.file =='null' ? false : true;
+               }
+            },
             beforeAvatarUpload(file) {
                 var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
                 const extension = testmsg === 'zip'
@@ -85,15 +96,17 @@
             },
             handleAvatarSuccess(res, file) {
                 console.log(res);
-                if(res.status == 0){
-                    this.$store.dispatch('changeCover',{
-//          cover:URL.createObjectURL(file.raw),
-                        cover:res.filePath,
-                    }) //封面图片
+                if(res.status == 0){               
+                    vue.$emit('uploadFile', res)
                     this.$message({
                         type: 'success',
                         message:('上传成功！')
                     })
+                }else{
+                    this.$store.dispatch('changeCover',{
+                        cover:'',
+                    }) 
+                    this.$message.error('上传失败！');
                 }
             },
             handleAvatarError(err, file, fileList){

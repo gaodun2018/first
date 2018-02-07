@@ -11,9 +11,9 @@
         <Glive></Glive>
 
       </el-tab-pane>
-      <el-tab-pane label="批量讲义" name="notes">
+      <el-tab-pane label="批量讲义" name="handout">
 
-      <Notes></Notes>
+      <Handout :handout="handout"></Handout>
 
     </el-tab-pane>
     </el-tabs>
@@ -22,22 +22,35 @@
 <script>
   import MainCourse from './coursecontent/ContentModuleMain.vue'
   import Glive from './coursecontent/ContentModuleGlive.vue'
-  import {getCourseInfo} from '../../api/course'
+  import {getCourseInfo,getCourseHandout} from '../../api/course'
   import {CourseSyllabuses} from '../../api/outline'
-  import Notes from './coursecontent/NotesModuleFlipped.vue'
+  import Handout from './coursecontent/HandoutModuleFlipped.vue'
   export default {
     components: {
-      MainCourse,Glive,Notes
+      MainCourse,Glive,Handout
     },
     data() {
       return {
         activeName: 'main',
+        handout:'courseHandout'
       }
     },
     methods: {
       handleClick(tab, event) {
         console.log(tab);
         console.log(this.activeName);
+        if(this.activeName == 'handout'){
+          this.getCourseHandout()
+        }
+      },
+      //获取讲义列表
+      async getCourseHandout(){
+        let url = this.course_id;
+        let ret = await getCourseHandout(url);
+        if(ret.status == 0){
+          this.handout= ret.result.list;
+        }
+        console.log(ret);
       },
       //获取课程的基本设置 拿到项目 科目id
       async getCourseInfo(){
