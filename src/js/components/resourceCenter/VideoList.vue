@@ -16,8 +16,8 @@
                         <span> 科 目:</span>
                         <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']"
                               @click="mulchange('0')">全部</span>
-                        <template v-for="(revm,index) in tags">
-                            <template v-for="(revs,index) in revm.children">
+                        <template v-for="(revm,index) in tags" v-if="clver != '0'">
+                            <template v-for="(revs,index) in revm.children" v-if="parseInt(clver) == revm.id">
                                 <span class="clitem" :class="[revs.id === clversm ?'current':'']"
                                       @click="mulchange(revs.id)">{{revs.name}}</span>
                             </template>
@@ -38,7 +38,7 @@
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
                                       :on-icon-click="handleIconClick"></el-input>
                             <el-button type="primary" size="small">
-                                <router-link to="/addVideo">新增视频</router-link>
+                                <router-link to="/">新增视频</router-link>
                             </el-button>
                         </div>
                     </el-row>
@@ -124,9 +124,12 @@
         methods: {
             outlinechange(reid) {
                 this.clver = reid;
+                this.clversm = '0'
+                this.loadResources()
             },
             mulchange(reid) {
                 this.clversm = reid;
+                this.loadResources()
             },
 
             fetchResources() {
@@ -134,6 +137,13 @@
                     page_size: this.pageSize,
                     page: this.currentPage,
                     discriminator: 'video'
+                }
+
+                if (this.clver != '0') {
+                    parameters.tag_id = this.clver
+                }
+                if (this.clversm != '0') {
+                    parameters.tag_id = this.clversm
                 }
 
                 return getResource(parameters)
