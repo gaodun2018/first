@@ -3,13 +3,19 @@
         <!--翻转课程 -->
         <el-form ref="firstForm" :model="ruleForm"  label-width="100%" label-position="left" :inline="true">
 
-            <el-form-item label="本课程是否启用批量下载讲义模块" class="first-form-item">
+            <el-form-item label="本课程是否启用批量下载讲义模块" class="handouts-form-item">
                 <el-radio-group v-model="ruleForm.bEnabled">
                     <el-radio label="0">启用</el-radio>
                     <el-radio label="1">不启用</el-radio>
                 </el-radio-group>
 
-                <el-button v-if="ruleForm.bEnabled=='0'?true:false" type="primary" size="small" @click="addTableData" label-position="right" >新增一个讲义</el-button>
+                <el-button
+                    v-if="ruleForm.bEnabled=='0'?true:false"
+                    class="addhandout"
+                    type="primary"
+                    size="small"
+                    @click="addTableData"
+                    label-position="right">新增一个讲义</el-button>
 
             </el-form-item>
 
@@ -44,7 +50,7 @@
         </template>
 
 
-        <el-dialog class="addContent tabplane" title="新增讲义" :visible.sync="dialogVisible" @close="cancel('NewTableForm')">
+        <el-dialog class="addContent tabplane handoutsDialog" :title="Doing=='update'?'编辑讲义':'新增讲义'" :visible.sync="dialogVisible" @close="cancel('NewTableForm')">
             <el-form :model="NewTableForm" :rules="rules" ref="NewTableForm" label-width="120px">
                 <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:20})">
                     <el-input v-model="NewTableForm.name" auto-complete="off" class="coursetxt" placeholder="请输入显示名称"></el-input>
@@ -70,6 +76,17 @@
 
     </div>
 </template>
+<style>
+    .handouts-form-item{
+        width: 89%;
+    }
+    .handouts-form-item .el-form-item__content{
+        width: 100%;
+    }
+    .handouts-form-item .el-form-item__content .addhandout{
+        float: right;
+    }
+</style>
 <script>
     import {format} from '../../../util/util'
     import FilesUpload from '../courseset/FilesModelUpload.vue'
