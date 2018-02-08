@@ -38,7 +38,7 @@
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
                                       :on-icon-click="handleIconClick"></el-input>
                             <el-button type="primary" size="small">
-                                <router-link to="/">新增视频</router-link>
+                                <router-link to="/resource/video/create">新增视频</router-link>
                             </el-button>
                         </div>
                     </el-row>

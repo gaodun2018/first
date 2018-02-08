@@ -41,7 +41,7 @@ exports.install = function (Vue, options) {
             rules.push({validator: (rule, value, callback)=>{
                     if (value != null && value != "") {
                         if (!maxLength(value,item.maxLength)) {
-                            return callback(new Error(`最多输入${item.maxLength}个字符！`))
+                            return callback(new Error(`最多输入${(item.maxLength/2)}个字符！`))
                         } else {
                             return callback()
                         }

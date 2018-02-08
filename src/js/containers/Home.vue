@@ -3,7 +3,7 @@
     <div class="header">
       <div class="w_1200 clear">
         <a href="javascript:;" class="logo left"></a>
-        <div class="head_login right" v-if="loginFlag" @click="dialogFormVisible = true">
+        <!--<div class="head_login right" v-if="loginFlag" @click="dialogFormVisible = true">
           <span>登录</span>
         </div>
         <div class="user right" v-if="!loginFlag">
@@ -11,14 +11,14 @@
               <span class="el-dropdown-link-2">
                 <img class="user_icon" src="../../images/financeHome/group.png" alt="头像">
                 <span class="user_name">超级管理员,Alan</span>
-                <i class="el-icon-caret-bottom el-icon--right"></i>
+                <i class="el-icon-caret-bottom el-icon&#45;&#45;right"></i>
               </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="passwordModify">修改密码</el-dropdown-item>
               <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
+        </div>-->
       </div>
     </div>
     <div class="banner">
@@ -27,22 +27,25 @@
         <h4 class="banner_titb">提供教学活动和教育资源管理、分析的一体化解决方案</h4>
         <!--<a href="javascript:;" class="login ban_btn" v-if="loginFlag" @click="dialogFormVisible = true">登录</a>-->
         <!--<router-link to="/index" v-if="!loginFlag" class="goIn ban_btn">进入</router-link>-->
-        <router-link to="/index" class="goIn ban_btn">进入</router-link>
+        <!--<router-link to="/index" class="goIn ban_btn">进入</router-link>-->
       </div>
     </div>
     <div class="contentHome">
       <div class="w_1200">
         <div class="contentBox">
           <ul>
-            <li class="item">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group.png">
-                </span>
-              <span class="item-titt">权限管理</span>
-              <span class="item-titb">User Permission</span>
-            </li>
 
-            <li class="item">
+              <router-link tag="li" to="/ResourceTag" class="item">
+                <span class="item-img">
+                  <img src="../../images/financeHome/group-5.png">
+                </span>
+                  <span class="item-titt">资源中心</span>
+                  <span class="item-titb">Resource Center</span>
+              </router-link>
+
+
+
+            <li class="item" @click="openEDU">
                 <span class="item-img">
                   <img src="../../images/financeHome/group-2.png">
                 </span>
@@ -50,23 +53,31 @@
               <span class="item-titb">Teaching Management</span>
             </li>
 
-            <li class="item">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-5.png">
-                </span>
-              <span class="item-titt">资源中心</span>
-              <span class="item-titb">Resource Center</span>
-            </li>
 
-            <li class="item">
+              <li class="item" @click="openCRM">
+                <span class="item-img">
+                  <img src="../../images/financeHome/group-8.png">
+                </span>
+                  <span class="item-titt">CRM</span>
+                  <span class="item-titb">Custom Relation Management</span>
+              </li>
+
+           <!-- <li class="item">
                 <span class="item-img">
                   <img src="../../images/financeHome/group-7.png">
                 </span>
               <span class="item-titt">应用服务</span>
               <span class="item-titb">Service</span>
-            </li>
+            </li>-->
 
-            <li class="item">
+              <li class="item" @click="afterFunction">
+                <span class="item-img">
+                  <img src="../../images/financeHome/group.png">
+                </span>
+                  <span class="item-titt">权限管理</span>
+                  <span class="item-titb">User Permission</span>
+              </li>
+            <li class="item" @click="afterFunction">
                 <span class="item-img">
                   <img src="../../images/financeHome/group-10.png">
                 </span>
@@ -74,7 +85,7 @@
               <span class="item-titb">Product Management</span>
             </li>
 
-            <li class="item">
+            <li class="item" @click="afterFunction">
                 <span class="item-img">
                   <img src="../../images/financeHome/group-9.png">
                 </span>
@@ -82,13 +93,6 @@
               <span class="item-titb">Business Intelligence</span>
             </li>
 
-            <li class="item">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-8.png">
-                </span>
-              <span class="item-titt">CRM</span>
-              <span class="item-titb">Custom Relation Management</span>
-            </li>
 
           </ul>
         </div>
@@ -148,6 +152,17 @@
       }
     },
     methods: {
+        afterFunction(){
+          this.$message({
+              message:'后续功能正在开发中~~'
+          })
+        },
+        openEDU(){
+            window.open('//eds.gaodun.com')
+        },
+        openCRM(){
+            window.open('//baiyi.gaodun.com/')
+        },
       formatRoute(menu, Title){
         let menuarr = [];
         function createRoutes(menu, Item) {
@@ -169,7 +184,10 @@
         console.log('format route')
         console.log(menuarr);
         createRoutes(menu, Title)
-        localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
+        if(localStorage.getItem(FORMAT_MENU) == undefined){
+            localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));
+        }
+        // localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
       },
       handleCommands(command) {
         let prefix = getEnv();
@@ -304,14 +322,15 @@
         }
         return;
       }
-      this.loadSSIDJS();
+      // this.loadSSIDJS();
     },
     mounted() {
       //暂时写在这儿
+        console.log('monted');
       let routesMenus = [...KMENU,...routesMenu]
       this.formatRoute(routesMenus); //格式化菜单
       this.reWriteEmptyUrl(KMENU);          //2017-12-15 13:26:37  修改
-      localStorage.setItem(CRM_MENU, JSON.stringify(KMENU));    //2017-12-15 11:49:10 修改
+        localStorage.setItem(CRM_MENU, JSON.stringify(KMENU));    //2017-12-15 11:49:10 修改
     }
   }
 </script>
