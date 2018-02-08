@@ -109,9 +109,9 @@
     },
     computed: {},
     mounted() {
-      setInterval(()=>{
+      /*setInterval(()=>{
         console.log(this.$store.state.resources.bKnowledge);
-      },1000)
+      },1000)*/
     },
     created() {
 
