@@ -564,7 +564,7 @@
           {
             "AppId": 130555,
             "NavigationId": 540,
-            "Title": "知识点列表",
+            "Title": "知识点汇总",
             "Url": "/KnowledgeList",
             "Path": "components/resourceCenter/KnowledgeList",
             "ParentID": 54,
@@ -576,38 +576,24 @@
               540
             ],
             "ChildNavigations": null
+          },
+          {
+            "AppId": 130555,
+            "NavigationId": 541,
+            "Title": "考试大纲",
+            "Url": "/ExaminationSyllabus",
+            "Path": "components/resourceCenter/ExaminationSyllabus",
+            "ParentID": 54,
+            "Iconurl": "",
+            "CreateTime": "2017-08-01 11:36:20",
+            "ParentPath": [
+              5,
+              54,
+              540
+            ],
+            "ChildNavigations": null
           }
         ]
-      }
-    ]
-  },
-  {
-    "AppId": 130555,
-    "NavigationId": 1,
-    "Title": "课程大纲管理",
-    "Url": "0.5624345345634",
-    "Path": "",
-    "ParentID": 0,
-    "Iconurl": "#icon-guanli",
-    "CreateTime": "2017-07-14 16:16:19",
-    "ParentPath": [
-      1
-    ],
-    "ChildNavigations": [
-      {
-        "AppId": 130555,
-        "NavigationId": 10,
-        "Title": "课程大纲列表",
-        "Url": "/CourseOutlineList",
-        "Path": "components/CourseoutlineManage/CourseOutlineList",
-        "ParentID": 1,
-        "Iconurl": "",
-        "CreateTime": "2017-11-17 10:21:30",
-        "ParentPath": [
-          1,
-          10
-        ],
-        "ChildNavigations": null
       }
     ]
   },
@@ -782,7 +768,66 @@
     ],
     "ChildNavigations": null
   },
-
+  {
+    "AppId": 130555,
+    "NavigationId": 15,
+    "Title": "班级管理",
+    "Url": "0.5624345345634",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      15
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 16,
+        "Title": "班级列表",
+        "Url": "/ClassList",
+        "Path": "components/ClassManageSys/ClassList",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          16
+        ],
+        "ChildNavigations": null
+      },
+      {
+        "AppId": 130555,
+        "NavigationId": 17,
+        "Title": "学员列表",
+        "Url": "/StudentLista",
+        "Path": "components/ClassManageSys/StudentLista",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          17
+        ],
+        "ChildNavigations": null
+      },
+      {
+        "AppId": 130555,
+        "NavigationId": 18,
+        "Title": "课程列表",
+        "Url": "/CourseLista",
+        "Path": "components/ClassManageSys/CourseLista",
+        "ParentID": 15,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          15,
+          18
+        ],
+        "ChildNavigations": null
+      }
+    ]
+  },
 
 
   {
@@ -822,7 +867,6 @@
   "Level": 1
 },
 
-
   {
     "AppId": 130555,
     "Title": "- 财经云",
@@ -837,11 +881,41 @@
   },
   {
     "AppId": 130555,
+    "NavigationId": 1,
+    "Title": "课程大纲管理",
+    "Url": "0.5624345345634",
+    "Path": "",
+    "ParentID": 0,
+    "Iconurl": "#icon-guanli",
+    "CreateTime": "2017-07-14 16:16:19",
+    "ParentPath": [
+      1
+    ],
+    "ChildNavigations": [
+      {
+        "AppId": 130555,
+        "NavigationId": 10,
+        "Title": "课程大纲管理",
+        "Url": "/CourseOutlineList",
+        "Path": "components/CourseoutlineManage/CourseOutlineList",
+        "ParentID": 1,
+        "Iconurl": "",
+        "CreateTime": "2017-11-17 10:21:30",
+        "ParentPath": [
+          1,
+          10
+        ],
+        "ChildNavigations": null
+      }
+    ]
+  },
+  {
+    "AppId": 130555,
     "Title": "- 编辑课程大纲",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseoutlineManage/CourseOutline/:sid",
-    "Path": "components/CourseoutlineManage/CourseOutline",
+    "Url": "/CourseOutlineManage/CourseOutline/:sid",
+    "Path": "components/CourseOutlineManage/CourseOutline",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
@@ -852,13 +926,12 @@
     "Title": "- 课程大纲模块",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseoutlineManage/CourseModule/:sid/:level",
-    "Path": "components/CourseoutlineManage/CourseModule",
+    "Url": "/CourseOutlineManage/CourseModule/:sid",
+    "Path": "components/CourseOutlineManage/CourseModule",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
   },
-
   {
     "AppId": 130555,
     "Title": "- 课程基本设置",
@@ -875,7 +948,7 @@
     "Title": "- 课程内容",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/CourseContent",
+    "Url": "/CourseContent/:cid",
     "Path": "components/CourseManage/CourseContent",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
@@ -886,7 +959,7 @@
     "Title": "- 新增视频",
     "NavigationId": 10000,
     "ParentID": 0,
-    "Url": "/addVideo",
+    "Url": "/resource/video/create",
     "Path": "components/resourceCenter/AddVideo",
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
@@ -902,6 +975,87 @@
     "Iconurl": "",
     "CreateTime": "2017-12-18 10:46:43",
     "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 新增知识点",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/addKnowledge",
+    "Path": "components/resourceCenter/AddKnowledge",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 编辑知识点",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/editKnowledge",
+    "Path": "components/resourceCenter/EditKnowledge",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP课程学习数据统计",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalClass/:cid/:sid",
+    "Path": "containers/EducationalClass",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP定制标杆计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/customizedPlan/:cid/:clid",
+    "Path": "containers/CustomizedPlan",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- EP选择标杆计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/choosePlan/:cid/:clid",
+    "Path": "containers/ChoosePlan",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 查看完整计划",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalPlanAll/:cid/:clid/:tabnum",
+    "Path": "containers/EducationalPlanAll",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
+  },
+  {
+    "AppId": 130555,
+    "Title": "- 全部学员详情",
+    "NavigationId": 10000,
+    "ParentID": 0,
+    "Url": "/EducationalClasslist/:cid/:clid/",
+    "Path": "containers/EducationalClasslist",
+    "Iconurl": "",
+    "CreateTime": "2017-12-18 10:46:43",
+    "ChildNavigations": null,
+    "Level": 1
   }
-
 ]

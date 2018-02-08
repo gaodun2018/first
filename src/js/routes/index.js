@@ -35,10 +35,10 @@ import VideoList from '../components/resourceCenter/VideoList.vue';
 import ExerciseList from '../components/resourceCenter/ExerciseList.vue';
 // 讲义列表
 import HandoutList from '../components/resourceCenter/HandoutList.vue';
-// 知识点列表
+// 知识点汇总
 import KnowledgeList from '../components/resourceCenter/KnowledgeList.vue';
-// 课程大纲列表
-import CourseOutlineList from '../components/CourseoutlineManage/CourseOutlineList.vue';
+// 考试大纲
+import ExaminationSyllabus from '../components/resourceCenter/ExaminationSyllabus.vue';
 // 课程列表
 import CourseList from '../components/CourseManage/CourseList.vue';
 // 产品列表
@@ -49,6 +49,12 @@ import StatisticAnalysis from '../components/productManagement/StatisticAnalysis
 import ZhuantiList from '../components/productManagement/ZhuantiList.vue';
 // 商业列表
 import BusinessList from '../components/productManagement/BusinessList.vue';
+// 班级列表
+import ClassList from '../components/ClassManageSys/ClassList.vue';
+// 学员列表
+import StudentLista from '../components/ClassManageSys/StudentLista.vue';
+// 课程列表
+import CourseLista from '../components/ClassManageSys/CourseLista.vue';
 // 登陆
 import Login from '../containers/Login.vue';
 // 404
@@ -57,10 +63,12 @@ import Page404 from '../components/Page404.vue';
 import UpdatePwd from '../containers/UpdatePwd.vue';
 // - 财经云
 import Home from '../containers/Home.vue';
+// 课程大纲管理
+import CourseOutlineList from '../components/CourseoutlineManage/CourseOutlineList.vue';
 // - 编辑课程大纲
-import CourseOutline from '../components/CourseoutlineManage/CourseOutline.vue';
+import CourseOutline from '../components/CourseOutlineManage/CourseOutline.vue';
 // - 课程大纲模块
-import CourseModule from '../components/CourseoutlineManage/CourseModule.vue';
+import CourseModule from '../components/CourseOutlineManage/CourseModule.vue';
 // - 课程基本设置
 import CourseSet from '../components/CourseManage/CourseSet.vue';
 // - 课程内容
@@ -69,10 +77,24 @@ import CourseContent from '../components/CourseManage/CourseContent.vue';
 import AddVideo from '../components/resourceCenter/AddVideo.vue';
 // - 新增讲义
 import AddHandout from '../components/resourceCenter/AddHandout.vue';
+// - 新增知识点
+import AddKnowledge from '../components/resourceCenter/AddKnowledge.vue';
+// - 编辑知识点
+import EditKnowledge from '../components/resourceCenter/EditKnowledge.vue';
+// - EP课程学习数据统计
+import EducationalClass from '../containers/EducationalClass.vue';
+// - EP定制标杆计划
+import CustomizedPlan from '../containers/CustomizedPlan.vue';
+// - EP选择标杆计划
+import ChoosePlan from '../containers/ChoosePlan.vue';
+// - 查看完整计划
+import EducationalPlanAll from '../containers/EducationalPlanAll.vue';
+// - 全部学员详情
+import EducationalClasslist from '../containers/EducationalClasslist.vue';
 
 
 export const routes = [
-	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
+	{ path: '/', name:'5500',component: Entry ,redirect: '/login',children: [
 		{ path: '/index',meta:{ title:'面板详情' }, name:'900',component: HomeIndex }, // 面板详情
 		{ path: '/UserManagement',meta:{ title:'用户管理' }, name:'20',component: UserManagement }, // 用户管理
 		{ path: '/OrganizationalManagement',meta:{ title:'组织管理' }, name:'21',component: OrganizationalManagement }, // 组织管理
@@ -91,22 +113,33 @@ export const routes = [
 		{ path: '/VideoList',meta:{ title:'视频列表' }, name:'510',component: VideoList }, // 视频列表
 		{ path: '/ExerciseList',meta:{ title:'题目列表' }, name:'520',component: ExerciseList }, // 题目列表
 		{ path: '/HandoutList',meta:{ title:'讲义列表' }, name:'530',component: HandoutList }, // 讲义列表
-		{ path: '/KnowledgeList',meta:{ title:'知识点列表' }, name:'540',component: KnowledgeList }, // 知识点列表
-		{ path: '/CourseOutlineList',meta:{ title:'课程大纲列表' }, name:'10',component: CourseOutlineList }, // 课程大纲列表
+		{ path: '/KnowledgeList',meta:{ title:'知识点汇总' }, name:'540',component: KnowledgeList }, // 知识点汇总
+		{ path: '/ExaminationSyllabus',meta:{ title:'考试大纲' }, name:'541',component: ExaminationSyllabus }, // 考试大纲
 		{ path: '/CourseList',meta:{ title:'课程列表' }, name:'80',component: CourseList }, // 课程列表
 		{ path: '/ProjectList',meta:{ title:'产品列表' }, name:'600',component: ProjectList }, // 产品列表
 		{ path: '/StatisticAnalysis',meta:{ title:'统计分析' }, name:'601',component: StatisticAnalysis }, // 统计分析
 		{ path: '/ZhuantiList',meta:{ title:'专题列表' }, name:'610',component: ZhuantiList }, // 专题列表
 		{ path: '/BusinessList',meta:{ title:'商业列表' }, name:'620',component: BusinessList }, // 商业列表
-		{ path: '/CourseoutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
-		{ path: '/CourseoutlineManage/CourseModule/:sid/:level',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
+		{ path: '/ClassList',meta:{ title:'班级列表' }, name:'16',component: ClassList }, // 班级列表
+		{ path: '/StudentLista',meta:{ title:'学员列表' }, name:'17',component: StudentLista }, // 学员列表
+		{ path: '/CourseLista',meta:{ title:'课程列表' }, name:'18',component: CourseLista }, // 课程列表
+		{ path: '/CourseOutlineList',meta:{ title:'课程大纲管理' }, name:'10',component: CourseOutlineList }, // 课程大纲管理
+		{ path: '/CourseOutlineManage/CourseOutline/:sid',meta:{ title:'- 编辑课程大纲' }, name:'10000',component: CourseOutline }, // - 编辑课程大纲
+		{ path: '/CourseOutlineManage/CourseModule/:sid',meta:{ title:'- 课程大纲模块' }, name:'10000',component: CourseModule }, // - 课程大纲模块
 		{ path: '/CourseSet/:cid',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
-		{ path: '/CourseContent',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
-		{ path: '/addVideo',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
+		{ path: '/CourseContent/:cid',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
+		{ path: '/resource/video/create',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
 		{ path: '/addHandout',meta:{ title:'- 新增讲义' }, name:'10000',component: AddHandout }, // - 新增讲义
+		{ path: '/addKnowledge',meta:{ title:'- 新增知识点' }, name:'10000',component: AddKnowledge }, // - 新增知识点
+		{ path: '/editKnowledge',meta:{ title:'- 编辑知识点' }, name:'10000',component: EditKnowledge }, // - 编辑知识点
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10009',component: Page404 }, // 404
 	{ path: '/updatePwd',meta:{ title:'修改密码' }, name:'10001',component: UpdatePwd }, // 修改密码
 	{ path: '/home',meta:{ title:'- 财经云' }, name:'10000',component: Home }, // - 财经云
+	{ path: '/EducationalClass/:cid/:sid',meta:{ title:'- EP课程学习数据统计' }, name:'10000',component: EducationalClass }, // - EP课程学习数据统计
+	{ path: '/customizedPlan/:cid/:clid',meta:{ title:'- EP定制标杆计划' }, name:'10000',component: CustomizedPlan }, // - EP定制标杆计划
+	{ path: '/choosePlan/:cid/:clid',meta:{ title:'- EP选择标杆计划' }, name:'10000',component: ChoosePlan }, // - EP选择标杆计划
+	{ path: '/EducationalPlanAll/:cid/:clid/:tabnum',meta:{ title:'- 查看完整计划' }, name:'10000',component: EducationalPlanAll }, // - 查看完整计划
+	{ path: '/EducationalClasslist/:cid/:clid/',meta:{ title:'- 全部学员详情' }, name:'10000',component: EducationalClasslist }, // - 全部学员详情
 ]

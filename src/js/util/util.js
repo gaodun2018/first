@@ -102,7 +102,22 @@ export function isCardNo(card) {
         return true;
     }
 }
-
+export function isAllSpace(value) {
+  // 全为空格时的验证
+  var reg = /^\s+$/g;
+  if (reg.test(value)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+export function maxLength(value,maxlength) {
+    if (value.replace(/[^\x00-\xff]/g,"aa").length > maxlength) {
+        return false;
+    } else {
+        return true;
+    }
+}
 /** 
  * 获取本周、本季度、本月、上月的开端日期、停止日期 
  */
@@ -121,47 +136,6 @@ export function getMonthDays(myMonth) {
     return days;
 }
 
-//获得本周的开端日期 
-export function getWeekStartDate() {
-    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
-    return format(weekStartDate);
-}
-//获得本周的停止日期 
-export function getWeekEndDate() {
-    var weekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
-    return format(weekEndDate);
-}
-//获得本月的开端日期 
-export function getMonthStartDate() {
-    var monthStartDate = new Date(nowYear, nowMonth, 1);
-    return format(monthStartDate);
-}
-
-//获得本月的停止日期 
-export function getMonthEndDate() {
-    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
-    return format(monthEndDate);
-}
-
-export function checkedUserTree(getclues) { // 获取当前所选中的姓名及ID方法
-    let getCluesId = [];
-    let objUserTree = {
-        userId: [],
-        userName: []
-    };
-    for (let i = 0; i < getclues.length; i++) {
-        getCluesId.push(getclues[i].Id);
-        if (Number(getCluesId[i]) == parseFloat(getCluesId[i])) {
-            objUserTree.userId.push(getCluesId[i]);
-            objUserTree.userName.push(getclues[i].Name);
-        }
-        if (getCluesId[i].toString().length > 25) {
-            objUserTree.userId.push(getCluesId[i]);
-            objUserTree.userName.push(getclues[i].Name);
-        }
-    }
-    return objUserTree;
-}
 export function debounce(func, wait, immediate) {
     let timeout, args, context, timestamp, result
 

@@ -13,3 +13,7 @@ export const PROJECTLIST = "PROJECTLIST";     //项目科目列表
 export const KNOWLEDGE_DIALOG = "KNOWLEDGE_DIALOG";     //选择知识点弹层
 
 export const COURSE_COVER = "COURSE_COVER";     //选择知识点弹层
+export const RESOURCE_INTRO = "RESOURCE_INTRO";     //保存资源介绍的信息
+export const RESOURCE_UPDATE = "RESOURCE_UPDATE";     //保存修改过的资源介绍的信息
+export const COURSE_INFO = "COURSE_INFO";     //保存课程的所有信息
+export const COURSE_SYLLABUSES = "COURSE_SYLLABUSES";     //保存课程下的大纲Syllabuses
