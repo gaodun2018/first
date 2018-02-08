@@ -110,6 +110,9 @@
   margin-top: 53px;
   margin-bottom: 29px;
 }
+.item:hover{
+    /*box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.42), 0 0 12px 0 rgba(0, 0, 0, 0.34);*/
+}
 .item span{
   display: block;
 }
