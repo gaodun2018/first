@@ -29,8 +29,8 @@
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="passwordModify">修改密码</el-dropdown-item>
-            <el-dropdown-item command="logout"  >退出</el-dropdown-item>
+            <!--<el-dropdown-item command="passwordModify">修改密码</el-dropdown-item>-->
+            <el-dropdown-item command="logout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -152,11 +152,12 @@
           setCookie(`${prefix}GDSID`, undefined, {
             expires: exp
           })
-          sessionStorage.clear(CRM_OPEN_TABS);
+          // sessionStorage.clear(CRM_OPEN_TABS);
           localStorage.clear();
           this.$store.state.navigation.currentLevelOneId = 488;
           window.crmSocket && window.crmSocket.disconnect();
           this.$router.push({path: '/login'});
+            // location.reload();
         } else if (command == 'passwordModify') {
           require.ensure([], (require) => {
             let PasswordModify = require("./PasswordModify.vue");
