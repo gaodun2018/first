@@ -51,15 +51,15 @@
 
 
         <el-dialog class="addContent tabplane handoutsDialog" :title="Doing=='update'?'编辑讲义':'新增讲义'" :visible.sync="dialogVisible" @close="cancel('NewTableForm')">
-            <el-form :model="NewTableForm" :rules="rules" ref="NewTableForm" label-width="120px">
-                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:20})">
+            <el-form :model="NewTableForm" ref="NewTableForm" label-width="120px">
+                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:40})">
                     <el-input v-model="NewTableForm.name" auto-complete="off" class="coursetxt" placeholder="请输入显示名称"></el-input>
                 </el-form-item>
 
-                <el-form-item label="备注" prop="content" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:20})">
+                <el-form-item label="备注" prop="content" :rules="filter_rules({type:'isAllSpace',maxLength:200})">
                     <el-input v-model="NewTableForm.content" type="textarea"  auto-complete="off" placeholder="请输入备注" class="coursetxt"></el-input>
                 </el-form-item>
-                <el-form-item label="上传文件" prop="file_name" :rules="filter_rules({required:true})">
+                <el-form-item label="上传文件" prop="file_name">
 
                     <FilesUpload :file="file"></FilesUpload>
                 </el-form-item>
@@ -107,9 +107,6 @@
                 tableData: [
 
                 ],
-                rules: {
-                    
-                },
                 file: {
                     
                 },
@@ -166,7 +163,7 @@
                     path:''
                 }
                 this.Doing = 'addDate';
-                this.file = null
+                this.file = null;
                 this.dialogVisible = true 
                 
             },
@@ -181,6 +178,15 @@
                 });
             },
             async AddCourseHandout(){
+                debugger
+                if(this.NewTableForm.path == ""){
+                    this.$message({
+                        showClose: true,
+                        message: '你必须要上传一个讲义！',
+                        type: 'warning'
+                    })
+                    return;
+                }
                 let params = {
                     ...this.NewTableForm,
                     course_id: this.course_id  ,
@@ -195,8 +201,7 @@
                     this.dialogVisible = false;
                     this.getCourseHandout();
                 } else if (ret.status > 0) {
-                    ret.message ? ret.message : '添加失败！'
-                    this.$message.error(ret.message);
+                    this.$message.error('添加失败！');
                 }
                 
             },
@@ -205,7 +210,15 @@
                 this.Doing = 'update';
                 this.NewTableForm = {...this.handout[index]};
                 this.currentIndex = index;
-                this.file = this.NewTableForm
+                // this.file = this.NewTableForm
+                this.file = [
+                    {
+                        name : this.NewTableForm.file_name,
+                        response:{
+                            filePath: this.NewTableForm.path
+                        }
+                    }
+                ]
                 this.dialogVisible = true;
 
             },
@@ -220,6 +233,14 @@
                 });
             },
             async updateCourseHandout(){
+                if(this.NewTableForm.path == ""){
+                    this.$message({
+                        showClose: true,
+                        message: '你必须要上传一个讲义！',
+                        type: 'warning'
+                    })
+                    return;
+                }
                 let params = {
                     ...this.NewTableForm,
                     course_id: this.course_id ,
@@ -252,9 +273,10 @@
         },
         mounted() {
             vue.$on('uploadFile',(res)=>{
-                this.NewTableForm.path = res.filePath
-                this.NewTableForm.upload_size = res.result.file.size
-                this.NewTableForm.file_name = res.result.file.name
+
+                this.NewTableForm.path = res.filePath?res.filePath:'';
+                this.NewTableForm.upload_size = res.result&&res.result.file.size?res.result.file.size:'';
+                this.NewTableForm.file_name = res.result&&res.result.file.name?res.result.file.name:'';
                 
             })
         },

@@ -54,7 +54,13 @@
 <script>
     import {userLogin} from "../api/loginFrom.js";
     import {appid} from "../common/config.js";
-
+    import {getEnv} from '../util/config';
+    import {getCookie, setCookie} from 'cookieUtils';
+    import {SAAS_USER_INFO,CRM_MENU, FORMAT_MENU} from '../util/keys.js'
+    import routesMenu from '../routes/routes'
+    import KMENU from '../common/KMENU'
+    let prefix = getEnv();
+    console.log(prefix);
     export default {
         data: function () {
             return {
@@ -62,7 +68,7 @@
                 ruleForm: {
                     user: '',
                     password: '',
-                    appid: appid
+                    appid: appid,
                 },
                 loading: false
             }
@@ -71,19 +77,38 @@
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let response = await userLogin(this.ruleForm);
+                        let GDSID =  getCookie(`${prefix}GDSID`);
+                        //登录
+                        let response = await userLogin({
+                            ...this.ruleForm,
+                            GDSID : GDSID
+                        });
                         if (response.data.status == 0) {
-                            console.info("token=" + response.headers.accesstoken + "; ");
+                            // console.info("token=" + response.headers.accesstoken + "; ");
                             this.setCookie("token", response.headers.accesstoken, 2)
-                            this.$router.push({path: '/home'});
+                            // localStorage.setItem(SAAS_USER_INFO, JSON.stringify(loginRet.result));
+                            // this.$router.push({path: '/home'});
                         } else {
                             this.$message({
                                 message: response.data.info,
                                 type: 'warning'
                             });
+                            return;
                         }
-                    } else {
 
+                        //获取菜单树
+                        //转换赋值
+                        let data = KMENU;
+                        let str = JSON.stringify(data);
+                        let data1 = JSON.parse(str);
+
+                        this.reWriteEmptyUrl(KMENU);
+                        localStorage.setItem(CRM_MENU, JSON.stringify(KMENU));
+                        let routesMenus = [...data1, ...routesMenu]
+
+                        this.formatRoute(routesMenus); //格式化菜单
+
+                        this.$router.push({path: '/home'});
                     }
                 });
 
@@ -93,10 +118,61 @@
                 var exp = new Date();
                 exp.setTime(exp.getTime() + hour * 60 * 60 * 1000);
                 document.cookie = name + "=" + value + ";expires=" + exp.toGMTString() + ";";
-            }
+            },
+            loadSSIDJS() {
+                let script = document.createElement('script');
+                script.type = "text/javascript";
+                // script.src = "http://192.168.35.251:8006/gdssid_v2.js?v=" + Date.now();
+                script.src = `//${prefix}s.gaodun.com/web/sso/gdssid_v2.js`;
+                document.getElementsByTagName('head')[0].appendChild(script);
+            },
+            reWriteEmptyUrl(menu) {
+                for (var i in menu) {
+                    if (menu[i].Url === "") {
+                        menu[i].Url = Math.random().toString();
+                    }
+                    if (menu[i].Url.indexOf('Report') > -1) {
+                        menu[i].Url = menu[i].Url.replace(/http.*key=/, '/Report/');
+                    }
+                    if (menu[i].ChildNavigations) {
+                        this.reWriteEmptyUrl(menu[i].ChildNavigations)
+                    }
+                }
+            },
+            //格式化菜单树 => 面包屑菜单
+            formatRoute(menu, Title) {
+                let menuarr = [];
+
+                function createRoutes(menu, Item) {
+                    // console.log('create routes')
+                    // console.log(menu)
+                    for (let i in menu) {
+                        menu[i].parenttitle = menu[i].parenttitle ? menu[i].parenttitle : [{
+                            name: menu[i].Title,
+                            url: menu[i].Url
+                        }];
+                        if (Item) {
+                            menu[i].parenttitle = [...Item, ...menu[i].parenttitle]
+                        }
+                        menuarr.push(menu[i])
+
+                        if (menu[i].ChildNavigations) {
+                            createRoutes(menu[i].ChildNavigations, menu[i].parenttitle);
+                        }
+                    }
+                }
+
+                console.log('format route')
+                console.log(menuarr);
+                createRoutes(menu, Title)
+
+                localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));
+
+                // localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
+            },
         },
         async created() {
-
+            this.loadSSIDJS();
         },
         mounted() {
 
@@ -109,6 +185,7 @@
         overflow:hidden;
         width: 100%;
         height: 100%;
+        min-height: 660px;
     }
     .login-left {
         position: absolute;
