@@ -165,7 +165,7 @@
                 window.open(`//${prefix}eds.gaodun.com`)
             },
             openCRM() {
-                window.open(`//${prefix}baiyi.gaodun.com/`)
+                window.open(`//${prefix}baiyi.gaodun.com/#/stage?to=/index`)
             },
             //格式化菜单树 => 面包屑菜单
             formatRoute(menu, Title) {
