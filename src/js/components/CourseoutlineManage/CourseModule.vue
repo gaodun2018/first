@@ -143,7 +143,7 @@
             <el-form :model="addResFirFrom" ref="addResFirFrom" v-show="module1" label-width="100px"
                      class="demo-ruleForm">
                 <el-form-item label="显示名称" prop="name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:1000})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:20})">
                     <el-input class="coursetxt" v-model="addResFirFrom.name"></el-input>
                 </el-form-item>
                 <!--标签-->
@@ -235,7 +235,7 @@
                    :visible.sync="adddialogVisible" size="tiny" :before-close="handleClose">
             <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="显示名称" prop="name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:20})">
                     <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
                 </el-form-item>
                 <el-form-item>

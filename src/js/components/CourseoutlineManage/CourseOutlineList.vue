@@ -85,7 +85,7 @@
                    @close="resetForm('ruleForm')">
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="课程大纲名称" prop="title"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
                 </el-form-item>
                 <el-form-item label="所属项目" prop="project_id"

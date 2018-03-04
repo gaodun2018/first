@@ -1,4 +1,4 @@
-import { post, get,DELETE } from '../util/zeusAxios';
+import { post, get,zDelete } from '../util/zeusAxios';
 import { Message } from 'element-ui';
 import {getBaseUrl} from '../util/config'
 

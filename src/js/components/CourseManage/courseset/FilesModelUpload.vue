@@ -22,11 +22,6 @@
             </el-col>
         </el-row>
         <!--<el-row><el-item v-if="isShow(2)">{{file.file_name}}</el-item></el-row>-->
-        <el-row>
-            <!--<el-col :span="8" style="margin-top: 10px;">-->
-            <!--<img v-if="coverImageUrl" style="max-width: 100%;" :src="coverImageUrl" class="avatar">-->
-            <!--</el-col>-->
-        </el-row>
     </div>
 </template>
 <style>
@@ -45,7 +40,8 @@
         ],
         data() {
             return {
-                fileList: [],
+                // fileList: [],
+                fileList: this.file == null ? [] : this.file,
                 imageUrl: '',
             }
         },
@@ -63,13 +59,6 @@
             isShowDownload(){
                 this.fileList = this.file == null ? [] : this.file;
                 return this.file == null || this.file == 'null' ? false : true;
-            },
-            coverImageUrl() {
-                if (this.$store.state.course.course_cover) {
-                    return this.$store.state.course.course_cover;
-                } else {
-                    return this.$store.state.course.course_default_cover;
-                }
             },
             materialUpload() {
                 return getBaseUrl() + 'course-api.gaodun.com/upload/handout';
@@ -105,17 +94,17 @@
                 return extension || extension2 && isLt2M
             },
             handleChange(file, fileList) {
-                console.log(this.fileList);
                 this.fileList = fileList.slice(-1);
             },
             handleRemove(file, fileList) {
                 this.fileList = fileList;
-                vue.$emit('uploadFile',{})
+                vue.$emit('uploadFile',{}, this.fileList)
             },
             handleAvatarSuccess(res, file) {
-                console.log(res);
+                // console.log(res);
                 if (res.status == 0) {
-                    vue.$emit('uploadFile', res)
+
+                    vue.$emit('uploadFile', res , this.fileList)
                     this.$message({
                         type: 'success',
                         message: ('上传成功！')
@@ -130,6 +119,9 @@
             }
         },
         mounted() {
+            setInterval(()=>{
+                console.log(this.file,this.fileList);
+            },2000)
         },
         destroyed() {
         },

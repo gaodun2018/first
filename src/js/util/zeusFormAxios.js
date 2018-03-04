@@ -34,7 +34,7 @@ instance.interceptors.response.use(function (response) {
         return Promise.resolve(response);
     }
     // 登录失效
-    if (response.data.status == 553649409 || response.data.status == 553650183) {
+    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952) {
         localStorage.clear();
         location.href = '/#/login';
         location.reload();

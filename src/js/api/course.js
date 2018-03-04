@@ -1,5 +1,5 @@
 
-import { post, get,DELETE,put } from '../util/zeusAxios';
+import { post, get,zDelete,put } from '../util/zeusAxios';
 import {formPost,formPut} from '../util/zeusFormAxios.js';
 
 import { Message } from 'element-ui';
@@ -16,7 +16,7 @@ export const getCourseInfo = (url,params) => get(`${getBaseUrl()}saas-service.ga
 
 //课程讲义
 export const getCourseHandout = (course_id,params) => get(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/handout`, params)
-export const deleteCourseHandout = (id,params) => DELETE(`${getBaseUrl()}course-service.gaodun.com/handout/${id}`, params)
+export const deleteCourseHandout = (id,params) => zDelete(`${getBaseUrl()}course-service.gaodun.com/handout/${id}`, params)
 export const AddCourseHandout = params => post(`${getBaseUrl()}course-service.gaodun.com/handout`, params)
 export const updateCourseHandout = (handout_id,params) => put(`${getBaseUrl()}course-service.gaodun.com/handout/${handout_id}`, params);
 
@@ -27,7 +27,7 @@ export const getCourseResourceIntro = (course_id,params) => get(`${getBaseUrl()}
 export const getStageAndOutline= (course_id,params) => get(`${getBaseUrl()}course-api.gaodun.com/course/${course_id}/gradation`, params)
 
 //删除一个阶段接口
-export const DeleteStage = (gradation_id,params) => DELETE(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
+export const DeleteStage = (gradation_id,params) => zDelete(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
 
 //新增一个课程
 export const addCourse = params => formPost(`${getBaseUrl()}saas-service.gaodun.com/course`, params);
@@ -44,3 +44,8 @@ export const AddCourseStage = params => formPost(`${getBaseUrl()}saas-service.ga
 //修改一个阶段接口
 export const changeStage = (gradation_id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/gradation/${gradation_id}`, params);
 
+//拉取课程内容管理设置
+export const GetCourseDisable = (course_id,params) => get(`${getBaseUrl()}course-service.gaodun.com/course/${course_id}/setting`, params);
+
+//课程管理设置（是否启用的设置）
+export const SetCourseDisable = (course_id,params) => formPut(`${getBaseUrl()}saas-service.gaodun.com/course/${course_id}/setting`, params);
