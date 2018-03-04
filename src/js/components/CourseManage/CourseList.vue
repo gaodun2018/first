@@ -106,7 +106,7 @@
         <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="课程名称" prop="course_name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:50})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input v-model="ruleForm.course_name"></el-input>
                 </el-form-item>
                 <el-form-item label="所属项目" prop="project_id"

@@ -1,4 +1,4 @@
-import { post, get, put,DELETE } from '../util/zeusAxios.js';
+import { post, get, put,zDelete } from '../util/zeusAxios.js';
 import { getBaseUrl } from '../util/config'
 import {formPost, formPut} from "../util/zeusFormAxios";
 
@@ -25,7 +25,7 @@ export const checkSyllabus = (id,params) => get(`${getBaseUrl()}saas-service.gao
 export const getSyllabusItems = (params) => get(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/items`, params);
 
 //删除大纲条目
-export const DeleteSyllabusItem = (id,params) => DELETE(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}`, params);
+export const DeleteSyllabusItem = (id,params) => zDelete(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/item/${id}`, params);
 
 //检查大纲下是否已有该资源
 export const checkResIsInOutline = (syllabus_id,resource_id,params) => get(`${getBaseUrl()}saas-service.gaodun.com/course/syllabus/${syllabus_id}/resources/${resource_id}`, params);

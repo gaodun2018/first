@@ -13,7 +13,7 @@
             <div v-show="active == 0">
                 <el-form :model="ruleForm" label-position="left" ref="ruleForm" label-width="100px" class="ruleForm">
                     <el-form-item label="课程名称" prop="name"
-                                  :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
+                                  :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                         <el-input v-model="ruleForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="所属项目" prop="project_id"
@@ -59,7 +59,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="welcome_letter"
-                                  :rules="filter_rules({required:true,type:'isAllSpace',maxLength:1000})">
+                                  :rules="filter_rules({required:true,type:'isAllSpace',max:200})">
                         <el-row>
                             <el-col :span="24">
                                 <el-input v-model="ruleForm.welcome_letter"
@@ -74,7 +74,7 @@
                         </el-row>
                     </el-form-item>
                     <el-form-item v-if="ruleForm.welcome_letter_type==0?false:true" prop="teacher_name"
-                                  :rules="filter_rules({type:'isAllSpace',maxLength:20})">
+                                  :rules="filter_rules({type:'isAllSpace',max:10})">
                         <el-row>
                             <el-col :span="6">
                                 <el-input v-model="ruleForm.teacher_name" class="coursetxt" auto-complete="off"

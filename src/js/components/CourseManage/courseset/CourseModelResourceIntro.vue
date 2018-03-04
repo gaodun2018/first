@@ -27,15 +27,15 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog title="新增资源介绍" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
+        <el-dialog :title="Doing==0?'新增资源介绍':'修改资源介绍'" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
             <el-form :model="AddResForm" :rules="AddResFormRules" ref="AddResForm">
                 <el-form-item label="标题" prop="title"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:30})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:15})">
                     <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off"
                               placeholder="示例：15章课程学习"></el-input>
                 </el-form-item>
                 <el-form-item label="详情" prop="content"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input v-model="AddResForm.content" autosize type="textarea" class="coursetxt"
                               auto-complete="off" placeholder="示例：每天按照计划完成学习，把握好学习节奏"></el-input>
                 </el-form-item>
@@ -182,7 +182,6 @@
         },
         created() {
             this.getCourseResourceIntro();
-            console.log(this.filter_rules({required: true, type: 'isAllSpace', maxLength: 4}));
         }
     }
 </script>

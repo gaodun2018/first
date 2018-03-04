@@ -35,7 +35,7 @@ axios.interceptors.request.use(function (config) {
 });
 axios.interceptors.response.use(function (response) {
     // 登录失效
-    if (response.data.status == 553649409 || response.data.status == 553650183) {
+    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952) {
         localStorage.clear();
         location.href = '/#/login';
         location.reload();
@@ -120,4 +120,4 @@ export const request = instanceAxios.request.bind(instanceAxios);
 export const get = instanceAxios.get.bind(instanceAxios);
 export const post = instanceAxios.post.bind(instanceAxios);
 export const put = instanceAxios.put.bind(instanceAxios);
-export const DELETE = instanceAxios.delete.bind(instanceAxios);
+export const zDelete = instanceAxios.delete.bind(instanceAxios);
