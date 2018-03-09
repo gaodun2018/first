@@ -57,7 +57,6 @@ const mutations = {
      * @param NavigationId { Number } 一级菜单ID
      */
     [CURRENT_SUB_MENU](state, {ChildNavigations, NavigationId}) {
-        debugger
         state.currentSubMenu = ChildNavigations;
         state.currentLevelOneId = NavigationId;
         localStorage.setItem(SAAS_CURRENT_SUBMENU, JSON.stringify(state.currentSubMenu));
