@@ -30,7 +30,7 @@
     import Vue from 'vue';
     import { mapState } from 'vuex';
     import { parseUrl } from 'base';
-    import { CRM_CURRENT_LEVEL_ONE_MENU, CRM_MENU } from '../util/keys';
+    import { SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_MENU } from '../util/keys';
     import { Row, Col, Menu, Submenu, MenuItem, MenuItemGroup} from 'element-ui';
     Vue.component(Row.name, Row);
     Vue.component(Col.name, Col);

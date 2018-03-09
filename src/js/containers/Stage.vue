@@ -10,7 +10,7 @@
     import {stringify} from 'queryString';
     import {parseUrl} from 'base';
     import { getEnv } from '../util/config';
-    import {CRM_TOKEN, CRM_USER_INFO, CRM_MENU, CRM_CURRENT_SUBMENU, CRM_CURRENT_LEVEL_ONE_MENU} from '../util/keys';
+    import {SAAS_TOKEN, SAAS_USER_INFO, SAAS_MENU, SAAS_CURRENT_SUBMENU, SAAS_CURRENT_LEVEL_ONE_MENU} from '../util/keys';
     import {userLogin, getToken, getLoginUserInfo, getCurrentUserMenuTree} from '../api/login';
     export default {
         data: function () {
@@ -44,8 +44,8 @@
                         let parentID = this.menu[i].ParentID;
                         let subMenu = this.menu[parentID];
                         let levelOneID = subMenu.ParentID || subMenu.NavigationId;
-                        localStorage.setItem(CRM_CURRENT_SUBMENU, JSON.stringify(subMenu));
-                        localStorage.setItem(CRM_CURRENT_LEVEL_ONE_MENU, levelOneID);
+                        localStorage.setItem(SAAS_CURRENT_SUBMENU, JSON.stringify(subMenu));
+                        localStorage.setItem(SAAS_CURRENT_LEVEL_ONE_MENU, levelOneID);
                         return;
                     }
                 }
@@ -65,15 +65,15 @@
                 grant_type: 'password'
             }));
             if (loginRet.access_token) {
-                setCookie(CRM_TOKEN, loginRet.access_token);
+                setCookie(SAAS_TOKEN, loginRet.access_token);
             }
             let ret = await getLoginUserInfo(); // 获取用户信息
             if (ret.status == 0) {
-                localStorage.setItem(CRM_USER_INFO, JSON.stringify(ret.result));
+                localStorage.setItem(SAAS_USER_INFO, JSON.stringify(ret.result));
                 let menuRet = await getCurrentUserMenuTree();
                 if (menuRet.status == 0) {
                     this.flatMenu(menuRet.result);  // 处理得出新的菜单存储到this.menu中
-                    localStorage.setItem(CRM_MENU, JSON.stringify(menuRet.result));  // 存储所有菜单
+                    localStorage.setItem(SAAS_MENU, JSON.stringify(menuRet.result));  // 存储所有菜单
                     this.setMenuInfo(to);   // 跳转url前所需的一级菜单ID和二级菜单内容
                     history.replaceState({url:'/',title:document.title},document.title,'/')
                     this.$router.push({path: to});

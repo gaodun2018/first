@@ -1,4 +1,4 @@
-import { CRM_MENU, CRM_CURRENT_LEVEL_ONE_MENU, CRM_USER_INFO } from './keys';
+import { SAAS_MENU, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_USER_INFO } from './keys';
 
 
 export const startMarquee = (lh, speed, delay, id) => { // 消息滚动

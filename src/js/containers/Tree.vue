@@ -58,7 +58,7 @@ import Vue from 'vue';
 import { GetAllowedUserTree, getchannels, GetCustomerSourceTree, GetSourceDetailsTree, GetArea,GetLabelList } from '../api/cluesManage';
 import { GetPublicUserTree } from '../api/SaleManage';
 import { checkedUserTree } from '../util/util';
-import { CRM_USER_INFO } from '../util/keys';
+import { SAAS_USER_INFO } from '../util/keys';
 
 export default {
 	props: {
@@ -231,7 +231,7 @@ export default {
 		}
 	},
 	created() {
-		this.userInfo = JSON.parse(localStorage.getItem(CRM_USER_INFO));
+		this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
 		let a = this.curre
 	},
 	mounted() {

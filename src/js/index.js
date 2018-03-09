@@ -1,10 +1,11 @@
 import promise from 'es6-promise';
+
 promise.polyfill();
 import Vue from 'vue';
 import store from './store/index';
 import App from './containers/App.vue';
 import VueRouter from 'vue-router';
-import { routes } from './routes/index';
+import {routes} from './routes/index';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
 import '../css/main.less';
@@ -23,10 +24,11 @@ import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
-import { setWindowNID } from './util/config';
-import { CRM_MENU } from './util/keys';
+import {setWindowNID} from './util/config';
+import {SAAS_MENU} from './util/keys';
 import Validate from './util/filter_rules'
 import VueJsonp from 'vue-jsonp'
+
 Vue.use(VueJsonp)
 
 Vue.use(ElementUI)
@@ -37,16 +39,21 @@ const router = new VueRouter({
 });
 //引入全局过滤器
 import filters from './filters/index.js'
-Object.keys(filters).forEach(key=>Vue.filter(key,filters[key]));
+
+Object.keys(filters).forEach(key => Vue.filter(key, filters[key]));
 
 router.beforeEach((to, from, next) => {
-    if (!window.CRMMENU) {
-        window.CRMMENU = JSON.parse(localStorage.getItem(CRM_MENU));
+    if (!window.SAASMENU) {
+        window.SAASMENU = JSON.parse(localStorage.getItem(SAAS_MENU));
     }
-    setWindowNID(window.CRMMENU, to.path); // window.nid
-    if (to.path == '/index') {
-        window.nid = 9;
-    }
+    setWindowNID(window.SAASMENU, to.path); // window.nid
+    // if (to.path == '/index') {
+    //     window.nid = 9;
+    // }
+    // if (to.path == '/home') {
+    //     window.nid = 9;
+    // }
+    console.log(window.nid,'this is index  window.nid');
     store.dispatch('updateCurrentSubMenu', window.nid);
     store.dispatch('updateBreadcrumb', to.path);//更新面包屑
     document.title = `高顿教育 ${to.meta.title}` || '高顿教育'
