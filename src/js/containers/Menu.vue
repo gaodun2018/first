@@ -9,8 +9,8 @@
                     {{item.Title}}
                 </template>
                 <el-menu-item :key="item2.NavigationId" :route="{path:`${item2.Url}`}" v-for="(item2,index2) in item.ChildNavigations" :index="item2.Url">
-                    <a v-if="item2.AppId != 130555 " href="/" style="display:block;">{{item2.Title}}</a>
-                    <span class="beyond-hidden" style="margin-right: -20px;" v-if="item2.AppId == 130555" :title="item2.Title">{{item2.Title}}</span>
+                    <a v-if="item2.AppId != 180302 " href="/" style="display:block;">{{item2.Title}}</a>
+                    <span class="beyond-hidden" style="margin-right: -20px;" v-if="item2.AppId == 180302" :title="item2.Title">{{item2.Title}}</span>
                 </el-menu-item>
             </el-submenu>
             <!-- 没有二级菜单的 -->
@@ -18,8 +18,8 @@
                 <svg class="icon" aria-hidden="true">
                     <use :xlink:href="item3.Iconurl"></use>
                 </svg>
-                <a v-if="item3.AppId != 130555 " href="/" style="display:block;">{{item3.Title}}</a>
-                <span v-if="item3.AppId == 130555">{{item3.Title}}</span>
+                <a v-if="item3.AppId != 180302 " href="/" style="display:block;">{{item3.Title}}</a>
+                <span v-if="item3.AppId == 180302">{{item3.Title}}</span>
             </el-menu-item>
         </el-menu>
     </div>
