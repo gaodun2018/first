@@ -41,6 +41,7 @@ const CourseList = resolve => {
         resolve(require('../components/CourseManage/CourseList.vue'))
     },'CourseList')
 }
+
 // 登陆
 const Login = resolve => {
     require.ensure(['../containers/Login.vue'], (require) => {
@@ -101,6 +102,14 @@ const AddVideo = resolve => {
         resolve(require('../components/resourceCenter/AddVideo.vue'))
     },'AddVideo')
 }
+
+// - 编辑视频
+const EditVideo = resolve => {
+    require.ensure(['../components/resourceCenter/EditVideo.vue'], (require) => {
+        resolve(require('../components/resourceCenter/EditVideo.vue'))
+    },'EditVideo')
+}
+
 // - 新增讲义
 const AddHandout = resolve => {
     require.ensure(['../components/resourceCenter/AddHandout.vue'], (require) => {
@@ -166,6 +175,7 @@ export const routes = [
 		{ path: '/CourseSet/:cid',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
 		{ path: '/CourseContent/:cid',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
 		{ path: '/resource/video/create',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
+		{ path: '/resource/video/:id/edit',meta:{ title:'- 编辑视频' }, name:'editVideo',component: EditVideo }, // - 编辑视频
 		{ path: '/addHandout',meta:{ title:'- 新增讲义' }, name:'10000',component: AddHandout }, // - 新增讲义
 		{ path: '/addKnowledge',meta:{ title:'- 新增知识点' }, name:'10000',component: AddKnowledge }, // - 新增知识点
 		{ path: '/editKnowledge',meta:{ title:'- 编辑知识点' }, name:'10000',component: EditKnowledge }, // - 编辑知识点
