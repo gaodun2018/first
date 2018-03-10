@@ -32,6 +32,7 @@ Vue.use(VueJsonp)
 Vue.use(ElementUI)
 Vue.use(VueRouter);
 Vue.use(Validate);
+
 const router = new VueRouter({
     routes
 });

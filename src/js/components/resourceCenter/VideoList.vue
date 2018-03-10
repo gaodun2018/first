@@ -67,7 +67,7 @@
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
                         <el-button type="text">预览</el-button>
-                        <el-button type="text">修改</el-button>
+                        <el-button type="text" @click="didClickEdit(scope)">修改</el-button>
                         <el-button type="text">删除</el-button>
                         <el-button type="text">使用统计</el-button>
                     </template>
@@ -117,7 +117,7 @@
                 tags: [],
                 currentPage: 1,
                 paginationTotal: 0,
-                pageSize: 1,
+                pageSize: 50,
                 loading: false
             }
         },
@@ -130,6 +130,11 @@
             mulchange(reid) {
                 this.clversm = reid;
                 this.loadResources()
+            },
+
+            didClickEdit(scope) {
+                console.log('navigate to edit video ' + scope.row.id)
+                this.$router.push({name: "editVideo", params: {id: scope.row.id}})
             },
 
             fetchResources() {

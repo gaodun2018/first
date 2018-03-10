@@ -1,96 +1,286 @@
 import Entry from '../containers/Entry.vue';
 // 面板详情
-import HomeIndex from '../components/home/HomeIndex.vue';
+const HomeIndex = resolve => {
+    require.ensure(['../components/home/HomeIndex.vue'], (require) => {
+        resolve(require('../components/home/HomeIndex.vue'))
+    },'HomeIndex')
+}
 // 用户管理
-import UserManagement from '../components/userPermission/UserManagement.vue';
+const UserManagement = resolve => {
+    require.ensure(['../components/userPermission/UserManagement.vue'], (require) => {
+        resolve(require('../components/userPermission/UserManagement.vue'))
+    },'UserManagement')
+}
 // 组织管理
-import OrganizationalManagement from '../components/userPermission/OrganizationalManagement.vue';
+const OrganizationalManagement = resolve => {
+    require.ensure(['../components/userPermission/OrganizationalManagement.vue'], (require) => {
+        resolve(require('../components/userPermission/OrganizationalManagement.vue'))
+    },'OrganizationalManagement')
+}
 // 功能管理
-import FunctionManagement from '../components/userPermission/FunctionManagement.vue';
+const FunctionManagement = resolve => {
+    require.ensure(['../components/userPermission/FunctionManagement.vue'], (require) => {
+        resolve(require('../components/userPermission/FunctionManagement.vue'))
+    },'FunctionManagement')
+}
 // 角色管理
-import RoleManagement from '../components/userPermission/RoleManagement.vue';
+const RoleManagement = resolve => {
+    require.ensure(['../components/userPermission/RoleManagement.vue'], (require) => {
+        resolve(require('../components/userPermission/RoleManagement.vue'))
+    },'RoleManagement')
+}
 // 权限分配
-import PermissionAssignment from '../components/userPermission/PermissionAssignment.vue';
+const PermissionAssignment = resolve => {
+    require.ensure(['../components/userPermission/PermissionAssignment.vue'], (require) => {
+        resolve(require('../components/userPermission/PermissionAssignment.vue'))
+    },'PermissionAssignment')
+}
 // 学员列表
-import StudentList from '../components/educationManage/StudentList.vue';
+const StudentList = resolve => {
+    require.ensure(['../components/educationManage/StudentList.vue'], (require) => {
+        resolve(require('../components/educationManage/StudentList.vue'))
+    },'StudentList')
+}
 // 班级管理
-import ClassManage from '../components/educationManage/ClassManage.vue';
+const ClassManage = resolve => {
+    require.ensure(['../components/educationManage/ClassManage.vue'], (require) => {
+        resolve(require('../components/educationManage/ClassManage.vue'))
+    },'ClassManage')
+}
 // 我的统计
-import MyStats from '../components/answeringService/MyStats.vue';
+const MyStats = resolve => {
+    require.ensure(['../components/answeringService/MyStats.vue'], (require) => {
+        resolve(require('../components/answeringService/MyStats.vue'))
+    },'MyStats')
+}
 // 项目统计
-import ProjectStatistics from '../components/answeringService/ProjectStatistics.vue';
+const ProjectStatistics = resolve => {
+    require.ensure(['../components/answeringService/ProjectStatistics.vue'], (require) => {
+        resolve(require('../components/answeringService/ProjectStatistics.vue'))
+    },'ProjectStatistics')
+}
 // 答疑排名
-import AnswerRanking from '../components/answeringService/AnswerRanking.vue';
+const AnswerRanking = resolve => {
+    require.ensure(['../components/answeringService/AnswerRanking.vue'], (require) => {
+        resolve(require('../components/answeringService/AnswerRanking.vue'))
+    },'AnswerRanking')
+}
 // 我的问题
-import MyQuestion from '../components/answeringService/MyQuestion.vue';
+const MyQuestion = resolve => {
+    require.ensure(['../components/answeringService/MyQuestion.vue'], (require) => {
+        resolve(require('../components/answeringService/MyQuestion.vue'))
+    },'MyQuestion')
+}
 // 所有问题
-import AllQuestion from '../components/answeringService/AllQuestion.vue';
+const AllQuestion = resolve => {
+    require.ensure(['../components/answeringService/AllQuestion.vue'], (require) => {
+        resolve(require('../components/answeringService/AllQuestion.vue'))
+    },'AllQuestion')
+}
 // 操作日志
-import AnsOperationLog from '../components/answeringService/AnsOperationLog.vue';
+const AnsOperationLog = resolve => {
+    require.ensure(['../components/answeringService/AnsOperationLog.vue'], (require) => {
+        resolve(require('../components/answeringService/AnsOperationLog.vue'))
+    },'AnsOperationLog')
+}
 // 资源列表
-import ResourceTag from '../components/resourceCenter/ResourceTag.vue';
+const ResourceTag = resolve => {
+    require.ensure(['../components/resourceCenter/ResourceTag.vue'], (require) => {
+        resolve(require('../components/resourceCenter/ResourceTag.vue'))
+    },'ResourceTag')
+}
 // 视频列表
-import VideoList from '../components/resourceCenter/VideoList.vue';
+const VideoList = resolve => {
+    require.ensure(['../components/resourceCenter/VideoList.vue'], (require) => {
+        resolve(require('../components/resourceCenter/VideoList.vue'))
+    },'VideoList')
+}
 // 题目列表
-import ExerciseList from '../components/resourceCenter/ExerciseList.vue';
+const ExerciseList = resolve => {
+    require.ensure(['../components/resourceCenter/ExerciseList.vue'], (require) => {
+        resolve(require('../components/resourceCenter/ExerciseList.vue'))
+    },'ExerciseList')
+}
 // 讲义列表
-import HandoutList from '../components/resourceCenter/HandoutList.vue';
+const HandoutList = resolve => {
+    require.ensure(['../components/resourceCenter/HandoutList.vue'], (require) => {
+        resolve(require('../components/resourceCenter/HandoutList.vue'))
+    },'HandoutList')
+}
 // 知识点汇总
-import KnowledgeList from '../components/resourceCenter/KnowledgeList.vue';
+const KnowledgeList = resolve => {
+    require.ensure(['../components/resourceCenter/KnowledgeList.vue'], (require) => {
+        resolve(require('../components/resourceCenter/KnowledgeList.vue'))
+    },'KnowledgeList')
+}
 // 考试大纲
-import ExaminationSyllabus from '../components/resourceCenter/ExaminationSyllabus.vue';
+const ExaminationSyllabus = resolve => {
+    require.ensure(['../components/resourceCenter/ExaminationSyllabus.vue'], (require) => {
+        resolve(require('../components/resourceCenter/ExaminationSyllabus.vue'))
+    },'ExaminationSyllabus')
+}
 // 课程列表
-import CourseList from '../components/CourseManage/CourseList.vue';
+const CourseList = resolve => {
+    require.ensure(['../components/CourseManage/CourseList.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseList.vue'))
+    },'CourseList')
+}
 // 产品列表
-import ProjectList from '../components/productManagement/ProjectList.vue';
+const ProjectList = resolve => {
+    require.ensure(['../components/productManagement/ProjectList.vue'], (require) => {
+        resolve(require('../components/productManagement/ProjectList.vue'))
+    },'ProjectList')
+}
 // 统计分析
-import StatisticAnalysis from '../components/productManagement/StatisticAnalysis.vue';
+const StatisticAnalysis = resolve => {
+    require.ensure(['../components/productManagement/StatisticAnalysis.vue'], (require) => {
+        resolve(require('../components/productManagement/StatisticAnalysis.vue'))
+    },'StatisticAnalysis')
+}
 // 专题列表
-import ZhuantiList from '../components/productManagement/ZhuantiList.vue';
+const ZhuantiList = resolve => {
+    require.ensure(['../components/productManagement/ZhuantiList.vue'], (require) => {
+        resolve(require('../components/productManagement/ZhuantiList.vue'))
+    },'ZhuantiList')
+}
 // 商业列表
-import BusinessList from '../components/productManagement/BusinessList.vue';
+const BusinessList = resolve => {
+    require.ensure(['../components/productManagement/BusinessList.vue'], (require) => {
+        resolve(require('../components/productManagement/BusinessList.vue'))
+    },'BusinessList')
+}
 // 班级列表
-import ClassList from '../components/ClassManageSys/ClassList.vue';
+const ClassList = resolve => {
+    require.ensure(['../components/ClassManageSys/ClassList.vue'], (require) => {
+        resolve(require('../components/ClassManageSys/ClassList.vue'))
+    },'ClassList')
+}
 // 学员列表
-import StudentLista from '../components/ClassManageSys/StudentLista.vue';
+const StudentLista = resolve => {
+    require.ensure(['../components/ClassManageSys/StudentLista.vue'], (require) => {
+        resolve(require('../components/ClassManageSys/StudentLista.vue'))
+    },'StudentLista')
+}
 // 课程列表
-import CourseLista from '../components/ClassManageSys/CourseLista.vue';
+const CourseLista = resolve => {
+    require.ensure(['../components/ClassManageSys/CourseLista.vue'], (require) => {
+        resolve(require('../components/ClassManageSys/CourseLista.vue'))
+    },'CourseLista')
+}
 // 登陆
-import Login from '../containers/Login.vue';
+const Login = resolve => {
+    require.ensure(['../containers/Login.vue'], (require) => {
+        resolve(require('../containers/Login.vue'))
+    },'Login')
+}
 // 404
-import Page404 from '../components/Page404.vue';
+const Page404 = resolve => {
+    require.ensure(['../components/Page404.vue'], (require) => {
+        resolve(require('../components/Page404.vue'))
+    },'Page404')
+}
 // 修改密码
-import UpdatePwd from '../containers/UpdatePwd.vue';
+const UpdatePwd = resolve => {
+    require.ensure(['../containers/UpdatePwd.vue'], (require) => {
+        resolve(require('../containers/UpdatePwd.vue'))
+    },'UpdatePwd')
+}
 // - 财经云
-import Home from '../containers/Home.vue';
+const Home = resolve => {
+    require.ensure(['../containers/Home.vue'], (require) => {
+        resolve(require('../containers/Home.vue'))
+    },'Home')
+}
 // 课程大纲管理
-import CourseOutlineList from '../components/CourseoutlineManage/CourseOutlineList.vue';
+const CourseOutlineList = resolve => {
+    require.ensure(['../components/CourseoutlineManage/CourseOutlineList.vue'], (require) => {
+        resolve(require('../components/CourseoutlineManage/CourseOutlineList.vue'))
+    },'CourseOutlineList')
+}
 // - 编辑课程大纲
-import CourseOutline from '../components/CourseOutlineManage/CourseOutline.vue';
+const CourseOutline = resolve => {
+    require.ensure(['../components/CourseOutlineManage/CourseOutline.vue'], (require) => {
+        resolve(require('../components/CourseOutlineManage/CourseOutline.vue'))
+    },'CourseOutline')
+}
 // - 课程大纲模块
-import CourseModule from '../components/CourseOutlineManage/CourseModule.vue';
+const CourseModule = resolve => {
+    require.ensure(['../components/CourseOutlineManage/CourseModule.vue'], (require) => {
+        resolve(require('../components/CourseOutlineManage/CourseModule.vue'))
+    },'CourseModule')
+}
 // - 课程基本设置
-import CourseSet from '../components/CourseManage/CourseSet.vue';
+const CourseSet = resolve => {
+    require.ensure(['../components/CourseManage/CourseSet.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseSet.vue'))
+    },'CourseSet')
+}
 // - 课程内容
-import CourseContent from '../components/CourseManage/CourseContent.vue';
+const CourseContent = resolve => {
+    require.ensure(['../components/CourseManage/CourseContent.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseContent.vue'))
+    },'CourseContent')
+}
 // - 新增视频
-import AddVideo from '../components/resourceCenter/AddVideo.vue';
+const AddVideo = resolve => {
+    require.ensure(['../components/resourceCenter/AddVideo.vue'], (require) => {
+        resolve(require('../components/resourceCenter/AddVideo.vue'))
+    },'AddVideo')
+}
+// - 编辑视频
+const EditVideo = resolve => {
+    require.ensure(['../components/resourceCenter/EditVideo.vue'], (require) => {
+        resolve(require('../components/resourceCenter/EditVideo.vue'))
+    },'EditVideo')
+}
 // - 新增讲义
-import AddHandout from '../components/resourceCenter/AddHandout.vue';
+const AddHandout = resolve => {
+    require.ensure(['../components/resourceCenter/AddHandout.vue'], (require) => {
+        resolve(require('../components/resourceCenter/AddHandout.vue'))
+    },'AddHandout')
+}
 // - 新增知识点
-import AddKnowledge from '../components/resourceCenter/AddKnowledge.vue';
+const AddKnowledge = resolve => {
+    require.ensure(['../components/resourceCenter/AddKnowledge.vue'], (require) => {
+        resolve(require('../components/resourceCenter/AddKnowledge.vue'))
+    },'AddKnowledge')
+}
 // - 编辑知识点
-import EditKnowledge from '../components/resourceCenter/EditKnowledge.vue';
+const EditKnowledge = resolve => {
+    require.ensure(['../components/resourceCenter/EditKnowledge.vue'], (require) => {
+        resolve(require('../components/resourceCenter/EditKnowledge.vue'))
+    },'EditKnowledge')
+}
 // - EP课程学习数据统计
-import EducationalClass from '../containers/EducationalClass.vue';
+const EducationalClass = resolve => {
+    require.ensure(['../containers/EducationalClass.vue'], (require) => {
+        resolve(require('../containers/EducationalClass.vue'))
+    },'EducationalClass')
+}
 // - EP定制标杆计划
-import CustomizedPlan from '../containers/CustomizedPlan.vue';
+const CustomizedPlan = resolve => {
+    require.ensure(['../containers/CustomizedPlan.vue'], (require) => {
+        resolve(require('../containers/CustomizedPlan.vue'))
+    },'CustomizedPlan')
+}
 // - EP选择标杆计划
-import ChoosePlan from '../containers/ChoosePlan.vue';
+const ChoosePlan = resolve => {
+    require.ensure(['../containers/ChoosePlan.vue'], (require) => {
+        resolve(require('../containers/ChoosePlan.vue'))
+    },'ChoosePlan')
+}
 // - 查看完整计划
-import EducationalPlanAll from '../containers/EducationalPlanAll.vue';
+const EducationalPlanAll = resolve => {
+    require.ensure(['../containers/EducationalPlanAll.vue'], (require) => {
+        resolve(require('../containers/EducationalPlanAll.vue'))
+    },'EducationalPlanAll')
+}
 // - 全部学员详情
-import EducationalClasslist from '../containers/EducationalClasslist.vue';
+const EducationalClasslist = resolve => {
+    require.ensure(['../containers/EducationalClasslist.vue'], (require) => {
+        resolve(require('../containers/EducationalClasslist.vue'))
+    },'EducationalClasslist')
+}
 
 
 export const routes = [
@@ -129,6 +319,7 @@ export const routes = [
 		{ path: '/CourseSet/:cid',meta:{ title:'- 课程基本设置' }, name:'10000',component: CourseSet }, // - 课程基本设置
 		{ path: '/CourseContent/:cid',meta:{ title:'- 课程内容' }, name:'10000',component: CourseContent }, // - 课程内容
 		{ path: '/resource/video/create',meta:{ title:'- 新增视频' }, name:'10000',component: AddVideo }, // - 新增视频
+		{ path: '/resource/video/:id/edit',meta:{ title:'- 编辑视频' }, name:'editVideo',component: EditVideo }, // - 编辑视频
 		{ path: '/addHandout',meta:{ title:'- 新增讲义' }, name:'10000',component: AddHandout }, // - 新增讲义
 		{ path: '/addKnowledge',meta:{ title:'- 新增知识点' }, name:'10000',component: AddKnowledge }, // - 新增知识点
 		{ path: '/editKnowledge',meta:{ title:'- 编辑知识点' }, name:'10000',component: EditKnowledge }, // - 编辑知识点
