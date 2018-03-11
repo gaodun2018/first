@@ -9,11 +9,11 @@
                 <!--<div class="user right" v-if="!loginFlag">-->
                 <div class="user right">
                     <el-dropdown trigger="hover" @command="handleCommands">
-              <span class="el-dropdown-link-2">
-                <img class="user_icon" src="../../images/financeHome/group.png" alt="头像">
-                <span class="user_name">超级管理员,Alan</span>
-                <i class="el-icon-caret-bottom el-icon--right"></i>
-              </span>
+                        <span class="el-dropdown-link-2">
+                            <img class="user_icon" src="../../images/default_icon.png" alt="头像">
+                            <span class="user_name">超级管理员,Alan</span>
+                            <i class="el-icon-caret-bottom el-icon--right"></i>
+                        </span>
                         <el-dropdown-menu slot="dropdown">
                             <!--<el-dropdown-item command="passwordModify">修改密码</el-dropdown-item>-->
                             <el-dropdown-item command="logout">退出</el-dropdown-item>
@@ -35,95 +35,40 @@
             <div class="w_1200">
                 <div class="contentBox">
                     <ul>
-
-                        <router-link tag="li" to="/ResourceTag" class="item">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-5.png">
-                </span>
-                            <span class="item-titt">资源中心</span>
-                            <span class="item-titb">Resource Center</span>
-                        </router-link>
-
-
-                        <li class="item" @click="openEDU">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-2.png">
-                </span>
-                            <span class="item-titt">教务管理</span>
-                            <span class="item-titb">Teaching Management</span>
+                        <li
+                            class="item"
+                            v-for="(item,index) in menu"
+                            :key="item.NavigationId"
+                            @click="clickRouter(item)"
+                        >
+                            <span class="item-img" :id="item.Iconurl"></span>
+                            <span class="item-titt">{{item.Title}}</span>
+                            <span class="item-titb">{{item.Title}}</span>
                         </li>
-
-
-                        <li class="item" @click="openCRM">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-8.png">
-                </span>
-                            <span class="item-titt">CRM</span>
-                            <span class="item-titb">Custom Relation Management</span>
-                        </li>
-
-                        <!-- <li class="item">
-                             <span class="item-img">
-                               <img src="../../images/financeHome/group-7.png">
-                             </span>
-                           <span class="item-titt">应用服务</span>
-                           <span class="item-titb">Service</span>
-                         </li>-->
-
-                        <li class="item" @click="afterFunction">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group.png">
-                </span>
-                            <span class="item-titt">权限管理</span>
-                            <span class="item-titb">User Permission</span>
-                        </li>
-                        <li class="item" @click="afterFunction">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-10.png">
-                </span>
-                            <span class="item-titt">产品管理</span>
-                            <span class="item-titb">Product Management</span>
-                        </li>
-
-                        <li class="item" @click="afterFunction">
-                <span class="item-img">
-                  <img src="../../images/financeHome/group-9.png">
-                </span>
-                            <span class="item-titt">报表中心</span>
-                            <span class="item-titb">Business Intelligence</span>
-                        </li>
-
-
                     </ul>
                 </div>
             </div>
         </div>
-
-        <el-dialog title="高顿教育 | 财经云" :visible.sync="dialogFormVisible" :show-close="false" modal="true"
-                   lock-scroll="true">
-            <el-form :model="ruleForm" :rules="rules" autoComplete="on" ref="ruleForm">
-
-
-                <el-form-item label="" prop="name" placeholder="账号">
-                    <el-input icon="erp-yonghu" v-model="ruleForm.Account" @keyup.enter.native="submitForm('ruleForm')"
-                              autoComplete="on"></el-input>
-                </el-form-item>
-
-                <el-form-item label="" prop="pass" placeholder="密码">
-                    <el-input type="password" icon="erp-mima" v-model="ruleForm.Password"
-                              @keyup.enter.native="submitForm('ruleForm')" autoComplete="on"></el-input>
-                </el-form-item>
-
-                <el-checkbox v-model="ruleForm.checked">记住密码</el-checkbox>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="large" :loading="loading"
-                           @click.native.prevent="submitForm('ruleForm')">
-                    {{loading ? '登录中' : '登录'}}
-                </el-button>
-            </div>
-        </el-dialog>
-
+        <!-- <el-dialog title="高顿教育 | 财经云" :visible.sync="dialogFormVisible" :show-close="false" modal="true"
+                    lock-scroll="true">
+             <el-form :model="ruleForm" :rules="rules" autoComplete="on" ref="ruleForm">
+                 <el-form-item label="" prop="name" placeholder="账号">
+                     <el-input icon="erp-yonghu" v-model="ruleForm.Account" @keyup.enter.native="submitForm('ruleForm')"
+                               autoComplete="on"></el-input>
+                 </el-form-item>
+                 <el-form-item label="" prop="pass" placeholder="密码">
+                     <el-input type="password" icon="erp-mima" v-model="ruleForm.Password"
+                               @keyup.enter.native="submitForm('ruleForm')" autoComplete="on"></el-input>
+                 </el-form-item>
+                 <el-checkbox v-model="ruleForm.checked">记住密码</el-checkbox>
+             </el-form>
+             <div slot="footer" class="dialog-footer">
+                 <el-button type="primary" size="large" :loading="loading"
+                            @click.native.prevent="submitForm('ruleForm')">
+                     {{loading ? '登录中' : '登录'}}
+                 </el-button>
+             </div>
+         </el-dialog>-->
     </div>
 </template>
 
@@ -155,7 +100,42 @@
                 loginFlag: true
             }
         },
+        computed: {
+            menu() {
+                return JSON.parse(localStorage.getItem('SAAS_MENU'))
+            }
+        },
         methods: {
+            clickRouter(item) {
+                console.log(item);
+                for (let i in this.menu) {
+                    if (item.NavigationId == this.menu[i].NavigationId) {
+                        if (this.menu[i].Path == 180302) {
+                            // location.href = this.menu[i].Url
+                            window.open(this.menu[i].Url)
+                        } else {
+                            this.updateCurrentSubMenu(this.menu[i]);
+                        }
+                        return;
+                    }
+                }
+            },
+            updateCurrentSubMenu(item) {
+                //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
+                if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
+                    let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
+                    let path = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
+                    // let path = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
+                    let NavigationId = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
+                    // let NavigationId = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
+                    this.$router.push({
+                        path,
+                    });
+                    // setTimeout(() => {
+                    //     this.$store.dispatch('updateCurrentTabId', NavigationId);
+                    // }, 0)
+                }
+            },
             afterFunction() {
                 this.$message({
                     message: '后续功能正在开发中~~'

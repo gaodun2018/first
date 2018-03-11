@@ -33,10 +33,22 @@ export const getBaseUrl = () => {
     }
 
 }
+export const setWindowNBID = (menu, path) => {
+    for (var i in menu) {
+        if (menu[i].Url == path) {
+            // window.nid = menu[i].ParentPath[0]
+            console.log(menu[i],'this is menu[i]');
+            window.nbid = menu[i].ParentPath[0];
+        }
+        if (menu[i].ChildNavigations) {
+            setWindowNBID(menu[i].ChildNavigations, path);
+        }
+    }
+}
 export const setWindowNID = (menu, path) => {
     for (var i in menu) {
         if (menu[i].Url == path) {
-            window.nid = menu[i].ParentPath[0]
+            window.nid = menu[i].ParentPath[1]
         }
         if (menu[i].ChildNavigations) {
             setWindowNID(menu[i].ChildNavigations, path);

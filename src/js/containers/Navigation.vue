@@ -66,8 +66,8 @@
         created() {
             this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
 
-            this.$store.dispatch('initCurrentLevelOneId');  // 记录一级菜单ID
-            this.$store.dispatch('updateCurrentSubMenu', this.$store.state.navigation.currentLevelOneId);   // 根据一级菜单ID找到二级菜单
+            // this.$store.dispatch('initCurrentLevelOneId');  // 记录一级菜单ID
+            // this.$store.dispatch('updateCurrentSubMenu', this.$store.state.navigation.currentLevelOneId);   // 根据一级菜单ID找到二级菜单
             //this.$store.dispatch('GetUnreadMessageCount')
         },
         mounted() {
@@ -89,7 +89,8 @@
 
         computed: {
             menu() {
-                return JSON.parse(localStorage.getItem('SAAS_MENU'))
+                // return JSON.parse(localStorage.getItem('SAAS_MENU'))
+                return JSON.parse(localStorage.getItem('SAAS_CURRENT_MENU'))
             },
             TrueName() {
                 return this.userInfo.TrueName

@@ -24,8 +24,8 @@ import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
-import {setWindowNID} from './util/config';
-import {SAAS_MENU} from './util/keys';
+import {setWindowNID,setWindowNBID} from './util/config';
+import {SAAS_MENU, SAAS_CURRENT_MENU} from './util/keys';
 import Validate from './util/filter_rules'
 import VueJsonp from 'vue-jsonp'
 
@@ -46,16 +46,28 @@ router.beforeEach((to, from, next) => {
     if (!window.SAASMENU) {
         window.SAASMENU = JSON.parse(localStorage.getItem(SAAS_MENU));
     }
-    setWindowNID(window.SAASMENU, to.path); // window.nid
+
     // if (to.path == '/index') {
     //     window.nid = 9;
     // }
     // if (to.path == '/home') {
     //     window.nid = 9;
     // }
-    console.log(window.nid,'this is index  window.nid');
+    // console.log(window.nid, 'this is index  window.nid');
+    // store.dispatch('updateCurrentSubMenu', window.nid);
+    // store.dispatch('updateBreadcrumb', to.path);//更新面包屑
+
+    setWindowNBID(window.SAASMENU, to.path); // window.nid
+    store.dispatch('updateCurrentMenu', window.nbid);
+    if (!window.SAASCURRENTMENU) {
+        window.SAASCURRENTMENU = JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU));
+    }
+    setWindowNID(window.SAASCURRENTMENU, to.path); // window.nid
     store.dispatch('updateCurrentSubMenu', window.nid);
     store.dispatch('updateBreadcrumb', to.path);//更新面包屑
+
+
+    
     document.title = `高顿教育 ${to.meta.title}` || '高顿教育'
     if (!to.query.url && from.query.url) {
         to.query.url = from.query.url
