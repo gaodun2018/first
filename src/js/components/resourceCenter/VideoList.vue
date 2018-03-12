@@ -128,6 +128,7 @@
                 this.clversm = reid;
                 this.loadResources()
             },
+
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
                 this.$router.push({name: "editVideo", params: {id: scope.row.id}})
@@ -167,6 +168,7 @@
                 this.tags = this.resource.tags
                 this.loading = false
             },
+
             formatDate(date) {
                 return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDay() +
                     " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
