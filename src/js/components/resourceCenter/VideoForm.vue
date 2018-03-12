@@ -56,7 +56,7 @@
 </template>
 <script>
     import SelectKnowledge from './SelectKnowledge.vue'
-    import {getTags, getOneResource, storeResource} from '../../api/resource.js'
+    import {getTags, getOneResource, storeResource, viewResource} from '../../api/resource.js'
     export default {
         components: {
             SelectKnowledge
@@ -99,6 +99,12 @@
             }
         },
         methods: {
+            async initData(){
+                if(this.$route.params.id){  // 编辑
+                    let ret = await viewResource(this.$route.params.id);
+                    console.log(ret)
+                }
+            },
             getSubjectByProjectId(projectId) {
                 var subjects = null
                 for (var project of this.tags) {
@@ -180,7 +186,8 @@
             this.id = this.$route.params.id
             this.resource = (await getOneResource(this.id)).result
             this.tags = (await getTags('project', {partner_id: 1})).result
-            this.loading = false
+            this.loading = false;
+            this.initData();
         }
     }
 </script>
