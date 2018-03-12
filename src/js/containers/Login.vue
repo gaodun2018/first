@@ -56,11 +56,8 @@
     import {appid} from "../common/config.js";
     import {getEnv} from '../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
-    import {SAAS_USER_INFO,SAAS_MENU, FORMAT_MENU} from '../util/keys.js'
-    import routesMenu from '../routes/routes'
-    import KMENU from '../common/KMENU'
+    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS} from '../util/keys.js'
     let prefix = getEnv();
-    console.log(prefix);
     export default {
         data: function () {
             return {
@@ -84,10 +81,8 @@
                             GDSID : GDSID
                         });
                         if (response.data.status == 0) {
-                            // console.info("token=" + response.headers.accesstoken + "; ");
                             this.setCookie("token", response.headers.accesstoken, 2)
-                            // localStorage.setItem(SAAS_USER_INFO, JSON.stringify(loginRet.result));
-                            // this.$router.push({path: '/home'});
+                            localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
                         } else {
                             this.$message({
                                 message: response.data.info,
@@ -104,13 +99,7 @@
                         if (menuRet.status === 0) {
                             this.reWriteEmptyUrl(menuRet.result.Tpo_Sys_Navigations);
                             localStorage.setItem(SAAS_MENU, JSON.stringify(menuRet.result.Tpo_Sys_Navigations));
-                            //转换赋值
-                            let menuData = menuRet.result.Tpo_Sys_Navigations;
-                            let menuStr = JSON.stringify(menuData);
-                            let menuData1 = JSON.parse(menuStr);
-                            let routesMenus = [...menuData1, ...routesMenu]
-                            //格式化菜单
-                            this.formatRoute(routesMenus);
+                            localStorage.setItem(SAAS_USER_FUNCTIONS, JSON.stringify(menuRet.result.Tpo_sys_Functions));
 
                             // if(loginRet.result.PwdType==0){
                                 if(response.data.result.HomePage==''){
@@ -157,37 +146,6 @@
                         this.reWriteEmptyUrl(menu[i].ChildNavigations)
                     }
                 }
-            },
-            //格式化菜单树 => 面包屑菜单
-            formatRoute(menu, Title) {
-                let menuarr = [];
-
-                function createRoutes(menu, Item) {
-                    // console.log('create routes')
-                    // console.log(menu)
-                    for (let i in menu) {
-                        menu[i].parenttitle = menu[i].parenttitle ? menu[i].parenttitle : [{
-                            name: menu[i].Title,
-                            url: menu[i].Url
-                        }];
-                        if (Item) {
-                            menu[i].parenttitle = [...Item, ...menu[i].parenttitle]
-                        }
-                        menuarr.push(menu[i])
-
-                        if (menu[i].ChildNavigations) {
-                            createRoutes(menu[i].ChildNavigations, menu[i].parenttitle);
-                        }
-                    }
-                }
-
-                console.log('format route')
-                console.log(menuarr);
-                createRoutes(menu, Title)
-
-                localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));
-
-                // localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
             },
         },
         async created() {
