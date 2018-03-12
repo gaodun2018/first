@@ -40,7 +40,7 @@
                         <div class="input-search">
                             <el-input placeholder="请输入课程大纲ID、名称" size="small" icon="search" v-model="searchinput"
                                       :on-icon-click="handleIconClick" @keyup.native.enter="handleIconClick"></el-input>
-                            <el-button type="primary" size="small" @click="addCourseOutline">新建一个课程大纲</el-button>
+                            <el-button type="primary" size="small" @click="addCourseOutline" v-if="unlocking('SY_CREATE')">新建一个课程大纲</el-button>
                         </div>
                     </el-row>
                 </el-col>
@@ -68,8 +68,8 @@
                 </el-table-column>
                 <el-table-column label="操作" min-width="200" fixed="right" align="center">
                     <template scope="scope">
-                        <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)">基本设置</el-button>
-                        <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)">编辑大纲内容</el-button>
+                        <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
+                        <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
                     </template>
                 </el-table-column>
             </el-table>

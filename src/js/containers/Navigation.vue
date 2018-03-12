@@ -8,7 +8,7 @@
             </div>
         </div>
         <el-tabs v-model="id" @tab-click="handleClick">
-            <el-tab-pane v-for="(item,index) in menu" :key="item.NavigationId" :item="item" :label="item.Title"
+            <el-tab-pane v-for="(item,index) in submenu" :key="item.NavigationId" :item="item" :label="item.Title"
                          :name="item.NavigationId">
                 {{item}}
             </el-tab-pane>
@@ -21,8 +21,8 @@
             <div class="can-work">
                 <el-dropdown trigger="hover" @command="handleCommands">
               <span class="el-dropdown-link-2">
-                <img class="user_icon" src="../../images/financeHome/group.png" alt="头像">
-                <span class="user_name">超级管理员,Alan</span>
+                <img class="user_icon" :src="CardImgUrl" alt="头像">
+                <span class="user_name">{{TrueName}}</span>
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
                     <el-dropdown-menu slot="dropdown">
@@ -48,7 +48,8 @@
         SAAS_TOKEN,
         SAAS_CURRENT_TAB,
         SAAS_OPEN_TABS,
-        SAAS_CURRENT_LEVEL_ONE_MENU
+        SAAS_CURRENT_LEVEL_ONE_MENU,
+        SAAS_CURRENT_LEVEL_TOP_MENU
     } from '../util/keys';
 
     export default {
@@ -61,41 +62,47 @@
                  return JSON.parse(localStorage.getItem(SAAS_MENU))
                  },*/
                 activeName: '',
+                Menu: '',
+                SubMenu: '',
             }
         },
         created() {
             this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
 
+            this.$store.dispatch('initCurrentLevelTopId');  // 记录顶级菜单ID
             this.$store.dispatch('initCurrentLevelOneId');  // 记录一级菜单ID
+            this.$store.dispatch('updateCurrentMenu', this.$store.state.navigation.currentLevelTopId);   // 根据顶级菜单ID找到一级菜单
             this.$store.dispatch('updateCurrentSubMenu', this.$store.state.navigation.currentLevelOneId);   // 根据一级菜单ID找到二级菜单
-            //this.$store.dispatch('GetUnreadMessageCount')
         },
         mounted() {
-            let nid = localStorage.getItem(SAAS_CURRENT_LEVEL_ONE_MENU)
-            // if (parseUrl().nw != 1 && !nid) {
-            //     nid = '9';
-            //     for (var i in this.menu) {
-            //         if (this.menu[i].NavigationId == nid) {
-            //             this.updateCurrentSubMenu(this.menu[i]);
-            //             break;
-            //         }
-            //     }
-            // }
-            if (parseUrl().nw != 1 && !nid) {
+            this.updateMenu();//更新菜单栏
+            this.updateSubMenu();//更新菜单栏
+            let nbid = localStorage.getItem(SAAS_CURRENT_LEVEL_TOP_MENU);
+            if (!nbid) {
                 if (this.menu && this.menu.length == 0) return;
-                this.updateCurrentSubMenu(this.menu[0]);
+                this.updateCurrentMenu(this.menu[0]);
             }
+
+            let nid = localStorage.getItem(SAAS_CURRENT_LEVEL_ONE_MENU);
+            if (!nid) {
+                if (this.submenu && this.submenu.length == 0) return;
+                this.updateCurrentSubMenu(this.submenu[0]);
+            }
+
         },
 
         computed: {
             menu() {
-                return JSON.parse(localStorage.getItem('SAAS_MENU'))
+                return this.Menu;
+            },
+            submenu() {
+                return this.SubMenu;
             },
             TrueName() {
                 return this.userInfo.TrueName
             },
-            workNo() {
-                return this.userInfo.WorkNo
+            CardImgUrl() {
+                return this.userInfo && this.userInfo.CardImgUrl
             },
             ...mapState({
                 duration: state => state.navbar.callDuration,
@@ -109,24 +116,42 @@
             })
         },
         watch: {
-            extStatusId: function (val) {
-                this.setExtStatus(val);
-            }
+            //切换路由时更新菜单栏 防止用户改变url
+            "$route": ['updateMenu', 'updateSubMenu'],
         },
         methods: {
-            onMessageList() {
-                this.$router.push({path: '/messageList'})
+            //更新菜单栏
+            updateMenu() {
+                this.Menu = JSON.parse(localStorage.getItem('SAAS_MENU'));
+            },
+            updateSubMenu() {
+                this.SubMenu = JSON.parse(localStorage.getItem('SAAS_CURRENT_MENU'));
             },
             handleClick(tab) {
-                for (let i in this.menu) {
-                    if (tab.name == this.menu[i].NavigationId) {
-                        if (this.menu[i].Path == 130520) {
-                            location.href = this.menu[i].Url
+                for (let i in this.submenu) {
+                    if (tab.name == this.submenu[i].NavigationId) {
+                        if (this.submenu[i].Path == 180302) {
+                            location.href = this.submenu[i].Url
                         } else {
-                            this.updateCurrentSubMenu(this.menu[i]);
+                            this.updateCurrentSubMenu(this.submenu[i]);
                         }
                         return;
                     }
+                }
+            },
+            updateCurrentMenu(item) {
+                if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
+                    let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
+                    let path = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
+                    let NavigationId = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
+                    this.$router.push({
+                        path,
+                    });
+                    setTimeout(() => {
+                        this.$store.dispatch('updateCurrentTabId', NavigationId);
+                    }, 0)
+                } else {
+                    this.afterFunction();
                 }
             },
             updateCurrentSubMenu(item) {

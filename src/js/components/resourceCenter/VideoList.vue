@@ -37,7 +37,7 @@
                         <div class="input-search">
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
                                       :on-icon-click="handleIconClick"></el-input>
-                            <el-button type="primary" size="small">
+                            <el-button type="primary" size="small" v-if="unlocking('VIDEO_CREATE')">
                                 <router-link to="/resource/video/create">新增视频</router-link>
                             </el-button>
                         </div>
@@ -64,10 +64,10 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
-                        <!--<el-button type="text">预览</el-button>-->
-                        <el-button type="text" @click="didClickEdit(scope)">修改</el-button>
-                        <el-button type="text">删除</el-button>
-                        <!--<el-button type="text">使用统计</el-button>-->
+                        <el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_DELETE')">删除</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -129,17 +129,11 @@
                 this.loadResources()
             },
 
-<<<<<<< HEAD
-            fetchResources() {
-
-=======
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
                 this.$router.push({name: "editVideo", params: {id: scope.row.id}})
             },
-
             async fetchResources() {
->>>>>>> feature-resource
                 let parameters = {
                     page_size: this.pageSize,
                     page: this.currentPage,
@@ -157,23 +151,17 @@
                 console.error(r)
                 return r
             },
-
             async loadResources() {
                 this.loading = true
                 let resourceResponse = await this.fetchResources()
-
                 let resources = resourceResponse.result
                 for (var resource of resources.resources) {
-
-
                     resource.created_at = new Date(resource.created_at)
                     resource.updated_at = this.formatDate(new Date(resource.updated_at))
                     resource.project_name = (resource.tag == null) ? "" : resource.tag.name
 
                 }
-
                 this.resource = resources
-
                 let total = this.resource.pagination.total;
                 if (this.paginationTotal == 0)
                     this.paginationTotal = total
@@ -181,17 +169,11 @@
                 this.loading = false
             },
 
-<<<<<<< HEAD
-            didChangePage(currentPage) {
-                this.currentPage = currentPage;
-=======
             formatDate(date) {
                 return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDay() +
                     " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
             },
-
             async didChangePage(page) {
->>>>>>> feature-resource
                 this.loadResources()
             },
 
