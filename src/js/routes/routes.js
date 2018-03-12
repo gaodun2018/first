@@ -131,6 +131,23 @@ export default [
     },
     {
         "AppId": 180302,
+        "Title": "- 新增视频",
+        "NavigationId": 10009,
+        "ParentID": 0,
+        "Url": "/resource/video/edit/:id",
+        "Path": "components/resourceCenter/addVideo",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null,
+        "parenttitle": [
+            {name: "资源中心", url: ''},
+            {name: "视频管理", url: ''},
+            {name: "视频列表", url: '/VideoList'},
+            {name: "编辑视频", url: '/resource/video/edit/:id'},
+        ]
+    },
+    {
+        "AppId": 180302,
         "Title": "- 新增讲义",
         "NavigationId": 10009,
         "ParentID": 0,
