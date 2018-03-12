@@ -1,5 +1,5 @@
-import { post, get,zDelete } from '../util/zeusAxios';
-import { Message } from 'element-ui';
+import {post, get, zDelete} from '../util/zeusAxios';
+import {Message} from 'element-ui';
 import {getBaseUrl} from '../util/config'
 
 //查询资源列表
