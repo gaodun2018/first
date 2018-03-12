@@ -1,6 +1,6 @@
 export default [
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "登陆",
         "NavigationId": 10000,
         "ParentID": 0,
@@ -12,9 +12,9 @@ export default [
         "Level": 1
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "404",
-        "NavigationId": 10009,
+        "NavigationId": 10001,
         "ParentID": 0,
         "Url": "*",
         "Path": "components/Page404",
@@ -24,9 +24,9 @@ export default [
         "Level": 1
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "修改密码",
-        "NavigationId": 10001,
+        "NavigationId": 10002,
         "ParentID": 0,
         "Url": "/updatePwd",
         "Path": "containers/UpdatePwd",
@@ -36,9 +36,9 @@ export default [
         "Level": 1
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "- 财经云",
-        "NavigationId": 10000,
+        "NavigationId": 10003,
         "ParentID": 0,
         "Url": "/home",
         "Path": "containers/Home",
@@ -48,9 +48,9 @@ export default [
         "Level": 1
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "编辑课程大纲",
-        "NavigationId": 10000,
+        "NavigationId": 10004,
         "ParentID": 0,
         "Url": "/CourseOutlineManage/CourseOutline",
         "Path": "components/CourseOutlineManage/CourseOutline",
@@ -65,9 +65,9 @@ export default [
     },
 
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "课程大纲模块",
-        "NavigationId": 10000,
+        "NavigationId": 10005,
         "ParentID": 0,
         "Url": "/CourseOutlineManage/CourseModule/",
         "Path": "components/CourseOutlineManage/CourseModule",
@@ -81,9 +81,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "课程基本设置",
-        "NavigationId": 10000,
+        "NavigationId": 10006,
         "ParentID": 0,
         "Url": "/CourseSet",
         "Path": "components/CourseManage/CourseSet",
@@ -97,9 +97,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "课程内容",
-        "NavigationId": 10000,
+        "NavigationId": 10007,
         "ParentID": 0,
         "Url": "/CourseContent",
         "Path": "components/CourseManage/CourseContent",
@@ -113,9 +113,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "- 新增视频",
-        "NavigationId": 10000,
+        "NavigationId": 10008,
         "ParentID": 0,
         "Url": "/resource/video/create",
         "Path": "components/resourceCenter/addVideo",
@@ -130,9 +130,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "- 新增讲义",
-        "NavigationId": 10000,
+        "NavigationId": 10009,
         "ParentID": 0,
         "Url": "/addHandout",
         "Path": "components/resourceCenter/addHandout",
@@ -147,9 +147,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "- 新增知识点",
-        "NavigationId": 10000,
+        "NavigationId": 10010,
         "ParentID": 0,
         "Url": "/addHandout",
         "Path": "components/resourceCenter/AddKnowledge",
@@ -164,9 +164,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "- 编辑知识点",
-        "NavigationId": 10000,
+        "NavigationId": 10011,
         "ParentID": 0,
         "Url": "/editKnowledge",
         "Path": "components/resourceCenter/EditKnowledge",
@@ -181,9 +181,9 @@ export default [
         ]
     },
     {
-        "AppId": 130555,
+        "AppId": 180302,
         "Title": "EP课程学习数据统计",
-        "NavigationId": 10000,
+        "NavigationId": 10012,
         "ParentID": 0,
         "Url": "/EducationalClass",
         "Path": "containers/EducationalClass",
