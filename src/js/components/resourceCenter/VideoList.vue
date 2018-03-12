@@ -56,18 +56,16 @@
                 </el-table-column>
                 <el-table-column prop="duration" label="时长" min-width="100">
                 </el-table-column>
-                <el-table-column prop="project" label="项目" min-width="115">
-                </el-table-column>
-                <el-table-column prop="" label="引用数" min-width="115">
+                <el-table-column prop="project_name" label="项目" min-width="115">
                 </el-table-column>
                 <el-table-column prop="updated_at" label="更新时间" min-width="150">
                 </el-table-column>
-                <el-table-column prop="creator" label="操作员" min-width="150">
+                <el-table-column prop="creator.username" label="操作员" min-width="150">
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
                         <el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>
-                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')">修改</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改</el-button>
                         <el-button type="text" v-if="unlocking('VIDEO_DELETE')">删除</el-button>
                         <el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>
                     </template>
@@ -80,8 +78,7 @@
                 <el-pagination
                     @size-change="didChangePageSize"
                     @current-change="didChangePage"
-                    :current-page.sync="currentPage"
-                    :page-sizes="[1, 200, 300, 400]"
+                    :page-sizes="[50, 200, 300, 400]"
                     :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="paginationTotal"
@@ -117,7 +114,7 @@
                 tags: [],
                 currentPage: 1,
                 paginationTotal: 0,
-                pageSize: 1,
+                pageSize: 50,
                 loading: false
             }
         },
@@ -131,8 +128,11 @@
                 this.clversm = reid;
                 this.loadResources()
             },
-
-            fetchResources() {
+            didClickEdit(scope) {
+                console.log('navigate to edit video ' + scope.row.id)
+                this.$router.push({name: "editVideo", params: {id: scope.row.id}})
+            },
+            async fetchResources() {
                 let parameters = {
                     page_size: this.pageSize,
                     page: this.currentPage,
@@ -146,34 +146,45 @@
                     parameters.tag_id = this.clversm
                 }
 
-                return getResource(parameters)
+                let r = await getResource(parameters)
+                console.error(r)
+                return r
             },
-
             async loadResources() {
                 this.loading = true
                 let resourceResponse = await this.fetchResources()
-                this.resource = resourceResponse.result
+                let resources = resourceResponse.result
+                for (var resource of resources.resources) {
+                    resource.created_at = new Date(resource.created_at)
+                    resource.updated_at = this.formatDate(new Date(resource.updated_at))
+                    resource.project_name = (resource.tag == null) ? "" : resource.tag.name
 
+                }
+                this.resource = resources
                 let total = this.resource.pagination.total;
                 if (this.paginationTotal == 0)
                     this.paginationTotal = total
                 this.tags = this.resource.tags
                 this.loading = false
             },
-
+            formatDate(date) {
+                return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDay() +
+                    " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
+            },
             async didChangePage(page) {
                 this.loadResources()
             },
 
-            didChangePageSize() {
-
+            didChangePageSize(pageSize) {
+                this.pageSize = pageSize;
+                this.loadResources()
             }
         },
         computed: {},
         mounted() {
         },
         async created() {
-            this.loadResources()
+            await this.loadResources()
         }
     }
 </script>

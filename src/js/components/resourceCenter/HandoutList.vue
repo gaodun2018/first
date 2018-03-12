@@ -63,8 +63,8 @@
         </el-table-column>
         <el-table-column prop="type" label="类型" min-width="110">
         </el-table-column>
-        <el-table-column prop="num" label="引用数" min-width="110">
-        </el-table-column>
+        <!--<el-table-column prop="num" label="引用数" min-width="110">
+        </el-table-column>-->
         <el-table-column prop="updatetime" label="更新时间" min-width="150">
         </el-table-column>
         <el-table-column prop="dong" label="操作员" min-width="150">
