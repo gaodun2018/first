@@ -1,9 +1,9 @@
-import { CRM_USER_INFO, CRM_CURRENT_LEVEL_ONE_MENU, CRM_CURRENT_SUBMENU, CRM_MENU } from '../util/keys';
+import { SAAS_USER_INFO, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_CURRENT_SUBMENU, SAAS_MENU } from '../util/keys';
 
 export default {
     install(Vue, options) {
         Vue.prototype.unlocking = (key) => {
-            let userInfo = localStorage.getItem(CRM_USER_INFO);
+            let userInfo = localStorage.getItem(SAAS_USER_INFO);
             userInfo = JSON.parse(userInfo);
             if (userInfo) {
                 var { SysFunctions } = userInfo;
@@ -28,7 +28,7 @@ export default {
             return false;
         }
         Vue.prototype.printClass = (key) => {
-            let userInfo = localStorage.getItem(CRM_USER_INFO);
+            let userInfo = localStorage.getItem(SAAS_USER_INFO);
             let print = '';
             
             userInfo = JSON.parse(userInfo);
@@ -60,7 +60,7 @@ export default {
 
         }
         Vue.prototype.push = ({ path, context }) => {
-            let menu = JSON.parse(localStorage.getItem(CRM_MENU));
+            let menu = JSON.parse(localStorage.getItem(SAAS_MENU));
             let matchingPath = (m) => {
                 for (let i in m) {
                     if (m[i].Url == path) {

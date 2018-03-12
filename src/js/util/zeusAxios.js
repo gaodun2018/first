@@ -1,11 +1,11 @@
 import axios from 'axios';
 import {getEnv, getBaseUrl} from '../util/config';
-import {CRM_TOKEN, CRM_USER_INFO} from './keys';
+import {SAAS_TOKEN, SAAS_USER_INFO} from './keys';
 import {getCookie, setCookie} from 'cookieUtils';
 import {Message} from 'element-ui';
 
 let prefix = getEnv();
-let userInfo = localStorage.getItem(CRM_USER_INFO);
+let userInfo = localStorage.getItem(SAAS_USER_INFO);
 if (userInfo) {
     userInfo = JSON.parse(userInfo);
 }

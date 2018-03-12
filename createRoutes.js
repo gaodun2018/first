@@ -41,10 +41,10 @@ let loadTreeData = () => {
 let readCustom = new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, '/src/js/routes/index.json'), 'utf-8', (err, data) => {
         customRoutes = JSON.parse(data);
-        resolve(customRoutes)
-        /*loadTreeData().then(value => {
+        // resolve(customRoutes)   //无接口开发模式
+        loadTreeData().then(value => {
             resolve(value.result.concat(...customRoutes));
-        })*/
+        })
     })
 });
 readCustom.then((data) => {

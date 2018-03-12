@@ -1,5 +1,5 @@
 import { ADD_TABS, REMOVE_TAB, SELECTED_TABLE, ADD_HOME, GET_USER_TREE } from '../mutation-types'; // 'ADD' , 'SUBTRACT'
-import { CRM_CURRENT_TAB, CRM_OPEN_TABS } from '../../util/keys';
+import { SAAS_CURRENT_TAB, SAAS_OPEN_TABS } from '../../util/keys';
 const state = {
     addTabs: [], // 添加Tab标签
     currentTab: '488', // 显示当前的Tab
@@ -25,7 +25,7 @@ const actions = {
     },
     updateCurrentTab({ commit, state }, pageId) {
         state.currentTab = pageId;
-        sessionStorage.setItem(CRM_CURRENT_TAB, state.currentTab);
+        sessionStorage.setItem(SAAS_CURRENT_TAB, state.currentTab);
     },
     getUserTree({ commit, state, dispatch }, tree) { // 人员树
         commit(GET_USER_TREE, tree);
@@ -52,10 +52,10 @@ const mutations = {
         let res = isInArray(state.addTabs, add);
         if (res === 0) {
             state.addTabs.push(add);
-            sessionStorage.setItem(CRM_OPEN_TABS, JSON.stringify(state.addTabs));
+            sessionStorage.setItem(SAAS_OPEN_TABS, JSON.stringify(state.addTabs));
         }
         state.currentTab = add.NavigationId;
-        sessionStorage.setItem(CRM_CURRENT_TAB, state.currentTab);
+        sessionStorage.setItem(SAAS_CURRENT_TAB, state.currentTab);
     },
     [ADD_HOME](state, add) {
         state.addHome.push(add);
@@ -71,12 +71,12 @@ const mutations = {
                 let nextTab = state.addTabs[index + 1] || state.addTabs[index - 1];
                 if (nextTab) {
                     state.currentTab = nextTab.NavigationId;
-                    sessionStorage.setItem(CRM_CURRENT_TAB, state.currentTab);
+                    sessionStorage.setItem(SAAS_CURRENT_TAB, state.currentTab);
                 }
                 return;
             }
         });
-        sessionStorage.setItem(CRM_OPEN_TABS, JSON.stringify(state.addTabs));
+        sessionStorage.setItem(SAAS_OPEN_TABS, JSON.stringify(state.addTabs));
     },
     [SELECTED_TABLE](state, table) {
         state.selectedTable = table;

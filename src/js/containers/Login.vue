@@ -52,11 +52,11 @@
 </template>
 
 <script>
-    import {userLogin} from "../api/loginFrom.js";
+    import {userLogin,getCurrentUserMenuTree} from "../api/login.js";
     import {appid} from "../common/config.js";
     import {getEnv} from '../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
-    import {SAAS_USER_INFO,CRM_MENU, FORMAT_MENU} from '../util/keys.js'
+    import {SAAS_USER_INFO,SAAS_MENU, FORMAT_MENU} from '../util/keys.js'
     import routesMenu from '../routes/routes'
     import KMENU from '../common/KMENU'
     let prefix = getEnv();
@@ -95,20 +95,39 @@
                             });
                             return;
                         }
-
                         //获取菜单树
-                        //转换赋值
-                        let data = KMENU;
-                        let str = JSON.stringify(data);
-                        let data1 = JSON.parse(str);
+                        let menuRet = await getCurrentUserMenuTree({
+                            appId: appid,
+                            GDSID: GDSID,
+                        });
+                        this.loading = false;
+                        if (menuRet.status === 0) {
+                            this.reWriteEmptyUrl(menuRet.result.Tpo_Sys_Navigations);
+                            localStorage.setItem(SAAS_MENU, JSON.stringify(menuRet.result.Tpo_Sys_Navigations));
+                            //转换赋值
+                            let menuData = menuRet.result.Tpo_Sys_Navigations;
+                            let menuStr = JSON.stringify(menuData);
+                            let menuData1 = JSON.parse(menuStr);
+                            let routesMenus = [...menuData1, ...routesMenu]
+                            //格式化菜单
+                            this.formatRoute(routesMenus);
 
-                        this.reWriteEmptyUrl(KMENU);
-                        localStorage.setItem(CRM_MENU, JSON.stringify(KMENU));
-                        let routesMenus = [...data1, ...routesMenu]
+                            // if(loginRet.result.PwdType==0){
+                                if(response.data.result.HomePage==''){
+                                    this.$router.push({ path: '/home' })
+                                }
+                                else{
+                                    this.$router.push({ path: response.data.result.HomePage })
+                                }
+                            // }
+                            // else{
+                            //     this.$router.push({ path: '/updatePwd?NavigationId=520&nw=1'})
+                            // }
+                        } else {
+                            this.loading = false;
+                            return;
+                        }
 
-                        this.formatRoute(routesMenus); //格式化菜单
-
-                        this.$router.push({path: '/home'});
                     }
                 });
 

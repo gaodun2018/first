@@ -68,7 +68,7 @@
   import Menu from './Menu.vue';
   import Breadcrumb from './Breadcrumb.vue';
   import {messageTitle} from '../util/util';
-  import {CRM_MENU, CRM_USER_INFO, CRM_TOKEN} from '../util/keys';
+  import {SAAS_MENU, SAAS_USER_INFO, SAAS_TOKEN} from '../util/keys';
   import {getCookie, setCookie} from 'cookieUtils';
   import {mapState} from 'vuex';
   import {parseUrl} from 'base';
@@ -95,7 +95,7 @@
     methods: {
       loadMessage() {
         let prefix = getEnv();
-        let userInfo = localStorage.getItem(CRM_USER_INFO);
+        let userInfo = localStorage.getItem(SAAS_USER_INFO);
         userInfo && (userInfo = JSON.parse(userInfo));
         let script = document.createElement('script');
         script.type = "text/javascript";
@@ -145,7 +145,7 @@
         });
       },
       mapMenuToWindow() {
-        let menu = localStorage.getItem(CRM_MENU);
+        let menu = localStorage.getItem(SAAS_MENU);
         window.Menu = JSON.parse(menu);
       },
       mapPageIdToWindow() {

@@ -133,7 +133,7 @@
     import {getCookie, setCookie} from 'cookieUtils';
     import {userLogin, getToken, getLoginUserInfo, getCurrentUserMenuTree} from '../api/login';
     import {stringify} from 'queryString';
-    import {CRM_MENU, CRM_USER_INFO, CRM_TOKEN, FORMAT_MENU} from '../util/keys';
+    import {SAAS_MENU, SAAS_USER_INFO, SAAS_TOKEN, FORMAT_MENU} from '../util/keys';
     import {getEnv} from '../util/config';
     import {parseUrl} from 'base';
 
@@ -209,7 +209,7 @@
                     setCookie(`${prefix}GDSID`, undefined, {
                         expires: exp
                     })
-                    // sessionStorage.clear(CRM_OPEN_TABS);
+                    // sessionStorage.clear(SAAS_OPEN_TABS);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 488;
                     window.crmSocket && window.crmSocket.disconnect();
