@@ -63,18 +63,18 @@
         </el-table-column>
         <el-table-column prop="type" label="类型" min-width="110">
         </el-table-column>
-        <el-table-column prop="num" label="引用数" min-width="110">
-        </el-table-column>
+        <!--<el-table-column prop="num" label="引用数" min-width="110">
+        </el-table-column>-->
         <el-table-column prop="updatetime" label="更新时间" min-width="150">
         </el-table-column>
         <el-table-column prop="dong" label="操作员" min-width="150">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" min-width="240">
           <template scope="scope">
-            <el-button type="text">预览</el-button>
+           <!-- <el-button type="text">预览</el-button>-->
             <el-button type="text">修改</el-button>
             <el-button type="text">删除</el-button>
-            <el-button type="text">使用统计</el-button>
+            <!--<el-button type="text">使用统计</el-button>-->
           </template>
         </el-table-column>
       </el-table>

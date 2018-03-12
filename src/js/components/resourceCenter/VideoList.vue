@@ -58,18 +58,18 @@
                 </el-table-column>
                 <el-table-column prop="project" label="项目" min-width="115">
                 </el-table-column>
-                <el-table-column prop="" label="引用数" min-width="115">
-                </el-table-column>
+                <!--<el-table-column prop="" label="引用数" min-width="115">
+                </el-table-column>-->
                 <el-table-column prop="updated_at" label="更新时间" min-width="150">
                 </el-table-column>
                 <el-table-column prop="creator" label="操作员" min-width="150">
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
-                        <el-button type="text">预览</el-button>
+                        <!--<el-button type="text">预览</el-button>-->
                         <el-button type="text">修改</el-button>
                         <el-button type="text">删除</el-button>
-                        <el-button type="text">使用统计</el-button>
+                        <!--<el-button type="text">使用统计</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -80,8 +80,7 @@
                 <el-pagination
                     @size-change="didChangePageSize"
                     @current-change="didChangePage"
-                    :current-page.sync="currentPage"
-                    :page-sizes="[1, 200, 300, 400]"
+                    :page-sizes="[50, 200, 300, 400]"
                     :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="paginationTotal"
@@ -117,7 +116,7 @@
                 tags: [],
                 currentPage: 1,
                 paginationTotal: 0,
-                pageSize: 1,
+                pageSize: 50,
                 loading: false
             }
         },
@@ -133,6 +132,7 @@
             },
 
             fetchResources() {
+
                 let parameters = {
                     page_size: this.pageSize,
                     page: this.currentPage,
@@ -161,12 +161,14 @@
                 this.loading = false
             },
 
-            async didChangePage(page) {
+            didChangePage(currentPage) {
+                this.currentPage = currentPage;
                 this.loadResources()
             },
 
-            didChangePageSize() {
-
+            didChangePageSize(pageSize) {
+                this.pageSize = pageSize;
+                this.loadResources()
             }
         },
         computed: {},

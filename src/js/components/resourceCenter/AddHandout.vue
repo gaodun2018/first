@@ -26,9 +26,9 @@
           <el-input v-model="ruleForm.name"  auto-complete="off" class="w_60"></el-input>
           <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button>
         </el-form-item>
-        <el-form-item label="知识点关联" prop="name">
+        <!--<el-form-item label="知识点关联" prop="name">
           <el-button type="text" @click="selectknowledge">选择知识点</el-button>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
           <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
