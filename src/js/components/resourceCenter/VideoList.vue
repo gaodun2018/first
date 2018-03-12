@@ -129,17 +129,13 @@
                 this.loadResources()
             },
 
-<<<<<<< HEAD
-            fetchResources() {
 
-=======
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
                 this.$router.push({name: "editVideo", params: {id: scope.row.id}})
             },
 
             async fetchResources() {
->>>>>>> feature-resource
                 let parameters = {
                     page_size: this.pageSize,
                     page: this.currentPage,
@@ -181,17 +177,13 @@
                 this.loading = false
             },
 
-<<<<<<< HEAD
-            didChangePage(currentPage) {
-                this.currentPage = currentPage;
-=======
+
             formatDate(date) {
                 return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDay() +
                     " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
             },
 
             async didChangePage(page) {
->>>>>>> feature-resource
                 this.loadResources()
             },
 
