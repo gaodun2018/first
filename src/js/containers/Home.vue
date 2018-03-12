@@ -1,17 +1,13 @@
 <template>
     <div class="home">
         <div class="header">
-            <div class="w_1200 clear">
+            <div class="w_1200 clear" style="max-width: 1200px;width: 100%;">
                 <a href="javascript:;" class="logo left"></a>
-                <!-- <div class="head_login right" v-if="loginFlag" @click="dialogFormVisible = true">
-                   <span>登录</span>
-                 </div>-->
-                <!--<div class="user right" v-if="!loginFlag">-->
                 <div class="user right">
                     <el-dropdown trigger="hover" @command="handleCommands">
                         <span class="el-dropdown-link-2">
-                            <img class="user_icon" src="../../images/default_icon.png" alt="头像">
-                            <span class="user_name">超级管理员,Alan</span>
+                            <img class="user_icon" :src="CardImgUrl" alt="头像">
+                            <span class="user_name">{{TrueName}}</span>
                             <i class="el-icon-caret-bottom el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -26,49 +22,22 @@
             <div class="w_1200">
                 <h3 class="banner_titt">高顿教育-财经云</h3>
                 <h4 class="banner_titb">提供教学活动和教育资源管理、分析的一体化解决方案</h4>
-                <!--<a href="javascript:;" class="login ban_btn" v-if="loginFlag" @click="dialogFormVisible = true">登录</a>-->
-                <!--<router-link to="/index" v-if="!loginFlag" class="goIn ban_btn">进入</router-link>-->
-                <!--<router-link to="/index" class="goIn ban_btn">进入</router-link>-->
             </div>
         </div>
         <div class="contentHome">
-            <div class="w_1200">
-                <div class="contentBox">
-                    <ul>
-                        <li
-                            class="item"
-                            v-for="(item,index) in menu"
-                            :key="item.NavigationId"
-                            @click="clickRouter(item)"
-                        >
-                            <span class="item-img" :id="item.Iconurl"></span>
-                            <span class="item-titt">{{item.Title}}</span>
-                            <span class="item-titb">{{item.Title}}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <ul class="console-menu clear">
+                <li
+                    class="console-menu-items"
+                    v-for="(item,index) in menu"
+                    :key="item.NavigationId"
+                    @click="clickRouter(item)"
+                >
+                    <span class="item-icon" :id="item.Iconurl"></span>
+                    <span class="item-title">{{item.Title}}</span>
+                    <span class="item-sub-title">Custom Relation Management</span>
+                </li>
+            </ul>
         </div>
-        <!-- <el-dialog title="高顿教育 | 财经云" :visible.sync="dialogFormVisible" :show-close="false" modal="true"
-                    lock-scroll="true">
-             <el-form :model="ruleForm" :rules="rules" autoComplete="on" ref="ruleForm">
-                 <el-form-item label="" prop="name" placeholder="账号">
-                     <el-input icon="erp-yonghu" v-model="ruleForm.Account" @keyup.enter.native="submitForm('ruleForm')"
-                               autoComplete="on"></el-input>
-                 </el-form-item>
-                 <el-form-item label="" prop="pass" placeholder="密码">
-                     <el-input type="password" icon="erp-mima" v-model="ruleForm.Password"
-                               @keyup.enter.native="submitForm('ruleForm')" autoComplete="on"></el-input>
-                 </el-form-item>
-                 <el-checkbox v-model="ruleForm.checked">记住密码</el-checkbox>
-             </el-form>
-             <div slot="footer" class="dialog-footer">
-                 <el-button type="primary" size="large" :loading="loading"
-                            @click.native.prevent="submitForm('ruleForm')">
-                     {{loading ? '登录中' : '登录'}}
-                 </el-button>
-             </div>
-         </el-dialog>-->
     </div>
 </template>
 
@@ -84,7 +53,6 @@
 
     let prefix = getEnv();
     import routesMenu from '../routes/routes'
-    import KMENU from '../common/KMENU'
 
     export default {
         data: function () {
@@ -100,27 +68,36 @@
                 loginFlag: true
             }
         },
+        created() {
+            this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
+
+        },
         computed: {
             menu() {
                 return JSON.parse(localStorage.getItem('SAAS_MENU'))
-            }
+            },
+            TrueName() {
+                return this.userInfo&&this.userInfo.TrueName
+            },
+            CardImgUrl (){
+                return this.userInfo&&this.userInfo.CardImgUrl
+            },
         },
         methods: {
             clickRouter(item) {
-                console.log(item);
                 for (let i in this.menu) {
                     if (item.NavigationId == this.menu[i].NavigationId) {
                         if (this.menu[i].Path == 180302) {
                             // location.href = this.menu[i].Url
                             window.open(this.menu[i].Url)
                         } else {
-                            this.updateCurrentSubMenu(this.menu[i]);
+                            this.updateCurrentMenu(this.menu[i]);
                         }
                         return;
                     }
                 }
             },
-            updateCurrentSubMenu(item) {
+            updateCurrentMenu(item) {
                 //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
                 if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
                     let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
@@ -131,52 +108,17 @@
                     this.$router.push({
                         path,
                     });
-                    // setTimeout(() => {
-                    //     this.$store.dispatch('updateCurrentTabId', NavigationId);
-                    // }, 0)
+                    setTimeout(() => {
+                        this.$store.dispatch('updateCurrentTabId', NavigationId);
+                    }, 0)
+                }else{
+                    this.afterFunction();
                 }
             },
             afterFunction() {
                 this.$message({
                     message: '后续功能正在开发中~~'
                 })
-            },
-            openEDU() {
-                window.open(`//${prefix}eds.gaodun.com`)
-            },
-            openCRM() {
-                window.open(`//${prefix}baiyi.gaodun.com/#/stage?to=/index`)
-            },
-            //格式化菜单树 => 面包屑菜单
-            formatRoute(menu, Title) {
-                let menuarr = [];
-
-                function createRoutes(menu, Item) {
-                    console.log('create routes')
-                    console.log(menu)
-                    for (let i in menu) {
-                        menu[i].parenttitle = menu[i].parenttitle ? menu[i].parenttitle : [{
-                            name: menu[i].Title,
-                            url: menu[i].Url
-                        }];
-                        if (Item) {
-                            menu[i].parenttitle = [...Item, ...menu[i].parenttitle]
-                        }
-                        menuarr.push(menu[i])
-
-                        if (menu[i].ChildNavigations) {
-                            createRoutes(menu[i].ChildNavigations, menu[i].parenttitle);
-                        }
-                    }
-                }
-
-                console.log('format route')
-                console.log(menuarr);
-                createRoutes(menu, Title)
-                if (localStorage.getItem(FORMAT_MENU) == undefined) {
-                    localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));
-                }
-                // localStorage.setItem(FORMAT_MENU, JSON.stringify(menuarr));    //2017-12-20 11:48:46 修改
             },
             handleCommands(command) {
                 let prefix = getEnv();
@@ -209,9 +151,6 @@
                 }
             },
 
-
-        },
-        async created() {
 
         },
         mounted() {

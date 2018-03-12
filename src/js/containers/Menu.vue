@@ -39,7 +39,7 @@
     Vue.component(MenuItem.name, MenuItem);
     Vue.component(MenuItemGroup.name, MenuItemGroup);
     export default {
-        name:'crm-menu',
+        name:'saas-menu',
         computed:{
             ...mapState({
                 menu: state=> state.navigation.currentSubMenu

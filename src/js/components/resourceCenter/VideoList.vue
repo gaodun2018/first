@@ -37,7 +37,7 @@
                         <div class="input-search">
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
                                       :on-icon-click="handleIconClick"></el-input>
-                            <el-button type="primary" size="small">
+                            <el-button type="primary" size="small" v-if="unlocking('VIDEO_CREATE')">
                                 <router-link to="/resource/video/create">新增视频</router-link>
                             </el-button>
                         </div>
@@ -66,10 +66,10 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
-                        <el-button type="text">预览</el-button>
-                        <el-button type="text">修改</el-button>
-                        <el-button type="text">删除</el-button>
-                        <el-button type="text">使用统计</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')">修改</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_DELETE')">删除</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>
                     </template>
                 </el-table-column>
             </el-table>

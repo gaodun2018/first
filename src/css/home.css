@@ -88,6 +88,7 @@
     height: 100%;
     padding-top: 6px;
     box-sizing: border-box;
+    line-height: 36px;
 }
 
 .home .user .user_icon {
@@ -167,28 +168,37 @@
     margin-top: 51px;
 }
 
+.contentHome {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
 .contentBox {
     padding-bottom: 100px /*随意写的*/
 }
 
-.item {
+.console-menu-items {
     width: 120px;
+    height: 188px;
     float: left;
-    margin-left: 66px;
-    margin-right: 113px;
+    margin-left: 64px;
+    margin-right: 115px;
     margin-top: 53px;
     margin-bottom: 29px;
+    cursor: pointer;
+    position: relative;
 }
 
-.item:hover {
+.console-menu-items:hover {
     /*box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.42), 0 0 12px 0 rgba(0, 0, 0, 0.34);*/
 }
 
-.item span {
+.console-menu-items span {
     display: block;
 }
 
-.item .item-img {
+.console-menu-items .item-icon {
     display: table-cell;
     width: 120px;
     height: 120px;
@@ -196,54 +206,58 @@
     box-shadow: 0 0 8px 0 rgba(206, 209, 210, 0.5);
     text-align: center;
     vertical-align: middle;
-    cursor: pointer;
 }
-#icon-resourcecenter{
+
+#icon-resourcecenter {
     background: url("../images/financeHome/icon_resourcecenter.png") no-repeat center;
 }
-#icon-crm{
+
+#icon-crm {
     background: url("../images/financeHome/icon_crm.png") no-repeat center;
 }
-#icon-eds{
+
+#icon-eds {
     background: url("../images/financeHome/icon_eds.png") no-repeat center;
 }
-#icon-product{
+
+#icon-product {
     background: url("../images/financeHome/icon_product.png") no-repeat center;
 }
-#icon-permission{
+
+#icon-permission {
     background: url("../images/financeHome/icon_permission.png") no-repeat center;
 }
-#icon-business{
+
+#icon-business {
     background: url("../images/financeHome/icon_business.png") no-repeat center;
 }
 
-.item .item-titt {
+.console-menu-items .item-title {
     width: 100%;
     height: 22px;
     line-height: 22px;
-    font-family: PingFangSC;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
     color: #3e424e;
-    cursor: pointer;
     margin-top: 18px;
 }
 
-.item .item-titb {
-    width: 194px;
-    height: 20px;
-    letter-spacing: -1px;
+.console-menu-items .item-sub-title {
     line-height: 20px;
-    font-family: PingFangSC;
     font-size: 14px;
     font-weight: 300;
     text-align: center;
     color: #3e424e;
-    margin-top: 8px;
-    position: relative;
-    cursor: pointer;
-    left: -38px;
+    padding: 0 4px;
+    position: absolute;
+    bottom: 0;
+    white-space: nowrap;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+
 }
 
 .home .el-dialog.el-dialog--small {

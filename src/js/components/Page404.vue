@@ -20,6 +20,9 @@
 <script>
     export default {
         data() {
+            return{
+                //UI组件也需要加return
+            }
         },
         computed: {
             message() {

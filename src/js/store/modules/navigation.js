@@ -9,16 +9,20 @@ import {
 } from '../../util/keys';
 
 const state = {
+    currentLevelTopId: 0,//顶级菜单id
     currentLevelOneId: 9,
     currentSubMenu: [],
     currentTabId: 0,
-    extStatusId: 0,
-    extStatusName: "",
     breadcrumbmenu: '',     //面包屑菜单
 };
 const getters = {}
 // 方法调用逻辑
 const actions = {
+    // 初始化顶级菜单选中的ID
+    initCurrentLevelTopId() {
+        let id = localStorage.getItem(SAAS_CURRENT_LEVEL_TOP_MENU);
+        id && (state.currentLevelTopId = id);
+    },
     // 初始化一级菜单选中的ID
     initCurrentLevelOneId() {
         let id = localStorage.getItem(SAAS_CURRENT_LEVEL_ONE_MENU);
@@ -26,34 +30,25 @@ const actions = {
     },
     // 更新一级菜单
     updateCurrentMenu({commit, state}, nbid) {
-        console.log(nbid, '控制台顶级菜单id');
         let saasMenu = JSON.parse(localStorage.getItem(SAAS_MENU));
         let MenuId = nbid || localStorage.getItem(SAAS_CURRENT_LEVEL_TOP_MENU);
-
         for (var i in saasMenu) {
             if (saasMenu[i].NavigationId == MenuId) {
-                // console.log(crmMenu[i]);
                 commit(CURRENT_MENU, saasMenu[i]);
                 break;
             }
         }
-
     },
     // 更新二级菜单
     updateCurrentSubMenu({commit, state}, nid) {
-        console.log(nid);
         let saasCurrentMenu = JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU));
         let subMenuId = nid || localStorage.getItem(SAAS_CURRENT_LEVEL_ONE_MENU);
-        // console.log(subMenuId,'  subMenuId subMenuId');
         for (var i in saasCurrentMenu) {
-            // console.log(saasMenu[i].NavigationId, subMenuId ,'this is saasMenu[i].NavigationId == subMenuId');
             if (saasCurrentMenu[i].NavigationId == subMenuId) {
-                // console.log(crmMenu[i]);
                 commit(CURRENT_SUB_MENU, saasCurrentMenu[i]);
                 break;
             }
         }
-
     },
     //更新面包屑
     updateBreadcrumb({commit, state}, path) {
@@ -64,7 +59,6 @@ const actions = {
                 commit(BREADCRUMB_MENU, formatMenu[i].parenttitle);
             }
         }
-
     },
     updateCurrentTabId({commit, state}, id) {
         state.currentTabId = id;
@@ -79,7 +73,6 @@ const mutations = {
      * @param NavigationId { Number } 顶级菜单ID
      */
     [CURRENT_MENU](state, {ChildNavigations, NavigationId}) {
-        console.log(ChildNavigations, NavigationId);
         state.currentMenu = ChildNavigations;
         state.currentLevelTopId = NavigationId;
         localStorage.setItem(SAAS_CURRENT_MENU, JSON.stringify(state.currentMenu));

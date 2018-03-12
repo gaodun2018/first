@@ -10,11 +10,7 @@ export const SAAS_CURRENT_LEVEL_ONE_MENU = 'SAAS_CURRENT_LEVEL_ONE_MENU'; // 当
 
 export const SAAS_CURRENT_LEVEL_TOP_MENU = 'SAAS_CURRENT_LEVEL_TOP_MENU'; // 当前顶级菜单
 
-
-export const CRM_ORDER_PAGEID = '10000'; // 报名=> 订单
-export const CRM_CLUES_TRACKING = '10001'; // 线索跟进
-export const CRM_CLUES_DETAILS = '10002'; // 线索详情
-
+export const SAAS_USER_FUNCTIONS = 'SAAS_USER_FUNCTIONS'; //用户的功能权限
 
 export const SAAS_USER_INFO = 'SAAS_USER_INFO'; // 用户信息
 export const FORMAT_MENU = 'FORMAT_MENU'; //  格式化菜单
