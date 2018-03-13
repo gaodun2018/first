@@ -46,9 +46,6 @@ export const ChangeSyllabusItem = (id,params) => formPut(`${getBaseUrl()}apigate
 export const addSyllabusResource = (id,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/resource`, params);
 
 
-
-
-
 // 班级列表
 export const getClassListout = parameters => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/class/lists`, parameters);
 

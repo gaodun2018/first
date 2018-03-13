@@ -19,7 +19,7 @@
                 </el-form-item>
                 <el-form-item label="项目" prop="project" class="">
                     <el-select v-model="ruleForm.project" style="width: 150px;" :change="didChangeProjectSelection()">
-                        <el-option :label="tag.name" :value="tag.id" v-for="tag in tags"></el-option>
+                        <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
                     </el-select>
                     <el-select v-model="ruleForm.subject" style="width: 150px;">
                         <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
@@ -56,7 +56,7 @@
 </template>
 <script>
     import SelectKnowledge from './SelectKnowledge.vue'
-    import {getTags, getOneResource, storeResource} from '../../api/resource.js'
+    import {getTags, getOneResource, storeResource, viewResource} from '../../api/resource.js'
     export default {
         components: {
             SelectKnowledge
@@ -68,11 +68,13 @@
                 loading: false,
                 ruleForm: {
                     title: '',
-                    project: '',
+                    project: '116',
                     subject: '',
                     video_id: '',
                     duration_minute: '',
                     duration_second: '',
+                    description: '',
+                    partner_id: '1'
                 },
                 resourceFormRules: {
                     title: [
@@ -80,7 +82,7 @@
                         {min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur'}
                     ],
                     project: [
-                        {required: true, message: '请选择项目', trigger: 'change', type: 'number'}
+                        {required: true, message: '请选择项目', trigger: 'change'}
                     ],
                     subject: [
                         {required: true, message: '请选择科目', trigger: 'change'}
@@ -99,6 +101,18 @@
             }
         },
         methods: {
+            async initData(){
+                if(this.$route.params.id){  // 编辑
+                    let ret = await viewResource(this.$route.params.id);
+                    this.ruleForm.title = ret.result.resource.title;
+                    this.ruleForm.description = ret.result.resource.description;
+                    this.ruleForm.video_id = ret.result.resource.uri;
+                    this.ruleForm.duration_second = ret.result.resource.duration;
+                    this.ruleForm.project = '116';
+                    this.ruleForm.partner_id = ret.result.resource.partner_id;
+                }
+                return this.ruleForm;
+            },
             getSubjectByProjectId(projectId) {
                 var subjects = null
                 for (var project of this.tags) {
@@ -179,8 +193,10 @@
             this.loading = true
             this.id = this.$route.params.id
             this.resource = (await getOneResource(this.id)).result
-            this.tags = (await getTags('project', {partner_id: 1})).result
-            this.loading = false
+            let ret = await this.initData();
+            this.tags = (await getTags('project', {partner_id: ret.partner_id})).result;
+            this.loading = false;
+
         }
     }
 </script>

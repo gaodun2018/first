@@ -21,7 +21,7 @@
             <div class="can-work">
                 <el-dropdown trigger="hover" @command="handleCommands">
               <span class="el-dropdown-link-2">
-                <img class="user_icon" :src="CardImgUrl" alt="头像">
+                <img class="user_icon" :src="CardImgUrl" alt="头像" v-if="CardImgUrl">
                 <span class="user_name">{{TrueName}}</span>
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>

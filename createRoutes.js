@@ -41,7 +41,7 @@ let loadTreeData = () => {
 let readCustom = new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, '/src/js/routes/index.json'), 'utf-8', (err, data) => {
         customRoutes = JSON.parse(data);
-        // resolve(customRoutes)   //无接口开发模式
+        //resolve(customRoutes)   //无接口开发模式
         loadTreeData().then(value => {
             resolve(value.result.concat(...customRoutes));
         })
@@ -63,7 +63,7 @@ readCustom.then((data) => {
                     randomName = fileName + Math.random().toString().substr(2, 7);
                 }
                 if (process.argv[2] === 'dev') {
-                    strRequire += `// ${menu[i].Title}\nimport ${randomName} from '../${menu[i].Path}.vue';\n`;
+                    strRequire += `// ${menu[i].Title}${i}\nimport ${randomName} from '../${menu[i].Path}.vue';\n`;
                 } else {
                     strRequire += `// ${menu[i].Title}\nconst ${randomName} = resolve => {
     require.ensure(['../${menu[i].Path}.vue'], (require) => {

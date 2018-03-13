@@ -56,7 +56,7 @@
     import {appid} from "../common/config.js";
     import {getEnv} from '../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
-    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS} from '../util/keys.js'
+    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS,SAAS_TOKEN} from '../util/keys.js'
     let prefix = getEnv();
     export default {
         data: function () {
@@ -81,7 +81,7 @@
                             GDSID : GDSID
                         });
                         if (response.data.status == 0) {
-                            this.setCookie("token", response.headers.accesstoken, 2)
+                            this.setCookie(SAAS_TOKEN, response.headers.accesstoken, 2)
                             localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
                         } else {
                             this.$message({

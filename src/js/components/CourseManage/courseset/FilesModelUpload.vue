@@ -2,17 +2,18 @@
     <div class="FilesUpload">
         <el-row style="position: relative;">
             <el-button style="position: absolute;top: 5px;left: 100px;" size="small" type="" v-if="isShowDownload">
-                <a :href="fileList[0].response&&fileList[0].response.filePath" download="filename" style="color:#4db3ff">下载</a>
+                <a :href="fileList[0].response&&fileList[0].response.filePath" download="filename"
+                   style="color:#4db3ff">下载</a>
             </el-button>
             <el-col :span="12">
                 <el-upload
                     class="handout-upload"
-                    with-credentials
                     :action="materialUpload"
                     :on-change="handleChange"
                     :on-remove="handleRemove"
                     :on-success="handleAvatarSuccess"
                     :on-error="handleAvatarError"
+                    :headers="apiHeader"
                     :before-upload="beforeAvatarUpload"
                     :file-list="fileList">
                     <el-button size="small" type="primary" v-if="isShow(1)">点击上传文件</el-button>
@@ -25,13 +26,15 @@
     </div>
 </template>
 <style>
-    .handout-upload{
+    .handout-upload {
         width: 100%;
     }
 </style>
 <script>
     import {getBaseUrl, getEnv} from '../../../util/config';
     import vue from '../../../common/vue.js'
+    import {SAAS_TOKEN} from '../../../util/keys.js'
+    import {getCookie, setCookie} from 'cookieUtils';
 
     export default {
         components: {},
@@ -43,6 +46,7 @@
                 // fileList: [],
                 fileList: this.file == null ? [] : this.file,
                 imageUrl: '',
+                apiHeader: {}
             }
         },
         /* watch:{
@@ -56,13 +60,13 @@
             // fileList(){
             //   return this.file == null || this.file == 'null' ? [] : this.file;
             // },
-            isShowDownload(){
+            isShowDownload() {
                 this.fileList = this.file == null ? [] : this.file;
                 return this.file == null || this.file == 'null' ? false : true;
             },
             materialUpload() {
                 return getBaseUrl() + 'course-api.gaodun.com/upload/handout';
-            }
+            },
         },
         methods: {
             isShow(flag) {
@@ -98,34 +102,42 @@
             },
             handleRemove(file, fileList) {
                 this.fileList = fileList;
-                vue.$emit('uploadFile',{}, this.fileList)
+                vue.$emit('uploadFile', {}, this.fileList)
             },
             handleAvatarSuccess(res, file) {
                 // console.log(res);
                 if (res.status == 0) {
 
-                    vue.$emit('uploadFile', res , this.fileList)
+                    vue.$emit('uploadFile', res, this.fileList)
                     this.$message({
                         type: 'success',
                         message: ('上传成功！')
                     })
                 } else {
-
                     this.$message.error('上传失败！');
+                    setTimeout(()=>{
+                        this.fileList = [];
+                    },0)
                 }
             },
             handleAvatarError(err, file, fileList) {
                 this.$message.error('上传失败！');
+                setTimeout(()=>{
+                    this.fileList = [];
+                },0)
             }
         },
         mounted() {
-            setInterval(()=>{
-                console.log(this.file,this.fileList);
-            },2000)
+            setInterval(() => {
+                console.log(this.file, this.fileList);
+            }, 2000)
         },
         destroyed() {
         },
         created() {
+            let token = 'Basic ' + getCookie(SAAS_TOKEN);
+            this.apiHeader = {Authentication: token};
+            console.log(this.apiHeader);
         }
     }
 </script>
