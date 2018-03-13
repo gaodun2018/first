@@ -1,4 +1,4 @@
-/*! Gaodun modified this file at 2018-3-12 16:30:37 */
+/*! Gaodun modified this file at 2018-3-13 11:19:59 */
 .teaching-manage-style .breadcrumb{ height: 28px;background-color: #f8f8f8;font-family: PingFangSC;font-size: 12px;color: #909296;padding-left: 28px;margin-top: -15px;}
 .teaching-manage-style .breadcrumb .el-breadcrumb{ height: 100%;line-height: 28px;}
 
@@ -1461,6 +1461,28 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .courseset {
     padding: 0 110px 0 0;
 }
@@ -1587,104 +1609,112 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
     color: #f09862;
 }
 
+.coursecontent .el-tabs.el-tabs--card .el-tabs__content {
+    display: none;
+}
+
 .coursecontent .el-tabs__header {
-  margin: 0;
+    margin: 0;
 }
 .coursecontent .el-tabs__content {
-  border: 1px solid #d1dbe5;
-  border-top: none;
-  padding-top: 36px;
-  padding-left: 30px;
-  padding-bottom: 40px;
+    border: 1px solid #d1dbe5;
+    border-top: none;
+    padding-top: 36px;
+    padding-left: 30px;
+    padding-bottom: 40px;
 }
 .coursecontent .fromtitle {
-  margin-bottom: 6px;
+    margin-bottom: 6px;
 }
 .coursecontent .fromtitle .titicon {
-  width: 4px;
-  height: 18px;
-  background: #26A1FF;
-  display: inline-block;
-  margin-right: 4px;
-  vertical-align: middle;
+    width: 4px;
+    height: 18px;
+    background: #26A1FF;
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: middle;
 }
 .coursecontent .fromtitle .tittxt {
-  display: inline-block;
-  font-size: 14px;
-  color: #2A2B2C;
-  font-weight: 700;
-  line-height: 20px;
-  vertical-align: middle;
+    display: inline-block;
+    font-size: 14px;
+    color: #2A2B2C;
+    font-weight: 700;
+    line-height: 20px;
+    vertical-align: middle;
 }
 .coursecontent .el-form-item {
-  padding-left: 12px;
+    padding-left: 12px;
 }
 .coursecontent .el-form-item.w_350 .el-input__inner {
-  width: 330px;
+    width: 330px;
 }
 .coursecontent .first-form-item {
-  display: block;
+    display: block;
 }
 .coursecontent .el-form-item .el-form-item__label {
-  font-size: 14px;
-  color: #2A2B2C;
+    font-size: 14px;
+    color: #2A2B2C;
 }
 .coursecontent .el-form-item .el-form-item__content .el-radio__label {
-  font-size: 14px;
-  color: #2A2B2C;
+    font-size: 14px;
+    color: #2A2B2C;
 }
 .coursecontent .el-form-item .el-form-item__content .el-radio-group .el-radio + .el-radio {
-  margin-left: 42px;
+    margin-left: 42px;
 }
 .coursecontent .el-table--fit {
-  border-right: 0;
+    border-right: 0;
 }
 .coursecontent .el-table .el-table__header-wrapper tr th {
-  background-color: #F5F7FA;
+    background-color: #F5F7FA;
 }
 .coursecontent .el-table .el-table__header-wrapper tr th:nth-child(3) {
-  text-align: center;
+    text-align: center;
 }
 .coursecontent .el-table .el-table__header-wrapper tr th .cell {
-  background-color: #F5F7FA;
-  font-size: 14px;
-  color: #253342;
+    background-color: #F5F7FA;
+    font-size: 14px;
+    color: #253342;
 }
 .coursecontent .el-table .el-table__body-wrapper tr td {
-  height: 50px;
-  font-size: 12px;
-  color: #253342;
+    height: 50px;
+    font-size: 12px;
+    color: #253342;
 }
 .coursecontent .el-table .el-table__body-wrapper tr td:nth-child(3) {
-  text-align: center;
+    text-align: center;
 }
 .coursecontent .el-table .el-table__body-wrapper tr td:nth-child(3) .cell .el-button {
-  margin: 0 14px;
+    margin: 0 14px;
 }
 .coursecontent .addBox {
-  text-align: center;
-  height: 60px;
-  border: 1px solid #dfe6ec;
-  border-top: none;
-  width: 89.8%;
+    text-align: center;
+    height: 60px;
+    border: 1px solid #dfe6ec;
+    border-top: none;
+    width: 89.8%;
 }
-.coursecontent .addBox .additem{
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAAXNSR0IArs4c6QAAAY9JREFUKBWFUktLAmEUPTPNWDoi2NtHCzcVBQU9KIMeBv2MoF3tgoj+QwhFy9b9iyK1FkqSgYso2gTlq6yEUMfUtHs/NCYpuos7MN8595z7kOoUMMTNWwnRJx2RdAFeh4bpPjNGOjsMCEBqktKFCvyxLIKJPKqGMooE+NxWbE/0wGlVBVmQmLAeSOL+vSx+Wgg5RyphUis2KnhsJhwuu+DQVMg1crdLCk0Cs2b7LdhfcIqvqEKJ3xnHePku94EQWfotJJA3QzCO8Uo4XcQn9cCWZkjBJEsY6zYL6CQNQZGBcq2OaEZHoVpDJFOEtHb8UL981rEyYMUeWforts5TOHnMY6qXCs07NTCJFTfPklDbJIyT0uqwHUe3OcRfdFTIygUpcTBe8TosOIhDSAcSBfHAICbFaF+nhn6pHk3VAnnI3g6fyyrA/6Ulwg0SXuwpla9gI5igsVYET6PuuSJb5uY5PDaV9uQWe/q+CCb6r7Ji/K0XsUgXsdN6EaJUI12/lqjpIkLJPNgOr2G06+ftfQF8d7zX3lkKVAAAAABJRU5ErkJggg==) no-repeat center;
-  vertical-align: middle;
+.coursecontent .addBox .additem {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAAXNSR0IArs4c6QAAAY9JREFUKBWFUktLAmEUPTPNWDoi2NtHCzcVBQU9KIMeBv2MoF3tgoj+QwhFy9b9iyK1FkqSgYso2gTlq6yEUMfUtHs/NCYpuos7MN8595z7kOoUMMTNWwnRJx2RdAFeh4bpPjNGOjsMCEBqktKFCvyxLIKJPKqGMooE+NxWbE/0wGlVBVmQmLAeSOL+vSx+Wgg5RyphUis2KnhsJhwuu+DQVMg1crdLCk0Cs2b7LdhfcIqvqEKJ3xnHePku94EQWfotJJA3QzCO8Uo4XcQn9cCWZkjBJEsY6zYL6CQNQZGBcq2OaEZHoVpDJFOEtHb8UL981rEyYMUeWforts5TOHnMY6qXCs07NTCJFTfPklDbJIyT0uqwHUe3OcRfdFTIygUpcTBe8TosOIhDSAcSBfHAICbFaF+nhn6pHk3VAnnI3g6fyyrA/6Ulwg0SXuwpla9gI5igsVYET6PuuSJb5uY5PDaV9uQWe/q+CCb6r7Ji/K0XsUgXsdN6EaJUI12/lqjpIkLJPNgOr2G06+ftfQF8d7zX3lkKVAAAAABJRU5ErkJggg==) no-repeat center;
+    vertical-align: middle;
 }
 .coursecontent .addBtn {
-  line-height: 40px;
+    line-height: 40px;
 }
-.coursecontent .addContent.tabplane .el-form-item__label {color: #8f9aac;
+.coursecontent .addContent.tabplane .el-form-item__label {
+    color: #8f9aac;
 }
-.module-edu-content.coursecontent .addContent.tabplane .el-dialog__body .el-form-item__label{width: 150px !important;
+.module-edu-content.coursecontent .addContent.tabplane .el-dialog__body .el-form-item__label {
+    width: 150px !important;
 }
-.module-edu-content.coursecontent .addContent.tabplane .el-dialog__body .el-form-item__content{margin-left: 150px !important;
+.module-edu-content.coursecontent .addContent.tabplane .el-dialog__body .el-form-item__content {
+    margin-left: 150px !important;
 }
-.module-edu-content.coursecontent .addContent.tabplane .coursebtn .el-form-item__content{margin-left: 0!important;
+.module-edu-content.coursecontent .addContent.tabplane .coursebtn .el-form-item__content {
+    margin-left: 0 !important;
 }
 
 
@@ -1721,17 +1751,17 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
-.handouts-form-item{
+.handouts-form-item {
     width: 89%;
 }
-.handouts-form-item .el-form-item__content{
+.handouts-form-item .el-form-item__content {
     width: 100%;
 }
-.handouts-form-item .el-form-item__content .addhandout{
+.handouts-form-item .el-form-item__content .addhandout {
     float: right;
 }
 
-.handout-upload{
+.handout-upload {
     width: 100%;
 }
 

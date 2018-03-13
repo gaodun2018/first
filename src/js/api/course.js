@@ -26,7 +26,7 @@ export const updateCourseHandout = (handout_id, params) => put(`${getBaseUrl()}a
 export const getCourseResourceIntro = (course_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/${course_id}/source`, params)
 
 //拉取课程下所有阶段和大纲接口
-export const getStageAndOutline = (course_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/${course_id}/gradation`, params)
+export const getStageAndOutline = (course_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/course-api/course/${course_id}/admin/gradation`, params)
 
 //删除一个阶段接口
 export const DeleteStage = (gradation_id, params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/saas-service/gradation/${gradation_id}`, params);

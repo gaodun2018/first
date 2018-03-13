@@ -18,7 +18,12 @@ var instance = axios.create({
 instance.interceptors.request.use(function (config) {
     let token = getCookie("token");
     // 非登录接口
-
+    if (config.url.indexOf('login') === -1 && token == undefined) {
+        localStorage.clear();
+        location.href = '/#/login';
+        location.reload();
+    }
+    // 非登录接口携带token
     if (config.url.indexOf('login') === -1) {
         config.headers.common['Authentication'] = `Basic ${token}`;
     }
@@ -34,7 +39,7 @@ instance.interceptors.response.use(function (response) {
         return Promise.resolve(response);
     }
     // 登录失效
-    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952) {
+    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952 || response.data.status == 553649434) {
         localStorage.clear();
         location.href = '/#/login';
         location.reload();

@@ -6,7 +6,7 @@
                 <div class="user right">
                     <el-dropdown trigger="hover" @command="handleCommands">
                         <span class="el-dropdown-link-2">
-                            <img class="user_icon" :src="CardImgUrl" alt="头像">
+                            <img class="user_icon" :src="CardImgUrl" alt="头像" v-if="CardImgUrl">
                             <span class="user_name">{{TrueName}}</span>
                             <i class="el-icon-caret-bottom el-icon--right"></i>
                         </span>
@@ -42,18 +42,15 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import {post} from '../util/zeusAxios';
+
     import {getCookie, setCookie} from 'cookieUtils';
-    import {userLogin, getToken, getLoginUserInfo, getCurrentUserMenuTree} from '../api/login';
+    import {getCurrentUserMenuTree} from "../api/login.js";
     import {stringify} from 'queryString';
-    import {SAAS_MENU, SAAS_USER_INFO, SAAS_TOKEN, FORMAT_MENU} from '../util/keys';
+    import {SAAS_MENU, SAAS_USER_INFO, SAAS_USER_FUNCTIONS} from '../util/keys';
     import {getEnv} from '../util/config';
+    import {appid} from "../common/config.js";
     import {parseUrl} from 'base';
-
     let prefix = getEnv();
-    import routesMenu from '../routes/routes'
-
     export default {
         data: function () {
             return {
@@ -70,7 +67,7 @@
         },
         created() {
             this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
-
+            this.getCurrentUserMenuTree();
         },
         computed: {
             menu() {
@@ -150,8 +147,33 @@
                      }*/
                 }
             },
+            async getCurrentUserMenuTree(){
+                let GDSID =  getCookie(`${prefix}GDSID`);
 
-
+                //获取菜单树
+                let menuRet = await getCurrentUserMenuTree({
+                    appId: appid,
+                    GDSID: GDSID,
+                });
+                if (menuRet.status === 0) {
+                    this.reWriteEmptyUrl(menuRet.result.Tpo_Sys_Navigations);
+                    localStorage.setItem(SAAS_MENU, JSON.stringify(menuRet.result.Tpo_Sys_Navigations));
+                    localStorage.setItem(SAAS_USER_FUNCTIONS, JSON.stringify(menuRet.result.Tpo_sys_Functions));
+                }
+            },
+            reWriteEmptyUrl(menu) {
+                for (var i in menu) {
+                    if (menu[i].Url === "") {
+                        menu[i].Url = Math.random().toString();
+                    }
+                    if (menu[i].Url.indexOf('Report') > -1) {
+                        menu[i].Url = menu[i].Url.replace(/http.*key=/, '/Report/');
+                    }
+                    if (menu[i].ChildNavigations) {
+                        this.reWriteEmptyUrl(menu[i].ChildNavigations)
+                    }
+                }
+            },
         },
         mounted() {
 
