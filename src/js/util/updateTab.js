@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import DefaultComponent from '../components/Default.vue';
-import { CRM_CURRENT_TAB } from './keys';
+import { SAAS_CURRENT_TAB } from './keys';
 export function updateTabs(tabInfo, isFromStorage) {
     var vueComponent = '';
     new Promise((resolve, reject) => {
         tabInfo.NavigationId = tabInfo.NavigationId.toString();
-        let currentTab = sessionStorage.getItem(CRM_CURRENT_TAB);
+        let currentTab = sessionStorage.getItem(SAAS_CURRENT_TAB);
         if (isFromStorage && currentTab != tabInfo.NavigationId) {
             return resolve({ vueComponent: DefaultComponent, objTab: tabInfo });
         }

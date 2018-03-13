@@ -38,7 +38,7 @@
 <script>
 import Navbar from './Navigation.vue';
 import { getChangePwd } from '../api/login';
-import { CRM_USER_INFO } from '../util/keys';
+import { SAAS_USER_INFO } from '../util/keys';
 import { Message } from 'element-ui';
 export default {
     components: {Navbar},
@@ -118,7 +118,7 @@ export default {
      computed: {
      },
      created() {
-         let userInfo = JSON.parse(localStorage.getItem(CRM_USER_INFO));
+         let userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
          this.account=userInfo.Email;
          if(userInfo.PwdType==1){
              this.pwdTypeStr = '初次登录，请修改密码';

@@ -7,7 +7,9 @@ export const ADD_HOME = 'ADD_HOME'; // 首页添加内容
 export const CURRENT_SUB_MENU = 'CURRENT_SUB_MENU'; // 电话呼入信息
 
 
-export const Breadcrumb = "Breadcrumb";     //面包屑
+export const CURRENT_MENU = "CURRENT_MENU";     //面包屑
+
+export const BREADCRUMB_MENU = "BREADCRUMB_MENU";     //面包屑
 export const PROJECTLIST = "PROJECTLIST";     //项目科目列表
 
 export const KNOWLEDGE_DIALOG = "KNOWLEDGE_DIALOG";     //选择知识点弹层

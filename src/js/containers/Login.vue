@@ -52,9 +52,12 @@
 </template>
 
 <script>
-    import {userLogin} from "../api/loginFrom.js";
+    import {userLogin,getCurrentUserMenuTree} from "../api/login.js";
     import {appid} from "../common/config.js";
-
+    import {getEnv} from '../util/config';
+    import {getCookie, setCookie} from 'cookieUtils';
+    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS,SAAS_TOKEN} from '../util/keys.js'
+    let prefix = getEnv();
     export default {
         data: function () {
             return {
@@ -62,7 +65,7 @@
                 ruleForm: {
                     user: '',
                     password: '',
-                    appid: appid
+                    appid: appid,
                 },
                 loading: false
             }
@@ -71,18 +74,48 @@
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let response = await userLogin(this.ruleForm);
+                        let GDSID =  getCookie(`${prefix}GDSID`);
+                        //登录
+                        let response = await userLogin({
+                            ...this.ruleForm,
+                            GDSID : GDSID
+                        });
                         if (response.data.status == 0) {
-                            console.info("token=" + response.headers.accesstoken + "; ");
-                            this.setCookie("token", response.headers.accesstoken, 2)
-                            this.$router.push({path: '/home'});
+                            this.setCookie(SAAS_TOKEN, response.headers.accesstoken, 2)
+                            localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
                         } else {
                             this.$message({
                                 message: response.data.info,
                                 type: 'warning'
                             });
+                            return;
                         }
-                    } else {
+                        //获取菜单树
+                        let menuRet = await getCurrentUserMenuTree({
+                            appId: appid,
+                            GDSID: GDSID,
+                        });
+                        this.loading = false;
+                        if (menuRet.status === 0) {
+                            this.reWriteEmptyUrl(menuRet.result.Tpo_Sys_Navigations);
+                            localStorage.setItem(SAAS_MENU, JSON.stringify(menuRet.result.Tpo_Sys_Navigations));
+                            localStorage.setItem(SAAS_USER_FUNCTIONS, JSON.stringify(menuRet.result.Tpo_sys_Functions));
+
+                            // if(loginRet.result.PwdType==0){
+                                if(response.data.result.HomePage==''){
+                                    this.$router.push({ path: '/home' })
+                                }
+                                else{
+                                    this.$router.push({ path: response.data.result.HomePage })
+                                }
+                            // }
+                            // else{
+                            //     this.$router.push({ path: '/updatePwd?NavigationId=520&nw=1'})
+                            // }
+                        } else {
+                            this.loading = false;
+                            return;
+                        }
 
                     }
                 });
@@ -93,10 +126,30 @@
                 var exp = new Date();
                 exp.setTime(exp.getTime() + hour * 60 * 60 * 1000);
                 document.cookie = name + "=" + value + ";expires=" + exp.toGMTString() + ";";
-            }
+            },
+            loadSSIDJS() {
+                let script = document.createElement('script');
+                script.type = "text/javascript";
+                // script.src = "http://192.168.35.251:8006/gdssid_v2.js?v=" + Date.now();
+                script.src = `//${prefix}s.gaodun.com/web/sso/gdssid_v2.js`;
+                document.getElementsByTagName('head')[0].appendChild(script);
+            },
+            reWriteEmptyUrl(menu) {
+                for (var i in menu) {
+                    if (menu[i].Url === "") {
+                        menu[i].Url = Math.random().toString();
+                    }
+                    if (menu[i].Url.indexOf('Report') > -1) {
+                        menu[i].Url = menu[i].Url.replace(/http.*key=/, '/Report/');
+                    }
+                    if (menu[i].ChildNavigations) {
+                        this.reWriteEmptyUrl(menu[i].ChildNavigations)
+                    }
+                }
+            },
         },
         async created() {
-
+            this.loadSSIDJS();
         },
         mounted() {
 
@@ -109,6 +162,7 @@
         overflow:hidden;
         width: 100%;
         height: 100%;
+        min-height: 660px;
     }
     .login-left {
         position: absolute;

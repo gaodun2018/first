@@ -1,11 +1,11 @@
 import axios from 'axios';
 import {getEnv, getBaseUrl} from '../util/config';
-import {CRM_TOKEN, CRM_USER_INFO} from './keys';
+import {SAAS_TOKEN, SAAS_USER_INFO} from './keys';
 import {getCookie, setCookie} from 'cookieUtils';
 import {Message} from 'element-ui';
 
 let prefix = getEnv();
-let userInfo = localStorage.getItem(CRM_USER_INFO);
+let userInfo = localStorage.getItem(SAAS_USER_INFO);
 if (userInfo) {
     userInfo = JSON.parse(userInfo);
 }
@@ -15,7 +15,13 @@ axios.defaults.headers.post['Content-Type'] = "application/json";
 axios.defaults.headers.put['Content-Type'] = "application/json";
 axios.interceptors.request.use(function (config) {
     let token = getCookie("token");
-
+    // 非登录接口
+    if (config.url.indexOf('login') === -1 && token == undefined) {
+        localStorage.clear();
+        location.href = '/#/login';
+        location.reload();
+    }
+    //非登录接口携带token
     if (config.url.indexOf('login') === -1) {
         config.headers.common['Authentication'] = `Basic ${token}`;
     }
@@ -35,7 +41,7 @@ axios.interceptors.request.use(function (config) {
 });
 axios.interceptors.response.use(function (response) {
     // 登录失效
-    if (response.data.status == 553649409 || response.data.status == 553650183) {
+    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952 || response.data.status == 553649434) {
         localStorage.clear();
         location.href = '/#/login';
         location.reload();
@@ -120,4 +126,4 @@ export const request = instanceAxios.request.bind(instanceAxios);
 export const get = instanceAxios.get.bind(instanceAxios);
 export const post = instanceAxios.post.bind(instanceAxios);
 export const put = instanceAxios.put.bind(instanceAxios);
-export const DELETE = instanceAxios.delete.bind(instanceAxios);
+export const zDelete = instanceAxios.delete.bind(instanceAxios);

@@ -136,7 +136,7 @@
 </style>
 <script>
 import { GetCustomerSourceTree, GetArea } from '../api/cluesManage';
-import { CRM_USER_INFO } from '../util/keys';
+import { SAAS_USER_INFO } from '../util/keys';
 export default {
     props: {
         // currentValue: String, // 当前输入的值

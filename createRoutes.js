@@ -5,7 +5,7 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
-let u = url.parse('https://baiyiapi.gaodun.com');
+let u = url.parse('https://t-baiyiapi.gaodun.com');
 let customRoutes = [];
 let strRequire = `import Entry from '../containers/Entry.vue';\n`;
 // let routes = `export const routes = [\n\t{ path: '/', name:'550',component: Entry ,redirect: '/index',children: [\n`;
@@ -21,7 +21,7 @@ let loadTreeData = () => {
             http.get({
                 host: u['host'],
                 port: 80,
-                path: '/Menu/GetAppMenuTree?appid=130555&t=2'
+                path: '/Menu/GetAppMenuTree?appid=180302&t=2'
             }, res => {
                 let json = '';
                 res.on('data', (ret) => {
@@ -41,10 +41,10 @@ let loadTreeData = () => {
 let readCustom = new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, '/src/js/routes/index.json'), 'utf-8', (err, data) => {
         customRoutes = JSON.parse(data);
-        resolve(customRoutes)
-        /*loadTreeData().then(value => {
+        //resolve(customRoutes)   //无接口开发模式
+        loadTreeData().then(value => {
             resolve(value.result.concat(...customRoutes));
-        })*/
+        })
     })
 });
 readCustom.then((data) => {
@@ -55,7 +55,7 @@ readCustom.then((data) => {
     // 递归菜单
     function createRoutes(menu) {
         for (let i in menu) {
-            if (menu[i].Url != "" && menu[i].Path!="" && menu[i].Url.indexOf('192.168') == -1) {
+            if (menu[i].Url != "" && menu[i].Path!=""&&menu[i].Path!="180302" && menu[i].Url.indexOf('192.168') == -1) {
                 let lastSymbolPosition = menu[i].Path.lastIndexOf('/');
                 let fileName = menu[i].Path.substr(lastSymbolPosition + 1);
                 let randomName = menu[i].Path.substr(lastSymbolPosition + 1);
@@ -63,7 +63,7 @@ readCustom.then((data) => {
                     randomName = fileName + Math.random().toString().substr(2, 7);
                 }
                 if (process.argv[2] === 'dev') {
-                    strRequire += `// ${menu[i].Title}\nimport ${randomName} from '../${menu[i].Path}.vue';\n`;
+                    strRequire += `// ${menu[i].Title}${i}\nimport ${randomName} from '../${menu[i].Path}.vue';\n`;
                 } else {
                     strRequire += `// ${menu[i].Title}\nconst ${randomName} = resolve => {
     require.ensure(['../${menu[i].Path}.vue'], (require) => {

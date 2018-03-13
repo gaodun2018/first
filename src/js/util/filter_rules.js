@@ -41,7 +41,7 @@ exports.install = function (Vue, options) {
             rules.push({validator: (rule, value, callback)=>{
                     if (value != null && value != "") {
                         if (!maxLength(value,item.maxLength)) {
-                            return callback(new Error(`最多输入${(item.maxLength/2)}个字符！`))
+                            return callback(new Error(`最多输入${(item.maxLength/2)}个字！`))
                         } else {
                             return callback()
                         }
@@ -51,12 +51,12 @@ exports.install = function (Vue, options) {
                     }
                 }, trigger: 'blur,change'})
         }
-        if (item.min && item.max) {
+        if (item.max) {
             rules.push({
-                min: item.min,
+                min: item.min?item.min:0,
                 max: item.max,
-                message: '字符长度在' + item.min + '至' + item.max + '之间!',
-                trigger: 'blur'
+                message: '最多输入' + item.max + '个字!',
+                trigger: 'blur,change'
             })
         }
         if (item.type) {

@@ -43,7 +43,7 @@
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="searchinput"
                                       :on-icon-click="handleIconClick"
                                       @keydown.native.enter="handleIconClick"></el-input>
-                            <el-button type="primary" size="small" @click="dialogCourseVisible = true">新增一个课程
+                            <el-button type="primary" size="small" @click="dialogCourseVisible = true" v-if="unlocking('COURSE_CREATE')">新增一个课程
                             </el-button>
                         </div>
                     </el-row>
@@ -79,10 +79,10 @@
 
                 <el-table-column fixed="right" label="操作" width="200" align="center">
                     <template scope="scope">
-                        <el-button type="text" style="margin: 0 10px;">
+                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')">
                             <router-link class="routerBtn" :to="'/CourseSet/'+scope.row.course_id">基本设置</router-link>
                         </el-button>
-                        <el-button type="text" style="margin: 0 10px;">
+                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')">
                             <router-link class="routerBtn" :to="'/CourseContent/'+scope.row.course_id">课程内容
                             </router-link>
                         </el-button>
@@ -106,7 +106,7 @@
         <el-dialog class="addCourse" title="新建课程" :visible.sync="dialogCourseVisible" @close="closeDialog('ruleForm')">
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="课程名称" prop="course_name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:50})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input v-model="ruleForm.course_name"></el-input>
                 </el-form-item>
                 <el-form-item label="所属项目" prop="project_id"
