@@ -7,7 +7,7 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
                 <el-form-item label="项目" prop="region" class="w_50">
-                    <el-select v-model="ruleForm.region">
+                    <el-select v-model="ruleForm.region" @change="didChangeProjectSelection">
                         <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
                     </el-select>
                 </el-form-item>
@@ -55,22 +55,20 @@
             SelectKnowledge
         },
         computed: {
-            async region(){
 
-            }
         },
         data() {
             return {
                 tags: [],
                 ruleForm: {
-                    //region: '',
+                    region: '',
                     project: '',
                     name: '',
                     fileName: '',
                 },
                 rules: {
                     region: [
-                        {required: true, message: '请选择项目', trigger: 'change'}
+                        {required: true, message: '请选择项目', trigger: 'blur'}
                     ],
                     project: [
                         {required: true, message: '请选择科目', trigger: 'change'}
@@ -103,6 +101,9 @@
                         return false;
                     }
                 });
+            },
+            didChangeProjectSelection(a,b,c){
+                debugger;
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
