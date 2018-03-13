@@ -74,7 +74,7 @@
                     duration_minute: '',
                     duration_second: '',
                     description: '',
-                    partner_id: ''
+                    partner_id: '1'
                 },
                 resourceFormRules: {
                     title: [
@@ -110,8 +110,8 @@
                     this.ruleForm.duration_second = ret.result.resource.duration;
                     this.ruleForm.project = '116';
                     this.ruleForm.partner_id = ret.result.resource.partner_id;
-                    return this.ruleForm;
                 }
+                return this.ruleForm;
             },
             getSubjectByProjectId(projectId) {
                 var subjects = null
