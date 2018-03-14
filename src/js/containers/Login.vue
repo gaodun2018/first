@@ -56,7 +56,7 @@
     import {appid} from "../common/config.js";
     import {getEnv} from '../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
-    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS,SAAS_TOKEN} from '../util/keys.js'
+    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS,SAAS_TOKEN,SAAS_USER_NAME} from '../util/keys.js'
     let prefix = getEnv();
     export default {
         data: function () {
@@ -83,6 +83,7 @@
                         if (response.data.status == 0) {
                             this.setCookie(SAAS_TOKEN, response.headers.accesstoken, 2)
                             localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
+                            localStorage.setItem(SAAS_USER_NAME, JSON.stringify(this.ruleForm.user));
                         } else {
                             this.$message({
                                 message: response.data.info,
