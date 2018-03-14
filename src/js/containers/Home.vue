@@ -44,12 +44,13 @@
 <script>
 
     import {getCookie, setCookie} from 'cookieUtils';
-    import {getCurrentUserMenuTree} from "../api/login.js";
+    import {getCurrentUserMenuTree, openTiku} from "../api/login.js";
     import {stringify} from 'queryString';
-    import {SAAS_MENU, SAAS_USER_INFO, SAAS_USER_FUNCTIONS} from '../util/keys';
-    import {getEnv} from '../util/config';
+    import {SAAS_MENU, SAAS_USER_INFO, SAAS_USER_FUNCTIONS, SAAS_TOKEN, SAAS_USER_NAME} from '../util/keys';
+    import {getEnv, getBaseUrl} from '../util/config';
     import {appid} from "../common/config.js";
     import {parseUrl} from 'base';
+
     let prefix = getEnv();
     export default {
         data: function () {
@@ -74,10 +75,10 @@
                 return JSON.parse(localStorage.getItem('SAAS_MENU'))
             },
             TrueName() {
-                return this.userInfo&&this.userInfo.TrueName
+                return this.userInfo && this.userInfo.TrueName
             },
-            CardImgUrl (){
-                return this.userInfo&&this.userInfo.CardImgUrl
+            CardImgUrl() {
+                return this.userInfo && this.userInfo.CardImgUrl
             },
         },
         methods: {
@@ -85,14 +86,60 @@
                 for (let i in this.menu) {
                     if (item.NavigationId == this.menu[i].NavigationId) {
                         if (this.menu[i].Path == 180302) {
-                            // location.href = this.menu[i].Url
-                            window.open(this.menu[i].Url)
+                            switch (this.menu[i].Url) {
+                                case 'tiku':
+                                    this.openTiku();  //登陆题库
+                                    break;
+                                default:
+                                    window.open(this.menu[i].Url)
+                                    break;
+                            }
                         } else {
                             this.updateCurrentMenu(this.menu[i]);
                         }
                         return;
                     }
                 }
+            },
+            //跳转题库
+            openTiku() {
+                let token = getCookie(SAAS_TOKEN);
+                let GDSID = getCookie(`${prefix}GDSID`);
+                let username = localStorage.getItem(SAAS_USER_NAME);
+                username = JSON.parse(username);
+                let params = {
+                    session_id: GDSID,
+                    username: username,
+                }
+                $.ajax({
+                    url: `${getBaseUrl()}apigateway.gaodun.com/saas-service/tiku`,
+                    type: 'POST', //
+                    async: false, //或false,是否异步
+                    data: params,
+                    headers: {
+                        'Authentication': `Basic ${token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    // timeout:5000, //超时时间
+                    dataType: 'json', //返回的数据格式：
+                    beforeSend: function (xhr) {
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data);
+                        // if (data && data.status == 553649409 || data.status == 553650183 || data.status == 553649952) {
+                        // deleteAllCookie();
+                        // location.href = `//${prefix}v.gaodun.com/member/login.html`;
+                        // return;
+                        // }
+                        if (data.status == 0) {
+                            window.open(data.result)
+                        }
+                    },
+                    error: function (xhr, textStatus) {
+                    },
+                    complete: function () {
+                    }
+                })
             },
             updateCurrentMenu(item) {
                 //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
@@ -108,7 +155,7 @@
                     setTimeout(() => {
                         this.$store.dispatch('updateCurrentTabId', NavigationId);
                     }, 0)
-                }else{
+                } else {
                     this.afterFunction();
                 }
             },
@@ -147,8 +194,8 @@
                      }*/
                 }
             },
-            async getCurrentUserMenuTree(){
-                let GDSID =  getCookie(`${prefix}GDSID`);
+            async getCurrentUserMenuTree() {
+                let GDSID = getCookie(`${prefix}GDSID`);
 
                 //获取菜单树
                 let menuRet = await getCurrentUserMenuTree({

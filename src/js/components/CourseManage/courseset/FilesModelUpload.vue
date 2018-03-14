@@ -65,7 +65,7 @@
                 return this.file == null || this.file == 'null' ? false : true;
             },
             materialUpload() {
-                return getBaseUrl() + 'course-api.gaodun.com/upload/handout';
+                return getBaseUrl() + 'apigateway.gaodun.com/course-api/upload/handout';
             },
         },
         methods: {
@@ -137,7 +137,6 @@
         created() {
             let token = 'Basic ' + getCookie(SAAS_TOKEN);
             this.apiHeader = {Authentication: token};
-            console.log(this.apiHeader);
         }
     }
 </script>
