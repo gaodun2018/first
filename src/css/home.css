@@ -247,7 +247,9 @@
 #icon_business {
     background: url("../images/financeHome/icon_business.png") no-repeat center;
 }
-
+#icon_tiku {
+    background: url("../images/financeHome/icon_tiku.png") no-repeat center;
+}
 .console-menu-items .item-title {
     width: 100%;
     height: 22px;
