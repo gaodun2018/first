@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column label="阶段课程大纲 " width="400">
                     <template scope="scope">
-                        <span>{{scope.row.syllabus_name}}</span>
+                        <span>{{scope.row.syllabus_id}} - {{scope.row.syllabus_name}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -54,7 +54,7 @@
                 <el-form-item label="阶段课程大纲" prop="syllabus_id"
                               :rules="[{required: true, message: '请选择网课类型', trigger: 'change'}]">
                     <el-select v-model="NewTableForm.syllabus_id" placeholder="选择该阶段的课程大纲" style="width: 90%;">
-                        <el-option :label="item.title" :value="String(item.id)" v-for="(item,index) in outlineList"
+                        <el-option :label="item.id+' - '+item.title" :value="String(item.id)" v-for="(item,index) in outlineList"
                                    :key="item.id"></el-option>
                     </el-select>
                 </el-form-item>

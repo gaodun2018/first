@@ -118,7 +118,7 @@
             return {
                 dialogVisible: false,
                 ruleForm: {
-                    bEnabled: 1,
+                    bEnabled: '',
                 },
                 NewTableForm: {},
                 tableData: [],

@@ -215,7 +215,7 @@
                 </el-table>
                 <el-pagination
                     @current-change="handleCurrentChange"
-                    :current-page="pagination.current_page"
+                    :current-page.sync="pagination.current_page"
                     :page-size="50"
                     layout="total, prev, pager, next, jumper"
                     :total="pagination.total">
@@ -290,6 +290,8 @@
         },
         data() {
             return {
+                project_id: '',     //项目id
+                subject_id: '',   //科目id
                 btnLoading: false,  //按钮loading
                 active: 0,
                 resourceRadio: '',    //选择的资源
@@ -336,7 +338,7 @@
                     total: 1,       //资源列表总数量
                 },
                 resLoading: false,//loading
-                resourceinput:'',//根据id或者名称搜索
+                resourceinput: '',//根据id或者名称搜索
             }
         },
         methods: {
@@ -391,51 +393,29 @@
                 this.active++;
                 this.progressText[this.active].isCustomerConfirm = true;
                 this.showitem();
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: 1,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                console.log(ret);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                }
-
+                this.resourceinput = '';  //输入框搜索初始化
+                this.searchResource();
             },
             //分页搜索
             async handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
                 val = Number(val)
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: val,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                }
+                this.searchResource(val);
             },
             //点击搜索
             async handleIconClick() {
+                this.searchResource();
+            },
+            //搜索资源
+            async searchResource(val) {
                 let discriminator = {
                     discriminator: this.selcurrent,
                     page_size: 50,
-                    page: 1,
+                    page: val ? val : 1,
                     'order_by[]': 'desc',   //顺序   倒序
                     'order_by_field[]': 'id',   //排序字段
-                    keywords:this.resourceinput
+                    keywords: this.resourceinput,
+                    project_id: this.project_id,
+                    subject_id : this.subject_id,
                 }
                 this.resLoading = true
                 let ret = await getResource(discriminator);
@@ -443,6 +423,7 @@
                     this.resLoading = false;
                     this.resourceTable = ret.result.resources;
                     this.pagination.total = ret.result.pagination.total;
+                    this.pagination.current_page = parseInt(ret.result.pagination.current_page);
                 }
             },
             prev() {
@@ -747,6 +728,8 @@
                 if (ret.status == 0) {
                     this.title = ret.result.title;
                     this.tag_id = ret.result.tag_id;
+                    this.project_id = ret.result.project.id;
+                    this.subject_id = ret.result.subject.id;
                     this.coursesylllevel = ret.result.template.level_max;    //大纲的层级
                 }
             },

@@ -341,7 +341,7 @@
                 //关闭字数统计
                 wordCount: true,
                 //允许的最大字符数
-                maximumWords : 1000,
+                maximumWords : 500,
                 //关闭elementPath
                 elementPathEnabled: false,
                 //默认的编辑区域高度
