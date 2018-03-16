@@ -430,7 +430,6 @@
                 if (this.active <= 0) return
                 this.progressText[this.active].isCustomerConfirm = false;
                 this.active--;
-                console.log(this.active);
                 this.showitem();
             },
             showitem() {
@@ -503,7 +502,6 @@
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
-                    console.log(retv);
                     this.btnLoading = false;
                     if (retv.status == 0) {
                         this.$message({
@@ -554,7 +552,6 @@
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
-                    console.log(retv);
                     if (retv.status == 0) {
                         this.$message({
                             type: 'success',
@@ -571,7 +568,6 @@
             },
             //弹出修改资源的弹层
             openeEditResource(item) {
-                console.log(item);
                 this.active = 0;
                 this.progressText.forEach((item, index) => {
                     if (index == 0) {
@@ -591,7 +587,6 @@
             },
             // 弹出资源删除框
             openDelResDialog(id) {
-                console.log(id);
                 this.currentId = id;
                 this.dialogVisible = true;
                 this.deleteModule = false;
@@ -606,7 +601,6 @@
             async confirmDelete() {
                 let id = this.currentId;
                 let ret = await DeleteSyllabusItem(id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         message: '删除成功',
@@ -683,7 +677,6 @@
                         };
                         this.btnLoading = true;
                         let ret = await ChangeSyllabusItem(id, name);
-                        console.log(ret);
                         this.btnLoading = false;
                         if (ret.status == 0) {
                             this.$message({
@@ -719,12 +712,10 @@
                 if (ret.status == 0) {
                     this.tabledata = ret.result;
                 }
-                console.log(ret);
             },
             //查看大纲的详情
             async checkSyllabus() {
                 let ret = await checkSyllabus(this.coursesyllid);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.title = ret.result.title;
                     this.tag_id = ret.result.tag_id;

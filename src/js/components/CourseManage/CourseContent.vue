@@ -57,14 +57,13 @@
             //获取课程下的大纲 根据项目科目id
             async CourseSyllabuses() {
                 let ret = await CourseSyllabuses({
-                    page: '',
-                    page_size: '',
+                    page: '1',
+                    page_size: '100',
                     project_id: this.$store.state.course.course_info && this.$store.state.course.course_info.project_id,
                     subject_id: this.$store.state.course.course_info && this.$store.state.course.course_info.subject_id,
                     status: '0',    //获取启用的大纲
                     keyword: '',
                 });
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$store.dispatch('saveCourseSyllabuses', ret.result.list);
                 }

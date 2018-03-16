@@ -107,7 +107,6 @@
                     course_id: this.course_id,
                 }
                 let ret = await AddCourseStage(params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -137,7 +136,6 @@
                     course_id: this.course_id,
                 }
                 let ret = await changeStage(gradation_id, params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -169,7 +167,6 @@
             async DeleteStage(){
                 let gradation_id = this.gradation_id;
                 let ret = await DeleteStage(gradation_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -205,7 +202,6 @@
             async getStageAndOutline(){
                 let course_id = this.course_id;
                 let ret = await getStageAndOutline(course_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.tableData = ret.result.gradation_list;
                 }

@@ -46,7 +46,18 @@
     import {getCookie, setCookie} from 'cookieUtils';
     import {getCurrentUserMenuTree, openTiku} from "../api/login.js";
     import {stringify} from 'queryString';
-    import {SAAS_MENU, SAAS_USER_INFO, SAAS_USER_FUNCTIONS, SAAS_TOKEN, SAAS_USER_NAME} from '../util/keys';
+    import {
+        SAAS_MENU,
+        SAAS_USER_INFO,
+        SAAS_USER_FUNCTIONS,
+        SAAS_TOKEN,
+        FORMAT_MENU,
+        SAAS_USER_NAME,
+        SAAS_CURRENT_MENU,
+        SAAS_CURRENT_SUBMENU,
+        SAAS_CURRENT_LEVEL_ONE_MENU,
+        SAAS_CURRENT_LEVEL_TOP_MENU
+    } from '../util/keys';
     import {getEnv, getBaseUrl} from '../util/config';
     import {appid} from "../common/config.js";
     import {parseUrl} from 'base';
@@ -83,6 +94,10 @@
         },
         methods: {
             clickRouter(item) {
+                if (!item.isAuth) {
+                    this.stopHalt();
+                    return;
+                }
                 for (let i in this.menu) {
                     if (item.NavigationId == this.menu[i].NavigationId) {
                         if (this.menu[i].Path == 180302) {
@@ -125,12 +140,12 @@
                     beforeSend: function (xhr) {
                     },
                     success: function (data, textStatus, jqXHR) {
-                        console.log(data);
-                        // if (data && data.status == 553649409 || data.status == 553650183 || data.status == 553649952) {
-                        // deleteAllCookie();
-                        // location.href = `//${prefix}v.gaodun.com/member/login.html`;
-                        // return;
-                        // }
+                        if (data && data.status == 553649409 || data.status == 553650183 || data.status == 553649952 || data.status == 553649434) {
+                            localStorage.clear();
+                            location.href = '/#/login';
+                            location.reload();
+                            return;
+                        }
                         if (data.status == 0) {
                             window.open(data.result)
                         }
@@ -141,14 +156,28 @@
                     }
                 })
             },
+            //查看是否有权限跳转地址
+            checkRouterPath(ChildNavigation) {
+                for (var i in ChildNavigation) {
+                    //有权限
+                    if (ChildNavigation[i].isAuth) {
+                        //看有无子集
+                        if (!ChildNavigation[i].ChildNavigations) {//无子集
+                            return ChildNavigation[i].Url;
+                        } else if (ChildNavigation[i].ChildNavigations) {//有子集
+                            return this.checkRouterPath(ChildNavigation[i].ChildNavigations)
+                        }
+                    }
+                }
+            },
             updateCurrentMenu(item) {
                 //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
                 if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
                     let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
-                    let path = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
-                    // let path = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
-                    let NavigationId = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
-                    // let NavigationId = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
+
+                    console.log(ChildNavigation);
+                    let path = this.checkRouterPath(ChildNavigation);
+                    let NavigationId = path;
                     this.$router.push({
                         path,
                     });
@@ -162,6 +191,11 @@
             afterFunction() {
                 this.$message({
                     message: '后续功能正在开发中~~'
+                })
+            },
+            stopHalt() {
+                this.$message({
+                    message: '您暂未开通权限'
                 })
             },
             handleCommands(command) {
@@ -223,7 +257,11 @@
             },
         },
         mounted() {
-
+            localStorage.removeItem(FORMAT_MENU);
+            localStorage.removeItem(SAAS_CURRENT_MENU);
+            localStorage.removeItem(SAAS_CURRENT_SUBMENU);
+            localStorage.removeItem(SAAS_CURRENT_LEVEL_ONE_MENU);
+            localStorage.removeItem(SAAS_CURRENT_LEVEL_TOP_MENU);
         }
     }
 </script>

@@ -136,13 +136,11 @@
                 if (ret.status == 0) {
                     this.handout = ret.result.list;
                 }
-                console.log(ret);
             },
             //获取讲义是否设置
             async GetCourseDisable() {
                 let course_id = this.$route.params.cid;
                 let ret = await GetCourseDisable(course_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     //0是没启用 1是启用了
                     this.ruleForm = {
@@ -169,7 +167,6 @@
                 if (ret.status == 0) {
                     this.handout = ret.result.list;
                 }
-                console.log(ret);
             },
             //删除数据
             handleDelete(index, row) {
@@ -237,7 +234,6 @@
                     course_id: this.course_id,
                 }
                 let ret = await AddCourseHandout(params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -300,7 +296,6 @@
                 }
                 console.log(params);
                 let ret = await updateCourseHandout(params.id, params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
