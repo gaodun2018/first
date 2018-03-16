@@ -232,7 +232,6 @@
                     this.videoList = ret.result.item_list;
                     this.eduTotal = ret.result.all_item_count;
                 }
-                console.log(ret);
             },
             visibleChange(bool) {  //开关函数
                 this.selectfalg = bool
