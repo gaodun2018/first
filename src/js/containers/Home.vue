@@ -34,7 +34,7 @@
                 >
                     <span class="item-icon" :id="item.Iconurl"></span>
                     <span class="item-title">{{item.Title}}</span>
-                    <span class="item-sub-title">Custom Relation Management</span>
+                    <!--<span class="item-sub-title">Custom Relation Management</span>-->
                 </li>
             </ul>
         </div>
