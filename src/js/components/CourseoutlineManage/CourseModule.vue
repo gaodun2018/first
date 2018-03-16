@@ -339,6 +339,7 @@
                 },
                 resLoading: false,//loading
                 resourceinput: '',//根据id或者名称搜索
+                searchResourceTimer: '',//搜索资源演示器
             }
         },
         methods: {
@@ -403,28 +404,35 @@
             },
             //点击搜索
             async handleIconClick() {
-                this.searchResource();
+                if (this.pagination.current_page != 1) {
+                    this.pagination.current_page = 1;
+                } else {
+                    this.searchResource();
+                }
             },
             //搜索资源
-            async searchResource(val) {
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: val ? val : 1,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                    keywords: this.resourceinput,
-                    project_id: this.project_id,
-                    subject_id : this.subject_id,
-                }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                    this.pagination.current_page = parseInt(ret.result.pagination.current_page);
-                }
+            searchResource(val) {
+                clearTimeout(this.searchResourceTimer)
+                this.resLoading = true;
+                this.searchResourceTimer = setTimeout(async () => {
+                    clearTimeout(this.searchResourceTimer)
+                    let discriminator = {
+                        discriminator: this.selcurrent,
+                        page_size: 50,
+                        page: val ? val : 1,
+                        'order_by[]': 'desc',   //顺序   倒序
+                        'order_by_field[]': 'id',   //排序字段
+                        keywords: this.resourceinput,
+                        project_id: this.project_id,
+                        subject_id: this.subject_id,
+                    }
+                    let ret = await getResource(discriminator);
+                    if (ret.status == 0) {
+                        this.resLoading = false;
+                        this.resourceTable = ret.result.resources;
+                        this.pagination.total = ret.result.pagination.total;
+                    }
+                }, 500)
             },
             prev() {
                 if (this.active <= 0) return
