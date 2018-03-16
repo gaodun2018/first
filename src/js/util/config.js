@@ -12,7 +12,7 @@ export const getEnv = () => {
     }
     let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre[0] === 'zeus-') {
+    if (pre[0] === 'zeus-' || pre[0] === 'yun-') {
         return '';
     } else {
         pre[0] = pre[0] == 'dev-' ? 't-' : pre[0];
@@ -29,7 +29,7 @@ export const getBaseUrl = () => {
     // let pre = location.host.match(/^.*-/);
     let pre = location.host.match(/(^.*?)-/);
     // 正式环境
-    if (pre[0] === 'zeus-') {
+    if (pre[0] === 'zeus-' || pre[0] === 'yun-') {
         return '//';
     } else {
         pre[0] = pre[0] == 'dev-' ? 't-' : pre[0];
@@ -70,7 +70,6 @@ export const checkIsAuth = (menu, nbid) => {
 }
 //格式化菜单树 => 面包屑菜单
 export const formatRoute = (menu, path) => {
-    console.log(path, 'this is path');
     if (!menu) return;
     //转换赋值
     let menuData = menu;
