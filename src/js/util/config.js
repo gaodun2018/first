@@ -1,7 +1,7 @@
-import {isIE9} from './util'
+import { isIE9 } from './util'
 import routesMenu from '../routes/routes.js'
 
-import {FORMAT_MENU} from '../util/keys.js'
+import { FORMAT_MENU } from '../util/keys.js'
 
 
 export const getEnv = () => {
@@ -50,19 +50,19 @@ export const setWindowNBID = (menu, path) => {
     }
 }
 export const setWindowNID = (menu, path) => {
-    for (var i in menu) {
-        if (menu[i].Url == path) {
-            window.nid = menu[i].ParentPath[1]
+        for (var i in menu) {
+            if (menu[i].Url == path) {
+                window.nid = menu[i].ParentPath[1]
 
-        }
-        if (menu[i].ChildNavigations) {
-            setWindowNID(menu[i].ChildNavigations, path);
+            }
+            if (menu[i].ChildNavigations) {
+                setWindowNID(menu[i].ChildNavigations, path);
+            }
         }
     }
-}
-//格式化菜单树 => 面包屑菜单
+    //格式化菜单树 => 面包屑菜单
 export const formatRoute = (menu, Title) => {
-    if(!menu)return;
+    if (!menu) return;
     //转换赋值
     let menuData = menu;
     let menuStr = JSON.stringify(menuData);
@@ -87,7 +87,7 @@ export const formatRoute = (menu, Title) => {
             }
         }
     }
-    createRoutes(routesMenus,Title);
+    createRoutes(routesMenus, Title);
     localStorage.setItem(FORMAT_MENU, JSON.stringify(formatMenuData));
 
 }
