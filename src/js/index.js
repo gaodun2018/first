@@ -24,10 +24,11 @@ import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
-import {setWindowNID,setWindowNBID, formatRoute} from './util/config';
+import {setWindowNID, setWindowNBID, formatRoute, checkIsAuth} from './util/config';
 import {SAAS_MENU, SAAS_CURRENT_MENU} from './util/keys';
 import Validate from './util/filter_rules'
 import VueJsonp from 'vue-jsonp'
+import {Message} from 'element-ui';
 
 Vue.use(VueJsonp)
 
@@ -48,9 +49,10 @@ router.beforeEach((to, from, next) => {
         window.SAASMENU = JSON.parse(localStorage.getItem(SAAS_MENU));
     }
 
-    // if (to.path == '/index') {
-    //     window.nid = 9;
-    // }
+    if (to.path == '/home' || to.path == '/login') {
+        window.nbid = '';
+        window.nid = '';
+    }
     // if (to.path == '/home') {
     //     window.nid = 9;
     // }
@@ -59,17 +61,25 @@ router.beforeEach((to, from, next) => {
     // store.dispatch('updateBreadcrumb', to.path);//更新面包屑
 
     setWindowNBID(window.SAASMENU, to.path); // window.nid
+    checkIsAuth(window.SAASMENU, window.nbid);//检查是否有权限
+    if (!window.isAuth) {
+        next({path: '/home'});
+        Message({
+            message: '您暂未开通权限'
+        })
+        return;
+    }
     store.dispatch('updateCurrentMenu', window.nbid);
     // if (!window.SAASCURRENTMENU) {
-        window.SAASCURRENTMENU = JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU));
+    window.SAASCURRENTMENU = JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU));
     // }
     setWindowNID(window.SAASCURRENTMENU, to.path); // window.nid
     store.dispatch('updateCurrentSubMenu', window.nid);
 
     //格式化菜单
-    formatRoute(JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU)));
+    formatRoute(JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU)), to.path);
     store.dispatch('updateBreadcrumb', to.path);//更新面包屑
-    
+
     document.title = `高顿教育 ${to.meta.title}` || '高顿教育'
     if (!to.query.url && from.query.url) {
         to.query.url = from.query.url

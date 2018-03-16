@@ -48,7 +48,7 @@
         </div>
 
         <div class="edu_table">
-            <el-table ref="multipleTable" v-loading="loading" :row-class-name="tableRowClassName"
+            <el-table ref="multipleTable" v-loading="tableLoading" :row-class-name="tableRowClassName"
                       @selection-change="handleSelectionChange" border :data="CourseLineList" style="width: 100%">
                 <el-table-column prop="id" label="大纲ID" min-width="100" fixed>
                 </el-table-column>
@@ -133,6 +133,7 @@
         components: {},
         data() {
             return {
+                tableLoading:false,//列表loading
                 btnLoading: false,  //按钮loading
                 searchinput: '',
                 CourseLineList: [],
@@ -196,7 +197,6 @@
                 // 添加一个课程大纲提交
                 this.btnLoading = true;
                 let ret = await CourseSyllabus({...ruleForm});
-                console.log(ret);
                 this.btnLoading = false;
                 if (ret.status == 0) {
                     this.dialogFormVisible = false;
@@ -227,7 +227,6 @@
                 // 修改一个课程大纲提交
                 this.btnLoading = true;
                 let ret = await UpdateCourseSyllabus(this.outlineid, {...this.ruleForm});
-                console.log(ret);
                 this.btnLoading = false;
                 if (ret.status == 0) {
                     this.dialogFormVisible = false;
@@ -325,6 +324,7 @@
             //拉去大纲列表
             async getCourseSyllabuses() {
                 console.log(this.currentPage);
+                this.tableLoading = true;
                 let ret = await CourseSyllabuses({
                     page: this.currentPage,
                     page_size: this.page_size,
@@ -334,6 +334,7 @@
                     keyword: this.searchinput
                 });
                 if (ret.status == 0) {
+                    this.tableLoading = false;
                     this.CourseLineList = ret.result.list;
                     this.courselinenum = ret.result.total;
                 }

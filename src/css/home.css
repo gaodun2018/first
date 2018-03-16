@@ -208,8 +208,8 @@
     vertical-align: middle;
 }
 
-#icon-resourcecenter {
-    background: url("../images/financeHome/icon_resourcecenter.png") no-repeat center;
+#icon-resource {
+    background: url("../images/financeHome/icon_resource.png") no-repeat center;
 }
 
 #icon-crm {
@@ -224,14 +224,32 @@
     background: url("../images/financeHome/icon_product.png") no-repeat center;
 }
 
-#icon-permission {
-    background: url("../images/financeHome/icon_permission.png") no-repeat center;
+#icon_quanxian {
+    background: url("../images/financeHome/icon_quanxian.png") no-repeat center;
 }
 
 #icon-business {
     background: url("../images/financeHome/icon_business.png") no-repeat center;
 }
 
+#icon_course {
+    background: url("../images/financeHome/icon_course.png") no-repeat center;
+}
+
+#icon_agent {
+    background: url("../images/financeHome/icon_agent.png") no-repeat center;
+}
+
+#icon_dayi {
+    background: url("../images/financeHome/icon_dayi.png") no-repeat center;
+}
+
+#icon_business {
+    background: url("../images/financeHome/icon_business.png") no-repeat center;
+}
+#icon_tiku {
+    background: url("../images/financeHome/icon_tiku.png") no-repeat center;
+}
 .console-menu-items .item-title {
     width: 100%;
     height: 22px;

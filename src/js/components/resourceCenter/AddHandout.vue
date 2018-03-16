@@ -120,8 +120,8 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        const {tag_id, title, file, path, description} = this.ruleForm;
-                        let params = {tag_id, title, file, path, description}
+                        const {tag_id, title, file, path, description, region} = this.ruleForm;
+                        let params = {tag_id, title, file, path, description, region}
                         let ids = this.$route.query.id;
                         if (!ids && !this.isUpload) {
                             this.$message({
@@ -134,6 +134,17 @@
                         if (ids) {
                             saveMidfyLecturenote(ids, params).then(ret => {
                                 this.loading = false;
+                                if (ret.status == 0) {
+                                    this.$message({
+                                        message: "保存成功",
+                                        type: "success"
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: "保存失败",
+                                        type: "success"
+                                    });
+                                }
                             })
                         } else {
                             saveLecturenote(params).then(ret => {

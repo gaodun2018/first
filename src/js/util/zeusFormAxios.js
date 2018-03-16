@@ -8,7 +8,7 @@ var instance = axios.create({
     headers :{
         'Content-Type': 'application/x-www-form-urlencoded'
     },
-    withCredentials : true,
+    // withCredentials : true,   //不能携带cookie 网关会报big header
     transformRequest(data,headers){
         let strData = queryString.stringify(data);
         return strData;

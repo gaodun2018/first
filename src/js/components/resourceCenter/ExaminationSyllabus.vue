@@ -199,7 +199,6 @@
                 if(ret.status == 0){
                     this.ExaminationSyllabusList = ret.result;
                     this.itemCount = ret.message;
-                    console.log(ret);
                 }
             },
             handleSizeChange(val) {
