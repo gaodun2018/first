@@ -28,15 +28,15 @@
             <el-row type="flex" align="bottom">
                 <el-col :sm="12">
                     <el-row>
-                        <div class="select-search">
-                        </div>
+                        <div class="select-search"></div>
                     </el-row>
                 </el-col>
                 <el-col :sm="12">
                     <el-row type="flex" justify="end">
                         <div class="input-search">
-                            <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="input2"
-                                      :on-icon-click="handleIconClick"></el-input>
+                            <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="keywords"
+                                      :on-icon-click="handleIconClick"
+                                      @keydown.native.enter="handleIconClick"></el-input>
                             <el-button type="primary" size="small" v-if="unlocking('VIDEO_CREATE')">
                                 <router-link to="/resource/video/create">新增视频</router-link>
                             </el-button>
@@ -64,10 +64,11 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" min-width="240">
                     <template scope="scope">
-                        <el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>
-                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改</el-button>
+                        <!--<el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>-->
+                        <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改
+                        </el-button>
                         <el-button type="text" v-if="unlocking('VIDEO_DELETE')">删除</el-button>
-                        <el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>
+                        <!--<el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -102,6 +103,7 @@
                 radio: '全部',
                 radio2: '全部',
                 input2: '',
+                keywords: '',//关键字搜索
                 resource: {
                     resources: [],
                     pagination: {
@@ -137,7 +139,8 @@
                 let parameters = {
                     page_size: this.pageSize,
                     page: this.currentPage,
-                    discriminator: 'video'
+                    discriminator: 'video',
+                    keywords: this.keywords,
                 }
 
                 if (this.clver != '0') {
@@ -148,7 +151,6 @@
                 }
 
                 let r = await getResource(parameters)
-                console.error(r)
                 return r
             },
             async loadResources() {
@@ -156,15 +158,16 @@
                 let resourceResponse = await this.fetchResources()
                 let resources = resourceResponse.result
                 for (var resource of resources.resources) {
-                    resource.created_at = new Date(resource.created_at)
-                    resource.updated_at = this.formatDate(new Date(resource.updated_at))
+                    resource.created_at = new Date((resource.created_at * 1000))
+                    resource.updated_at = this.formatDate(new Date(resource.updated_at * 1000))
                     resource.project_name = (resource.tag == null) ? "" : resource.tag.name
 
                 }
                 this.resource = resources
                 let total = this.resource.pagination.total;
-                if (this.paginationTotal == 0)
-                    this.paginationTotal = total
+                // if (this.paginationTotal == 0)
+                //     this.paginationTotal = total
+                this.paginationTotal = total;
                 this.tags = this.resource.tags
                 this.loading = false
             },
@@ -174,13 +177,19 @@
                     " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
             },
             async didChangePage(page) {
+                this.currentPage = page;
                 this.loadResources()
             },
 
             didChangePageSize(pageSize) {
                 this.pageSize = pageSize;
                 this.loadResources()
-            }
+            },
+            handleIconClick() {    //输入框搜索
+                this.clver = "0";    //点击搜索所选项目
+                this.clversm = "0";    //点击搜索所选科目
+                this.loadResources();
+            },
         },
         computed: {},
         mounted() {

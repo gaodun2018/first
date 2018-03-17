@@ -382,11 +382,11 @@
             checkSyllabus(index, row) {
                 if (row.template == null) {
                     this.$router.push({
-                        path: '/CourseOutlineManage/CourseOutline/' + row.id,
+                        path: '/syllabus/manage/template/' + row.id,
                     })
                 } else {
                     this.$router.push({
-                        path: '/CourseOutlineManage/CourseModule/' + row.id,
+                        path: '/syllabus/manage/edit/' + row.id,
                     })
                 }
             }
