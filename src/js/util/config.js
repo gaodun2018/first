@@ -1,7 +1,7 @@
-import {isIE9} from './util'
+import { isIE9 } from './util'
 import routesMenu from '../routes/routes.js'
 
-import {FORMAT_MENU} from '../util/keys.js'
+import { FORMAT_MENU } from '../util/keys.js'
 
 
 export const getEnv = () => {
@@ -49,26 +49,26 @@ export const setWindowNBID = (menu, path) => {
     }
 }
 export const setWindowNID = (menu, path) => {
-    for (var i in menu) {
-        if (menu[i].Url == path) {
-            window.nid = menu[i].ParentPath[1]
-        }
-        if (menu[i].ChildNavigations) {
-            setWindowNID(menu[i].ChildNavigations, path);
+        for (var i in menu) {
+            if (menu[i].Url == path) {
+                window.nid = menu[i].ParentPath[1]
+            }
+            if (menu[i].ChildNavigations) {
+                setWindowNID(menu[i].ChildNavigations, path);
+            }
         }
     }
-}
-//检查是否有权限
+    //检查是否有权限
 export const checkIsAuth = (menu, nbid) => {
-    for (var i in menu) {
-        if (menu[i].NavigationId == nbid) {
-            window.isAuth = menu[i].isAuth;
-            return;
+        for (var i in menu) {
+            if (menu[i].NavigationId == nbid) {
+                window.isAuth = menu[i].isAuth;
+                return;
+            }
         }
+        window.isAuth = true;
     }
-    window.isAuth = true;
-}
-//格式化菜单树 => 面包屑菜单
+    //格式化菜单树 => 面包屑菜单
 export const formatRoute = (menu, path) => {
     if (!menu) return;
     //转换赋值

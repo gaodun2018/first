@@ -37,7 +37,7 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 财经云",
+        "Title": "财经云",
         "NavigationId": 10003,
         "ParentID": 0,
         "Url": "/home",
@@ -114,7 +114,7 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 新增视频",
+        "Title": "新增视频",
         "NavigationId": 10008,
         "ParentID": 0,
         "Url": "/resource/video/create",
@@ -131,10 +131,10 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 新增视频",
+        "Title": "编辑视频",
         "NavigationId": 10009,
         "ParentID": 0,
-        "Url": "/resource/video/edit/:id",
+        "Url": "/resource/video/edit",
         "Path": "components/resourceCenter/addVideo",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
@@ -148,7 +148,7 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 新增讲义",
+        "Title": "新增讲义",
         "NavigationId": 10009,
         "ParentID": 0,
         "Url": "/addHandout",
@@ -165,7 +165,7 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 新增知识点",
+        "Title": "新增知识点",
         "NavigationId": 10010,
         "ParentID": 0,
         "Url": "/addHandout",
@@ -182,7 +182,7 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "- 编辑知识点",
+        "Title": "编辑知识点",
         "NavigationId": 10011,
         "ParentID": 0,
         "Url": "/editKnowledge",

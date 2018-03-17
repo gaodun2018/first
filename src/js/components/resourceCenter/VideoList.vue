@@ -131,7 +131,7 @@
 
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
-                this.$router.push({name: "editVideo", params: {id: scope.row.id}})
+                this.$router.push({name: "10009", params: {id: scope.row.id}})
             },
             async fetchResources() {
                 let parameters = {
