@@ -52,14 +52,14 @@ export default [
         "Title": "编辑课程大纲",
         "NavigationId": 10004,
         "ParentID": 0,
-        "Url": "/CourseOutlineManage/CourseOutline",
+        "Url": "/syllabus/manage/template",
         "Path": "components/CourseOutlineManage/CourseOutline",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程大纲管理", url: ''},
-            {name: "课程大纲列表", url: '/CourseOutlineList'},
+            {name: "课程大纲列表", url: '/syllabus/manage/list'},
             {name: "编辑课程大纲", url: 'CourseOutlineManage/CourseOutline'},
         ]
     },
@@ -69,14 +69,14 @@ export default [
         "Title": "课程大纲模块",
         "NavigationId": 10005,
         "ParentID": 0,
-        "Url": "/CourseOutlineManage/CourseModule/",
+        "Url": "/syllabus/manage/edit",
         "Path": "components/CourseOutlineManage/CourseModule",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程大纲管理", url: ''},
-            {name: "课程大纲列表", url: '/CourseOutlineList'},
+            {name: "课程大纲列表", url: '/syllabus/manage/list'},
             {name: "编辑课程大纲", url: '/CourseOutlineManage/CourseModule'},
         ]
     },
@@ -85,14 +85,14 @@ export default [
         "Title": "课程基本设置",
         "NavigationId": 10006,
         "ParentID": 0,
-        "Url": "/CourseSet",
+        "Url": "/course/manage/basic/set",
         "Path": "components/CourseManage/CourseSet",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程管理", url: ''},
-            {name: "课程列表", url: '/CourseList'},
+            {name: "课程列表", url: '/course/manage/list'},
             {name: "课程基本设置", url: ''},
         ]
     },
@@ -101,14 +101,14 @@ export default [
         "Title": "课程内容",
         "NavigationId": 10007,
         "ParentID": 0,
-        "Url": "/CourseContent",
+        "Url": "/course/manage/content/set",
         "Path": "components/CourseManage/CourseContent",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程管理", url: ''},
-            {name: "课程列表", url: '/CourseList'},
+            {name: "课程列表", url: '/course/manage/list'},
             {name: "课程内容", url: ''},
         ]
     },
@@ -125,7 +125,7 @@ export default [
         "parenttitle": [
             {name: "资源中心", url: ''},
             {name: "视频管理", url: ''},
-            {name: "视频列表", url: '/VideoList'},
+            {name: "视频列表", url: '/resource/video/list'},
             {name: "新增视频", url: '/resource/video/create'},
         ]
     },
@@ -142,7 +142,7 @@ export default [
         "parenttitle": [
             {name: "资源中心", url: ''},
             {name: "视频管理", url: ''},
-            {name: "视频列表", url: '/VideoList'},
+            {name: "视频列表", url: '/resource/video/list'},
             {name: "编辑视频", url: '/resource/video/edit/:id'},
         ]
     },
