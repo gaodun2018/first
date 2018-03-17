@@ -281,7 +281,6 @@
                         //brief_introduction  富文本
                     }, 500)
                 }
-                console.log(ret);
             },
             async getProjectSubject() {
                 let ret = await getProjectSubject();
@@ -310,7 +309,6 @@
                 };
                 this.btnLoading = true;
                 SetCourse(url, fromData).then((res) => {
-                    console.log(res);
                     this.btnLoading = false;
                     if (res.status == 0) {
                         this.$message({
@@ -341,7 +339,7 @@
                 //关闭字数统计
                 wordCount: true,
                 //允许的最大字符数
-                maximumWords : 1000,
+                maximumWords : 500,
                 //关闭elementPath
                 elementPathEnabled: false,
                 //默认的编辑区域高度

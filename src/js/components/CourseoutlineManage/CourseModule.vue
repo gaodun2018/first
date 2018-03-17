@@ -215,7 +215,7 @@
                 </el-table>
                 <el-pagination
                     @current-change="handleCurrentChange"
-                    :current-page="pagination.current_page"
+                    :current-page.sync="pagination.current_page"
                     :page-size="50"
                     layout="total, prev, pager, next, jumper"
                     :total="pagination.total">
@@ -290,6 +290,8 @@
         },
         data() {
             return {
+                project_id: '',     //项目id
+                subject_id: '',   //科目id
                 btnLoading: false,  //按钮loading
                 active: 0,
                 resourceRadio: '',    //选择的资源
@@ -336,7 +338,8 @@
                     total: 1,       //资源列表总数量
                 },
                 resLoading: false,//loading
-                resourceinput:'',//根据id或者名称搜索
+                resourceinput: '',//根据id或者名称搜索
+                searchResourceTimer: '',//搜索资源演示器
             }
         },
         methods: {
@@ -391,65 +394,50 @@
                 this.active++;
                 this.progressText[this.active].isCustomerConfirm = true;
                 this.showitem();
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: 1,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                console.log(ret);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                }
-
+                this.resourceinput = '';  //输入框搜索初始化
+                this.searchResource();
             },
             //分页搜索
             async handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
                 val = Number(val)
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: val,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                }
+                this.searchResource(val);
             },
             //点击搜索
             async handleIconClick() {
-                let discriminator = {
-                    discriminator: this.selcurrent,
-                    page_size: 50,
-                    page: 1,
-                    'order_by[]': 'desc',   //顺序   倒序
-                    'order_by_field[]': 'id',   //排序字段
-                    keywords:this.resourceinput
+                if (this.pagination.current_page != 1) {
+                    this.pagination.current_page = 1;
+                } else {
+                    this.searchResource();
                 }
-                this.resLoading = true
-                let ret = await getResource(discriminator);
-                if (ret.status == 0) {
-                    this.resLoading = false;
-                    this.resourceTable = ret.result.resources;
-                    this.pagination.total = ret.result.pagination.total;
-                }
+            },
+            //搜索资源
+            searchResource(val) {
+                clearTimeout(this.searchResourceTimer)
+                this.resLoading = true;
+                this.searchResourceTimer = setTimeout(async () => {
+                    clearTimeout(this.searchResourceTimer)
+                    let discriminator = {
+                        discriminator: this.selcurrent,
+                        page_size: 50,
+                        page: val ? val : 1,
+                        'order_by[]': 'desc',   //顺序   倒序
+                        'order_by_field[]': 'id',   //排序字段
+                        keywords: this.resourceinput,
+                        project_id: this.project_id,
+                        subject_id: this.subject_id,
+                    }
+                    let ret = await getResource(discriminator);
+                    if (ret.status == 0) {
+                        this.resLoading = false;
+                        this.resourceTable = ret.result.resources;
+                        this.pagination.total = ret.result.pagination.total;
+                    }
+                }, 500)
             },
             prev() {
                 if (this.active <= 0) return
                 this.progressText[this.active].isCustomerConfirm = false;
                 this.active--;
-                console.log(this.active);
                 this.showitem();
             },
             showitem() {
@@ -522,7 +510,6 @@
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
-                    console.log(retv);
                     this.btnLoading = false;
                     if (retv.status == 0) {
                         this.$message({
@@ -573,7 +560,6 @@
                         tag_id: this.tag_id
                     }
                     let retv = await addSyllabusResource(id, params);
-                    console.log(retv);
                     if (retv.status == 0) {
                         this.$message({
                             type: 'success',
@@ -590,7 +576,6 @@
             },
             //弹出修改资源的弹层
             openeEditResource(item) {
-                console.log(item);
                 this.active = 0;
                 this.progressText.forEach((item, index) => {
                     if (index == 0) {
@@ -610,7 +595,6 @@
             },
             // 弹出资源删除框
             openDelResDialog(id) {
-                console.log(id);
                 this.currentId = id;
                 this.dialogVisible = true;
                 this.deleteModule = false;
@@ -625,7 +609,6 @@
             async confirmDelete() {
                 let id = this.currentId;
                 let ret = await DeleteSyllabusItem(id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         message: '删除成功',
@@ -702,7 +685,6 @@
                         };
                         this.btnLoading = true;
                         let ret = await ChangeSyllabusItem(id, name);
-                        console.log(ret);
                         this.btnLoading = false;
                         if (ret.status == 0) {
                             this.$message({
@@ -738,15 +720,15 @@
                 if (ret.status == 0) {
                     this.tabledata = ret.result;
                 }
-                console.log(ret);
             },
             //查看大纲的详情
             async checkSyllabus() {
                 let ret = await checkSyllabus(this.coursesyllid);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.title = ret.result.title;
                     this.tag_id = ret.result.tag_id;
+                    this.project_id = ret.result.project.id;
+                    this.subject_id = ret.result.subject.id;
                     this.coursesylllevel = ret.result.template.level_max;    //大纲的层级
                 }
             },

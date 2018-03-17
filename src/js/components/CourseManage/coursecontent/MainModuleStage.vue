@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column label="阶段课程大纲 " width="400">
                     <template scope="scope">
-                        <span>{{scope.row.syllabus_name}}</span>
+                        <span>{{scope.row.syllabus_id}} - {{scope.row.syllabus_name}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -52,9 +52,9 @@
                     <el-input v-model="NewTableForm.description" class="coursetxt"></el-input>
                 </el-form-item>
                 <el-form-item label="阶段课程大纲" prop="syllabus_id"
-                              :rules="[{required: true, message: '请选择网课类型', trigger: 'change'}]">
+                              :rules="[{required: true, message: '选择该阶段的课程大纲', trigger: 'change'}]">
                     <el-select v-model="NewTableForm.syllabus_id" placeholder="选择该阶段的课程大纲" style="width: 90%;">
-                        <el-option :label="item.title" :value="String(item.id)" v-for="(item,index) in outlineList"
+                        <el-option :label="item.id+' - '+item.title" :value="String(item.id)" v-for="(item,index) in outlineList"
                                    :key="item.id"></el-option>
                     </el-select>
                 </el-form-item>
@@ -107,7 +107,6 @@
                     course_id: this.course_id,
                 }
                 let ret = await AddCourseStage(params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -137,7 +136,6 @@
                     course_id: this.course_id,
                 }
                 let ret = await changeStage(gradation_id, params);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -169,7 +167,6 @@
             async DeleteStage(){
                 let gradation_id = this.gradation_id;
                 let ret = await DeleteStage(gradation_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$message({
                         type: 'success',
@@ -205,7 +202,6 @@
             async getStageAndOutline(){
                 let course_id = this.course_id;
                 let ret = await getStageAndOutline(course_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.tableData = ret.result.gradation_list;
                 }

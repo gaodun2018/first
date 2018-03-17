@@ -4,12 +4,12 @@
       <el-col :span="12">
         <el-upload
           class="upload-demo"
-          with-credentials
           :action="materialUpload"
           :on-change="handleChange"
           :on-remove="handleRemove"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
+          :headers="apiHeader"
           :before-upload="beforeAvatarUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
@@ -27,12 +27,15 @@
 
 <script>
   import { getBaseUrl,getEnv } from '../../../util/config';
+  import {SAAS_TOKEN} from '../../../util/keys.js'
+  import {getCookie, setCookie} from 'cookieUtils';
   export default {
     components: {},
     data() {
       return {
         fileList: [],
         imageUrl: '',
+          apiHeader:''
       }
     },
     computed:{
@@ -44,7 +47,7 @@
         }
       },
       materialUpload(){
-        return getBaseUrl() + 'course-api.gaodun.com/upload/picture';
+        return getBaseUrl() + 'apigateway.gaodun.com/course-api/upload/picture';
       }
     },
     methods: {
@@ -90,6 +93,8 @@
     destroyed() {
     },
     created() {
+        let token = 'Basic ' + getCookie(SAAS_TOKEN);
+        this.apiHeader = {Authentication: token};
     }
   }
 </script>

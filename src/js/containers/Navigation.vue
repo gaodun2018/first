@@ -9,6 +9,7 @@
         </div>
         <el-tabs v-model="id" @tab-click="handleClick">
             <el-tab-pane v-for="(item,index) in submenu" :key="item.NavigationId" :item="item" :label="item.Title"
+                         v-if="item.isAuth"
                          :name="item.NavigationId">
                 {{item}}
             </el-tab-pane>

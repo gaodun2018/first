@@ -189,7 +189,6 @@
           plan_id:this.form.plan_id?this.form.plan_id:'0'
         }
         let ret = await changeStudentPlan(class_id,student_id,plan_id);
-        console.log(ret);
         if(ret.data.status == 0){
           this.dialogFormVisible = false;
           this.$message({

@@ -170,7 +170,6 @@
             async getCourseResourceIntro() {
                 let course_id = this.course_id;
                 let ret = await getCourseResourceIntro(course_id);
-                console.log(ret);
                 if (ret.status == 0) {
                     this.$store.dispatch('saveResourceIntro', ret.result);
                 }

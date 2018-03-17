@@ -86,7 +86,6 @@
       //选择大纲模板
       async selectSyllabus(template_id){
         let ret = await selectSyllabus(this.coursesyllid,{'template_id':template_id});
-        console.log(ret);
         if(ret.status == 0&& ret.result == true){
           this.$router.replace({
            path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid
@@ -96,7 +95,6 @@
       //获取大纲的模板列表
       async OutlineTemplates(){
         let ret = await CourseSyllabusTemplates();
-        console.log(ret);
         if(ret.status == 0){
           this.modulelist = ret.result;
         }
@@ -104,7 +102,6 @@
       //查看大纲的详情
       async checkSyllabus(){
         let ret = await checkSyllabus(this.coursesyllid);
-        console.log(ret);
         if(ret.status == 0){
           this.title = ret.result.title;
           //当用户已经选择大纲时则直接跳转过去

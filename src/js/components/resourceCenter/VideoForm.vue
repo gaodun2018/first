@@ -1,18 +1,18 @@
 <template>
     <div class="module-clues-content add-resource">
-        <div>
+    <!--    <div>
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/VideoList' }">视频列表</el-breadcrumb-item>
                 <el-breadcrumb-item v-if="undefined === id">添加视频</el-breadcrumb-item>
                 <el-breadcrumb-item v-if="undefined !== id">编辑视频</el-breadcrumb-item>
             </el-breadcrumb>
-        </div>
+        </div>-->
         <div class="outlineeat">
             新增视频
         </div>
         <div class="frombox">
             <el-form :model="ruleForm" :rules="resourceFormRules" ref="ruleForm" label-width="100px"
-                     class="demo-ruleForm" v-loading.fullscreen.lock="loading">
+                     class="demo-ruleForm" v-loading="loading">
 
                 <el-form-item label="视频名称" prop="title">
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>

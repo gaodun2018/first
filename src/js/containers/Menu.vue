@@ -1,20 +1,25 @@
 <template>
     <div>
         <el-menu :default-active="activeId" :unique-opened="true" :router="true" class="el-menu-vertical-demo">
-            <el-submenu :index="item.Url" v-if="item.ChildNavigations" v-for="(item,index) in menu" :key="item.NavigationId">
+            <el-submenu :index="item.Url" v-if="item.ChildNavigations&&item.isAuth" v-for="(item,index) in menu"
+                        :key="item.NavigationId">
                 <template slot="title">
-                <svg class="icon" aria-hidden="true">
-                    <use :xlink:href="item.Iconurl"></use>
-                </svg>
+                    <svg class="icon" aria-hidden="true">
+                        <use :xlink:href="item.Iconurl"></use>
+                    </svg>
                     {{item.Title}}
                 </template>
-                <el-menu-item :key="item2.NavigationId" :route="{path:`${item2.Url}`}" v-for="(item2,index2) in item.ChildNavigations" :index="item2.Url">
+                <el-menu-item :key="item2.NavigationId" :route="{path:`${item2.Url}`}"
+                              v-for="(item2,index2) in item.ChildNavigations" :index="item2.Url" v-if="item2.isAuth">
                     <a v-if="item2.AppId != 180302 " href="/" style="display:block;">{{item2.Title}}</a>
-                    <span class="beyond-hidden" style="margin-right: -20px;" v-if="item2.AppId == 180302" :title="item2.Title">{{item2.Title}}</span>
+                    <span class="beyond-hidden" style="margin-right: -20px;" v-if="item2.AppId == 180302"
+                          :title="item2.Title">{{item2.Title}}</span>
                 </el-menu-item>
             </el-submenu>
             <!-- 没有二级菜单的 -->
-            <el-menu-item v-if="!item3.ChildNavigations" :key="item3.NavigationId" :route="{path:`${item3.Url}`}" v-for="(item3,index3) in menu" :index="item3.Url  || Math.random()">
+            <el-menu-item v-if="!item3.ChildNavigations&&item3.isAuth" :key="item3.NavigationId"
+                          :route="{path:`${item3.Url}`}" v-for="(item3,index3) in menu"
+                          :index="item3.Url  || Math.random()">
                 <svg class="icon" aria-hidden="true">
                     <use :xlink:href="item3.Iconurl"></use>
                 </svg>
@@ -28,10 +33,11 @@
 </style>
 <script>
     import Vue from 'vue';
-    import { mapState } from 'vuex';
-    import { parseUrl } from 'base';
-    import { SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_MENU } from '../util/keys';
-    import { Row, Col, Menu, Submenu, MenuItem, MenuItemGroup} from 'element-ui';
+    import {mapState} from 'vuex';
+    import {parseUrl} from 'base';
+    import {SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_MENU} from '../util/keys';
+    import {Row, Col, Menu, Submenu, MenuItem, MenuItemGroup} from 'element-ui';
+
     Vue.component(Row.name, Row);
     Vue.component(Col.name, Col);
     Vue.component(Menu.name, Menu);
@@ -39,18 +45,18 @@
     Vue.component(MenuItem.name, MenuItem);
     Vue.component(MenuItemGroup.name, MenuItemGroup);
     export default {
-        name:'saas-menu',
-        computed:{
+        name: 'saas-menu',
+        computed: {
             ...mapState({
-                menu: state=> state.navigation.currentSubMenu
+                menu: state => state.navigation.currentSubMenu
             }),
-            activeId(){
+            activeId() {
                 return this.$store.state.navigation.currentTabId;
             }
         },
         mounted() {
             //this.$store.dispatch('updateCurrentTabId',parseUrl().nid)
-            this.$store.dispatch('updateCurrentTabId',this.$route.path);
+            this.$store.dispatch('updateCurrentTabId', this.$route.path);
         }
     }
 </script>

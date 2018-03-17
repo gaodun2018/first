@@ -13,4 +13,5 @@ export const SAAS_CURRENT_LEVEL_TOP_MENU = 'SAAS_CURRENT_LEVEL_TOP_MENU'; // 当
 export const SAAS_USER_FUNCTIONS = 'SAAS_USER_FUNCTIONS'; //用户的功能权限
 
 export const SAAS_USER_INFO = 'SAAS_USER_INFO'; // 用户信息
+export const SAAS_USER_NAME = 'SAAS_USER_NAME'; // 用户登陆账号
 export const FORMAT_MENU = 'FORMAT_MENU'; //  格式化菜单
