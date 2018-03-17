@@ -169,7 +169,6 @@
                 }
 
                 let r = await getResource(parameters)
-                console.error(r)
                 return r
             },
             async loadResources() {
