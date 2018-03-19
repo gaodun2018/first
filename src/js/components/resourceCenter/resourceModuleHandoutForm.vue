@@ -4,9 +4,9 @@
             {{id?'编辑讲义':'新增讲义'}}
         </div>
         <div class="frombox">
-            <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-loading="loading">
                 <el-form-item label="项目" prop="region" class="w_50"
-                              :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
+                              :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
                     <el-select v-model="ruleForm.region" filterable @change="didChangeProjectSelection"
                                @visible-change="visibleChange">
                         <el-option :label="tag.name" :key="tag.id" :value="String(tag.id)"
@@ -214,6 +214,7 @@
                     if (valid) {
                         const {tag_id, title, file, path, description, region} = this.ruleForm;
                         let params = {tag_id, title, file, path, description, region}
+                        params.tag_id == '0' ?   this.ruleForm.region :  params.tag_id;
                         let ids = this.$route.query.id;
                         if (!ids && !this.isUpload) {
                             this.$message({

@@ -4,32 +4,39 @@
             {{id?'编辑视频':'新增视频'}}
         </div>
         <div class="frombox">
-            <el-form :model="ruleForm" :rules="resourceFormRules" ref="ruleForm" label-width="100px"
+            <el-form :model="ruleForm" ref="ruleForm" label-width="120px"
                      class="demo-ruleForm" v-loading="loading">
-                <el-form-item label="视频名称" prop="title">
+                <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:30})">
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
-                <el-form-item label="项目" prop="project" class="">
-                    <el-select v-model="ruleForm.project" style="width: 150px;" filterable
+                <el-form-item label="项目" prop="project" class="w_50"
+                              :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
+                    <el-select v-model="ruleForm.project" filterable
                                @change="didChangeProjectSelection" @visible-change="visibleChange">
                         <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
                     </el-select>
-                    <el-select v-model="ruleForm.subject" filterable style="width: 150px;">
-                        <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
+                </el-form-item>
+                <el-form-item label="科目" prop="subject" class="w_50"
+                              :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
+                    <el-select v-model="ruleForm.subject" filterable>
+                        <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in subjects"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注说明" prop="description">
                     <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
-                <el-form-item label="视频地址" prop="video_id">
+                <el-form-item label="视频地址" prop="video_id"
+                              :rules="[{required: true, message: '请输入视频ID', trigger: 'change'}]">
                     <el-input v-model="ruleForm.video_id" auto-complete="off" class="w_60"></el-input>
                     <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                 </el-form-item>
-                <el-form-item label="视频时长（分）" prop="duration_minute" class="displayinline">
+                <el-form-item label="视频时长（分）" prop="duration_minute" class="displayinline"
+                              :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
                     <el-input v-model="ruleForm.duration_minute" auto-complete="off"></el-input>
                     分
                 </el-form-item>
-                <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
+                <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
+                              :rules="[{message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
                     <el-input v-model="ruleForm.duration_second" auto-complete="off"></el-input>
                     秒
                 </el-form-item>
@@ -38,7 +45,7 @@
                 <!--</el-form-item>-->
                 <el-form-item style="text-align: right">
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
-                    <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+                    <el-button type="primary" :loading="loading" @click="submitForm('ruleForm')">保存</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -65,34 +72,13 @@
                 selectFalg: false,
                 ruleForm: {
                     title: '',
-                    project: '116',
+                    project: '',
                     subject: '',
                     video_id: '',
                     duration_minute: '',
                     duration_second: '',
                     description: '',
                     partner_id: '1'
-                },
-                resourceFormRules: {
-                    title: [
-                        {required: true, message: '请输入资源名称', trigger: 'blur'},
-                        {min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur'}
-                    ],
-                    project: [
-                        {required: true, message: '请选择项目', trigger: 'change'}
-                    ],
-                    subject: [
-                        {required: true, message: '请选择科目', trigger: 'change'}
-                    ],
-                    video_id: [
-                        {required: true, message: '请输入视频ID', trigger: 'change'}
-                    ],
-                    duration_minute: [
-                        {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
-                    ],
-                    duration_second: [
-                        {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
-                    ]
                 },
                 multipleSelection: []
             }
@@ -110,54 +96,58 @@
                 }
                 return this.ruleForm;
             },
-            getSubjectByProjectId(projectId) {
-                var subjects = null
-                for (var project of this.tags) {
-                    if (project.id == projectId) {
-                        subjects = project.children;
-                    }
-                }
-                return subjects
-            },
             //选择器开关函数
             visibleChange(bool) {
                 this.selectFalg = bool
             },
-            didChangeProjectSelection() {
-                console.error(this.ruleForm)
-                this.subjects = this.getSubjectByProjectId(this.ruleForm.project)
+            // 项目
+            didChangeProjectSelection(id) {
+                this.tags.forEach((item) => {
+                    if (item.id == id) {
+                        let subject_list = [...item.children];
+                        subject_list.unshift({
+                            id: '0',
+                            name: '全部'
+                        })
+                        this.subjects = subject_list;
+                        if (this.selectFalg) {
+                            this.ruleForm.subject = '0';
+                        }
+                    }
+                })
             },
             //选择知识点
             selectknowledge() {
                 this.$store.dispatch('changeDialog', true)
             },
-
-
-            createResourceForm() {
-                return {
+            async createResourceForm() {
+                let params = {
                     title: this.ruleForm.title,
                     description: this.ruleForm.description,
-                    tag_id: this.ruleForm.subject,
+                    tag_id: this.ruleForm.subject == '0' ? this.ruleForm.project : this.ruleForm.subject,
                     duration: `${this.ruleForm.duration_minute}:${this.ruleForm.duration_second}`,
                     video_id: this.ruleForm.video_id
                 }
+                this.loading = true;
+                let createResponse = await storeResource(params);
+                if (createResponse.status == 0) {
+                    this.loading = false;
+                    this.$message({
+                        message: "保存成功",
+                        type: "success"
+                    });
+                    this.resetForm('ruleForm');
+                } else {
+                    this.$message({
+                        message: "保存失败",
+                        type: "error"
+                    });
+                }
             },
-
             submitForm(formName) {
-                console.error('submit form')
-                console.error(this.$refs[formName])
                 this.$refs[formName].validate((valid) => {
-                    console.error(`form valid ${valid}`)
-                    this.loading = true
                     if (valid) {
-                        console.error('form creation')
-                        console.error(this.createResourceForm())
-                        let createResponse = storeResource(this.createResourceForm())
-                        createResponse.then((resolve, reject) => {
-                            this.loading = false
-                            this.$router.go(-1)
-                        })
-                        console.error(createResponse)
+                        this.createResourceForm();
                     } else {
                         console.log('error submit!!');
                     }
