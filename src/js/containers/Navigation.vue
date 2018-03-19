@@ -38,9 +38,11 @@
 <script>
     import Vue from 'vue';
     import {mapState, mapActions} from 'vuex';
-    import {setCookie} from 'cookieUtils';
+    import {setCookie, getCookie} from 'cookieUtils';
     import {parseUrl} from 'base';
+    import {userLogout} from '../api/login.js'
     import {getEnv} from '../util/config';
+    import {appid} from '../common/config.js';
     import Modal from 'vueModal';
 
     import {
@@ -168,34 +170,38 @@
                     }, 0)
                 }
             },
-            handleCommands(command) {
+            async handleCommands(command) {
                 let prefix = getEnv();
                 if (command == 'logout') {
-                    let exp = new Date();
-                    exp.setTime(exp.getTime() - 1);
-                    setCookie("token", undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    })
-                    // sessionStorage.clear(SAAS_OPEN_TABS);
-                    localStorage.clear();
-                    this.$store.state.navigation.currentLevelOneId = 488;
-                    window.crmSocket && window.crmSocket.disconnect();
-                    this.$router.push({path: '/login'});
-                    // location.reload();
-                } else if (command == 'passwordModify') {
-                    require.ensure([], (require) => {
-                        let PasswordModify = require("./PasswordModify.vue");
-                        Modal.openComponent(PasswordModify, {
-                            title: '修改密码',
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            width: '500px',
-                            self: this,
+                    let params = {
+                        appid: appid,
+                        token: getCookie(SAAS_TOKEN)
+                    }
+                    let logoutRet = await userLogout(params)
+                    if(logoutRet.status == 0){
+                        let exp = new Date();
+                        exp.setTime(exp.getTime() - 1);
+                        setCookie(SAAS_TOKEN, undefined, {
+                            expires: exp
                         });
-                    }, 'passwordModify');
+                        setCookie(`${prefix}GDSID`, undefined, {
+                            expires: exp
+                        })
+                        localStorage.clear();
+                        this.$store.state.navigation.currentLevelOneId = 9;
+                        this.$router.push({path: '/login'});
+                    }
+                } else if (command == 'passwordModify') {
+                    // require.ensure([], (require) => {
+                    //     let PasswordModify = require("./PasswordModify.vue");
+                    //     Modal.openComponent(PasswordModify, {
+                    //         title: '修改密码',
+                    //         showCancelButton: false,
+                    //         showConfirmButton: false,
+                    //         width: '500px',
+                    //         self: this,
+                    //     });
+                    // }, 'passwordModify');
                 }
             }
         }

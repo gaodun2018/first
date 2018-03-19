@@ -75,7 +75,7 @@
             <el-button type="text"><router-link :to="'/EducationalClass/'+scope.row.course_id+'/'+scope.row.class_id" tag="a" target="_blank">查看详情</router-link></el-button>
 
 
-            <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
+            <!-- <el-button type="text"><router-link :to="'/SyllabusManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
         </el-table-column>

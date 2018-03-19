@@ -14,7 +14,7 @@ axios.defaults.baseURL = '//';
 axios.defaults.headers.post['Content-Type'] = "application/json";
 axios.defaults.headers.put['Content-Type'] = "application/json";
 axios.interceptors.request.use(function (config) {
-    let token = getCookie("token");
+    let token = getCookie(SAAS_TOKEN);
     // 非登录接口
     if (config.url.indexOf('login') === -1 && token == undefined) {
         localStorage.clear();

@@ -8,6 +8,8 @@ import { getBaseUrl } from '../util/config'
 // 登录
 export const userLogin = parameters => formPost(`${getBaseUrl()}apigateway.gaodun.com/api/v1/vigo/login`, parameters)
 
+//退出登录
+export const userLogout = parameters => formPost(`${getBaseUrl()}apigateway.gaodun.com/api/v1/vigo/logout`, parameters)
 
 /*export const getToken = parameters => post('/token', parameters);
 

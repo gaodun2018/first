@@ -44,7 +44,7 @@
 <script>
 
     import {getCookie, setCookie} from 'cookieUtils';
-    import {getCurrentUserMenuTree, openTiku} from "../api/login.js";
+    import {getCurrentUserMenuTree,userLogout} from "../api/login.js";
     import {stringify} from 'queryString';
     import {
         SAAS_MENU,
@@ -198,22 +198,27 @@
                     message: '您暂未开通权限'
                 })
             },
-            handleCommands(command) {
+            async handleCommands(command) {
                 let prefix = getEnv();
                 if (command == 'logout') {
-                    let exp = new Date();
-                    exp.setTime(exp.getTime() - 1);
-                    setCookie("token", undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    })
-                    // sessionStorage.clear(SAAS_OPEN_TABS);
-                    localStorage.clear();
-                    this.$store.state.navigation.currentLevelOneId = 488;
-                    window.crmSocket && window.crmSocket.disconnect();
-                    this.$router.push({path: '/login'});
+                    let params = {
+                        appid: appid,
+                        token: getCookie(SAAS_TOKEN)
+                    }
+                    let logoutRet = await userLogout(params)
+                    if(logoutRet.status == 0){
+                        let exp = new Date();
+                        exp.setTime(exp.getTime() - 1);
+                        setCookie(SAAS_TOKEN, undefined, {
+                            expires: exp
+                        });
+                        setCookie(`${prefix}GDSID`, undefined, {
+                            expires: exp
+                        })
+                        localStorage.clear();
+                        this.$store.state.navigation.currentLevelOneId = 9;
+                        this.$router.push({path: '/login'});
+                    }
                 } else if (command == 'passwordModify') {
                     /*require.ensure([], (require) => {
                      let PasswordModify = require("./PasswordModify.vue");

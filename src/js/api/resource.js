@@ -1,5 +1,5 @@
 import {post, get, zDelete} from '../util/zeusAxios';
-import {formPost} from '../util/zeusFormAxios';
+import {formPost, formPut} from '../util/zeusFormAxios';
 import {Message} from 'element-ui';
 import {getBaseUrl} from '../util/config'
 
@@ -14,6 +14,9 @@ export const getTags = (slug, params) => get(`${getBaseUrl()}apigateway.gaodun.c
 
 //保存视频资源
 export const storeResource = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video`, params)
+
+//修改视频资源
+export const editVideoResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video/${id}`, params)
 
 
 // 讲义保存
