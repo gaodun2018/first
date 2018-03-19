@@ -174,7 +174,7 @@ export const routes = [
 		{ path: '/course/manage/list',meta:{ title:'课程列表' }, name:'861',component: CourseList }, // 课程列表
 		{ path: '/syllabus/manage/list',meta:{ title:'课程大纲列表' }, name:'863',component: CourseOutlineList }, // 课程大纲列表
 		{ path: '/syllabus/manage/template/:sid',meta:{ title:'编辑课程大纲' }, name:'10004',component: CourseOutline }, // 编辑课程大纲
-		{ path: '/syllabus/manage/template/:sid',meta:{ title:'课程大纲模块' }, name:'10005',component: CourseModule }, // 课程大纲模块
+		{ path: '/syllabus/manage/edit/:sid',meta:{ title:'课程大纲模块' }, name:'10005',component: CourseModule }, // 课程大纲模块
 		{ path: '/course/manage/basic/set/:cid',meta:{ title:'课程基本设置' }, name:'10006',component: CourseSet }, // 课程基本设置
 		{ path: '/course/manage/content/set/:cid',meta:{ title:'课程内容' }, name:'10007',component: CourseContent }, // 课程内容
 		{ path: '/resource/video/create',meta:{ title:'新增视频' }, name:'createVideo',component: AddVideo }, // 新增视频

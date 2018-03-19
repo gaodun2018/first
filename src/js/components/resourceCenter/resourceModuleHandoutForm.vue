@@ -15,7 +15,7 @@
                 <el-form-item label="科目" prop="tag_id" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
                     <el-select v-model="ruleForm.tag_id">
-                        <el-option v-for="item in projectData" filterable :key="item.id" :label="item.name"
+                        <el-option v-for="item in subjectData" filterable :key="item.id" :label="item.name"
                                    :value="String(item.id)"></el-option>
                     </el-select>
                 </el-form-item>
@@ -26,8 +26,17 @@
                     <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="文件名">
-                    <el-upload :headers="apiHeader" :file-list="fileList" drag :on-success="uploadSuccess"
-                               ref="onUpload" :action="materialUpload">
+                    <el-upload
+                        :headers="apiHeader"
+                        :file-list="fileList"
+                        drag
+                        :on-success="uploadSuccess"
+                        :on-change="handleChange"
+                        :on-remove="handleRemove"
+                        :on-error="handleAvatarError"
+                        :before-upload="beforeAvatarUpload"
+                        ref="onUpload"
+                        :action="materialUpload">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或
                             <em>点击上传</em>
@@ -43,8 +52,7 @@
                 </el-form-item>
             </el-form>
         </div>
-
-        <SelectKnowledge></SelectKnowledge>
+        <!--<SelectKnowledge></SelectKnowledge>-->
     </div>
 </template>
 <style>
@@ -71,7 +79,7 @@
         data() {
             return {
                 tags: [],
-                projectData: [],
+                subjectData: [],
                 fileList: [],
                 apiHeader: {},
                 isUpload: false,
@@ -109,60 +117,6 @@
             selectknowledge() {
                 this.$store.dispatch('changeDialog', true)
             },
-
-            // 保存讲义
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        const {tag_id, title, file, path, description, region} = this.ruleForm;
-                        let params = {tag_id, title, file, path, description, region}
-                        let ids = this.$route.query.id;
-                        if (!ids && !this.isUpload) {
-                            this.$message({
-                                message: "需上传文件才能保存",
-                                type: "warning"
-                            });
-                            return;
-                        }
-                        this.loading = true;
-                        if (ids) {
-                            saveMidfyLecturenote(ids, params).then(ret => {
-                                this.loading = false;
-                                if (ret.status == 0) {
-                                    this.$message({
-                                        message: "保存成功",
-                                        type: "success"
-                                    });
-                                } else {
-                                    this.$message({
-                                        message: "保存失败",
-                                        type: "success"
-                                    });
-                                }
-                            })
-                        } else {
-                            saveLecturenote(params).then(ret => {
-                                this.loading = false;
-                                this.isUpload = false;
-                                this.fileList = [];
-                                this.ruleForm.path = '';
-                                if (ret.status == 0) {
-                                    this.$message({
-                                        message: "保存成功",
-                                        type: "success"
-                                    });
-                                } else {
-                                    this.$message({
-                                        message: "保存失败",
-                                        type: "success"
-                                    });
-                                }
-                            })
-                        }
-                    }
-                });
-            },
-
             // 重置
             resetForm(formName) {
                 this.$refs[formName].resetFields();
@@ -170,7 +124,36 @@
                     this.fileList = [];
                 }, 0)
             },
-
+            //上传前回调
+            beforeAvatarUpload(file) {
+                var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+                const extension = testmsg === 'pdf'
+                if (!extension) {
+                    this.$message({
+                        message: '上传文件只能是 pdf格式!',
+                        type: 'warning'
+                    });
+                }
+                return extension;
+            },
+            //上传文件改变回调
+            handleChange(file, fileList) {
+                this.fileList = fileList.slice(-1);
+            },
+            //移除文件回调
+            handleRemove(file, fileList) {
+                if(fileList.length==0){
+                    this.isUpload = false;
+                }
+                this.fileList = fileList;
+            },
+            //上传失败回调
+            handleAvatarError(err, file, fileList) {
+                this.$message.error('上传失败！');
+                setTimeout(() => {
+                    this.fileList = [];
+                }, 0)
+            },
             // 上传结束
             uploadSuccess(response, file) {
                 if (response.status === 0) {
@@ -195,14 +178,69 @@
 
             // 项目
             didChangeProjectSelection(id) {
-                this.projectData = [];
-                this.ruleForm.project = '';
+                this.subjectData = [];
+                this.ruleForm.tag_id = '';
                 this.tags.forEach((item) => {
                     if (item.id == id) {
-                        this.projectData = item.children;
+                        this.subjectData = item.children;
                     }
                 })
-            }
+            },
+            // 保存讲义
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        const {tag_id, title, file, path, description, region} = this.ruleForm;
+                        let params = {tag_id, title, file, path, description, region}
+                        let ids = this.$route.query.id;
+                        if (!ids && !this.isUpload) {
+                            this.$message({
+                                message: "需上传文件才能保存",
+                                type: "warning"
+                            });
+                            return;
+                        }
+                        this.loading = true;
+                        if (ids) {
+                            //修改讲义
+                            saveMidfyLecturenote(ids, params).then(ret => {
+                                this.loading = false;
+                                if (ret.status == 0) {
+                                    this.$message({
+                                        message: "保存成功",
+                                        type: "success"
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: "保存失败",
+                                        type: "error"
+                                    });
+                                }
+                            })
+                        } else {
+                            //新建讲义
+                            saveLecturenote(params).then(ret => {
+                                this.loading = false;
+                                this.isUpload = false;
+                                this.fileList = [];
+                                // this.ruleForm.path = '';
+                                this.resetForm('ruleForm');
+                                if (ret.status == 0) {
+                                    this.$message({
+                                        message: "保存成功",
+                                        type: "success"
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: "保存失败",
+                                        type: "error"
+                                    });
+                                }
+                            })
+                        }
+                    }
+                });
+            },
         },
 
         mounted() {

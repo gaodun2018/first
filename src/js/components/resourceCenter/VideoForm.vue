@@ -34,9 +34,9 @@
                     <el-input v-model="ruleForm.duration_second" auto-complete="off"></el-input>
                     秒
                 </el-form-item>
-                <el-form-item label="知识点关联" prop="name">
-                    <el-button type="text" @click="selectknowledge">选择知识点</el-button>
-                </el-form-item>
+                <!--<el-form-item label="知识点关联" prop="name">-->
+                <!--<el-button type="text" @click="selectknowledge">选择知识点</el-button>-->
+                <!--</el-form-item>-->
                 <el-form-item style="text-align: right">
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                     <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
@@ -44,7 +44,7 @@
             </el-form>
         </div>
 
-        <SelectKnowledge></SelectKnowledge>
+        <!--<SelectKnowledge></SelectKnowledge>-->
 
     </div>
 </template>
