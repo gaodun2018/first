@@ -88,7 +88,7 @@
         let ret = await selectSyllabus(this.coursesyllid,{'template_id':template_id});
         if(ret.status == 0&& ret.result == true){
           this.$router.replace({
-           path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid
+           path:'/syllabus/manage/edit/'+this.coursesyllid
            })
         }
       },
@@ -107,7 +107,7 @@
           //当用户已经选择大纲时则直接跳转过去
           if(ret.result.template&&ret.result.template.id){
             this.$router.push({
-              path:'/CourseOutlineManage/CourseModule/'+this.coursesyllid,
+              path:'/syllabus/manage/edit/'+this.coursesyllid,
             })
           }
         }

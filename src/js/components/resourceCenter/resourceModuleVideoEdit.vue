@@ -5,7 +5,7 @@
 <style>
 </style>
 <script>
-    import VideoForm from './VideoForm.vue'
+    import VideoForm from './resourceModuleVideoForm.vue'
 
     export default {
         components: {

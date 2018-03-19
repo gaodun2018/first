@@ -42,7 +42,7 @@
 <style>
 </style>
 <script>
-  import SelectKnowledge from './SelectKnowledge.vue'
+  import SelectKnowledge from './resourceModuleSelectKnowledge.vue'
   export default {
     components: {
       SelectKnowledge

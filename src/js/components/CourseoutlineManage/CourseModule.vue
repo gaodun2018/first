@@ -507,7 +507,8 @@
                     let id = ret.result.id;
                     let params = {
                         resource_id: this.resourceRadio,
-                        tag_id: this.tag_id
+                        tag_id: this.tag_id,
+                        course_syllabus_id: this.coursesyllid,
                     }
                     let retv = await addSyllabusResource(id, params);
                     this.btnLoading = false;
@@ -557,7 +558,8 @@
                     let id = ret.result.id ? ret.result.id : this.currentId;
                     let params = {
                         resource_id: this.resourceRadio,
-                        tag_id: this.tag_id
+                        tag_id: this.tag_id,
+                        course_syllabus_id: this.coursesyllid,
                     }
                     let retv = await addSyllabusResource(id, params);
                     if (retv.status == 0) {
@@ -608,7 +610,10 @@
             // 删除确定
             async confirmDelete() {
                 let id = this.currentId;
-                let ret = await DeleteSyllabusItem(id);
+                let params = {
+                    course_syllabus_id: this.coursesyllid,
+                }
+                let ret = await DeleteSyllabusItem(id, params);
                 if (ret.status == 0) {
                     this.$message({
                         message: '删除成功',

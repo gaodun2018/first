@@ -9,8 +9,8 @@
                         <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']"
                               @click="outlinechange('0')">全部</span>
                         <template v-for="(rev,index) in projectlist">
-              <span class="clitem" :class="[rev.project_id === clver ?'current':'']"
-                    @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
+                            <span class="clitem" :class="[rev.project_id === clver ?'current':'']"
+                                  @click="outlinechange(rev.project_id,index)">{{rev.project_name}}</span>
                         </template>
                     </div>
                     <div class="button_group_b">
@@ -18,8 +18,8 @@
                         <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']"
                               @click="mulchange('0')">全部</span>
                         <template v-for="(revs,index) in subtablist">
-                <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']"
-                      @click="mulchange(revs.subject_id)">{{revs.subject_name}}</span>
+                            <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']"
+                                  @click="mulchange(revs.subject_id)">{{revs.subject_name}}</span>
                         </template>
                     </div>
                 </el-col>
@@ -43,7 +43,8 @@
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="searchinput"
                                       :on-icon-click="handleIconClick"
                                       @keydown.native.enter="handleIconClick"></el-input>
-                            <el-button type="primary" size="small" @click="dialogCourseVisible = true" v-if="unlocking('COURSE_CREATE')">新增一个课程
+                            <el-button type="primary" size="small" @click="dialogCourseVisible = true"
+                                       v-if="unlocking('COURSE_CREATE')">新增一个课程
                             </el-button>
                         </div>
                     </el-row>
@@ -79,13 +80,20 @@
 
                 <el-table-column fixed="right" label="操作" width="200" align="center">
                     <template scope="scope">
-                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')">
-                            <router-link class="routerBtn" :to="'/CourseSet/'+scope.row.course_id">基本设置</router-link>
-                        </el-button>
-                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')">
-                            <router-link class="routerBtn" :to="'/CourseContent/'+scope.row.course_id">课程内容
-                            </router-link>
-                        </el-button>
+                        <router-link
+                            style="margin: 0 10px;"
+                            v-if="unlocking('COURSE_BASIC_SET')"
+                            class="routerBtn"
+                            :to="'/course/manage/basic/set/'+scope.row.course_id"
+                        >基本设置
+                        </router-link>
+                        <router-link
+                            style="margin: 0 10px;"
+                            v-if="unlocking('COURSE_CONTENT')"
+                            class="routerBtn"
+                            :to="'/course/manage/content/set/'+scope.row.course_id"
+                        >课程内容
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>
