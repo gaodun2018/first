@@ -37,9 +37,12 @@
                             <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="keywords"
                                       :on-icon-click="handleIconClick"
                                       @keydown.native.enter="handleIconClick"></el-input>
-                            <el-button type="primary" size="small" v-if="unlocking('VIDEO_CREATE')">
-                                <router-link to="/resource/video/create">新增视频</router-link>
-                            </el-button>
+                            <router-link
+                                class="routerBtn"
+                                v-if="unlocking('VIDEO_CREATE')"
+                                to="/resource/video/create"
+                            >新增视频
+                            </router-link>
                         </div>
                     </el-row>
                 </el-col>
@@ -95,6 +98,7 @@
 <script>
     import Vue from 'vue';
     import {getResource} from '../../api/resource.js'
+    import {number2DateTime} from '../../util/util.js'
 
     export default {
         components: {},
@@ -133,7 +137,7 @@
 
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
-                this.$router.push({name: "10009", params: {id: scope.row.id}})
+                this.$router.push({name: "editVideo", params: {id: scope.row.id}})
             },
             async fetchResources() {
                 let parameters = {
@@ -159,7 +163,7 @@
                 let resources = resourceResponse.result
                 for (var resource of resources.resources) {
                     resource.created_at = new Date((resource.created_at * 1000))
-                    resource.updated_at = this.formatDate(new Date(resource.updated_at * 1000))
+                    resource.updated_at = number2DateTime(new Date(resource.updated_at * 1000))
                     resource.project_name = (resource.tag == null) ? "" : resource.tag.name
 
                 }
@@ -170,11 +174,6 @@
                 this.paginationTotal = total;
                 this.tags = this.resource.tags
                 this.loading = false
-            },
-
-            formatDate(date) {
-                return date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDay() +
-                    " " + date.getUTCMinutes() + ":" + date.getUTCSeconds()
             },
             async didChangePage(page) {
                 this.currentPage = page;

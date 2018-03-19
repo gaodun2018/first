@@ -103,15 +103,21 @@ const AddVideo = resolve => {
 }
 // 编辑视频
 const EditVideo = resolve => {
-    require.ensure(['../components/resourceCenter/AddVideo.vue'], (require) => {
-        resolve(require('../components/resourceCenter/AddVideo.vue'))
-    },'AddVideo')
+    require.ensure(['../components/resourceCenter/EditVideo.vue'], (require) => {
+        resolve(require('../components/resourceCenter/EditVideo.vue'))
+    },'EditVideo')
 }
 // 新增讲义
-const AddHandout = resolve => {
-    require.ensure(['../components/resourceCenter/AddHandout.vue'], (require) => {
-        resolve(require('../components/resourceCenter/AddHandout.vue'))
-    },'AddHandout')
+const resourceModuleCreateHandout = resolve => {
+    require.ensure(['../components/resourceCenter/resourceModuleCreateHandout.vue'], (require) => {
+        resolve(require('../components/resourceCenter/resourceModuleCreateHandout.vue'))
+    },'resourceModuleCreateHandout')
+}
+// 编辑讲义
+const resourceModuleEditHandout = resolve => {
+    require.ensure(['../components/resourceCenter/resourceModuleEditHandout.vue'], (require) => {
+        resolve(require('../components/resourceCenter/resourceModuleEditHandout.vue'))
+    },'resourceModuleEditHandout')
 }
 // 新增知识点
 const AddKnowledge = resolve => {
@@ -162,18 +168,19 @@ export const routes = [
 		{ path: '/ResourceTag',meta:{ title:'资源列表' }, name:'850',component: ResourceTag }, // 资源列表
 		{ path: '/resource/video/list',meta:{ title:'视频列表' }, name:'852',component: VideoList }, // 视频列表
 		{ path: '/ExerciseList',meta:{ title:'题目列表' }, name:'856',component: ExerciseList }, // 题目列表
-		{ path: '/HandoutList',meta:{ title:'讲义列表' }, name:'857',component: HandoutList }, // 讲义列表
+		{ path: '/resource/handout/list',meta:{ title:'讲义列表' }, name:'857',component: HandoutList }, // 讲义列表
 		{ path: '/KnowledgeList',meta:{ title:'知识点汇总' }, name:'858',component: KnowledgeList }, // 知识点汇总
 		{ path: '/ExaminationSyllabus',meta:{ title:'考试大纲' }, name:'859',component: ExaminationSyllabus }, // 考试大纲
 		{ path: '/course/manage/list',meta:{ title:'课程列表' }, name:'861',component: CourseList }, // 课程列表
 		{ path: '/syllabus/manage/list',meta:{ title:'课程大纲列表' }, name:'863',component: CourseOutlineList }, // 课程大纲列表
 		{ path: '/syllabus/manage/template/:sid',meta:{ title:'编辑课程大纲' }, name:'10004',component: CourseOutline }, // 编辑课程大纲
-		{ path: '/syllabus/manage/edit/:sid',meta:{ title:'课程大纲模块' }, name:'10005',component: CourseModule }, // 课程大纲模块
+		{ path: '/syllabus/manage/template/:sid',meta:{ title:'课程大纲模块' }, name:'10005',component: CourseModule }, // 课程大纲模块
 		{ path: '/course/manage/basic/set/:cid',meta:{ title:'课程基本设置' }, name:'10006',component: CourseSet }, // 课程基本设置
 		{ path: '/course/manage/content/set/:cid',meta:{ title:'课程内容' }, name:'10007',component: CourseContent }, // 课程内容
-		{ path: '/resource/video/create',meta:{ title:'新增视频' }, name:'10008',component: AddVideo }, // 新增视频
-		{ path: '/resource/video/edit/:id',meta:{ title:'编辑视频' }, name:'10009',component: EditVideo }, // 编辑视频
-		{ path: '/addHandout',meta:{ title:'新增讲义' }, name:'10009',component: AddHandout }, // 新增讲义
+		{ path: '/resource/video/create',meta:{ title:'新增视频' }, name:'createVideo',component: AddVideo }, // 新增视频
+		{ path: '/resource/video/edit/:id',meta:{ title:'编辑视频' }, name:'editVideo',component: EditVideo }, // 编辑视频
+		{ path: '/resource/handout/create',meta:{ title:'新增讲义' }, name:'createHandout',component: resourceModuleCreateHandout }, // 新增讲义
+		{ path: '/resource/handout/edit/:id',meta:{ title:'编辑讲义' }, name:'editHandout',component: resourceModuleEditHandout }, // 编辑讲义
 		{ path: '/addKnowledge',meta:{ title:'新增知识点' }, name:'10010',component: AddKnowledge }, // 新增知识点
 		{ path: '/editKnowledge',meta:{ title:'编辑知识点' }, name:'10011',component: EditKnowledge }, // 编辑知识点
 	]},

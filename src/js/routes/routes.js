@@ -115,7 +115,7 @@ export default [
     {
         "AppId": 180302,
         "Title": "新增视频",
-        "NavigationId": 10008,
+        "NavigationId": "createVideo",
         "ParentID": 0,
         "Url": "/resource/video/create",
         "Path": "components/resourceCenter/addVideo",
@@ -132,10 +132,10 @@ export default [
     {
         "AppId": 180302,
         "Title": "编辑视频",
-        "NavigationId": 10009,
+        "NavigationId": "editVideo",
         "ParentID": 0,
         "Url": "/resource/video/edit",
-        "Path": "components/resourceCenter/addVideo",
+        "Path": "components/resourceCenter/EditVideo",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
@@ -149,18 +149,34 @@ export default [
     {
         "AppId": 180302,
         "Title": "新增讲义",
-        "NavigationId": 10009,
+        "NavigationId": "createHandout",
         "ParentID": 0,
-        "Url": "/addHandout",
-        "Path": "components/resourceCenter/addHandout",
+        "Url": "/resource/handout/create",
+        "Path": "components/resourceCenter/resourceModuleCreateHandout",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "资源中心", url: ''},
             {name: "讲义管理", url: ''},
-            {name: "讲义列表", url: '/HandoutList'},
-            {name: "新增讲义", url: '/AddHandout'},
+            {name: "讲义列表", url: '/resource/handout/list'},
+            {name: "新增讲义", url: '/resource/handout/create'},
+        ]
+    }, {
+        "AppId": 180302,
+        "Title": "编辑讲义",
+        "NavigationId": "editHandout",
+        "ParentID": 0,
+        "Url": "/resource/handout/edit",
+        "Path": "components/resourceCenter/resourceModuleEditHandout",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null,
+        "parenttitle": [
+            {name: "资源中心", url: ''},
+            {name: "讲义管理", url: ''},
+            {name: "讲义列表", url: '/resource/handout/list'},
+            {name: "新增讲义", url: '/resource/handout/edit'},
         ]
     },
     {

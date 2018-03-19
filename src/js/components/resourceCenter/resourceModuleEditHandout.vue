@@ -1,5 +1,5 @@
 <template>
-    <HandoutForm>
+    <HandoutForm :id="$route.params.id">
     </HandoutForm>
 </template>
 <style>
@@ -11,6 +11,5 @@
         components: {
             HandoutForm
         }
-
     }
 </script>
