@@ -7,15 +7,16 @@
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="项目" prop="region" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.region" filterable @change="didChangeProjectSelection">
+                    <el-select v-model="ruleForm.region" filterable @change="didChangeProjectSelection"
+                               @visible-change="visibleChange">
                         <el-option :label="tag.name" :key="tag.id" :value="String(tag.id)"
                                    v-for="tag in tags"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="科目" prop="tag_id" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.tag_id">
-                        <el-option v-for="item in subjectData" filterable :key="item.id" :label="item.name"
+                    <el-select v-model="ruleForm.tag_id" filterable>
+                        <el-option v-for="item in subjectData" :key="item.id" :label="item.name"
                                    :value="String(item.id)"></el-option>
                     </el-select>
                 </el-form-item>
@@ -58,7 +59,7 @@
 <style>
 </style>
 <script>
-    import SelectKnowledge from './SelectKnowledge.vue';
+    import SelectKnowledge from './resourceModuleSelectKnowledge.vue';
     import {getBaseUrl} from '../../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
     import {SAAS_TOKEN} from '../../util/keys.js'
@@ -84,6 +85,7 @@
                 apiHeader: {},
                 isUpload: false,
                 loading: false,
+                selectFalg: false,
                 ruleForm: {
                     region: '',
                     tag_id: '',
@@ -103,14 +105,24 @@
 
             // 获取讲义数据
             async getModifyData() {
-                if (this.$route.params.id) {  // 编辑
-                    let ret = await getOneResource(this.$route.params.id);
-                    let data = ret.result.resource;
-                    this.ruleForm.title = data.title;
-                    this.ruleForm.description = data.description;
-                    this.ruleForm.tag_id = data.partner_id;
-                    this.ruleForm.path = data.path;
-                }
+                // 编辑讲义
+                let ret = await getOneResource(this.$route.params.id);
+                this.tags = ret.result.tags;  //在编辑讲义时需要重新设置
+                let data = ret.result.resource;
+                this.ruleForm.title = data.title;
+                this.ruleForm.description = data.description;
+                this.ruleForm.region = String(data.tag.id);   //项目id
+                this.ruleForm.tag_id = data.tag.children && data.tag.children.length != 0 && String(data.tag.children[0].id);   //科目id
+                this.ruleForm.path = data.path;  //文件路径
+                //上传文件的格式化
+                this.fileList = [
+                    {
+                        name: data.title,
+                        response: {
+                            filePath: data.path
+                        }
+                    }
+                ]
             },
 
             //选择知识点
@@ -142,7 +154,7 @@
             },
             //移除文件回调
             handleRemove(file, fileList) {
-                if(fileList.length==0){
+                if (fileList.length == 0) {
                     this.isUpload = false;
                 }
                 this.fileList = fileList;
@@ -175,17 +187,27 @@
                     });
                 }
             },
-
+            //选择器开关函数
+            visibleChange(bool) {
+                this.selectFalg = bool
+            },
             // 项目
             didChangeProjectSelection(id) {
-                this.subjectData = [];
-                this.ruleForm.tag_id = '';
                 this.tags.forEach((item) => {
                     if (item.id == id) {
-                        this.subjectData = item.children;
+                        let subject_list = [...item.children];
+                        subject_list.unshift({
+                            id: '0',
+                            name: '全部'
+                        })
+                        this.subjectData = subject_list;
+                        if (this.selectFalg) {
+                            this.ruleForm.tag_id = '0';
+                        }
                     }
                 })
             },
+
             // 保存讲义
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
@@ -247,11 +269,16 @@
 
         },
         async created() {
-            this.initTags();
             let token = 'Basic ' + getCookie(SAAS_TOKEN);
             this.apiHeader = {Authentication: token};
-            this.id = this.$route.params.id
-            let ret = await this.getModifyData();
+            this.id = this.$route.params.id;
+            if (this.$route.params.id) {
+                //有id是编辑讲义，不需要拉一次tag_Id列表
+                let ret = await this.getModifyData();
+            } else {
+                this.initTags();
+
+            }
 
         }
     }

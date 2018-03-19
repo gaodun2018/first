@@ -97,7 +97,7 @@
         "NavigationId": "createVideo",
         "ParentID": 0,
         "Url": "/resource/video/create",
-        "Path": "components/resourceCenter/AddVideo",
+        "Path": "components/resourceCenter/resourceModuleVideoCreate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -108,7 +108,7 @@
         "NavigationId": "editVideo",
         "ParentID": 0,
         "Url": "/resource/video/edit/:id",
-        "Path": "components/resourceCenter/EditVideo",
+        "Path": "components/resourceCenter/resourceModuleVideoEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -119,7 +119,7 @@
         "NavigationId": "createHandout",
         "ParentID": 0,
         "Url": "/resource/handout/create",
-        "Path": "components/resourceCenter/resourceModuleCreateHandout",
+        "Path": "components/resourceCenter/resourceModuleHandoutCreate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -130,7 +130,7 @@
         "NavigationId": "editHandout",
         "ParentID": 0,
         "Url": "/resource/handout/edit/:id",
-        "Path": "components/resourceCenter/resourceModuleEditHandout",
+        "Path": "components/resourceCenter/resourceModuleHandoutEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -140,8 +140,8 @@
         "Title": "新增知识点",
         "NavigationId": 10010,
         "ParentID": 0,
-        "Url": "/addKnowledge",
-        "Path": "components/resourceCenter/AddKnowledge",
+        "Url": "/resource/knowledge/create",
+        "Path": "components/resourceCenter/resourceModuleKnowledgeCreate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -151,8 +151,8 @@
         "Title": "编辑知识点",
         "NavigationId": 10011,
         "ParentID": 0,
-        "Url": "/editKnowledge",
-        "Path": "components/resourceCenter/EditKnowledge",
+        "Url": "/resource/knowledge/edit/:id",
+        "Path": "components/resourceCenter/resourceModuleKnowledgeEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
