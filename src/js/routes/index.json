@@ -63,7 +63,7 @@
         "Title": "课程大纲模块",
         "NavigationId": 10005,
         "ParentID": 0,
-        "Url": "/syllabus/manage/template/:sid",
+        "Url": "/syllabus/manage/edit/:sid",
         "Path": "components/CourseOutlineManage/CourseModule",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",

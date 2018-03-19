@@ -10,9 +10,9 @@ export const getTags = (slug, params) => get(`${getBaseUrl()}apigateway.gaodun.c
 export const storeResource = params => post(`${getBaseUrl()}apigateway.gaodun.com/resource-api/video`, params)
 export const viewResource = id => get(`${getBaseUrl()}apigateway.gaodun.com/resource-api/${id}`)
     // 讲义保存
-export const saveLecturenote = params => post(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note`, params)
+export const saveLecturenote = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note`, params)
     // 讲义上传
-export const resourceFile = params => post(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/file`, params)
+export const resourceFile = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/file`, params)
     // 修改讲义
 export const saveMidfyLecturenote = (id, params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note/${id}`, params)
     // 删除资源
