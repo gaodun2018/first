@@ -63,7 +63,7 @@
         "Title": "课程大纲模块",
         "NavigationId": 10005,
         "ParentID": 0,
-        "Url": "/syllabus/manage/edit/:sid",
+        "Url": "/syllabus/manage/template/:sid",
         "Path": "components/CourseOutlineManage/CourseModule",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
@@ -94,7 +94,7 @@
     {
         "AppId": 180302,
         "Title": "新增视频",
-        "NavigationId": 10008,
+        "NavigationId": "createVideo",
         "ParentID": 0,
         "Url": "/resource/video/create",
         "Path": "components/resourceCenter/AddVideo",
@@ -105,10 +105,10 @@
     {
         "AppId": 180302,
         "Title": "编辑视频",
-        "NavigationId": 10009,
+        "NavigationId": "editVideo",
         "ParentID": 0,
         "Url": "/resource/video/edit/:id",
-        "Path": "components/resourceCenter/AddVideo",
+        "Path": "components/resourceCenter/EditVideo",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -116,10 +116,21 @@
     {
         "AppId": 180302,
         "Title": "新增讲义",
-        "NavigationId": 10009,
+        "NavigationId": "createHandout",
         "ParentID": 0,
-        "Url": "/addHandout",
-        "Path": "components/resourceCenter/AddHandout",
+        "Url": "/resource/handout/create",
+        "Path": "components/resourceCenter/resourceModuleCreateHandout",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null
+    },
+    {
+        "AppId": 180302,
+        "Title": "编辑讲义",
+        "NavigationId": "editHandout",
+        "ParentID": 0,
+        "Url": "/resource/handout/edit/:id",
+        "Path": "components/resourceCenter/resourceModuleEditHandout",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null

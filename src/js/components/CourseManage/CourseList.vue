@@ -80,13 +80,20 @@
 
                 <el-table-column fixed="right" label="操作" width="200" align="center">
                     <template scope="scope">
-                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')">
-                            <router-link class="routerBtn" :to="'/course/manage/basic/set/'+scope.row.course_id">基本设置</router-link>
-                        </el-button>
-                        <el-button type="text" style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')">
-                            <router-link class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
-                            </router-link>
-                        </el-button>
+                        <router-link
+                            style="margin: 0 10px;"
+                            v-if="unlocking('COURSE_BASIC_SET')"
+                            class="routerBtn"
+                            :to="'/course/manage/basic/set/'+scope.row.course_id"
+                        >基本设置
+                        </router-link>
+                        <router-link
+                            style="margin: 0 10px;"
+                            v-if="unlocking('COURSE_CONTENT')"
+                            class="routerBtn"
+                            :to="'/course/manage/content/set/'+scope.row.course_id"
+                        >课程内容
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>

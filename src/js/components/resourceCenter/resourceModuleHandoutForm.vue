@@ -1,62 +1,60 @@
 <template>
     <div class="module-clues-content add-resource">
-        <!--    <div>
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item :to="{ path: '/VideoList' }">视频列表</el-breadcrumb-item>
-                    <el-breadcrumb-item v-if="undefined === id">添加视频</el-breadcrumb-item>
-                    <el-breadcrumb-item v-if="undefined !== id">编辑视频</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>-->
         <div class="outlineeat">
-            {{id?'编辑视频':'新增视频'}}
+            {{id?'编辑讲义':'新增讲义'}}
         </div>
         <div class="frombox">
-            <el-form :model="ruleForm" :rules="resourceFormRules" ref="ruleForm" label-width="100px"
-                     class="demo-ruleForm" v-loading="loading">
-
-                <el-form-item label="视频名称" prop="title">
+            <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="项目" prop="region" class="w_50"
+                              :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
+                    <el-select v-model="ruleForm.region" filterable @change="didChangeProjectSelection">
+                        <el-option :label="tag.name" :key="tag.id" :value="String(tag.id)"
+                                   v-for="tag in tags"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="科目" prop="tag_id" class="w_50"
+                              :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
+                    <el-select v-model="ruleForm.tag_id">
+                        <el-option v-for="item in projectData" filterable :key="item.id" :label="item.name"
+                                   :value="String(item.id)"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:30})">
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
-                <el-form-item label="项目" prop="project" class="">
-                    <el-select v-model="ruleForm.project" style="width: 150px;" :change="didChangeProjectSelection()">
-                        <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
-                    </el-select>
-                    <el-select v-model="ruleForm.subject" style="width: 150px;">
-                        <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="备注说明" prop="description">
+                <el-form-item label="讲义描述">
                     <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
-                <el-form-item label="视频地址" prop="video_id">
-                    <el-input v-model="ruleForm.video_id" auto-complete="off" class="w_60"></el-input>
-                    <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
+                <el-form-item label="文件名">
+                    <el-upload :headers="apiHeader" :file-list="fileList" drag :on-success="uploadSuccess"
+                               ref="onUpload" :action="materialUpload">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处，或
+                            <em>点击上传</em>
+                        </div>
+                    </el-upload>
                 </el-form-item>
-                <el-form-item label="视频时长（分）" prop="duration_minute" class="displayinline">
-                    <el-input v-model="ruleForm.duration_minute" auto-complete="off"></el-input>
-                    分
-                </el-form-item>
-                <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
-                    <el-input v-model="ruleForm.duration_second" auto-complete="off"></el-input>
-                    秒
-                </el-form-item>
-                <el-form-item label="知识点关联" prop="name">
-                    <el-button type="text" @click="selectknowledge">选择知识点</el-button>
-                </el-form-item>
+                <!--<el-form-item label="知识点关联" prop="name">
+                  <el-button type="text" @click="selectknowledge">选择知识点</el-button>
+                </el-form-item>-->
                 <el-form-item style="text-align: right">
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
-                    <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+                    <el-button type="primary" :loading="loading" @click="submitForm('ruleForm')">保存</el-button>
                 </el-form-item>
             </el-form>
         </div>
 
         <SelectKnowledge></SelectKnowledge>
-
     </div>
 </template>
+<style>
+</style>
 <script>
-    import SelectKnowledge from './SelectKnowledge.vue'
-    import {getTags, getOneResource, storeResource, viewResource} from '../../api/resource.js'
+    import SelectKnowledge from './SelectKnowledge.vue';
+    import {getBaseUrl} from '../../util/config';
+    import {getCookie, setCookie} from 'cookieUtils';
+    import {SAAS_TOKEN} from '../../util/keys.js'
+    import {getTags, saveLecturenote, resourceFile, getOneResource, saveMidfyLecturenote} from '../../api/resource.js'
 
     export default {
         components: {
@@ -65,140 +63,157 @@
         props: [
             'id'
         ],
+        computed: {
+            materialUpload() {
+                return `${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/file`;
+            }
+        },
         data() {
             return {
                 tags: [],
+                projectData: [],
+                fileList: [],
+                apiHeader: {},
+                isUpload: false,
                 loading: false,
                 ruleForm: {
+                    region: '',
+                    tag_id: '',
                     title: '',
-                    project: '116',
-                    subject: '',
-                    video_id: '',
-                    duration_minute: '',
-                    duration_second: '',
-                    description: '',
-                    partner_id: '1'
+                    fileName: '',
+                    path: '',
+                    description: ''
                 },
-                resourceFormRules: {
-                    title: [
-                        {required: true, message: '请输入资源名称', trigger: 'blur'},
-                        {min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur'}
-                    ],
-                    project: [
-                        {required: true, message: '请选择项目', trigger: 'change'}
-                    ],
-                    subject: [
-                        {required: true, message: '请选择科目', trigger: 'change'}
-                    ],
-                    video_id: [
-                        {required: true, message: '请输入视频ID', trigger: 'change'}
-                    ],
-                    duration_minute: [
-                        {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
-                    ],
-                    duration_second: [
-                        {required: true, message: '请填写视频时长的分钟', trigger: 'blur'}
-                    ]
-                },
-                multipleSelection: []
             }
         },
         methods: {
-            async initData() {
-                if (this.$route.params.id) {  // 编辑
-                    let ret = await viewResource(this.$route.params.id);
-                    this.ruleForm.title = ret.result.resource.title;
-                    this.ruleForm.description = ret.result.resource.description;
-                    this.ruleForm.video_id = ret.result.resource.uri;
-                    this.ruleForm.duration_second = ret.result.resource.duration;
-                    this.ruleForm.project = '116';
-                    this.ruleForm.partner_id = ret.result.resource.partner_id;
-                }
-                return this.ruleForm;
-            },
-            getSubjectByProjectId(projectId) {
-                var subjects = null
-                for (var project of this.tags) {
-                    if (project.id == projectId) {
-                        subjects = project.children;
-                    }
-                }
-                return subjects
+            // 项目数据
+            async initTags() {
+                let ret = await getTags('project');
+                this.tags = ret.result;
             },
 
-            didChangeProjectSelection() {
-                console.error(this.ruleForm)
-                this.subjects = this.getSubjectByProjectId(this.ruleForm.project)
+            // 获取讲义数据
+            async getModifyData() {
+                if (this.$route.params.id) {  // 编辑
+                    let ret = await getOneResource(this.$route.params.id);
+                    let data = ret.result.resource;
+                    this.ruleForm.title = data.title;
+                    this.ruleForm.description = data.description;
+                    this.ruleForm.tag_id = data.partner_id;
+                    this.ruleForm.path = data.path;
+                }
             },
+
             //选择知识点
             selectknowledge() {
                 this.$store.dispatch('changeDialog', true)
             },
 
-
-            createResourceForm() {
-                return {
-                    title: this.ruleForm.title,
-                    description: this.ruleForm.description,
-                    tag_id: this.ruleForm.subject,
-                    duration: `${this.ruleForm.duration_minute}:${this.ruleForm.duration_second}`,
-                    video_id: this.ruleForm.video_id
-                }
-            },
-
+            // 保存讲义
             submitForm(formName) {
-                console.error('submit form')
-                console.error(this.$refs[formName])
                 this.$refs[formName].validate((valid) => {
-                    console.error(`form valid ${valid}`)
-                    this.loading = true
                     if (valid) {
-                        console.error('form creation')
-                        console.error(this.createResourceForm())
-                        let createResponse = storeResource(this.createResourceForm())
-                        createResponse.then((resolve, reject) => {
-                            this.loading = false
-                            this.$router.go(-1)
-                        })
-                        console.error(createResponse)
-                    } else {
-                        console.log('error submit!!');
+                        const {tag_id, title, file, path, description, region} = this.ruleForm;
+                        let params = {tag_id, title, file, path, description, region}
+                        let ids = this.$route.query.id;
+                        if (!ids && !this.isUpload) {
+                            this.$message({
+                                message: "需上传文件才能保存",
+                                type: "warning"
+                            });
+                            return;
+                        }
+                        this.loading = true;
+                        if (ids) {
+                            saveMidfyLecturenote(ids, params).then(ret => {
+                                this.loading = false;
+                                if (ret.status == 0) {
+                                    this.$message({
+                                        message: "保存成功",
+                                        type: "success"
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: "保存失败",
+                                        type: "success"
+                                    });
+                                }
+                            })
+                        } else {
+                            saveLecturenote(params).then(ret => {
+                                this.loading = false;
+                                this.isUpload = false;
+                                this.fileList = [];
+                                this.ruleForm.path = '';
+                                if (ret.status == 0) {
+                                    this.$message({
+                                        message: "保存成功",
+                                        type: "success"
+                                    });
+                                } else {
+                                    this.$message({
+                                        message: "保存失败",
+                                        type: "success"
+                                    });
+                                }
+                            })
+                        }
                     }
                 });
             },
+
+            // 重置
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+                setTimeout(() => {
+                    this.fileList = [];
+                }, 0)
             },
-            //关闭弹层
-            closeDialog(formName) {
-                this.bSubject = false;
-                this.dialogCourseVisible = false;
-                this.$refs[formName].resetFields();
-            },
-            toggleSelection(rows) {
-                if (rows) {
-                    rows.forEach(row => {
-                        this.$refs.multipleTable.toggleRowSelection(row);
+
+            // 上传结束
+            uploadSuccess(response, file) {
+                if (response.status === 0) {
+                    this.isUpload = true;
+                    this.$message({
+                        message: "文件上传成功",
+                        type: "success"
                     });
+                    this.ruleForm.path = response.result.path;
                 } else {
-                    this.$refs.multipleTable.clearSelection();
+                    this.isUpload = false;
+                    setTimeout(() => {
+                        this.fileList = [];
+                    }, 0);
+                    this.ruleForm.path = '';
+                    this.$message({
+                        message: "文件上传失败",
+                        type: "warning"
+                    });
                 }
             },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
+
+            // 项目
+            didChangeProjectSelection(id) {
+                this.projectData = [];
+                this.ruleForm.project = '';
+                this.tags.forEach((item) => {
+                    if (item.id == id) {
+                        this.projectData = item.children;
+                    }
+                })
+            }
         },
-        computed: {},
+
         mounted() {
 
         },
         async created() {
-            this.loading = true
+            this.initTags();
+            let token = 'Basic ' + getCookie(SAAS_TOKEN);
+            this.apiHeader = {Authentication: token};
             this.id = this.$route.params.id
-            this.resource = (await getOneResource(this.id)).result
-            let ret = await this.initData();
-            this.tags = (await getTags('project', {partner_id: ret.partner_id})).result;
-            this.loading = false;
+            let ret = await this.getModifyData();
 
         }
     }

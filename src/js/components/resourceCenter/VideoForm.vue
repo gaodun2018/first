@@ -1,14 +1,7 @@
 <template>
     <div class="module-clues-content add-resource">
-    <!--    <div>
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/VideoList' }">视频列表</el-breadcrumb-item>
-                <el-breadcrumb-item v-if="undefined === id">添加视频</el-breadcrumb-item>
-                <el-breadcrumb-item v-if="undefined !== id">编辑视频</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>-->
         <div class="outlineeat">
-            新增视频
+            {{id?'编辑视频':'新增视频'}}
         </div>
         <div class="frombox">
             <el-form :model="ruleForm" :rules="resourceFormRules" ref="ruleForm" label-width="100px"
@@ -18,10 +11,11 @@
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="项目" prop="project" class="">
-                    <el-select v-model="ruleForm.project" style="width: 150px;" :change="didChangeProjectSelection()">
+                    <el-select v-model="ruleForm.project" style="width: 150px;" filterable
+                               :change="didChangeProjectSelection()">
                         <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
                     </el-select>
-                    <el-select v-model="ruleForm.subject" style="width: 150px;">
+                    <el-select v-model="ruleForm.subject" filterable style="width: 150px;">
                         <el-option :label="tag.name" :value="tag.id" v-for="tag in subjects"></el-option>
                     </el-select>
                 </el-form-item>
@@ -57,11 +51,14 @@
 <script>
     import SelectKnowledge from './SelectKnowledge.vue'
     import {getTags, getOneResource, storeResource, viewResource} from '../../api/resource.js'
+
     export default {
         components: {
             SelectKnowledge
         },
-        props: ['id'],
+        props: [
+            'id'
+        ],
         data() {
             return {
                 tags: [],
@@ -101,8 +98,8 @@
             }
         },
         methods: {
-            async initData(){
-                if(this.$route.params.id){  // 编辑
+            async initData() {
+                if (this.$route.params.id) {  // 编辑
                     let ret = await viewResource(this.$route.params.id);
                     this.ruleForm.title = ret.result.resource.title;
                     this.ruleForm.description = ret.result.resource.description;
