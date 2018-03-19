@@ -49,35 +49,35 @@ export default [
     },
     {
         "AppId": 180302,
-        "Title": "编辑课程大纲",
+        "Title": "选择课程大纲模板",
         "NavigationId": 10004,
         "ParentID": 0,
         "Url": "/syllabus/manage/template",
-        "Path": "components/CourseOutlineManage/CourseOutline",
+        "Path": "components/SyllabusManage/SyllabusModuleOptTemplate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程大纲管理", url: ''},
             {name: "课程大纲列表", url: '/syllabus/manage/list'},
-            {name: "编辑课程大纲", url: 'CourseOutlineManage/CourseOutline'},
+            {name: "编辑课程大纲", url: ''},
         ]
     },
 
     {
         "AppId": 180302,
-        "Title": "课程大纲模块",
+        "Title": "编辑课程大纲",
         "NavigationId": 10005,
         "ParentID": 0,
         "Url": "/syllabus/manage/edit",
-        "Path": "components/CourseOutlineManage/CourseModule",
+        "Path": "components/SyllabusManage/SyllabusModuleEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
             {name: "课程大纲管理", url: ''},
             {name: "课程大纲列表", url: '/syllabus/manage/list'},
-            {name: "编辑课程大纲", url: '/CourseOutlineManage/CourseModule'},
+            {name: "编辑课程大纲", url: ''},
         ]
     },
     {
@@ -86,7 +86,7 @@ export default [
         "NavigationId": 10006,
         "ParentID": 0,
         "Url": "/course/manage/basic/set",
-        "Path": "components/CourseManage/CourseSet",
+        "Path": "components/CourseManage/CourseModuleBasicSet",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
@@ -102,7 +102,7 @@ export default [
         "NavigationId": 10007,
         "ParentID": 0,
         "Url": "/course/manage/content/set",
-        "Path": "components/CourseManage/CourseContent",
+        "Path": "components/CourseManage/CourseModuleContentSet",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
@@ -126,7 +126,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "视频管理", url: ''},
             {name: "视频列表", url: '/resource/video/list'},
-            {name: "新增视频", url: '/resource/video/create'},
+            {name: "新增视频", url: ''},
         ]
     },
     {
@@ -143,7 +143,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "视频管理", url: ''},
             {name: "视频列表", url: '/resource/video/list'},
-            {name: "编辑视频", url: '/resource/video/edit/:id'},
+            {name: "编辑视频", url: ''},
         ]
     },
     {
@@ -160,7 +160,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "讲义管理", url: ''},
             {name: "讲义列表", url: '/resource/handout/list'},
-            {name: "新增讲义", url: '/resource/handout/create'},
+            {name: "新增讲义", url: ''},
         ]
     }, {
         "AppId": 180302,
@@ -176,7 +176,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "讲义管理", url: ''},
             {name: "讲义列表", url: '/resource/handout/list'},
-            {name: "新增讲义", url: '/resource/handout/edit'},
+            {name: "新增讲义", url: ''},
         ]
     },
     {
@@ -193,7 +193,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "知识图谱", url: ''},
             {name: "知识点汇总", url: '/KnowledgeList'},
-            {name: "新增知识点", url: '/AddKnowledge'},
+            {name: "新增知识点", url: ''},
         ]
     },
     {
@@ -210,7 +210,7 @@ export default [
             {name: "资源中心", url: ''},
             {name: "知识图谱", url: ''},
             {name: "知识点汇总", url: '/KnowledgeList'},
-            {name: "编辑知识点", url: '/editKnowledge'},
+            {name: "编辑知识点", url: ''},
         ]
     },
     {
