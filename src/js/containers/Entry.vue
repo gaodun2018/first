@@ -1,176 +1,165 @@
 <template>
-  <div id="app">
-    <div class="container">
-      <div style="margin-bottom: 0">
-        <Navbar></Navbar>
-      </div>
-      <div v-if="!this.$route.query.NavigationId" class="content-menu">
-        <Menu></Menu>
-      </div>
-      <section class="content-container" :style="this.$route.query.NavigationId && 'margin-left: 0'">
-        <Breadcrumb></Breadcrumb>
-        <div class="content-box">
-          <transition name="fade" mode="out-in" appear>
-            <router-view></router-view>
-          </transition>
+    <div id="app">
+        <div class="container">
+            <div style="margin-bottom: 0">
+                <Navbar></Navbar>
+            </div>
+            <div v-if="!this.$route.query.NavigationId" class="content-menu">
+                <Menu></Menu>
+            </div>
+            <section class="content-container" :style="this.$route.query.NavigationId && 'margin-left: 0'">
+                <Breadcrumb></Breadcrumb>
+                <div class="content-box">
+                    <transition name="fade" mode="out-in" appear>
+                        <router-view></router-view>
+                    </transition>
+                </div>
+            </section>
         </div>
-      </section>
     </div>
-  </div>
 </template>
 <style>
-  nav {
-    margin-bottom: 10px;
-  }
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all .3s
-  }
-
-  .fade-enter,
-  .fade-leave-active {
-    transition: all .3s;
-    opacity: 0
-  }
-
-  .fold-enter-active {
-    animation-name: fold-in;
-    animation-duration: .1s;
-  }
-
-  .fold-leave-active {
-    animation-name: fold-out;
-    animation-duration: .1s;
-  }
-
-  @keyframes fold-in {
-    0% {
-      transform: translate3d(0, 100%, 0);
+    nav {
+        margin-bottom: 10px;
     }
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
-  }
 
-  @keyframes fold-out {
-    0% {
-      transform: translate3d(0, 0, 0);
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all .3s
     }
-    100% {
-      transform: translate3d(0, 100%, 0);
+
+    .fade-enter,
+    .fade-leave-active {
+        transition: all .3s;
+        opacity: 0
     }
-  }
+
+    .fold-enter-active {
+        animation-name: fold-in;
+        animation-duration: .1s;
+    }
+
+    .fold-leave-active {
+        animation-name: fold-out;
+        animation-duration: .1s;
+    }
+
+    @keyframes fold-in {
+        0% {
+            transform: translate3d(0, 100%, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    @keyframes fold-out {
+        0% {
+            transform: translate3d(0, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 100%, 0);
+        }
+    }
 </style>
 <script>
-  import Vue from 'vue';
-  import Navbar from '../containers/Navigation.vue';
-  import Menu from './Menu.vue';
-  import Breadcrumb from './Breadcrumb.vue';
-  import {messageTitle} from '../util/util';
-  import {SAAS_MENU, SAAS_USER_INFO, SAAS_TOKEN} from '../util/keys';
-  import {getCookie, setCookie} from 'cookieUtils';
-  import {mapState} from 'vuex';
-  import {parseUrl} from 'base';
-  import modal from 'vueModal';
-  import CrmMessage from '../plugins/message';
-  import Access from '../util/accessControl';
-  import {getEnv} from '../util/config';
- Vue.use(Access);
-  export default {
-    name: 'app',
-    components: {
-      Navbar,
-      Menu,
-      Breadcrumb,
-    },
-    data() {
-      return {}
-    },
-    created() {
-        console.log('Entry.vue loaded')
-      this.mapMenuToWindow();
-      this.mapPageIdToWindow();
-    },
-    methods: {
-      loadMessage() {
-        let prefix = getEnv();
-        let userInfo = localStorage.getItem(SAAS_USER_INFO);
-        userInfo && (userInfo = JSON.parse(userInfo));
-        let script = document.createElement('script');
-        script.type = "text/javascript";
-        script.src = `//s.gaodun.com/web/scripts/widget/socket.io.min.js`
-        window.crmSocket = null;
-        script.onload = () => {
-          //window.crmSocket = io(`https://${prefix}message.gaodunwangxiao.com:3002`, {
-          //  path: '/crm',
-          //  reconnection: true
-          //});
-          // window.crmSocket = io(`http://localhost:3002`, {
-          //     path: '/crm',
-          //     //reconnection: true
-          // });
-          //window.crmSocket.on('connect', () => {
-           // if (window.socketReconnect === 1) {
-              //location.reload();
-          //  }
-          //  crmSocket.emit('sendUserInfo', {
-          //    UserId: userInfo.UserId,
-          //    PartialPhone: userInfo.PartialPhone,
-          //  });
-          //  crmSocket.on('message', (message) => {
-          //    this.handleMessage(message);
-          //   this.MessageBrowser(message);
-          //  });
-          //  window.socketReconnect = 1;
-          //});
-          //window.crmSocket.on('disconnect', function () {
-          //  console.log("与服务其断开!");
-          //  window.socketReconnect = 0;
-          //});
-        }
-        document.getElementsByTagName('head')[0].appendChild(script);
-      },
-      handleMessage(msg) {
-        if (!msg.Data && !msg.data) {
-          return;
-        }
-        if (this[`messageType${msg.MessageType}`]) {
-          this[`messageType${msg.MessageType}`](msg);
-          return;
-        }
-        CrmMessage.create({
-          type: 'info',
-          message: msg.Data
-        });
-      },
-      mapMenuToWindow() {
-        let menu = localStorage.getItem(SAAS_MENU);
-        window.Menu = JSON.parse(menu);
-      },
-      mapPageIdToWindow() {
-        var mapMethod = menu => {
-          for (var i in menu) {
-            if (menu[i].ChildNavigations) {
-              mapMethod(menu[i].ChildNavigations);
-            }
-          }
-        }
-        mapMethod(window.Menu);
-      },
-    },
-    computed: {
-      ...mapState({
-        count: state => {
-          return state.list.number
-        }
-      }),
-    },
-    destroyed() {
+    import Vue from 'vue';
+    import Navbar from '../containers/Navigation.vue';
+    import Menu from './Menu.vue';
+    import Breadcrumb from './Breadcrumb.vue';
+    import {
+        SAAS_MENU,
+        SAAS_USER_INFO,
+        SAAS_TOKEN,
+        SAAS_REFRESH_TOKEN
+    } from '../util/keys';
+    import {getCookie, setCookie} from 'cookieUtils';
+    import {mapState} from 'vuex';
+    import {parseUrl} from 'base';
+    import Access from '../util/accessControl';
+    import {Base64} from 'js-base64';//需要npm安装js-base64
+    import {appid} from '../common/config.js'
+    import {getAccessToken} from '../api/login.js'
 
-    },
-    mounted() {
-//      this.loadMessage();
+
+    Vue.use(Access);
+    export default {
+        name: 'app',
+        components: {
+            Navbar,
+            Menu,
+            Breadcrumb,
+        },
+        data() {
+            return {
+                checkTokenTimer: '',//查询token时间的定时器
+            }
+        },
+        created() {
+            this.mapMenuToWindow();
+            this.mapPageIdToWindow();
+            let times = 1 * 60 * 1000;   //1分钟查询一次
+            let minute = 30;   //30分钟过期前更换
+            this.checkTokenTimer = setInterval(() => {
+                if (this.checkToken(minute)) {
+                    this.Refeshtoken2Accesstoken();
+                }
+            }, times)
+        },
+        methods: {
+            //用Refeshtoken换Accesstoken
+            async Refeshtoken2Accesstoken() {
+                let Refesh_token = getCookie(SAAS_REFRESH_TOKEN);
+                if(!Refesh_token)return;
+                let params = {
+                    refreshtoken: Refesh_token,
+                    appid: appid,
+                }
+                let tokenRet = await getAccessToken(params);
+                if (tokenRet.status == 0) {
+                    //name,value,hours
+                    setCookie(SAAS_TOKEN, tokenRet.result);
+                } else {
+
+                }
+            },
+            //检查token是否过期
+            checkToken(minute) {
+                //minute=>分钟
+                let Token = getCookie(SAAS_TOKEN);
+                let str_token = Token.split('.')[1]
+                let obj_token = JSON.parse(Base64.decode(str_token));
+                let exp = obj_token.exp;  //过期时间
+                let currentTime = new Date().getTime();  //当前时间
+                let timeDifference = parseInt(exp) - parseInt(currentTime / 1000);  //时间差(换算成秒)
+                if (timeDifference <= (minute * 60)) {
+                    return true;
+                } else {
+                    return false
+                }
+            },
+            mapMenuToWindow() {
+                let menu = localStorage.getItem(SAAS_MENU);
+                window.Menu = JSON.parse(menu);
+            },
+            mapPageIdToWindow() {
+                var mapMethod = menu => {
+                    for (var i in menu) {
+                        if (menu[i].ChildNavigations) {
+                            mapMethod(menu[i].ChildNavigations);
+                        }
+                    }
+                }
+                mapMethod(window.Menu);
+            },
+        },
+        computed: {
+            ...mapState({}),
+        },
+        beforeDestroy() {
+            clearInterval(this.checkTokenTimer)
+        },
+        mounted() {
+        }
     }
-  }
 </script>

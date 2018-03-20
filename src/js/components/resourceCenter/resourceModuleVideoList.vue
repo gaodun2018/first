@@ -57,7 +57,11 @@
                 </el-table-column>
                 <el-table-column prop="title" label="视频名称" min-width="200">
                 </el-table-column>
-                <el-table-column prop="duration" label="时长" min-width="100">
+                <el-table-column label="时长" min-width="100">
+                    <template scope="scope">
+                        {{scope.row.duration_minutes<10?"0"+scope.row.duration_minutes:scope.row.duration_minutes}}分
+                        {{scope.row.duration_seconds<10?"0"+scope.row.duration_seconds:scope.row.duration_seconds}}秒
+                    </template>
                 </el-table-column>
                 <el-table-column prop="project_name" label="项目" min-width="115">
                 </el-table-column>
@@ -70,7 +74,8 @@
                         <!--<el-button type="text" v-if="unlocking('VIDEO_PREVIEW')">预览</el-button>-->
                         <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改
                         </el-button>
-                        <el-button type="text" v-if="unlocking('VIDEO_DELETE')">删除</el-button>
+                        <el-button type="text" v-if="unlocking('VIDEO_DELETE')" @click="onRemove(scope.row)">删除
+                        </el-button>
                         <!--<el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>-->
                     </template>
                 </el-table-column>
@@ -97,7 +102,7 @@
 </style>
 <script>
     import Vue from 'vue';
-    import {getResource} from '../../api/resource.js'
+    import {getResource, removeLecturenote} from '../../api/resource.js'
     import {number2DateTime} from '../../util/util.js'
 
     export default {
@@ -134,7 +139,33 @@
                 this.clversm = reid;
                 this.loadResources()
             },
-
+            onRemove(row) { // 删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    removeLecturenote(row.id).then(ret => {
+                        if (ret.status == 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功'
+                            })
+                            this.loadResources();
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: '删除失败'
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             didClickEdit(scope) {
                 console.log('navigate to edit video ' + scope.row.id)
                 this.$router.push({name: "editVideo", params: {id: scope.row.id}})
@@ -160,7 +191,7 @@
             async loadResources() {
                 this.loading = true
                 let resourceResponse = await this.fetchResources()
-                let resources = resourceResponse.result
+                let resources = resourceResponse.result;
                 for (var resource of resources.resources) {
                     resource.created_at = new Date((resource.created_at * 1000))
                     resource.updated_at = number2DateTime(new Date(resource.updated_at * 1000))

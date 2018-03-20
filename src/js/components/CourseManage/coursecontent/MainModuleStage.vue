@@ -53,10 +53,16 @@
                 </el-form-item>
                 <el-form-item label="阶段课程大纲" prop="syllabus_id"
                               :rules="[{required: true, message: '选择该阶段的课程大纲', trigger: 'change'}]">
-                    <el-select v-model="NewTableForm.syllabus_id" placeholder="选择该阶段的课程大纲" style="width: 90%;">
-                        <el-option :label="item.id+' - '+item.title" :value="String(item.id)" v-for="(item,index) in outlineList"
+                    <el-select @change="handleChange" v-model="NewTableForm.syllabus_id" placeholder="选择该阶段的课程大纲"
+                               style="width: 90%;">
+                        <el-option :label="item.id+' - '+item.title" :value="String(item.id)"
+                                   v-for="(item,index) in outlineList"
                                    :key="item.id"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="openSyllabusPage">查看大纲
+                    </el-button>
                 </el-form-item>
                 <el-form-item class="coursebtn">
                     <el-button @click="cancel('NewTableForm')">取 消</el-button>
@@ -71,9 +77,9 @@
 
     </div>
 </template>
-
 <script>
-    import {getStageAndOutline, DeleteStage,AddCourseStage, changeStage} from '../../../api/course'
+    import {getStageAndOutline, DeleteStage, AddCourseStage, changeStage} from '../../../api/course'
+
     export default {
         components: {},
         data() {
@@ -83,6 +89,7 @@
                 },
                 NewTableForm: {},
                 dialogVisible: false,
+                currentTemplate: '',//当前大纲的模板  定位需要跳转的页面
                 tableData: [],
                 currentIndex: '',
                 operation: '',
@@ -91,7 +98,7 @@
         },
         methods: {
             //新增数据 确定
-            addTable(formName){
+            addTable(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         this.AddCourseStage();
@@ -101,7 +108,29 @@
                     }
                 });
             },
-            async AddCourseStage(){
+            handleChange(sy_id) {
+                this.outlineList.forEach((item) => {
+                    console.log(item);
+                    if (item.id == sy_id) {
+                        this.currentTemplate = item.template;
+                    }
+                })
+            },
+            //打开大纲页面
+            openSyllabusPage() {
+                let sy_id = this.NewTableForm.syllabus_id;
+                console.log(this.currentTemplate);
+                if (sy_id) {
+                    if (this.currentTemplate) {
+                        window.open(`/#/syllabus/manage/edit/${sy_id}`);
+                    } else {
+                        window.open(`/#/syllabus/manage/template/${sy_id}`);
+                    }
+                } else {
+                    window.open('/#/syllabus/manage/list');
+                }
+            },
+            async AddCourseStage() {
                 let params = {
                     ...this.NewTableForm,
                     course_id: this.course_id,
@@ -129,7 +158,7 @@
                     }
                 });
             },
-            async changeStage(){
+            async changeStage() {
                 let gradation_id = this.gradation_id;
                 let params = {
                     ...this.NewTableForm,
@@ -144,7 +173,7 @@
                     this.dialogVisible = false;
                     this.getStageAndOutline();
                 } else if (ret.status > 0) {
-                    ret.message ? ret.message :'修改失败！'
+                    ret.message ? ret.message : '修改失败！'
                     this.$message.error(ret.message)
                 }
             },
@@ -164,7 +193,7 @@
                 })
             },
             //删除一个阶段
-            async DeleteStage(){
+            async DeleteStage() {
                 let gradation_id = this.gradation_id;
                 let ret = await DeleteStage(gradation_id);
                 if (ret.status == 0) {
@@ -174,12 +203,12 @@
                     })
                     this.getStageAndOutline();
                 } else if (ret.status > 0) {
-                    ret.message ? ret.message :'删除失败！'
+                    ret.message ? ret.message : '删除失败！'
                     this.$message.error(ret.message)
                 }
             },
             //弹层新增阶段弹层
-            addTableData(){
+            addTableData() {
                 this.NewTableForm = {
                     name: '',
                     description: '',
@@ -199,7 +228,7 @@
                 this.$refs[formName].resetFields();
                 this.dialogVisible = false;
             },
-            async getStageAndOutline(){
+            async getStageAndOutline() {
                 let course_id = this.course_id;
                 let ret = await getStageAndOutline(course_id);
                 if (ret.status == 0) {
@@ -208,10 +237,10 @@
             },
         },
         computed: {
-            course_id(){
+            course_id() {
                 return this.$route.params.cid;
             },
-            outlineList(){
+            outlineList() {
                 return this.$store.state.course.course_Syllabuses;
             }
         },

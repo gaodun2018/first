@@ -61,7 +61,7 @@
             <el-button type="text"><router-link :to="'//'+baseUrl+'gcloud.gaodun.com/edata/#/studentHome/'+scope.row.id" target="_blank" tag="a">查看详情</router-link></el-button>
 
             <el-button type="text"><router-link :to="'//'+baseUrl+'buyclass/buyclass.html?studentId='+scope.row.id+'&stuName='+scope.row.name+'&nickname='+scope.row.nickname" target="_blank" tag="a">购课列表</router-link></el-button>
-            <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
+            <!-- <el-button type="text"><router-link :to="'/SyllabusManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
         </el-table-column>

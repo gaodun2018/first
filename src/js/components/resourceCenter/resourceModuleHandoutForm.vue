@@ -111,18 +111,25 @@
                 let data = ret.result.resource;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
-                this.ruleForm.region = String(data.tag.id);   //项目id
-                this.ruleForm.tag_id = data.tag.children && data.tag.children.length != 0 && String(data.tag.children[0].id);   //科目id
-                this.ruleForm.path = data.path;  //文件路径
-                //上传文件的格式化
-                this.fileList = [
-                    {
+                if (data.tag.id) {
+                    this.ruleForm.region = String(data.tag.id);
+                    this.ruleForm.tag_id = (data.tag.children && data.tag.children.length != 0) ? String(data.tag.children[0].id) : '0';
+                } else {
+                    this.ruleForm.region = '';
+                    this.ruleForm.tag_id = '';
+                }
+                if (data.path) {
+                    this.isUpload = true;
+                    this.ruleForm.path = data.path;  //文件路径
+                    //上传文件的格式化
+                    this.fileList = [{
                         name: data.title,
-                        response: {
-                            filePath: data.path
-                        }
-                    }
-                ]
+                        response: {filePath: data.path}
+                    }]
+                } else {
+                    this.isUpload = false;   //没上传文件
+                }
+
             },
 
             //选择知识点
@@ -207,59 +214,83 @@
                     }
                 })
             },
+            //新建讲义
+            async saveLecturenote() {
+                const {tag_id, title, file, path, description, region} = this.ruleForm;
+                let params = {
+                    tag_id: tag_id == '0' ? region : tag_id,
+                    title, description, file, path,
+                }
+                this.loading = true;
+                let ret = await saveLecturenote(params)
+                this.loading = false;
+                this.isUpload = false;
+                // this.fileList = [];
+                // this.ruleForm.path = '';
+                // this.resetForm('ruleForm');
+                if (ret.status == 0) {
+                    this.$message({
+                        message: "保存成功",
+                        type: "success"
+                    });
+                    setTimeout(() => {
+                        this.$router.push({
+                            path: '/resource/handout/list'
+                        })
+                    }, 1000)
+                } else {
+                    this.$message({
+                        message: "保存失败",
+                        type: "error"
+                    });
+                }
 
+            },
+            //修改讲义
+            async saveMidfyLecturenote() {
+                const {tag_id, title, file, path, description, region} = this.ruleForm;
+                let params = {
+                    tag_id: tag_id == '0' ? region : tag_id,
+                    _method: 'PUT',
+                    title, description, path,
+                }
+                this.loading = true;
+                let ret = await saveMidfyLecturenote(this.$route.params.id, params);
+                this.loading = false;
+                if (ret.status == 0) {
+                    this.$message({
+                        message: "保存成功",
+                        type: "success"
+                    });
+                    setTimeout(() => {
+                        this.$router.push({
+                            path: '/resource/handout/list'
+                        })
+                    }, 1000)
+                } else {
+                    this.$message({
+                        message: "保存失败",
+                        type: "error"
+                    });
+                }
+            },
             // 保存讲义
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        const {tag_id, title, file, path, description, region} = this.ruleForm;
-                        let params = {tag_id, title, file, path, description, region}
-                        params.tag_id == '0' ?   this.ruleForm.region :  params.tag_id;
-                        let ids = this.$route.query.id;
-                        if (!ids && !this.isUpload) {
+                        if (!this.isUpload) {
                             this.$message({
                                 message: "需上传文件才能保存",
                                 type: "warning"
                             });
                             return;
                         }
+                        let ids = this.$route.params.id;
                         this.loading = true;
                         if (ids) {
-                            //修改讲义
-                            saveMidfyLecturenote(ids, params).then(ret => {
-                                this.loading = false;
-                                if (ret.status == 0) {
-                                    this.$message({
-                                        message: "保存成功",
-                                        type: "success"
-                                    });
-                                } else {
-                                    this.$message({
-                                        message: "保存失败",
-                                        type: "error"
-                                    });
-                                }
-                            })
+                            this.saveMidfyLecturenote();  //修改
                         } else {
-                            //新建讲义
-                            saveLecturenote(params).then(ret => {
-                                this.loading = false;
-                                this.isUpload = false;
-                                this.fileList = [];
-                                // this.ruleForm.path = '';
-                                this.resetForm('ruleForm');
-                                if (ret.status == 0) {
-                                    this.$message({
-                                        message: "保存成功",
-                                        type: "success"
-                                    });
-                                } else {
-                                    this.$message({
-                                        message: "保存失败",
-                                        type: "error"
-                                    });
-                                }
-                            })
+                            this.saveLecturenote();  //新增
                         }
                     }
                 });

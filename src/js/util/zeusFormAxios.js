@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {getBaseUrl} from './config'
 import queryString from 'queryString';
+import {SAAS_TOKEN, SAAS_USER_INFO} from './keys';
 import {getCookie, setCookie} from 'cookieUtils';
 
 var instance = axios.create({
@@ -16,7 +17,7 @@ var instance = axios.create({
 });
 
 instance.interceptors.request.use(function (config) {
-    let token = getCookie("token");
+    let token = getCookie(SAAS_TOKEN);
     // 非登录接口
     if (config.url.indexOf('login') === -1 && token == undefined) {
         localStorage.clear();

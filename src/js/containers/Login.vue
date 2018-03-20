@@ -52,11 +52,19 @@
 </template>
 
 <script>
-    import {userLogin,getCurrentUserMenuTree} from "../api/login.js";
+    import {userLogin, getCurrentUserMenuTree} from "../api/login.js";
     import {appid} from "../common/config.js";
     import {getEnv} from '../util/config';
     import {getCookie, setCookie} from 'cookieUtils';
-    import {SAAS_USER_INFO,SAAS_MENU,SAAS_USER_FUNCTIONS,SAAS_TOKEN,SAAS_USER_NAME} from '../util/keys.js'
+    import {
+        SAAS_USER_INFO,
+        SAAS_MENU,
+        SAAS_USER_FUNCTIONS,
+        SAAS_TOKEN,
+        SAAS_USER_NAME,
+        SAAS_REFRESH_TOKEN,
+    } from '../util/keys.js'
+
     let prefix = getEnv();
     export default {
         data: function () {
@@ -74,14 +82,16 @@
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let GDSID =  getCookie(`${prefix}GDSID`);
+                        let GDSID = getCookie(`${prefix}GDSID`);
                         //登录
                         let response = await userLogin({
                             ...this.ruleForm,
-                            GDSID : GDSID
+                            GDSID: GDSID
                         });
                         if (response.data.status == 0) {
+                            console.log(response.headers);
                             this.setCookie(SAAS_TOKEN, response.headers.accesstoken, 2)
+                            this.setCookie(SAAS_REFRESH_TOKEN, response.headers.refreshtoken, 24 * 7)
                             localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
                             localStorage.setItem(SAAS_USER_NAME, JSON.stringify(this.ruleForm.user));
                         } else {
@@ -103,12 +113,12 @@
                             localStorage.setItem(SAAS_USER_FUNCTIONS, JSON.stringify(menuRet.result.Tpo_sys_Functions));
 
                             // if(loginRet.result.PwdType==0){
-                                if(response.data.result.HomePage==''){
-                                    this.$router.push({ path: '/home' })
-                                }
-                                else{
-                                    this.$router.push({ path: response.data.result.HomePage })
-                                }
+                            if (response.data.result.HomePage == '') {
+                                this.$router.push({path: '/home'})
+                            }
+                            else {
+                                this.$router.push({path: response.data.result.HomePage})
+                            }
                             // }
                             // else{
                             //     this.$router.push({ path: '/updatePwd?NavigationId=520&nw=1'})
@@ -159,12 +169,13 @@
 </script>
 
 <style>
-    .login-page{
-        overflow:hidden;
+    .login-page {
+        overflow: hidden;
         width: 100%;
         height: 100%;
         min-height: 660px;
     }
+
     .login-left {
         position: absolute;
         top: 0;
@@ -174,15 +185,18 @@
         z-index: 100;
         background: url(../../images/left_bg.jpg) no-repeat center;
     }
-    .login-right{
+
+    .login-right {
         position: absolute;
-        top: 0;left: 954px;
+        top: 0;
+        left: 954px;
         height: 100%;
         width: 575px;
         z-index: 100;
         background: url(../../images/right_bg.jpg) repeat-x center;
     }
-    .login-title{
+
+    .login-title {
         z-index: 999;
         width: 658px;
         letter-spacing: 5px;
@@ -190,14 +204,16 @@
         top: 320px;
         left: 0;
     }
-    .login-title .login-title-t{
+
+    .login-title .login-title-t {
         font-size: 36px;
         line-height: 54px;
         color: #666666;
         border-bottom: 1px solid #666666;
         margin-bottom: 24px;
     }
-    .login-title .login-title-b{
+
+    .login-title .login-title-b {
         font-size: 16px;
         line-height: 32px;
         color: #666666;
@@ -215,7 +231,7 @@
     .login-wrap .el-input__inner {
         height: 46px !important;
         line-height: 46px !important;
-        color: #333!important;
+        color: #333 !important;
     }
 
     .login-wrap .Copyright {

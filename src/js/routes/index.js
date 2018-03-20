@@ -24,10 +24,10 @@ const resourceModuleHandoutList = resolve => {
     },'resourceModuleHandoutList')
 }
 // 知识点汇总
-const KnowledgeList = resolve => {
+const resourceModuleKnowledgeList = resolve => {
     require.ensure(['../components/resourceCenter/resourceModuleKnowledgeList.vue'], (require) => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeList.vue'))
-    },'KnowledgeList')
+    },'resourceModuleKnowledgeList')
 }
 // 考试大纲
 const ExaminationSyllabus = resolve => {
@@ -36,16 +36,16 @@ const ExaminationSyllabus = resolve => {
     },'ExaminationSyllabus')
 }
 // 课程列表
-const CourseList = resolve => {
-    require.ensure(['../components/CourseManage/CourseList.vue'], (require) => {
-        resolve(require('../components/CourseManage/CourseList.vue'))
-    },'CourseList')
+const CourseModuleList = resolve => {
+    require.ensure(['../components/CourseManage/CourseModuleList.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseModuleList.vue'))
+    },'CourseModuleList')
 }
 // 课程大纲列表
-const CourseOutlineList = resolve => {
-    require.ensure(['../components/CourseOutlineManage/CourseOutlineList.vue'], (require) => {
-        resolve(require('../components/CourseOutlineManage/CourseOutlineList.vue'))
-    },'CourseOutlineList')
+const SyllabusModuleList = resolve => {
+    require.ensure(['../components/SyllabusManage/SyllabusModuleList.vue'], (require) => {
+        resolve(require('../components/SyllabusManage/SyllabusModuleList.vue'))
+    },'SyllabusModuleList')
 }
 // 登陆
 const Login = resolve => {
@@ -71,29 +71,29 @@ const Home = resolve => {
         resolve(require('../containers/Home.vue'))
     },'Home')
 }
-// 编辑课程大纲
-const CourseOutline = resolve => {
-    require.ensure(['../components/CourseOutlineManage/CourseOutline.vue'], (require) => {
-        resolve(require('../components/CourseOutlineManage/CourseOutline.vue'))
-    },'CourseOutline')
+// 选择课程大纲模板
+const SyllabusModuleOptTemplate = resolve => {
+    require.ensure(['../components/SyllabusManage/SyllabusModuleOptTemplate.vue'], (require) => {
+        resolve(require('../components/SyllabusManage/SyllabusModuleOptTemplate.vue'))
+    },'SyllabusModuleOptTemplate')
 }
-// 课程大纲模块
-const CourseModule = resolve => {
-    require.ensure(['../components/CourseOutlineManage/CourseModule.vue'], (require) => {
-        resolve(require('../components/CourseOutlineManage/CourseModule.vue'))
-    },'CourseModule')
+// 编辑课程大纲
+const SyllabusModuleEdit = resolve => {
+    require.ensure(['../components/SyllabusManage/SyllabusModuleEdit.vue'], (require) => {
+        resolve(require('../components/SyllabusManage/SyllabusModuleEdit.vue'))
+    },'SyllabusModuleEdit')
 }
 // 课程基本设置
-const CourseSet = resolve => {
-    require.ensure(['../components/CourseManage/CourseSet.vue'], (require) => {
-        resolve(require('../components/CourseManage/CourseSet.vue'))
-    },'CourseSet')
+const CourseModuleBasicSet = resolve => {
+    require.ensure(['../components/CourseManage/CourseModuleBasicSet.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseModuleBasicSet.vue'))
+    },'CourseModuleBasicSet')
 }
 // 课程内容
-const CourseContent = resolve => {
-    require.ensure(['../components/CourseManage/CourseContent.vue'], (require) => {
-        resolve(require('../components/CourseManage/CourseContent.vue'))
-    },'CourseContent')
+const CourseModuleContentSet = resolve => {
+    require.ensure(['../components/CourseManage/CourseModuleContentSet.vue'], (require) => {
+        resolve(require('../components/CourseManage/CourseModuleContentSet.vue'))
+    },'CourseModuleContentSet')
 }
 // 新增视频
 const resourceModuleVideoCreate = resolve => {
@@ -120,16 +120,16 @@ const resourceModuleHandoutEdit = resolve => {
     },'resourceModuleHandoutEdit')
 }
 // 新增知识点
-const AddKnowledge = resolve => {
+const resourceModuleKnowledgeCreate = resolve => {
     require.ensure(['../components/resourceCenter/resourceModuleKnowledgeCreate.vue'], (require) => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeCreate.vue'))
-    },'AddKnowledge')
+    },'resourceModuleKnowledgeCreate')
 }
 // 编辑知识点
-const EditKnowledge = resolve => {
+const resourceModuleKnowledgeEdit = resolve => {
     require.ensure(['../components/resourceCenter/resourceModuleKnowledgeEdit.vue'], (require) => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeEdit.vue'))
-    },'EditKnowledge')
+    },'resourceModuleKnowledgeEdit')
 }
 // EP课程学习数据统计
 const EducationalClass = resolve => {
@@ -164,25 +164,25 @@ const EducationalClasslist = resolve => {
 
 
 export const routes = [
-	{ path: '/', name:'5500',component: Entry ,redirect: '/login',children: [
+	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
 		{ path: '/ResourceTag',meta:{ title:'资源列表' }, name:'850',component: ResourceTag }, // 资源列表
 		{ path: '/resource/video/list',meta:{ title:'视频列表' }, name:'852',component: resourceModuleVideoList }, // 视频列表
 		{ path: '/ExerciseList',meta:{ title:'题目列表' }, name:'856',component: ExerciseList }, // 题目列表
 		{ path: '/resource/handout/list',meta:{ title:'讲义列表' }, name:'857',component: resourceModuleHandoutList }, // 讲义列表
-		{ path: '/KnowledgeList',meta:{ title:'知识点汇总' }, name:'858',component: KnowledgeList }, // 知识点汇总
+		{ path: '/resource/knowledge/list',meta:{ title:'知识点汇总' }, name:'858',component: resourceModuleKnowledgeList }, // 知识点汇总
 		{ path: '/ExaminationSyllabus',meta:{ title:'考试大纲' }, name:'859',component: ExaminationSyllabus }, // 考试大纲
-		{ path: '/course/manage/list',meta:{ title:'课程列表' }, name:'861',component: CourseList }, // 课程列表
-		{ path: '/syllabus/manage/list',meta:{ title:'课程大纲列表' }, name:'863',component: CourseOutlineList }, // 课程大纲列表
-		{ path: '/syllabus/manage/template/:sid',meta:{ title:'编辑课程大纲' }, name:'10004',component: CourseOutline }, // 编辑课程大纲
-		{ path: '/syllabus/manage/edit/:sid',meta:{ title:'课程大纲模块' }, name:'10005',component: CourseModule }, // 课程大纲模块
-		{ path: '/course/manage/basic/set/:cid',meta:{ title:'课程基本设置' }, name:'10006',component: CourseSet }, // 课程基本设置
-		{ path: '/course/manage/content/set/:cid',meta:{ title:'课程内容' }, name:'10007',component: CourseContent }, // 课程内容
+		{ path: '/course/manage/list',meta:{ title:'课程列表' }, name:'861',component: CourseModuleList }, // 课程列表
+		{ path: '/syllabus/manage/list',meta:{ title:'课程大纲列表' }, name:'863',component: SyllabusModuleList }, // 课程大纲列表
+		{ path: '/syllabus/manage/template/:sid',meta:{ title:'选择课程大纲模板' }, name:'10004',component: SyllabusModuleOptTemplate }, // 选择课程大纲模板
+		{ path: '/syllabus/manage/edit/:sid',meta:{ title:'编辑课程大纲' }, name:'10005',component: SyllabusModuleEdit }, // 编辑课程大纲
+		{ path: '/course/manage/basic/set/:cid',meta:{ title:'课程基本设置' }, name:'10006',component: CourseModuleBasicSet }, // 课程基本设置
+		{ path: '/course/manage/content/set/:cid',meta:{ title:'课程内容' }, name:'10007',component: CourseModuleContentSet }, // 课程内容
 		{ path: '/resource/video/create',meta:{ title:'新增视频' }, name:'createVideo',component: resourceModuleVideoCreate }, // 新增视频
 		{ path: '/resource/video/edit/:id',meta:{ title:'编辑视频' }, name:'editVideo',component: resourceModuleVideoEdit }, // 编辑视频
 		{ path: '/resource/handout/create',meta:{ title:'新增讲义' }, name:'createHandout',component: resourceModuleHandoutCreate }, // 新增讲义
 		{ path: '/resource/handout/edit/:id',meta:{ title:'编辑讲义' }, name:'editHandout',component: resourceModuleHandoutEdit }, // 编辑讲义
-		{ path: '/addKnowledge',meta:{ title:'新增知识点' }, name:'10010',component: AddKnowledge }, // 新增知识点
-		{ path: '/editKnowledge',meta:{ title:'编辑知识点' }, name:'10011',component: EditKnowledge }, // 编辑知识点
+		{ path: '/resource/knowledge/create',meta:{ title:'新增知识点' }, name:'10010',component: resourceModuleKnowledgeCreate }, // 新增知识点
+		{ path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10001',component: Page404 }, // 404

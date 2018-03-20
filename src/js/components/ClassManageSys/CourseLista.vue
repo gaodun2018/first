@@ -75,7 +75,7 @@
         <el-table-column label="操作" min-width="155">
           <template scope="scope">
             <el-button type="text"><router-link :to="'//'+baseUrl+'gcloud.gaodun.com/edata/#/courseHome/'+scope.row.course_id" target="_blank" tag="a">课程统计</router-link></el-button>
-            <!-- <el-button type="text"><router-link :to="'/CourseoutlineManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
+            <!-- <el-button type="text"><router-link :to="'/SyllabusManage/CourseModule/'+scope.row.id">查看大纲</router-link></el-button> -->
 
           </template>
         </el-table-column>

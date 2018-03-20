@@ -95,7 +95,7 @@
       },
       CourseSyllabusLevel(level){
         this.$router.push({
-          path:'/CourseoutlineManage/CourseModule/'+this.coursesyllid+'/'+level
+          path:'/SyllabusManage/CourseModule/'+this.coursesyllid+'/'+level
         })
       },
       async OutlineTemplates(){
