@@ -84,13 +84,13 @@
             let nbid = localStorage.getItem(SAAS_CURRENT_LEVEL_TOP_MENU);
             if (!nbid) {
                 if (this.menu && this.menu.length == 0) return;
-                this.updateCurrentMenu(this.menu[0]);
+                this.updateCurrentMenu(this.menu);
             }
 
             let nid = localStorage.getItem(SAAS_CURRENT_LEVEL_ONE_MENU);
             if (!nid) {
                 if (this.submenu && this.submenu.length == 0) return;
-                this.updateCurrentSubMenu(this.submenu[0]);
+                this.updateCurrentSubMenu(this.submenu);
             }
 
         },
@@ -131,6 +131,20 @@
             updateSubMenu() {
                 this.SubMenu = JSON.parse(localStorage.getItem('SAAS_CURRENT_MENU'));
             },
+            //查看是否有权限跳转地址
+            checkRouterPath(ChildNavigation) {
+                for (var i in ChildNavigation) {
+                    //有权限
+                    if (ChildNavigation[i].isAuth) {
+                        //看有无子集
+                        if (!ChildNavigation[i].ChildNavigations) {//无子集
+                            return ChildNavigation[i].Url;
+                        } else if (ChildNavigation[i].ChildNavigations) {//有子集
+                            return this.checkRouterPath(ChildNavigation[i].ChildNavigations)
+                        }
+                    }
+                }
+            },
             handleClick(tab) {
                 for (let i in this.submenu) {
                     if (tab.name == this.submenu[i].NavigationId) {
@@ -144,10 +158,10 @@
                 }
             },
             updateCurrentMenu(item) {
-                if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
-                    let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
-                    let path = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
-                    let NavigationId = ChildNavigation[0].ChildNavigations ? ChildNavigation[0].ChildNavigations[0].Url : ChildNavigation[0].Url;
+                if (item.ChildNavigations) { //控制台菜单
+                    let ChildNavigation = item.ChildNavigations;
+                    let path = this.checkRouterPath(ChildNavigation);
+                    let NavigationId = path;
                     this.$router.push({
                         path,
                     });
@@ -159,17 +173,25 @@
                 }
             },
             updateCurrentSubMenu(item) {
-                //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
                 if (item.ChildNavigations) {
-                    let path = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
-                    let NavigationId = item.ChildNavigations[0].ChildNavigations ? item.ChildNavigations[0].ChildNavigations[0].Url : item.ChildNavigations[0].Url;
+                    let ChildNavigation = item.ChildNavigations;
+
+                    let path = this.checkRouterPath(ChildNavigation);
+                    let NavigationId = path;
                     this.$router.push({
                         path,
                     });
                     setTimeout(() => {
                         this.$store.dispatch('updateCurrentTabId', NavigationId);
                     }, 0)
+                } else {
+                    this.afterFunction();
                 }
+            },
+            afterFunction() {
+                this.$message({
+                    message: '后续功能正在开发中~~'
+                })
             },
             async handleCommands(command) {
                 let prefix = getEnv();
@@ -179,7 +201,7 @@
                         token: getCookie(SAAS_TOKEN)
                     }
                     let logoutRet = await userLogout(params)
-                    if(logoutRet.status == 0){
+                    if (logoutRet.status == 0) {
                         let exp = new Date();
                         exp.setTime(exp.getTime() - 1);
                         setCookie(SAAS_TOKEN, undefined, {

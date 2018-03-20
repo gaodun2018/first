@@ -217,10 +217,9 @@
             },
             updateCurrentMenu(item) {
                 //this.$store.dispatch('updateCurrentSubMenu', item.NavigationId);
-                if (item.ChildNavigations && item.ChildNavigations[0].ChildNavigations) { //控制台菜单
-                    let ChildNavigation = item.ChildNavigations[0].ChildNavigations;
+                if (item.ChildNavigations) { //控制台菜单
+                    let ChildNavigation = item.ChildNavigations;
 
-                    console.log(ChildNavigation);
                     let path = this.checkRouterPath(ChildNavigation);
                     let NavigationId = path;
                     this.$router.push({
