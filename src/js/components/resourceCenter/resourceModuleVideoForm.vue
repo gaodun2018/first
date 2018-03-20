@@ -19,7 +19,7 @@
                 <el-form-item label="科目" prop="subject" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
                     <el-select v-model="ruleForm.subject" filterable>
-                        <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in subjects"></el-option>
+                        <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in subjectData"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注说明" prop="description">
@@ -68,6 +68,7 @@
         data() {
             return {
                 tags: [],
+                subjectData: [],
                 loading: false,
                 selectFalg: false,
                 ruleForm: {
@@ -108,14 +109,16 @@
             },
             // 项目
             didChangeProjectSelection(id) {
+                console.log(id);
                 this.tags.forEach((item) => {
                     if (item.id == id) {
                         let subject_list = [...item.children];
+                        console.log(subject_list);
                         subject_list.unshift({
                             id: '0',
                             name: '全部'
                         })
-                        this.subjects = subject_list;
+                        this.subjectData = subject_list;
                         if (this.selectFalg) {
                             this.ruleForm.subject = '0';
                         }
@@ -134,7 +137,7 @@
                     tag_id: this.ruleForm.subject == '0' ? this.ruleForm.project : this.ruleForm.subject,
                     // duration: `${this.ruleForm.duration_minutes}:${this.ruleForm.duration_second}`,
                     duration_minutes: this.ruleForm.duration_minutes,
-                    durations_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
+                    duration_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
                     video_id: this.ruleForm.video_id
                 }
                 this.loading = true;
