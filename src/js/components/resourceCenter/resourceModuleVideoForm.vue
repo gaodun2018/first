@@ -6,7 +6,7 @@
         <div class="frombox">
             <el-form :model="ruleForm" ref="ruleForm" label-width="120px"
                      class="demo-ruleForm" v-loading="loading">
-                <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:30})">
+                <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="项目" prop="project" class="w_50"

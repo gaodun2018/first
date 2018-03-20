@@ -1,4 +1,4 @@
-import {isAllSpace,maxLength} from './util.js'
+import {isAllSpace, maxLength} from './util.js'
 
 exports.install = function (Vue, options) {
 
@@ -38,10 +38,11 @@ exports.install = function (Vue, options) {
             rules.push({required: true, message: '该输入项为必填项!', trigger: 'blur'});
         }
         if (item.maxLength) {
-            rules.push({validator: (rule, value, callback)=>{
+            rules.push({
+                validator: (rule, value, callback) => {
                     if (value != null && value != "") {
-                        if (!maxLength(value,item.maxLength)) {
-                            return callback(new Error(`最多输入${(item.maxLength/2)}个字！`))
+                        if (!maxLength(value, item.maxLength)) {
+                            return callback(new Error(`最多输入${(item.maxLength / 2)}个汉字或者${(item.maxLength)}个英文！`))
                         } else {
                             return callback()
                         }
@@ -49,11 +50,12 @@ exports.install = function (Vue, options) {
                     else {
                         return callback();
                     }
-                }, trigger: 'blur,change'})
+                }, trigger: 'blur,change'
+            })
         }
         if (item.max) {
             rules.push({
-                min: item.min?item.min:0,
+                min: item.min ? item.min : 0,
                 max: item.max,
                 message: '最多输入' + item.max + '个字!',
                 trigger: 'blur,change'

@@ -20,7 +20,7 @@
                                    :value="String(item.id)"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:30})">
+                <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="讲义描述">
