@@ -550,7 +550,8 @@
                 //先走修改大纲条目名字
                 let id = this.currentId;
                 let name = {
-                    name: this.addResFirFrom.name
+                    name: this.addResFirFrom.name,
+                    course_syllabus_id: this.coursesyllid
                 };
                 let ret = await ChangeSyllabusItem(id, name);
                 if (ret.status == 0) {
