@@ -49,6 +49,7 @@
         SAAS_MENU,
         SAAS_USER_INFO,
         SAAS_TOKEN,
+        SAAS_REFRESH_TOKEN,
         SAAS_CURRENT_TAB,
         SAAS_OPEN_TABS,
         SAAS_CURRENT_LEVEL_ONE_MENU,
@@ -182,6 +183,9 @@
                         let exp = new Date();
                         exp.setTime(exp.getTime() - 1);
                         setCookie(SAAS_TOKEN, undefined, {
+                            expires: exp
+                        });
+                        setCookie(SAAS_REFRESH_TOKEN, undefined, {
                             expires: exp
                         });
                         setCookie(`${prefix}GDSID`, undefined, {
