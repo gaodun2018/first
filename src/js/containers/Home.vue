@@ -44,7 +44,7 @@
 <script>
 
     import {getCookie, setCookie} from 'cookieUtils';
-    import {getCurrentUserMenuTree,userLogout} from "../api/login.js";
+    import {getCurrentUserMenuTree, userLogout, getAccessToken} from "../api/login.js";
     import {stringify} from 'queryString';
     import {
         SAAS_MENU,
@@ -56,11 +56,14 @@
         SAAS_CURRENT_MENU,
         SAAS_CURRENT_SUBMENU,
         SAAS_CURRENT_LEVEL_ONE_MENU,
-        SAAS_CURRENT_LEVEL_TOP_MENU
+        SAAS_CURRENT_LEVEL_TOP_MENU,
+        SAAS_REFRESH_TOKEN
     } from '../util/keys';
     import {getEnv, getBaseUrl} from '../util/config';
     import {appid} from "../common/config.js";
     import {parseUrl} from 'base';
+    import {Base64} from 'js-base64';//需要npm安装js-base64
+
 
     let prefix = getEnv();
     export default {
@@ -74,12 +77,23 @@
                     checked: '',
                 },
                 loading: false,
-                loginFlag: true
+                loginFlag: true,
+                checkTokenTimer: '',
             }
         },
-        created() {
+        async created() {
+            // let tokenRet = await this.Refeshtoken2Accesstoken();
+            // console.log(tokenRet);
+            // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
             this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
             this.getCurrentUserMenuTree();
+            let times = 1 * 60 * 1000;   //1分钟查询一次
+            let minute = 30;   //30分钟过期前更换
+            this.checkTokenTimer = setInterval(() => {
+                if (this.checkToken(minute)) {
+                    this.Refeshtoken2Accesstoken();
+                }
+            }, times)
         },
         computed: {
             menu() {
@@ -93,6 +107,37 @@
             },
         },
         methods: {
+            //用Refeshtoken换Accesstoken
+            async Refeshtoken2Accesstoken() {
+                let Refesh_token = getCookie(SAAS_REFRESH_TOKEN);
+                if (!Refesh_token) return;
+                let params = {
+                    refreshtoken: Refesh_token,
+                    appid: appid,
+                }
+                let tokenRet = await getAccessToken(params);
+                if (tokenRet.status == 0) {
+                    //name,value,hours
+                    setCookie(SAAS_TOKEN, tokenRet.result);
+                } else {
+
+                }
+            },
+            //检查token是否过期
+            checkToken(minute) {
+                //minute=>分钟
+                let Token = getCookie(SAAS_TOKEN);
+                let str_token = Token.split('.')[1]
+                let obj_token = JSON.parse(Base64.decode(str_token));
+                let exp = obj_token.exp;  //过期时间
+                let currentTime = new Date().getTime();  //当前时间
+                let timeDifference = parseInt(exp) - parseInt(currentTime / 1000);  //时间差(换算成秒)
+                if (timeDifference <= (minute * 60)) {
+                    return true;
+                } else {
+                    return false
+                }
+            },
             clickRouter(item) {
                 if (!item.isAuth) {
                     this.stopHalt();
@@ -206,10 +251,13 @@
                         token: getCookie(SAAS_TOKEN)
                     }
                     let logoutRet = await userLogout(params)
-                    if(logoutRet.status == 0){
+                    if (logoutRet.status == 0) {
                         let exp = new Date();
                         exp.setTime(exp.getTime() - 1);
                         setCookie(SAAS_TOKEN, undefined, {
+                            expires: exp
+                        });
+                        setCookie(SAAS_REFRESH_TOKEN, undefined, {
                             expires: exp
                         });
                         setCookie(`${prefix}GDSID`, undefined, {
@@ -267,6 +315,9 @@
             localStorage.removeItem(SAAS_CURRENT_SUBMENU);
             localStorage.removeItem(SAAS_CURRENT_LEVEL_ONE_MENU);
             localStorage.removeItem(SAAS_CURRENT_LEVEL_TOP_MENU);
+        },
+        beforeDestroy() {
+            clearInterval(this.checkTokenTimer)
         }
     }
 </script>

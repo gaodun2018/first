@@ -9,7 +9,7 @@ let u = url.parse('https://t-baiyiapi.gaodun.com');
 let customRoutes = [];
 let strRequire = `import Entry from '../containers/Entry.vue';\n`;
 // let routes = `export const routes = [\n\t{ path: '/', name:'550',component: Entry ,redirect: '/index',children: [\n`;
-let routes = `export const routes = [\n\t{ path: '/', name:'5500',component: Entry ,redirect: '/login',children: [\n`;
+let routes = `export const routes = [\n\t{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [\n`;
 //2017-12-15 16:10:39  修改
 let login = '';
 /**

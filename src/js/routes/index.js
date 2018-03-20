@@ -164,7 +164,7 @@ const EducationalClasslist = resolve => {
 
 
 export const routes = [
-	{ path: '/', name:'5500',component: Entry ,redirect: '/login',children: [
+	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
 		{ path: '/ResourceTag',meta:{ title:'资源列表' }, name:'850',component: ResourceTag }, // 资源列表
 		{ path: '/resource/video/list',meta:{ title:'视频列表' }, name:'852',component: resourceModuleVideoList }, // 视频列表
 		{ path: '/ExerciseList',meta:{ title:'题目列表' }, name:'856',component: ExerciseList }, // 题目列表
