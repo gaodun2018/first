@@ -168,7 +168,7 @@
                     description: this.ruleForm.description,
                     tag_id: this.ruleForm.subject == '0' ? this.ruleForm.project : this.ruleForm.subject,
                     duration_minutes: this.ruleForm.duration_minutes,
-                    durations_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
+                    duration_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
                     video_id: this.ruleForm.video_id
                 }
                 this.loading = true;
