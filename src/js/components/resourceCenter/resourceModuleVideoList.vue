@@ -57,7 +57,11 @@
                 </el-table-column>
                 <el-table-column prop="title" label="视频名称" min-width="200">
                 </el-table-column>
-                <el-table-column prop="duration" label="时长" min-width="100">
+                <el-table-column label="时长" min-width="100">
+                    <template scope="scope">
+                        {{scope.row.duration_minutes<10?"0"+scope.row.duration_minutes:scope.row.duration_minutes}}分
+                        {{scope.row.duration_seconds<10?"0"+scope.row.duration_seconds:scope.row.duration_seconds}}秒
+                    </template>
                 </el-table-column>
                 <el-table-column prop="project_name" label="项目" min-width="115">
                 </el-table-column>
