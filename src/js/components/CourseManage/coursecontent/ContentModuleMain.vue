@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Special></Special>
+    <!--<Special></Special>-->
 
     <Stage></Stage>
 
-    <MockExam></MockExam>
+    <!--<MockExam></MockExam>-->
 
   </div>
 </template>

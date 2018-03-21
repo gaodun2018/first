@@ -207,11 +207,11 @@
                             <span>{{scope.row.title}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="120">
-                        <template scope="scope">
-                            <span>查看</span>
-                        </template>
-                    </el-table-column>
+                    <!--<el-table-column label="操作" width="120">-->
+                        <!--<template scope="scope">-->
+                            <!--<span>查看</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
                 </el-table>
                 <el-pagination
                     @current-change="handleCurrentChange"
@@ -395,7 +395,11 @@
                 this.progressText[this.active].isCustomerConfirm = true;
                 this.showitem();
                 this.resourceinput = '';  //输入框搜索初始化
-                this.searchResource();
+                if (this.pagination.current_page != 1) {
+                    this.pagination.current_page = 1;
+                } else {
+                    this.searchResource();
+                }
             },
             //分页搜索
             async handleCurrentChange(val) {

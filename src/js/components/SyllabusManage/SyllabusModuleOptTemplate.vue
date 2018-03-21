@@ -2,8 +2,8 @@
   <div class="module-edu-content permission-outlineeat">
     <div class="outlineeat">
       课程大纲：{{title}}<!--<span class="eaticon"></span>-->
-      <span class="cloneoutline" @click="clonedialogVisible = true">克隆旧课程大纲</span>
-      <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>
+      <!--<span class="cloneoutline" @click="clonedialogVisible = true">克隆旧课程大纲</span>-->
+      <!--<span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>-->
     </div>
     <div class="outlinebox">
       <div class="outlinetit">请先为该课程大纲选择合适的结构模板</div>
@@ -21,7 +21,7 @@
     </div>
 
 
-    <el-dialog title="克隆旧课程大纲" class="tabplane clonetab" :visible.sync="clonedialogVisible" :before-close="handleClose">
+    <!--<el-dialog title="克隆旧课程大纲" class="tabplane clonetab" :visible.sync="clonedialogVisible" :before-close="handleClose">
       <el-form :model="ruleProject" :rules="rulesject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
         <el-form-item label="选择旧大纲" prop="region">
           <el-select v-model="ruleProject.region" placeholder="请选择旧大纲">
@@ -35,16 +35,16 @@
           <el-button type="primary" @click="cloneruleProject('ruleProject')">确 定</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog>
+    </el-dialog>-->
 
 
-    <el-dialog title="批量导入" class="tabplane clonetab" :visible.sync="uploaddialogVisible" size="tiny" :before-close="handleClose">
+    <!--<el-dialog title="批量导入" class="tabplane clonetab" :visible.sync="uploaddialogVisible" size="tiny" :before-close="handleClose">
       <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip"><em>课程导入Excel模板</em><br/>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。</div>
       </el-upload>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 <style>

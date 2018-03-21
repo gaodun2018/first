@@ -52,8 +52,8 @@
                 </el-table-column>
                 <el-table-column prop="title" label="讲义名称" min-width="200">
                 </el-table-column>
-                <el-table-column prop="duration" label="大小" min-width="100">
-                </el-table-column>
+                <!--<el-table-column prop="duration" label="大小" min-width="100">-->
+                <!--</el-table-column>-->
                 <el-table-column prop="project_name" label="项目" min-width="110">
                 </el-table-column>
                 <el-table-column prop="extension" label="类型" min-width="110">
