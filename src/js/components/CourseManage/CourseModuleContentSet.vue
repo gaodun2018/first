@@ -4,9 +4,9 @@
             <el-tab-pane label="主课程" name="MainCourse">
                 <!--<MainCourse v-if="activeName=='main'"></MainCourse>-->
             </el-tab-pane>
-            <el-tab-pane label="Glive" name="Glive">
+            <!--<el-tab-pane label="Glive" name="Glive">-->
                 <!--<Glive v-if="activeName=='glive'"></Glive>-->
-            </el-tab-pane>
+            <!--</el-tab-pane>-->
             <el-tab-pane label="批量讲义" name="Handout">
                 <!--<Handout v-if="activeName=='handout'" :handout="handout"></Handout>-->
             </el-tab-pane>
