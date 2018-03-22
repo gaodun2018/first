@@ -7,37 +7,38 @@
             <el-form :model="ruleForm" ref="ruleForm" label-width="120px"
                      class="demo-ruleForm" v-loading="loading">
                 <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
-                    <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
+                    <el-input v-model="ruleForm.title" placeholder="请填写视频名称" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="项目" prop="project" class="w_50"
                               :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.project" filterable
+                    <el-select v-model="ruleForm.project" filterable placeholder="请选择所属项目"
                                @change="didChangeProjectSelection" @visible-change="visibleChange">
                         <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in tags"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="科目" prop="subject" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.subject" filterable>
+                    <el-select v-model="ruleForm.subject" filterable placeholder="请选择所属科目">
                         <el-option :label="tag.name" :value="String(tag.id)" v-for="tag in subjectData"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注说明" prop="description">
-                    <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
+                    <el-input v-model="ruleForm.description"  placeholder="备注说明" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="视频地址" prop="video_id"
                               :rules="[{required: true, message: '请输入视频ID', trigger: 'change'}]">
-                    <el-input v-model="ruleForm.video_id" auto-complete="off" class="w_60"></el-input>
+                    <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_60"></el-input>
+                    <!--<span class="gray_12">asdasdasd</span>-->
                     <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                 </el-form-item>
                 <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
                               :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-                    <el-input v-model="ruleForm.duration_minutes" auto-complete="off"></el-input>
+                    <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                     分
                 </el-form-item>
                 <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
-                              :rules="[{message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-                    <el-input v-model="ruleForm.duration_second" auto-complete="off"></el-input>
+                              :rules="[{message: '请填写视频时长的秒', trigger: 'change,blur'}]">
+                    <el-input v-model="ruleForm.duration_second" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                     秒
                 </el-form-item>
                 <!--<el-form-item label="知识点关联" prop="name">-->

@@ -25,22 +25,63 @@
             </div>
         </div>
         <div class="contentHome">
-            <ul class="console-menu clear">
-                <li
-                    class="console-menu-items"
-                    v-for="(item,index) in menu"
-                    :key="item.NavigationId"
-                    @click="clickRouter(item)"
-                >
-                    <span class="item-icon" :id="item.Iconurl"></span>
-                    <span class="item-title">{{item.Title}}</span>
-                    <!--<span class="item-sub-title">Custom Relation Management</span>-->
-                </li>
-            </ul>
+            <transition name="fade" mode="out-in" appear>
+                <ul class="console-menu clear">
+                    <li
+                        class="console-menu-items"
+                        v-for="(item,index) in menu"
+                        :key="item.NavigationId"
+                        @click="clickRouter(item)"
+                    >
+                        <span class="item-icon" :id="item.Iconurl"></span>
+                        <span class="item-title">{{item.Title}}</span>
+                        <!--<span class="item-sub-title">Custom Relation Management</span>-->
+                    </li>
+                </ul>
+            </transition>
         </div>
     </div>
 </template>
+<style>
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all .3s
+    }
 
+    .fade-enter,
+    .fade-leave-active {
+        transition: all .3s;
+        opacity: 0
+    }
+
+    .fold-enter-active {
+        animation-name: fold-in;
+        animation-duration: .1s;
+    }
+
+    .fold-leave-active {
+        animation-name: fold-out;
+        animation-duration: .1s;
+    }
+
+    @keyframes fold-in {
+        0% {
+            transform: translate3d(0, 100%, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    @keyframes fold-out {
+        0% {
+            transform: translate3d(0, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 100%, 0);
+        }
+    }
+</style>
 <script>
 
     import {getCookie, setCookie} from 'cookieUtils';
