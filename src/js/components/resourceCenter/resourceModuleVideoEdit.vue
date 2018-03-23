@@ -8,6 +8,7 @@
     import VideoForm from './resourceModuleVideoForm.vue'
 
     export default {
+        name:'resourceModuleVideoEdit',
         components: {
             VideoForm
         },

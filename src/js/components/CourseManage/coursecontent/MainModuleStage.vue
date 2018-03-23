@@ -17,12 +17,12 @@
                         <span>{{scope.row.description}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="阶段课程大纲 " width="400">
+                <el-table-column label="阶段课程大纲 ">
                     <template scope="scope">
                         <span>{{scope.row.syllabus_id}} - {{scope.row.syllabus_name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" width="160">
                     <template scope="scope">
                         <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>

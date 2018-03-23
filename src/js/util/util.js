@@ -1,4 +1,4 @@
-import { SAAS_MENU, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_USER_INFO } from './keys';
+import {SAAS_MENU, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_USER_INFO} from './keys';
 
 
 export const startMarquee = (lh, speed, delay, id) => { // 消息滚动
@@ -6,10 +6,10 @@ export const startMarquee = (lh, speed, delay, id) => { // 消息滚动
     let p = false;
     const o = document.getElementById(id);
     o.innerHTML += o.innerHTML + o.innerHTML + o.innerHTML;
-    o.onmouseover = function() {
+    o.onmouseover = function () {
         p = true;
     }
-    o.onmouseout = function() {
+    o.onmouseout = function () {
         p = false;
     }
     o.scrollTop = 0;
@@ -28,8 +28,10 @@ export const startMarquee = (lh, speed, delay, id) => { // 消息滚动
             setTimeout(start, delay);
         }
     }
+
     setTimeout(start, delay);
 }
+
 export function padding(v) {
     let value = v + '';
     if (value.length < 2) {
@@ -37,9 +39,11 @@ export function padding(v) {
     }
     return value;
 }
+
 export function format(d) { //时间转换 => YYYY-MM-dd
     return !!d && typeof d !== 'string' ? (d.getFullYear() + '-' + padding(d.getMonth() + 1) + '-' + padding(d.getDate())) : d;
 }
+
 export function number2DateTime(value, fmt = 'yyyy-MM-dd HH:mm:ss') { // yyyy-MM-dd HH:mm:ss
     if (isNaN(value)) return '';
     const date = new Date(Number(value));
@@ -50,16 +54,18 @@ export function number2DateTime(value, fmt = 'yyyy-MM-dd HH:mm:ss') { // yyyy-MM
     const minute = date.getMinutes();
     const second = date.getSeconds();
     return fmt.replace('yyyy', year.toString())
-        .replace('yy', (year % 100).toString())
-        .replace('MM', month > 9 ? month.toString() : ("0" + month))
-        .replace('dd', day > 9 ? day.toString() : ("0" + day))
-        .replace('HH', hour > 9 ? (hour).toString() : ("0" + hour))
-        .replace('mm', minute > 9 ? (minute).toString() : ("0" + minute))
-        .replace('ss', second > 9 ? (second).toString() : ("0" + second));
+    .replace('yy', (year % 100).toString())
+    .replace('MM', month > 9 ? month.toString() : ("0" + month))
+    .replace('dd', day > 9 ? day.toString() : ("0" + day))
+    .replace('HH', hour > 9 ? (hour).toString() : ("0" + hour))
+    .replace('mm', minute > 9 ? (minute).toString() : ("0" + minute))
+    .replace('ss', second > 9 ? (second).toString() : ("0" + second));
 }
+
 export function trim(str) { // 去空格
     return str.replace(/\s/g, '');
 }
+
 export function isPhone(str) { // 手机号验证
     var reg = /^(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
     if (reg.test(str)) {
@@ -68,6 +74,7 @@ export function isPhone(str) { // 手机号验证
         return false;
     }
 }
+
 export function isEmail(str) { // 邮箱验证
     var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
     // var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
@@ -77,6 +84,7 @@ export function isEmail(str) { // 邮箱验证
         return false;
     }
 }
+
 export function isNumber(value) { // 数字验证
     var patrn = /^[0-9]*$/;
     if (patrn.exec(value) == null || value == "") {
@@ -85,6 +93,7 @@ export function isNumber(value) { // 数字验证
         return true
     }
 }
+
 export function isMoney(value) { // 验证输入金额
     var patrn = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
     if (patrn.exec(value) == null || value == "") {
@@ -93,6 +102,7 @@ export function isMoney(value) { // 验证输入金额
         return true
     }
 }
+
 export function isCardNo(card) {
     // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X  
     var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
@@ -102,24 +112,37 @@ export function isCardNo(card) {
         return true;
     }
 }
+
 export function isAllSpace(value) {
-  // 全为空格时的验证
-  var reg = /^\s+$/g;
-  if (reg.test(value)) {
-    return false;
-  } else {
-    return true;
-  }
-}
-export function maxLength(value,maxlength) {
-    if (value.replace(/[^\x00-\xff]/g,"aa").length > maxlength) {
+    // 全为空格时的验证
+    var reg = /^\s+$/g;
+    if (reg.test(value)) {
         return false;
     } else {
         return true;
     }
 }
-/** 
- * 获取本周、本季度、本月、上月的开端日期、停止日期 
+
+export function isChinese(value) {
+    // 有中文的验证
+    var reg = /[\u4e00-\u9fa5]/g;
+    if (reg.test(value)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+export function maxLength(value, maxlength) {
+    if (value.replace(/[^\x00-\xff]/g, "aa").length > maxlength) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * 获取本周、本季度、本月、上月的开端日期、停止日期
  */
 var now = new Date(); //当前日期 
 var nowDayOfWeek = now.getDay(); //今天本周的第几天 
@@ -139,7 +162,7 @@ export function getMonthDays(myMonth) {
 export function debounce(func, wait, immediate) {
     let timeout, args, context, timestamp, result
 
-    const later = function() {
+    const later = function () {
         // 据上一次触发时间间隔
         const last = +new Date() - timestamp
 
@@ -148,7 +171,7 @@ export function debounce(func, wait, immediate) {
             timeout = setTimeout(later, wait - last)
         } else {
             timeout = null
-                // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+            // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
             if (!immediate) {
                 result = func.apply(context, args)
                 if (!timeout) context = args = null
@@ -156,11 +179,11 @@ export function debounce(func, wait, immediate) {
         }
     }
 
-    return function(...args) {
+    return function (...args) {
         context = this
         timestamp = +new Date()
         const callNow = immediate && !timeout
-            // 如果延时不存在，重新设定延时
+        // 如果延时不存在，重新设定延时
         if (!timeout) timeout = setTimeout(later, wait)
         if (callNow) {
             result = func.apply(context, args)
@@ -170,31 +193,33 @@ export function debounce(func, wait, immediate) {
         return result
     }
 }
+
 export const messageTitle = { // title 消息提示
-        time: 0,
-        title: document.title,
-        timer: null,
-        // 显示新消息提示执行方法  
-        show: function() {
-            var title = messageTitle.title;
-            // 定时器，设置消息切换频率闪烁效果就此产生  
-            messageTitle.timer = setTimeout(function() {
-                messageTitle.time++;
-                messageTitle.show();
-                if (messageTitle.time % 2 == 0) {
-                    document.title = "【新消息】" + title
-                } else {
-                    document.title = "【　　　】" + title
-                };
-            }, 600);
-            return [messageTitle.timer, messageTitle.title];
-        },
-        // 取消新消息提示方法  
-        clear: function() {
-            clearTimeout(messageTitle.timer);
-            document.title = messageTitle.title;
-        }
+    time: 0,
+    title: document.title,
+    timer: null,
+    // 显示新消息提示执行方法
+    show: function () {
+        var title = messageTitle.title;
+        // 定时器，设置消息切换频率闪烁效果就此产生
+        messageTitle.timer = setTimeout(function () {
+            messageTitle.time++;
+            messageTitle.show();
+            if (messageTitle.time % 2 == 0) {
+                document.title = "【新消息】" + title
+            } else {
+                document.title = "【　　　】" + title
+            }
+            ;
+        }, 600);
+        return [messageTitle.timer, messageTitle.title];
+    },
+    // 取消新消息提示方法
+    clear: function () {
+        clearTimeout(messageTitle.timer);
+        document.title = messageTitle.title;
     }
+}
 
 
 export const isIE9 = () => {
