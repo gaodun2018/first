@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
     if (!window.isAuth) {
         next({path: '/home'});
         Message({
-            message: '您暂未开通权限'
+            message: '您暂未开通权限！'
         })
         return;
     }

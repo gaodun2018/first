@@ -58,8 +58,8 @@
                 </el-table-column>
                 <el-table-column prop="subject.name" label="所属科目" min-width="125">
                 </el-table-column>
-                <el-table-column prop="num" label="使用" min-width="150">
-                </el-table-column>
+                <!--<el-table-column prop="num" label="使用" min-width="150">-->
+                <!--</el-table-column>-->
                 <el-table-column label="所属状态" min-width="115">
                     <template scope="scope">
                         <span v-if="scope.row.status == 0">启用</span>

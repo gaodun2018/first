@@ -35,13 +35,13 @@ export const resourceTypeList = [
         "discriminator": "paper",
         "label": "试卷"
     },
-    {
+   /* {
         "discriminator": "question",
         "label": "题目"
     },
     {
         "discriminator": "live",
         "label": "直播"
-    }
+    }*/
 ];
 
