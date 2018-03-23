@@ -55,6 +55,7 @@
   import {CourseSyllabusTemplates,checkSyllabus,selectSyllabus} from '../../api/outline.js';
 
   export default {
+      name:'SyllabusModuleOptTemplate',
     components: {},
     data() {
       return {

@@ -285,6 +285,7 @@
     import {progressText, resourceTypeList} from '../../common/outlineConfig.js'
 
     export default {
+        name:'SyllabusModuleEdit',
         components: {
             draggable,
         },

@@ -29,7 +29,7 @@
                               class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="视频地址" prop="video_id"
-                              :rules="[{required: true, message: '请输入视频ID', trigger: 'change'}]">
+                              :rules="filter_rules({required:true,type:'isVideoId'})">
                     <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off"
                               class="w_60"></el-input>
                     <!--<span class="gray_12">asdasdasd</span>-->
@@ -86,7 +86,7 @@
                     duration_second: '',
                     description: '',
                 },
-                multipleSelection: []
+                multipleSelection: [],
             }
         },
         methods: {
@@ -113,7 +113,6 @@
                 let params = {
                     url: this.ruleForm.video_id
                 }
-                // debugger
                 let ret = await getVideoPath(params);
                 return ret;
             },
@@ -145,7 +144,6 @@
             async createResourceForm() {
                 let pathRet = await this.getVideoPath();
                 let video_id = '';
-                // debugger
                 if (pathRet.status == 0) {
                     if (!pathRet.result.video_id) {
                         return this.$message({
@@ -154,6 +152,9 @@
                         })
                     }
                     video_id = pathRet.result.video_id;
+                } else if (pathRet.status == 1) {
+                    //为1时使用用户输入的地址
+                    video_id = this.ruleForm.video_id;
                 } else {
                     return this.$message({
                         type: 'warning',
@@ -202,6 +203,9 @@
                         })
                     }
                     video_id = pathRet.result.video_id;
+                } else if (pathRet.status == 1) {
+                    //为1时使用用户输入的地址
+                    video_id = this.ruleForm.video_id;
                 } else {
                     return this.$message({
                         type: 'warning',

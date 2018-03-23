@@ -1,4 +1,4 @@
-import {isAllSpace, maxLength} from './util.js'
+import {isAllSpace, maxLength, isChinese} from './util.js'
 
 exports.install = function (Vue, options) {
 
@@ -21,6 +21,36 @@ exports.install = function (Vue, options) {
         }
     }
 
+    /*输入的是否有中文*/
+    const ischinese = (rule, value, callback) => {
+        if (value != null && value != "") {
+            if (!isChinese(value)) {
+                return callback(new Error('请不要输入中文！'))
+            } else {
+                return callback()
+            }
+        }
+        else {
+            return callback();
+        }
+    }
+    /*验证视频*/
+    const isVideoId = (rule, value, callback) => {
+        if (value != null && value != "") {
+            if (!isChinese(value)) {
+                return callback(new Error('请输入正确的视频地址！'))
+            } else if (!isAllSpace(value)) {
+                return callback(new Error('输入的内容不能全为空格!'))
+            } else {
+                return callback()
+            }
+        }
+        else {
+            return callback();
+        }
+    }
+
+
     /**
      * 参数 item
      * required true  必填项
@@ -29,6 +59,7 @@ exports.install = function (Vue, options) {
      * type 手机号 mobile
      *      邮箱   email
      *      网址   url
+     *      视频地址   video_id
      *      各种自定义类型   定义在 src/utils/validate 中    持续添加中.......
      * */
 
@@ -66,6 +97,12 @@ exports.install = function (Vue, options) {
             switch (type) {
                 case 'isAllSpace':
                     rules.push({validator: isallspace, trigger: 'blur,change'});
+                    break;
+                case 'isChinese':
+                    rules.push({validator: ischinese, trigger: 'blur,change'});
+                    break;
+                case 'isVideoId':
+                    rules.push({validator: isVideoId, trigger: 'blur,change'});
                     break;
                 default:
                     rule.push({});

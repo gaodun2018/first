@@ -153,6 +153,7 @@
     import {initial_info, course_type, progressText} from '../../common/courseConfig.js'
 
     export default {
+        name:'CourseModuleBasicSet',
         components: {
             ImgUpload, ResourceIntro
         },

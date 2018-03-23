@@ -33,6 +33,7 @@
     import {CourseSyllabuses} from '../../api/outline'
 
     export default {
+        name:'CourseModuleContentSet',
         components: {
             MainCourse, Glive, Handout
         },
