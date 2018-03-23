@@ -6,8 +6,10 @@
         <div class="frombox">
             <el-form :model="ruleForm" ref="ruleForm" label-width="120px"
                      class="demo-ruleForm" v-loading="loading">
-                <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
-                    <el-input v-model="ruleForm.title" placeholder="请填写视频名称" auto-complete="off" class="w_50"></el-input>
+                <el-form-item label="视频名称" prop="title"
+                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                    <el-input v-model="ruleForm.title" placeholder="请填写视频名称" auto-complete="off"
+                              class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="项目" prop="project" class="w_50"
                               :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
@@ -23,17 +25,20 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注说明" prop="description">
-                    <el-input v-model="ruleForm.description"  placeholder="备注说明" auto-complete="off" class="w_50"></el-input>
+                    <el-input v-model="ruleForm.description" placeholder="备注说明" auto-complete="off"
+                              class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="视频地址" prop="video_id"
                               :rules="[{required: true, message: '请输入视频ID', trigger: 'change'}]">
-                    <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_60"></el-input>
+                    <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off"
+                              class="w_60"></el-input>
                     <!--<span class="gray_12">asdasdasd</span>-->
                     <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                 </el-form-item>
                 <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
                               :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-                    <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                    <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟"
+                              auto-complete="off"></el-input>
                     分
                 </el-form-item>
                 <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
@@ -57,7 +62,7 @@
 </template>
 <script>
     import SelectKnowledge from './resourceModuleSelectKnowledge.vue'
-    import {getTags, getOneResource, storeResource, editVideoResource} from '../../api/resource.js'
+    import {getTags, getOneResource, storeResource, editVideoResource, getVideoPath} from '../../api/resource.js'
 
     export default {
         components: {
@@ -88,7 +93,6 @@
             async initData() {
                 let ret = await getOneResource(this.$route.params.id);
                 if (ret.status == 0) {
-                    this.tags = ret.result.tags;
                     let data = ret.result.resource;
                     this.ruleForm.title = data.title;
                     this.ruleForm.description = data.description;
@@ -104,17 +108,24 @@
                     }
                 }
             },
+            //解析视频地址获得视频id
+            async getVideoPath() {
+                let params = {
+                    url: this.ruleForm.video_id
+                }
+                // debugger
+                let ret = await getVideoPath(params);
+                return ret;
+            },
             //选择器开关函数
             visibleChange(bool) {
                 this.selectFalg = bool
             },
             // 项目
             didChangeProjectSelection(id) {
-                console.log(id);
                 this.tags.forEach((item) => {
                     if (item.id == id) {
                         let subject_list = [...item.children];
-                        console.log(subject_list);
                         subject_list.unshift({
                             id: '0',
                             name: '全部'
@@ -132,6 +143,23 @@
             },
             //新增视频
             async createResourceForm() {
+                let pathRet = await this.getVideoPath();
+                let video_id = '';
+                // debugger
+                if (pathRet.status == 0) {
+                    if (!pathRet.result.video_id) {
+                        return this.$message({
+                            type: 'warning',
+                            message: '视频地址解析失败！'
+                        })
+                    }
+                    video_id = pathRet.result.video_id;
+                } else {
+                    return this.$message({
+                        type: 'warning',
+                        message: '视频地址解析失败！'
+                    })
+                }
                 let params = {
                     title: this.ruleForm.title,
                     description: this.ruleForm.description,
@@ -139,7 +167,7 @@
                     // duration: `${this.ruleForm.duration_minutes}:${this.ruleForm.duration_second}`,
                     duration_minutes: this.ruleForm.duration_minutes,
                     duration_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
-                    video_id: this.ruleForm.video_id
+                    video_id: video_id
                 }
                 this.loading = true;
                 let createResponse = await storeResource(params);
@@ -164,13 +192,29 @@
             },
             //修改视频资源
             async editVideoResource() {
+                let pathRet = await this.getVideoPath();
+                let video_id = '';
+                if (pathRet.status == 0) {
+                    if (!pathRet.result.video_id) {
+                        return this.$message({
+                            type: 'warning',
+                            message: '视频地址解析失败！'
+                        })
+                    }
+                    video_id = pathRet.result.video_id;
+                } else {
+                    return this.$message({
+                        type: 'warning',
+                        message: '视频地址解析失败！'
+                    })
+                }
                 let params = {
                     title: this.ruleForm.title,
                     description: this.ruleForm.description,
                     tag_id: this.ruleForm.subject == '0' ? this.ruleForm.project : this.ruleForm.subject,
                     duration_minutes: this.ruleForm.duration_minutes,
                     duration_seconds: this.ruleForm.duration_second ? this.ruleForm.duration_second : 0,
-                    video_id: this.ruleForm.video_id
+                    video_id: video_id
                 }
                 this.loading = true;
                 let Response = await editVideoResource(this.$route.params.id, params);
@@ -238,10 +282,9 @@
             this.loading = true
             this.id = this.$route.params.id;
             // this.resource = (await getOneResource(this.id)).result
+            this.tags = (await getTags('project')).result;
             if (this.$route.params.id) {
                 await this.initData();
-            } else {
-                this.tags = (await getTags('project')).result;
             }
             this.loading = false;
 

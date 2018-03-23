@@ -102,7 +102,7 @@
 </style>
 <script>
     import Vue from 'vue';
-    import {getResource, removeLecturenote} from '../../api/resource.js'
+    import {getResource, removeLecturenote, getTags} from '../../api/resource.js'
     import {number2DateTime} from '../../util/util.js'
 
     export default {
@@ -203,7 +203,6 @@
                 // if (this.paginationTotal == 0)
                 //     this.paginationTotal = total
                 this.paginationTotal = total;
-                this.tags = this.resource.tags
                 this.loading = false
             },
             async didChangePage(page) {
@@ -225,6 +224,7 @@
         mounted() {
         },
         async created() {
+            this.tags = (await getTags('project')).result;
             await this.loadResources()
         }
     }

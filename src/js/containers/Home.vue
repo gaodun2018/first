@@ -280,7 +280,7 @@
             },
             stopHalt() {
                 this.$message({
-                    message: '您暂未开通权限'
+                    message: '您暂未开通权限！'
                 })
             },
             async handleCommands(command) {

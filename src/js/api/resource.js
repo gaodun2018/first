@@ -18,6 +18,9 @@ export const storeResource = params => formPost(`${getBaseUrl()}apigateway.gaodu
 //修改视频资源
 export const editVideoResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video/${id}`, params)
 
+//分析视频地址
+export const getVideoPath = params => get(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video-path`, params)
+
 
 // 讲义保存
 export const saveLecturenote = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note`, params)
