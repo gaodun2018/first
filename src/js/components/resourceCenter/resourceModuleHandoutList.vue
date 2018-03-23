@@ -52,8 +52,8 @@
                 </el-table-column>
                 <el-table-column prop="title" label="讲义名称" min-width="200">
                 </el-table-column>
-                <el-table-column prop="duration" label="大小" min-width="100">
-                </el-table-column>
+                <!--<el-table-column prop="duration" label="大小" min-width="100">-->
+                <!--</el-table-column>-->
                 <el-table-column prop="project_name" label="项目" min-width="110">
                 </el-table-column>
                 <el-table-column prop="extension" label="类型" min-width="110">
@@ -96,7 +96,7 @@
 </style>
 <script>
     import Vue from 'vue';
-    import {getOneResource, getResource, removeLecturenote} from '../../api/resource';
+    import {getOneResource, getResource, removeLecturenote,getTags} from '../../api/resource';
     import {number2DateTime} from '../../util/util.js'
 
     export default {
@@ -196,7 +196,6 @@
                 // let total = this.resource.pagination.total;
                 // if (this.paginationTotal == 0)
                 this.paginationTotal = this.resource.pagination.total;
-                this.tags = this.resource.tags
                 this.loading = false
             },
             async didChangePage(page) {
@@ -214,6 +213,7 @@
 
         },
         async created() {
+            this.tags = (await getTags('project')).result;
             await this.loadResources()
         }
     }

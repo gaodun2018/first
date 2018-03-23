@@ -89,7 +89,6 @@
                             GDSID: GDSID
                         });
                         if (response.data.status == 0) {
-                            console.log(response.headers);
                             this.setCookie(SAAS_TOKEN, response.headers.accesstoken, 2)
                             this.setCookie(SAAS_REFRESH_TOKEN, response.headers.refreshtoken, 24 * 7)
                             localStorage.setItem(SAAS_USER_INFO, JSON.stringify(response.data.result));
@@ -114,7 +113,9 @@
 
                             // if(loginRet.result.PwdType==0){
                             if (response.data.result.HomePage == '') {
+
                                 this.$router.push({path: '/home'})
+                                // location.href = '/#/home'
                             }
                             else {
                                 this.$router.push({path: response.data.result.HomePage})

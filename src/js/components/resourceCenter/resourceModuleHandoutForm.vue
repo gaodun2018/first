@@ -7,7 +7,8 @@
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-loading="loading">
                 <el-form-item label="项目" prop="region" class="w_50"
                               :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.region" filterable @change="didChangeProjectSelection"
+                    <el-select v-model="ruleForm.region" filterable placeholder="请选择所属项目"
+                               @change="didChangeProjectSelection"
                                @visible-change="visibleChange">
                         <el-option :label="tag.name" :key="tag.id" :value="String(tag.id)"
                                    v-for="tag in tags"></el-option>
@@ -15,16 +16,19 @@
                 </el-form-item>
                 <el-form-item label="科目" prop="tag_id" class="w_50"
                               :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
-                    <el-select v-model="ruleForm.tag_id" filterable>
+                    <el-select v-model="ruleForm.tag_id" placeholder="请选择所属科目" filterable>
                         <el-option v-for="item in subjectData" :key="item.id" :label="item.name"
                                    :value="String(item.id)"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:30})">
-                    <el-input v-model="ruleForm.title" auto-complete="off" class="w_50"></el-input>
+                <el-form-item label="讲义名称" prop="title"
+                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                    <el-input v-model="ruleForm.title" placeholder="请填写讲义名称" auto-complete="off"
+                              class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="讲义描述">
-                    <el-input v-model="ruleForm.description" auto-complete="off" class="w_50"></el-input>
+                    <el-input v-model="ruleForm.description" placeholder="请填写讲义描述" auto-complete="off"
+                              class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="文件名">
                     <el-upload
@@ -107,7 +111,6 @@
             async getModifyData() {
                 // 编辑讲义
                 let ret = await getOneResource(this.$route.params.id);
-                this.tags = ret.result.tags;  //在编辑讲义时需要重新设置
                 let data = ret.result.resource;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
@@ -301,17 +304,16 @@
 
         },
         async created() {
+            this.loading = true;
             let token = 'Basic ' + getCookie(SAAS_TOKEN);
             this.apiHeader = {Authentication: token};
             this.id = this.$route.params.id;
+            await this.initTags();
             if (this.$route.params.id) {
                 //有id是编辑讲义，不需要拉一次tag_Id列表
-                let ret = await this.getModifyData();
-            } else {
-                this.initTags();
-
+                await this.getModifyData();
             }
-
+            this.loading = false;
         }
     }
 </script>

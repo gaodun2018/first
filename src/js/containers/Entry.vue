@@ -7,7 +7,7 @@
             <div v-if="!this.$route.query.NavigationId" class="content-menu">
                 <Menu></Menu>
             </div>
-            <section class="content-container" :style="this.$route.query.NavigationId && 'margin-left: 0'">
+            <section id="content-container" class="content-container" :style="this.$route.query.NavigationId && 'margin-left: 0'">
                 <Breadcrumb></Breadcrumb>
                 <div class="content-box">
                     <transition name="fade" mode="out-in" appear>

@@ -1,5 +1,5 @@
 <template>
-    <div class="module-edu-content courseset">
+    <div class="module-edu-content courseset" v-loading="zLoading">
         <el-row class="progressBox">
             <el-col v-for="item in progressText" :key="item.text" :sm="12">
                 <div class="order-progress-bar">
@@ -132,32 +132,41 @@
                     </el-form-item>
                     <el-form-item class="last-form-item">
                         <el-button style="margin-top: 12px;" @click="prev">上一步</el-button>
-                        <el-button type="primary" :loading="btnLoading" @click="submitForm('kForm')">{{btnLoading?'保存中':'确定'}}</el-button>
+                        <el-button type="primary" :loading="btnLoading" @click="submitForm('kForm')">
+                            {{btnLoading?'保存中':'确定'}}
+                        </el-button>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
     </div>
 </template>
+<style>
+    .courseset .el-loading-mask {
+        height: calc(100vh - 100px);
+    }
+</style>
 <script>
-    import {getCourseInfo, getProjectSubject,SetCourse, AddSourceIntro} from '../../api/course.js'
+    import {getCourseInfo, getProjectSubject, SetCourse, AddSourceIntro} from '../../api/course.js'
     import ImgUpload from './courseset/CourseModelUpload.vue'
     import ResourceIntro from './courseset/CourseModelResourceIntro.vue'
-    import {initial_info,course_type,progressText} from '../../common/courseConfig.js'
+    import {initial_info, course_type, progressText} from '../../common/courseConfig.js'
 
     export default {
+        name:'CourseModuleBasicSet',
         components: {
             ImgUpload, ResourceIntro
         },
         data() {
             return {
+                zLoading: false,
                 btnLoading: false,  //按钮loading
                 editor: null,
                 selectfalg: false,     //选择器搜索开关
                 projectlist: [],    //项目列表
                 selectedlist: [],   //科目列表
                 ware_status_list: [],    //内容制作状态
-                course_type:course_type,   //网课类型
+                course_type: course_type,   //网课类型
                 active: 0,
                 progressText: progressText,   //进度状态
                 ruleForm: {
@@ -251,7 +260,6 @@
                 let url = this.course_id;
                 let ret = await getCourseInfo(url);
                 if (ret.status == 0) {
-
                     this.ruleForm.name = ret.result.course_name;
                     this.ruleForm.project_id = ret.result.project_id;
                     this.ruleForm.subject_id = ret.result.subject_id;
@@ -259,10 +267,10 @@
                     this.ruleForm.welcome_letter = ret.result.welcome_letter;    //欢迎信
 
                     this.ruleForm.teacher_name = ret.result.teacher_name;
-                    this.ruleForm.welcome_letter_type = ret.result.welcome_letter_type + '';   //欢迎信类型
+                    this.ruleForm.welcome_letter_type = String(ret.result.welcome_letter_type);   //欢迎信类型
                     this.templateContent = ret.result.welcome_letter_template;  //通用模板
-                    this.userDefinedContent = ret.result.welcome_letter; //自定义内容
-                    if (ret.result.welcome_letter_type == 1) {    //默认的通用模板
+                    this.userDefinedContent = ret.result.welcome_letter;      //自定义内容
+                    if (ret.result.welcome_letter_type == 1) {                //默认的通用模板
                         this.userDefinedContent = '';
                         this.ruleForm.welcome_letter = ret.result.welcome_letter_template;  //默认的选1时，welcome_letter为空，将其设为通用模板
                     }
@@ -277,7 +285,7 @@
                     this.kForm.allow_investigate = ret.result.allow_investigate;
                     this.kForm.investigate_url = ret.result.investigate_url;
                     setTimeout(() => {
-                        ret.result.brief_introduction&&this.editor.setContent(ret.result.brief_introduction);
+                        ret.result.brief_introduction && this.editor.setContent(ret.result.brief_introduction);
                         //brief_introduction  富文本
                     }, 500)
                 }
@@ -300,7 +308,7 @@
                 let fromData = {
                     ...this.ruleForm,
                     ...this.kForm,
-                    brief_introduction: this.editor.getContent() != `<p>${initial_info}</p>`?this.editor.getContent():'',
+                    brief_introduction: this.editor.getContent() != `<p>${initial_info}</p>` ? this.editor.getContent() : '',
                     'course_source_ids[]': this.$store.state.course.resource_intro_id,
                     'course_update_ids[]': this.$store.state.course.course_update_ids,
                     'course_update_titles[]': this.$store.state.course.course_update_titles,
@@ -313,9 +321,8 @@
                     if (res.status == 0) {
                         this.$message({
                             type: 'success',
-                            message: res.message? res.message:'设置成功！'
+                            message: res.message ? res.message : '设置成功！'
                         })
-                        debugger;
                         setTimeout(() => {
                             location.reload();
                         }, 1000)
@@ -335,11 +342,11 @@
                 //focus时自动清空初始化时的内容
                 autoClearinitialContent: true,
                 //初始化编辑器的内容，
-                initialContent:initial_info,
+                initialContent: initial_info,
                 //关闭字数统计
                 wordCount: true,
                 //允许的最大字符数
-                maximumWords : 500,
+                maximumWords: 500,
                 //关闭elementPath
                 elementPathEnabled: false,
                 //默认的编辑区域高度
@@ -348,7 +355,7 @@
             })
         },
         destroyed() {
-            this.editor.destroy();
+            this.editor && this.editor.destroy();
         },
         created() {
             this.getProjectSubject();

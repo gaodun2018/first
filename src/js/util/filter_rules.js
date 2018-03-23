@@ -1,4 +1,4 @@
-import {isAllSpace,maxLength} from './util.js'
+import {isAllSpace, maxLength, isChinese} from './util.js'
 
 exports.install = function (Vue, options) {
 
@@ -21,6 +21,36 @@ exports.install = function (Vue, options) {
         }
     }
 
+    /*输入的是否有中文*/
+    const ischinese = (rule, value, callback) => {
+        if (value != null && value != "") {
+            if (!isChinese(value)) {
+                return callback(new Error('请不要输入中文！'))
+            } else {
+                return callback()
+            }
+        }
+        else {
+            return callback();
+        }
+    }
+    /*验证视频*/
+    const isVideoId = (rule, value, callback) => {
+        if (value != null && value != "") {
+            if (!isChinese(value)) {
+                return callback(new Error('请输入正确的视频地址！'))
+            } else if (!isAllSpace(value)) {
+                return callback(new Error('输入的内容不能全为空格!'))
+            } else {
+                return callback()
+            }
+        }
+        else {
+            return callback();
+        }
+    }
+
+
     /**
      * 参数 item
      * required true  必填项
@@ -29,6 +59,7 @@ exports.install = function (Vue, options) {
      * type 手机号 mobile
      *      邮箱   email
      *      网址   url
+     *      视频地址   video_id
      *      各种自定义类型   定义在 src/utils/validate 中    持续添加中.......
      * */
 
@@ -38,10 +69,11 @@ exports.install = function (Vue, options) {
             rules.push({required: true, message: '该输入项为必填项!', trigger: 'blur'});
         }
         if (item.maxLength) {
-            rules.push({validator: (rule, value, callback)=>{
+            rules.push({
+                validator: (rule, value, callback) => {
                     if (value != null && value != "") {
-                        if (!maxLength(value,item.maxLength)) {
-                            return callback(new Error(`最多输入${(item.maxLength/2)}个字！`))
+                        if (!maxLength(value, item.maxLength)) {
+                            return callback(new Error(`最多输入${(item.maxLength / 2)}个汉字或者${(item.maxLength)}个英文！`))
                         } else {
                             return callback()
                         }
@@ -49,11 +81,12 @@ exports.install = function (Vue, options) {
                     else {
                         return callback();
                     }
-                }, trigger: 'blur,change'})
+                }, trigger: 'blur,change'
+            })
         }
         if (item.max) {
             rules.push({
-                min: item.min?item.min:0,
+                min: item.min ? item.min : 0,
                 max: item.max,
                 message: '最多输入' + item.max + '个字!',
                 trigger: 'blur,change'
@@ -64,6 +97,12 @@ exports.install = function (Vue, options) {
             switch (type) {
                 case 'isAllSpace':
                     rules.push({validator: isallspace, trigger: 'blur,change'});
+                    break;
+                case 'isChinese':
+                    rules.push({validator: ischinese, trigger: 'blur,change'});
+                    break;
+                case 'isVideoId':
+                    rules.push({validator: isVideoId, trigger: 'blur,change'});
                     break;
                 default:
                     rule.push({});
