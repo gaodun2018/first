@@ -125,14 +125,6 @@
           project: 'ACCA',
           num: '12',
           updatetime: '2017-10-21 09:57'
-        },{
-          videoid: '123',
-          classname: '基金从业一类线索',
-          duration: '00:55:40',
-          type: '课程录播',
-          project: 'ACCA',
-          num: '12',
-          updatetime: '2017-10-21 09:57'
         }
         ],
       }
