@@ -36,14 +36,15 @@
                     <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                 </el-form-item>
                 <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                              :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-                    <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟"
+                              :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
+                    <el-input v-model.number="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟"
                               auto-complete="off"></el-input>
                     分
                 </el-form-item>
                 <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
-                              :rules="[{message: '请填写视频时长的秒', trigger: 'change,blur'}]">
-                    <el-input v-model="ruleForm.duration_second" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+                              :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
+                    <el-input v-model.number="ruleForm.duration_second" placeholder="请填写视频时长的秒"
+                              auto-complete="off"></el-input>
                     秒
                 </el-form-item>
                 <!--<el-form-item label="知识点关联" prop="name">-->
@@ -63,6 +64,7 @@
 <script>
     import SelectKnowledge from './resourceModuleSelectKnowledge.vue'
     import {getTags, getOneResource, storeResource, editVideoResource, getVideoPath} from '../../api/resource.js'
+    import {getSrcStr} from '../../util/util.js'
 
     export default {
         components: {
@@ -97,12 +99,13 @@
                     this.ruleForm.title = data.title;
                     this.ruleForm.description = data.description;
                     this.ruleForm.video_id = data.video_id;
-                    this.ruleForm.duration_minutes = String(data.duration_minutes);
-                    this.ruleForm.duration_second = String(data.duration_seconds);
-                    if (data.tag.id) {
+                    this.ruleForm.duration_minutes = Number(data.duration_minutes);
+                    this.ruleForm.duration_second = Number(data.duration_seconds);
+                    if (data.tag && data.tag.id && data.tag.id != 0) {
                         this.ruleForm.project = String(data.tag.id);
                         this.ruleForm.subject = (data.tag.children && data.tag.children.length != 0) ? String(data.tag.children[0].id) : '0';
                     } else {
+                        //没项目，没科目
                         this.ruleForm.project = '';
                         this.ruleForm.subject = '';
                     }
@@ -110,8 +113,9 @@
             },
             //解析视频地址获得视频id
             async getVideoPath() {
+                let url = getSrcStr(this.ruleForm.video_id);
                 let params = {
-                    url: this.ruleForm.video_id
+                    url: url
                 }
                 let ret = await getVideoPath(params);
                 return ret;
