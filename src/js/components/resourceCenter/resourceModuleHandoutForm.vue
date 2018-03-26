@@ -114,10 +114,11 @@
                 let data = ret.result.resource;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
-                if (data.tag.id) {
+                if (data.tag && data.tag.id && data.tag.id != 0) {
                     this.ruleForm.region = String(data.tag.id);
                     this.ruleForm.tag_id = (data.tag.children && data.tag.children.length != 0) ? String(data.tag.children[0].id) : '0';
                 } else {
+                    //没项目，没科目
                     this.ruleForm.region = '';
                     this.ruleForm.tag_id = '';
                 }
