@@ -126,6 +126,10 @@
                             // }
                         } else {
                             this.loading = false;
+                            this.$message({
+                                message: menuRet.message,
+                                type: 'warning'
+                            });
                             return;
                         }
 

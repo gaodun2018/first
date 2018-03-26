@@ -113,6 +113,19 @@ export function isCardNo(card) {
     }
 }
 
+export function getSrcStr(value) {
+    // 获取字符串里的src
+    var reg = /src=\"([^\"]*?)\"/gi;
+    var v = '';
+    if (value) {
+        var vArr = value.match(reg);
+        v = (vArr && vArr.length != 0) ? vArr[0] : value;
+        return v;
+    } else {
+        return value;
+    }
+}
+
 export function isAllSpace(value) {
     // 全为空格时的验证
     var reg = /^\s+$/g;
