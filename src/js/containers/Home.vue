@@ -192,6 +192,7 @@
                                     this.openTiku();  //登陆题库
                                     break;
                                 default:
+                                    console.log(this.menu[i].Url);
                                     window.open(this.menu[i].Url)
                                     break;
                             }
