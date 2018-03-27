@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {getEnv, getBaseUrl} from '../util/config';
-import {SAAS_TOKEN, SAAS_USER_INFO} from './keys';
-import {getCookie, setCookie} from 'cookieUtils';
-import {Message} from 'element-ui';
+import { getEnv, getBaseUrl } from '../util/config';
+import { SAAS_TOKEN, SAAS_USER_INFO } from './keys';
+import { getCookie, setCookie } from 'cookieUtils';
+import { Message } from 'element-ui';
 
 let prefix = getEnv();
 let userInfo = localStorage.getItem(SAAS_USER_INFO);
@@ -13,7 +13,7 @@ if (userInfo) {
 axios.defaults.baseURL = '//';
 axios.defaults.headers.post['Content-Type'] = "application/json";
 axios.defaults.headers.put['Content-Type'] = "application/json";
-axios.interceptors.request.use(function (config) {
+axios.interceptors.request.use(function(config) {
     let token = getCookie(SAAS_TOKEN);
     // 非登录接口
     if (config.url.indexOf('login') === -1 && token == undefined) {
@@ -36,12 +36,12 @@ axios.interceptors.request.use(function (config) {
      }
      config.headers.common[`GDSID`] = GDSID;*/
     return Promise.resolve(config);
-}, function (error) {
+}, function(error) {
     return Promise.reject(error);
 });
-axios.interceptors.response.use(function (response) {
-    // 登录失效
-    if (response.data.status == 553649409 || response.data.status == 553650183 || response.data.status == 553649952 || response.data.status == 553649434) {
+axios.interceptors.response.use(function(response) {
+    // 登录失效 553649410～553649444  
+    if (response.data.status > 553649000 && response.data.status < 563649999) {
         localStorage.clear();
         location.href = '/#/login';
         location.reload();
@@ -66,7 +66,7 @@ axios.interceptors.response.use(function (response) {
      });
      }*/
     return Promise.resolve(response.data);
-}, function (error) {
+}, function(error) {
     return Promise.reject(error);
 });
 export default class ZEUSAxios {

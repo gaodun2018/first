@@ -1,4 +1,4 @@
-/*! Gaodun modified this file at 2018-3-27 13:54:21 */
+/*! Gaodun modified this file at 2018-3-27 17:54:14 */
 
 nav {
     margin-bottom: 10px;
@@ -872,20 +872,20 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: all .3s
+    transition: all 0.3s;
 }
 .fade-enter,
 .fade-leave-active {
-    transition: all .3s;
-    opacity: 0
+    transition: all 0.3s;
+    opacity: 0;
 }
 .fold-enter-active {
     animation-name: fold-in;
-    animation-duration: .1s;
+    animation-duration: 0.1s;
 }
 .fold-leave-active {
     animation-name: fold-out;
-    animation-duration: .1s;
+    animation-duration: 0.1s;
 }
 @keyframes fold-in {
 0% {
@@ -903,6 +903,15 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
         transform: translate3d(0, 100%, 0);
 }
 }
+
+
+
+
+
+
+
+
+
 
 
 
