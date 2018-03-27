@@ -83,6 +83,16 @@
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
                         let GDSID = getCookie(`${prefix}GDSID`);
+                        if(!GDSID){
+                            GDSID = getCookie(`${prefix}GDSID`);
+                        }
+                        if(!GDSID){
+                            this.$message({
+                                type:'warning',
+                                message:'请求失败，请联系技术客服!',
+                            })
+                            return;
+                        }
                         //登录
                         let response = await userLogin({
                             ...this.ruleForm,
