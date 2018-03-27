@@ -5,7 +5,7 @@ import Vue from 'vue';
 import store from './store/index';
 import App from './containers/App.vue';
 import VueRouter from 'vue-router';
-import {routes} from './routes/index';
+import { routes } from './routes/index';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
 import '../css/main.less';
@@ -24,11 +24,19 @@ import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/title';
-import {setWindowNID, setWindowNBID, formatRoute, checkIsAuth} from './util/config';
-import {SAAS_MENU, SAAS_CURRENT_MENU} from './util/keys';
+import { setWindowNID, setWindowNBID, formatRoute, checkIsAuth } from './util/config';
+import { SAAS_MENU, SAAS_CURRENT_MENU } from './util/keys';
 import Validate from './util/filter_rules'
 import VueJsonp from 'vue-jsonp'
-import {Message} from 'element-ui';
+import { Message } from 'element-ui';
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
+
+Raven
+    .config('http://e4bd12ab2d1a43efb7fd822b5a89fd30@sentry.gaodunwangxiao.com/22')
+    .addPlugin(RavenVue, Vue)
+    .install();
+
 
 Vue.use(VueJsonp)
 
@@ -61,9 +69,9 @@ router.beforeEach((to, from, next) => {
     // store.dispatch('updateBreadcrumb', to.path);//更新面包屑
 
     setWindowNBID(window.SAASMENU, to.path); // window.nid
-    checkIsAuth(window.SAASMENU, window.nbid);//检查是否有权限
+    checkIsAuth(window.SAASMENU, window.nbid); //检查是否有权限
     if (!window.isAuth) {
-        next({path: '/home'});
+        next({ path: '/home' });
         Message({
             message: '您暂未开通权限！'
         })
@@ -78,7 +86,7 @@ router.beforeEach((to, from, next) => {
 
     //格式化菜单
     formatRoute(JSON.parse(localStorage.getItem(SAAS_CURRENT_MENU)), to.path);
-    store.dispatch('updateBreadcrumb', to.path);//更新面包屑
+    store.dispatch('updateBreadcrumb', to.path); //更新面包屑
 
     document.title = `高顿教育 ${to.meta.title}` || '高顿教育'
     if (!to.query.url && from.query.url) {
