@@ -37,7 +37,7 @@ export const resourceTypeList = [{
          "label": "题目"
      },*/
     {
-        "discriminator": "live",
+        "discriminator": "legacy_live",
         "label": "直播"
     }
 ];
