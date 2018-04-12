@@ -11,7 +11,7 @@
                         <el-form :model="ruleForm" autoComplete="on" ref="ruleForm" style="text-align: center">
                             <el-form-item prop="user" :rules="filter_rules({required:true,type:'isAllSpace'})">
                             <span class="container_login">
-                                <img src="../../images/login/user-icon.png"></img>
+                                <img src="../../images/login/user-icon.png">
                             </span>
                                 <el-input class="login_bnt" type="text" v-model="ruleForm.user"
                                           @keyup.enter.native="submitForm('ruleForm')" autofocus="true"
@@ -19,7 +19,7 @@
                             </el-form-item>
                             <el-form-item prop="password" :rules="filter_rules({required:true,type:'isAllSpace'})">
                             <span class="container_login">
-                                <img style="width: 13px" src="../../images/login/password-icon.png"></img>
+                                <img style="width: 13px" src="../../images/login/password-icon.png">
                             </span>
                                 <el-input class="login_bnt" type="password" v-model="ruleForm.password"
                                           @keyup.enter.native="submitForm('ruleForm')" auto-complete="on"

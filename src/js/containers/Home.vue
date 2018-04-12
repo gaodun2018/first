@@ -27,7 +27,7 @@
         <div class="contentHome">
             <transition name="fade" mode="out-in" appear>
                 <ul class="console-menu clear">
-                    <li class="console-menu-items" v-for="(item,index) in menu" :key="item.NavigationId" @click="clickRouter(item)">
+                    <li class="console-menu-items" v-for="item in menu" :key="item.NavigationId" @click="clickRouter(item)">
                         <span class="item-icon" :id="item.Iconurl"></span>
                         <span class="item-title">{{item.Title}}</span>
                         <!--<span class="item-sub-title">Custom Relation Management</span>-->
