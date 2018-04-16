@@ -428,8 +428,7 @@
                         'order_by[]': 'desc',   //顺序   倒序
                         'order_by_field[]': 'id',   //排序字段
                         keywords: this.resourceinput,
-                        project_id: this.project_id,
-                        subject_id: this.subject_id,
+                        project_id: this.project_id,//不传科目id
                     }
                     let ret = await getResource(discriminator);
                     if (ret.status == 0) {
