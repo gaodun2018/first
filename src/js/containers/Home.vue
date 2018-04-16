@@ -27,7 +27,7 @@
         <div class="contentHome">
             <transition name="fade" mode="out-in" appear>
                 <ul class="console-menu clear">
-                    <li class="console-menu-items" v-for="(item,index) in menu" :key="item.NavigationId" @click="clickRouter(item)">
+                    <li class="console-menu-items" v-for="item in menu" :key="item.NavigationId" @click="clickRouter(item)">
                         <span class="item-icon" :id="item.Iconurl"></span>
                         <span class="item-title">{{item.Title}}</span>
                         <!--<span class="item-sub-title">Custom Relation Management</span>-->
@@ -176,28 +176,86 @@ export default {
             }
         },
         clickRouter(item) {
-            if (!item.isAuth) {
-                this.stopHalt();
-                return;
-            }
+            // if (!item.isAuth) {
+            //     this.stopHalt();
+            //     return;
+            // }
             for (let i in this.menu) {
                 if (item.NavigationId == this.menu[i].NavigationId) {
-                    if (this.menu[i].Path == 180302) {
-                        switch (this.menu[i].Url) {
-                            case "tiku":
-                                this.openTiku(); //登陆题库
-                                break;
-                            default:
-                                console.log(this.menu[i].Url);
-                                window.open(this.menu[i].Url);
-                                break;
-                        }
+                    if (this.menu[i].Url.indexOf("http") > -1) {
+                        let appid = this.menu[i].Path;
+                        let z_url = this.menu[i].Url;
+                        console.log(appid);
+                        this.openPages(appid,z_url);
                     } else {
                         this.updateCurrentMenu(this.menu[i]);
                     }
                     return;
                 }
             }
+            // for (let i in this.menu) {
+            //     if (item.NavigationId == this.menu[i].NavigationId) {
+            //         if (this.menu[i].Path == 180302) {
+            //             switch (this.menu[i].Url) {
+            //                 case "tiku":
+            //                     this.openTiku(); //登陆题库
+            //                     break;
+            //                 default:
+            //                     console.log(this.menu[i].Url);
+            //                     window.open(this.menu[i].Url);
+            //                     break;
+            //             }
+            //         } else {
+            //             this.updateCurrentMenu(this.menu[i]);
+            //         }
+            //         return;
+            //     }
+            // }
+        },
+        // 跳转其他系统
+        openPages(appid,z_url){
+            console.log(z_url);
+            let GDSID = getCookie(`${prefix}GDSID`);
+            let token = getCookie(SAAS_TOKEN);
+            //获取菜单树
+            let params = {
+                appId: appid,
+                GDSID: GDSID
+            }
+            $.ajax({
+                url: `${getBaseUrl()}apigateway.gaodun.com/saas-service/menu/child`,
+                type: "GET", //
+                async: false, //或false,是否异步
+                data: params,
+                headers: {
+                    Authentication: `Basic ${token}`,
+                   "Content-Type": "application/json",
+                },
+                // timeout:5000, //超时时间
+                dataType: "json", //返回的数据格式：
+                //beforeSend: function(xhr) {},
+                success: function(data, textStatus, jqXHR) {
+                    // 登录失效 553649410～553649444
+                    if (
+                        data &&
+                        data.status > 553649000 &&
+                        data.status < 563649999
+                    ) {
+                        localStorage.clear();
+                        location.href = "/#/login";
+                        location.reload();
+                        return;
+                    }
+                    if (data.status === 0) {
+                        window.open(z_url);
+                    }else if(data.status === 101){
+                        // 无权限访问
+                        this.stopHalt();
+                    }
+                },
+                error: function(xhr, textStatus) {},
+                complete: function() {}
+            });
         },
         //跳转题库
         openTiku() {
@@ -266,6 +324,9 @@ export default {
                 let ChildNavigation = item.ChildNavigations;
 
                 let path = this.checkRouterPath(ChildNavigation);
+                if(parseInt(path) == 0){
+                    return this.afterFunction();
+                }
                 let NavigationId = path;
                 this.$router.push({
                     path
