@@ -418,7 +418,7 @@
                         'order_by_field[]': 'id',   //排序字段
                         keywords: this.resourceinput,
                         project_id: this.project_id,
-                        subject_id: this.subject_id,
+                        // subject_id: this.subject_id,
                     }
                     let ret = await this.$http.getResource(discriminator);
                     if (ret.status == 0) {
