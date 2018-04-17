@@ -214,13 +214,10 @@
             },
             //下拉框选取项目后切换科目
             changeProject(val) {
+                console.log(val,'下拉框选取项目后切换科目');
                 for (var obj in this.projectlist) {
                     if (this.projectlist[obj].project_id == val) {
                         let subject_list = [...this.projectlist[obj].subject_list];
-                        subject_list.unshift({
-                            subject_id: '0',
-                            subject_name: '全部'
-                        })
                         this.selectedlist = subject_list;
                         if (this.selectfalg) {
                             this.ruleForm.subject_id = '0';
@@ -262,6 +259,7 @@
                     this.ruleForm.name = ret.result.course_name;
                     this.ruleForm.project_id = ret.result.project_id;
                     this.ruleForm.subject_id = ret.result.subject_id;
+                    this.changeProject(this.ruleForm.project_id); //匹配科目
                     this.ruleForm.course_type = ret.result.course_type;
                     this.ruleForm.welcome_letter = ret.result.welcome_letter;    //欢迎信
 
@@ -291,7 +289,14 @@
             },
             async getProjectSubject() {
                 let ret = await this.$http.getProjectSubject();
-                this.projectlist = ret.result;
+                let result = ret.result;
+                result.forEach(element => {
+                    element.subject_list && element.subject_list.unshift({
+                        subject_id: '0',
+                        subject_name: '不限科目'
+                    })
+                });
+                this.projectlist = result;
                 this.getCourseInfo();
             },
             SetCourse() {

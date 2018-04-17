@@ -28,7 +28,7 @@
             </el-col>
         </el-row>
         <el-dialog :title="Doing==0?'新增资源介绍':'修改资源介绍'" class="tabplane" :visible.sync="dialogAddResVisible" @close="resetForm('AddResForm')">
-            <el-form :model="AddResForm" :rules="AddResFormRules" ref="AddResForm">
+            <el-form :model="AddResForm" ref="AddResForm">
                 <el-form-item label="标题" prop="title"
                               :rules="filter_rules({required:true,type:'isAllSpace',max:15})">
                     <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off"

@@ -234,8 +234,7 @@
         </el-dialog>
 
         <el-dialog :title="deleteModule ? '删除课程大纲目录' : '删除已选资源'" class="tabplane" :visible.sync="dialogVisible"
-                   size="tiny"
-                   :before-close="handleClose">
+                   size="tiny">
             <span>{{deleteModule ? '确定要删除该课程大纲目录吗？删除后，该目录下的子目录及资源关系均将被删除！' : '确定要删除已选择的资源吗？'}}</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -244,7 +243,7 @@
         </el-dialog>
 
         <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane"
-                   :visible.sync="adddialogVisible" size="tiny" :before-close="handleClose">
+                   :visible.sync="adddialogVisible" size="tiny">
             <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="显示名称" prop="name"
                               :rules="filter_rules({required:true,type:'isAllSpace',max:20})">

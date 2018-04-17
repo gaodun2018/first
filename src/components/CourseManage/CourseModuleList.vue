@@ -9,7 +9,7 @@
                         <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']"
                               @click="outlinechange('0')">全部</span>
                         <template v-for="(rev,index) in projectlist">
-                            <span class="clitem" 
+                            <span class="clitem"
                                 :class="[rev.project_id === clver ?'current':'']"
                                 :key="index"
                                 @click="outlinechange(rev.project_id,index)">{{rev.project_name}}
@@ -44,11 +44,12 @@
                 <el-col :sm="12">
                     <el-row type="flex" justify="end">
                         <div class="input-search">
-                            <el-input placeholder="课程ID／课程名称" size="small" icon="search" v-model="searchinput"
-                                      :on-icon-click="handleIconClick"
-                                      @keydown.native.enter="handleIconClick"></el-input>
+                            <el-input placeholder="课程ID／课程名称" size="small" v-model="searchinput"
+                                      @keydown.native.enter="handleIconClick">
+                                <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
+                            </el-input>
                             <el-button type="primary" size="small" @click="dialogCourseVisible = true"
-                                       v-if="unlocking('COURSE_CREATE')">新增一个课程
+                                       v-if="unlocking('COURSE_CREATE')">+&nbsp;新增一个课程
                             </el-button>
                         </div>
                     </el-row>
@@ -56,7 +57,7 @@
             </el-row>
         </div>
         <div class="edu_table">
-            <el-table ref="multipleTable" border v-loading="loading" @selection-change="handleSelectionChange"
+            <el-table ref="multipleTable" border v-loading="loading"
                       :data="videoList" style="width: 100%">
                 <el-table-column prop="course_id" label="课程id" width="80" fixed>
                 </el-table-column>

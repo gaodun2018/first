@@ -91,6 +91,7 @@
                 tableData: [],
                 currentIndex: '',
                 operation: '',
+                Doing:'',
                 gradation_id: '',   //阶段的id 用于修改、删除
             }
         },

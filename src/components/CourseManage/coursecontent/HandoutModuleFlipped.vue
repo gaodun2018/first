@@ -117,7 +117,7 @@
                 file: '',
                 currentIndex: '',
                 Doing: 'addDate',
-                handout: '',//讲义列表
+                handout: [],//讲义列表
             }
         },
         methods: {

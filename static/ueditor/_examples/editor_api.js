@@ -1,8 +1,8 @@
 /**
  * 开发版本的文件导入
  */
-(function (){
-    var paths  = [
+(function() {
+    var paths = [
             'editor.js',
             'core/browser.js',
             'core/utils.js',
@@ -123,9 +123,9 @@
             'adapter/autosave.js'
         ],
         baseURL = '../static/ueditor/_src/';
-		//baseURL = '//localhost:8081/_src/'
+    //baseURL = '//localhost:8081/_src/'
 
-    for (var i=0,pi;pi = paths[i++];) {
-        document.write('<script type="text/javascript" src="'+ baseURL + pi +'"></script>');
+    for (var i = 0, pi; pi = paths[i++];) {
+        document.write('<script type="text/javascript" src="' + baseURL + pi + '"></script>');
     }
 })();

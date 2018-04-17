@@ -1,6 +1,12 @@
 // import promise from 'es6-promise';
 // promise.polyfill();
 import Vue from 'vue';
+if (process.env.NODE_ENV === 'development') {
+    require('element-ui/lib/theme-chalk/index.css')
+    const ELEMENT = require('element-ui')
+    Vue.use(ELEMENT)
+    Vue.use(VueRouter)
+}
 import store from './store/index';
 import App from './App.vue';
 import VueRouter from 'vue-router';
@@ -33,12 +39,6 @@ import VueJsonp from 'vue-jsonp'
 import { Message } from 'element-ui';
 import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
-if (process.env.NODE_ENV === 'development') {
-    // require('element-ui/lib/theme-chalk/index.css') 
-    const ELEMENT = require('element-ui')
-    Vue.use(ELEMENT)
-    Vue.use(VueRouter)
-}
 import Service from './api/index'
 Vue.prototype.$http = Service
 Vue.prototype.message = Message
