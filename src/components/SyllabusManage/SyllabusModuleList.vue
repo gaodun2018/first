@@ -6,13 +6,13 @@
                 <el-col :sm="24">
                     <div class="button_group_t">
                         <span>项 目:</span>
-                        <span class="clitem" :class="[clver === '0'||clver === 0 ?'current':'']" @click="outlinechange('0')">全部</span>
+                        <span class="clitem" :class="[clver === null ?'current':'']" @click="outlinechange(null)">全部</span>
                         <span class="clitem" :class="[rev.project_id === clver ?'current':'']" v-for="(rev,index) in projectlist" :key="index" @click="outlinechange(rev.project_id,index)">{{rev.project_name}}
                         </span>
                     </div>
                     <div class="button_group_b">
                         <span> 科 目:</span>
-                        <span class="clitem" :class="[clversm === '0'||clversm === 0 ?'current':'']" @click="mulchange('0')">全部</span>
+                        <span class="clitem" :class="[clversm === null ?'current':'']" @click="mulchange(null)">全部</span>
                         <span class="clitem" :class="[revs.subject_id === clversm ?'current':'']" v-for="(revs,index) in subjectlist" :key="index" @click="mulchange(revs.subject_id,index)">{{revs.subject_name}}
                         </span>
                     </div>
@@ -32,7 +32,7 @@
                     <el-row type="flex" justify="end">
                         <div class="input-search">
                             <el-input placeholder="请输入课程大纲ID、名称" size="small" v-model="searchinput" @keyup.native.enter="handleIconClick">
-                              <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
+                                <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
                             </el-input>
                             <el-button type="primary" size="small" @click="addCourseOutline" v-if="unlocking('SY_CREATE')">+&nbsp;新建一个课程大纲</el-button>
                         </div>
@@ -84,7 +84,7 @@
                 </el-form-item>
                 <el-form-item label="所属科目" prop="subject_id" :rules="[ { required: true, message: '请选择所属科目', trigger: 'change' }]">
                     <el-select v-model="ruleForm.subject_id" :disabled="!issubject" placeholder="请选择所属科目">
-                        <el-option label="全部" value="0"></el-option>
+                        <el-option label="不限科目" value="0"></el-option>
                         <el-option v-for="com in boxsubject" :key="com.subject_id" :label="com.subject_name" :value="String(com.subject_id)"></el-option>
                     </el-select>
                 </el-form-item>
@@ -109,6 +109,7 @@
 
 </style>
 <script>
+import { mapState } from "vuex";
 export default {
     data() {
         return {
@@ -139,9 +140,8 @@ export default {
                 }
             ],
             selectvalue: "",
-            clver: "0", //项目id
-            clversm: "0", //科目id
-            projectlist: [],
+            clver: null, //项目id
+            clversm: null, //科目id
             subjectlist: [],
             issubject: false,
             boxsubject: [],
@@ -183,8 +183,8 @@ export default {
             this.btnLoading = false;
             if (ret.status == 0) {
                 this.dialogFormVisible = false;
-                this.clver = "0"; //项目id
-                this.clversm = "0"; //科目id
+                this.clver = null; //项目id
+                this.clversm = null; //科目id
                 this.currentPage = 1;
                 this.page_size = 15;
                 this.getCourseSyllabuses();
@@ -215,8 +215,8 @@ export default {
             this.btnLoading = false;
             if (ret.status == 0) {
                 this.dialogFormVisible = false;
-                this.clver = "0"; //项目id
-                this.clversm = "0"; //科目id
+                this.clver = null; //项目id
+                this.clversm = null; //科目id
                 this.currentPage = 1;
                 this.page_size = 15;
                 this.getCourseSyllabuses();
@@ -265,12 +265,12 @@ export default {
         },
         outlinechange(reid, index) {
             this.clver = reid;
-            if (reid == "0") {
+            if (reid === null) {
                 this.subjectlist = [];
             } else {
                 this.subjectlist = this.projectlist[index].subject_list;
             }
-            this.clversm = "0"; //科目设置为0
+            this.clversm = null; //科目设置为0
             this.pageSize = 15;
             this.currentPage = 1;
             this.searchinput = "";
@@ -284,12 +284,12 @@ export default {
             this.searchinput = "";
             this.getCourseSyllabuses();
         },
-        async getProjectSubject(projectid) {
-            let ret = await this.$http.getProjectSubject();
-            if (ret.status == 0) {
-                this.projectlist = ret.result;
-            }
-        },
+        // async getProjectSubject(projectid) {
+        //     let ret = await this.$http.getProjectSubject();
+        //     if (ret.status == 0) {
+        //         this.projectlist = ret.result;
+        //     }
+        // },
         selectval(value) {
             // 状态搜索
             this.selectvalue = value;
@@ -298,14 +298,10 @@ export default {
         },
         handleIconClick() {
             // 搜索框
-            this.clversm = "0";
-            this.clver = "0";
+            this.clversm = null;
+            this.clver = null;
             this.selectvalue = "";
-            if (this.clver == "0") {
-                this.subjectlist = [];
-            } else {
-                this.subjectlist = this.projectlist[index].subject_list;
-            }
+            this.subjectlist = [];
             this.getCourseSyllabuses();
         },
         //拉去大纲列表
@@ -354,10 +350,6 @@ export default {
             for (var i = 0; i < this.projectlist.length; i++) {
                 if (this.projectlist[i].project_id == row.project.id) {
                     let subjectall = [...this.projectlist[i]["subject_list"]];
-                    /*subjectall.unshift({
-                          subject_id:String('0'),
-                          subject_name:'全部'
-                        })*/
                     this.boxsubject = subjectall;
                 }
             }
@@ -378,9 +370,16 @@ export default {
             }
         }
     },
-    computed: {},
+    computed: {
+        ...mapState({
+            projectlist: state => {
+                return state.common.project_subject_list;
+            }
+        })
+    },
     mounted() {
-        this.getProjectSubject();
+        // this.getProjectSubject();
+        this.$store.dispatch("getProjectSubjectList");
         this.getCourseSyllabuses();
     },
     created() {}

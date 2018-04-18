@@ -27,6 +27,7 @@
                         <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>
                         <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="small" type="text" @click="handleCheck(scope.row)">查看大纲</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -129,6 +130,25 @@
                     window.open('/#/syllabus/manage/list');
                 }
             },
+            // 查看大纲
+            handleCheck(row){
+                let sy_id = row.syllabus_id;
+                let currentTemplate;
+                this.outlineList.forEach((item) => {
+                    if (item.id == sy_id) {
+                        currentTemplate = item.template;
+                    }
+                })
+                if (sy_id) {
+                    if (currentTemplate) {
+                        window.open(`/#/syllabus/manage/edit/${sy_id}`);
+                    } else {
+                        window.open(`/#/syllabus/manage/template/${sy_id}`);
+                    }
+                } else {
+                    window.open('/#/syllabus/manage/list');
+                }
+            },
             async AddCourseStage() {
                 let params = {
                     ...this.NewTableForm,
@@ -216,12 +236,15 @@
                 this.Doing = 'addDate';
                 this.dialogVisible = true
             },
+            //弹出编辑弹层
             handleEdit(index, row) {
                 this.Doing = 'update';
                 this.gradation_id = row.id;
+                let sy_id = row.syllabus_id;
                 this.NewTableForm = {...this.tableData[index]};
                 this.currentIndex = index;
                 this.dialogVisible = true;
+                this.handleChange(sy_id);
             },
             cancel(formName) {
                 this.$refs[formName].resetFields();

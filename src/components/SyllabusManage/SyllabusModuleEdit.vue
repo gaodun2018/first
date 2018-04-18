@@ -133,13 +133,16 @@
 
         <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="10%" :visible.sync="dialogFormVisible"
                    @close="closeDialog('addResFirFrom')">
-            <el-col v-for="item in progressText" :key="item.text" :sm="8">
+            <!-- <el-col v-for="item in progressText" :key="item.text" :sm="8">
                 <div class="order-progress-bar">
                     <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
                     <i class="progress-bar-dot" :class="item.isCustomerConfirm ? item.currentDot : ''"></i>
                     <span :class="item.isCustomerConfirm ? item.currentText : ''">{{item.text}}</span>
                 </div>
-            </el-col>
+            </el-col> -->
+             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
+                    <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
+            </el-steps>
             <!-- 第一步 -->
             <el-form :model="addResFirFrom" ref="addResFirFrom" v-show="module1" label-width="100px"
                      class="demo-ruleForm">
@@ -188,7 +191,7 @@
             <div class="rulemodule" v-show="module3">
                 <el-input :placeholder="inputPlaceholder" size="small" icon="search" v-model="resourceinput"
                           :on-icon-click="handleIconClick" @keydown.native.enter="handleIconClick"></el-input>
-                <el-table ref="multipleTable" :data="resourceTable" tooltip-effect="dark" v-loading="resLoading"
+                <el-table ref="multipleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading"
                           style="width:100%;margin-top:20px;"
                           max-height="400"
                           @selection-change="handleSelectionChange">
@@ -246,7 +249,7 @@
                    :visible.sync="adddialogVisible" size="tiny">
             <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="显示名称" prop="name"
-                              :rules="filter_rules({required:true,type:'isAllSpace',max:20})">
+                              :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -263,10 +266,15 @@
 
     </div>
 </template>
-<style>
+<style lang="less">
     .addResourceDialog .el-pagination {
         text-align: right;
         margin-top: 14px;
+    }
+    .el-dialog__body{
+         .el-steps {
+             line-height: normal;
+         }
     }
 </style>
 <script>
@@ -283,7 +291,7 @@
                 project_id: '',     //项目id
                 subject_id: '',   //科目id
                 btnLoading: false,  //按钮loading
-                active: 0,
+                active: 0,     //步骤条active
                 resourceRadio: '',    //选择的资源
                 nativeResourceRadio: '',    //修改之前本来选择的资源
                 ResIsInOutline: false,  //检查该资源是否已经挂载
@@ -348,13 +356,6 @@
             openAddResDialog(id) {
                 this.currentId = id;
                 this.active = 0;
-                this.progressText.forEach((item, index) => {
-                    if (index == 0) {
-                        item.isCustomerConfirm = true;
-                    } else {
-                        item.isCustomerConfirm = false;
-                    }
-                })
                 this.showitem();
                 this.addResFirFrom.name = '';
                 this.resourceRadio = '';
@@ -367,7 +368,6 @@
                     if (valid) {
                         if (this.active >= this.progressText.length - 1) return;
                         this.active++;
-                        this.progressText[this.active].isCustomerConfirm = true;
                         this.showitem();
                     } else {
                         return false;
@@ -382,7 +382,6 @@
                 }
                 if (this.active >= this.progressText.length - 1) return;
                 this.active++;
-                this.progressText[this.active].isCustomerConfirm = true;
                 this.showitem();
                 this.resourceinput = '';  //输入框搜索初始化
                 if (this.pagination.current_page != 1) {
@@ -430,7 +429,7 @@
             },
             prev() {
                 if (this.active <= 0) return
-                this.progressText[this.active].isCustomerConfirm = false;
+
                 this.active--;
                 this.showitem();
             },
@@ -574,13 +573,7 @@
             //弹出修改资源的弹层
             openeEditResource(item) {
                 this.active = 0;
-                this.progressText.forEach((item, index) => {
-                    if (index == 0) {
-                        item.isCustomerConfirm = true;
-                    } else {
-                        item.isCustomerConfirm = false;
-                    }
-                })
+
                 this.showitem();
                 this.addResFirFrom.name = item.name;
                 this.currentId = item.id;

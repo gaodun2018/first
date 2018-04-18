@@ -1,5 +1,8 @@
 <template>
     <div class="module-edu-content coursecontent">
+        <div class="outlineeat">
+            课程名称：{{course_name}}
+        </div>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="主课程" name="MainCourse">
                 <!--<MainCourse v-if="activeName=='main'"></MainCourse>-->
@@ -70,7 +73,9 @@
         computed: {
             course_id() {
                 return this.$route.params.cid;
-                
+            },
+            course_name(){
+                return this.$store.state.course.course_info.course_name;
             }
         },
         mounted() {
@@ -80,6 +85,11 @@
         }
     }
 </script>
+<style lang="less" scoped>
+.outlineeat{
+    margin-bottom: 20px;
+}
+</style>
 <style>
     .coursecontent .el-tabs__header {
         margin: 0;
@@ -187,7 +197,7 @@
         height: 13px;
         background: url("./../../assets/images/additem.png") no-repeat center;
         vertical-align: middle;
-        
+
     }
 
     .coursecontent .addBtn {

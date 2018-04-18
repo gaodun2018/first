@@ -1,11 +1,10 @@
-export default [
-    {
+export default [{
         "AppId": 180302,
         "Title": "登陆",
         "NavigationId": 10000,
         "ParentID": 0,
         "Url": "/login",
-        "Path": "containers/Login",
+        "Path": "pages/Login",
         "Iconurl": "",
         "CreateTime": "2017-07-14 10:05:05",
         "ChildNavigations": null,
@@ -29,7 +28,7 @@ export default [
         "NavigationId": 10002,
         "ParentID": 0,
         "Url": "/updatePwd",
-        "Path": "containers/UpdatePwd",
+        "Path": "pages/UpdatePwd",
         "Iconurl": "",
         "CreateTime": "2017-10-31 10:05:05",
         "ChildNavigations": null,
@@ -41,7 +40,7 @@ export default [
         "NavigationId": 10003,
         "ParentID": 0,
         "Url": "/home",
-        "Path": "containers/Home",
+        "Path": "pages/Home",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
@@ -58,9 +57,9 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "课程大纲管理", url: ''},
-            {name: "课程大纲列表", url: '/syllabus/manage/list'},
-            {name: "编辑课程大纲", url: ''},
+            { name: "课程大纲管理", url: '' },
+            { name: "课程大纲列表", url: '/syllabus/manage/list' },
+            { name: "编辑课程大纲", url: '' },
         ]
     },
 
@@ -75,9 +74,9 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "课程大纲管理", url: ''},
-            {name: "课程大纲列表", url: '/syllabus/manage/list'},
-            {name: "编辑课程大纲", url: ''},
+            { name: "课程大纲管理", url: '' },
+            { name: "课程大纲列表", url: '/syllabus/manage/list' },
+            { name: "编辑课程大纲", url: '' },
         ]
     },
     {
@@ -91,9 +90,9 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "课程管理", url: ''},
-            {name: "课程列表", url: '/course/manage/list'},
-            {name: "课程基本设置", url: ''},
+            { name: "课程管理", url: '' },
+            { name: "课程列表", url: '/course/manage/list' },
+            { name: "课程基本设置", url: '' },
         ]
     },
     {
@@ -107,9 +106,9 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "课程管理", url: ''},
-            {name: "课程列表", url: '/course/manage/list'},
-            {name: "课程内容", url: ''},
+            { name: "课程管理", url: '' },
+            { name: "课程列表", url: '/course/manage/list' },
+            { name: "课程内容", url: '' },
         ]
     },
     {
@@ -123,10 +122,10 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "视频管理", url: ''},
-            {name: "视频列表", url: '/resource/video/list'},
-            {name: "新增视频", url: ''},
+            { name: "资源中心", url: '' },
+            { name: "视频管理", url: '' },
+            { name: "视频列表", url: '/resource/video/list' },
+            { name: "新增视频", url: '' },
         ]
     },
     {
@@ -140,10 +139,27 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "视频管理", url: ''},
-            {name: "视频列表", url: '/resource/video/list'},
-            {name: "编辑视频", url: ''},
+            { name: "资源中心", url: '' },
+            { name: "视频管理", url: '' },
+            { name: "视频列表", url: '/resource/video/list' },
+            { name: "编辑视频", url: '' },
+        ]
+    },
+    {
+        "AppId": 180302,
+        "Title": "预览视频",
+        "NavigationId": "previewVideo",
+        "ParentID": 0,
+        "Url": "/resource/video/preview",
+        "Path": "components/resourceCenter/videoManage/resourceModuleVideoPreview",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null,
+        "parenttitle": [
+            { name: "资源中心", url: '' },
+            { name: "视频管理", url: '' },
+            { name: "视频列表", url: '/resource/video/list' },
+            { name: "预览视频", url: '' },
         ]
     },
     {
@@ -157,10 +173,10 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "讲义管理", url: ''},
-            {name: "讲义列表", url: '/resource/handout/list'},
-            {name: "新增讲义", url: ''},
+            { name: "资源中心", url: '' },
+            { name: "讲义管理", url: '' },
+            { name: "讲义列表", url: '/resource/handout/list' },
+            { name: "新增讲义", url: '' },
         ]
     }, {
         "AppId": 180302,
@@ -168,15 +184,15 @@ export default [
         "NavigationId": "editHandout",
         "ParentID": 0,
         "Url": "/resource/handout/edit",
-        "Path": "components/resourceCenter/resourceModuleHandoutEdit",
+        "Path": "components/resourceCenter/handoutManage/resourceModuleHandoutEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "讲义管理", url: ''},
-            {name: "讲义列表", url: '/resource/handout/list'},
-            {name: "新增讲义", url: ''},
+            { name: "资源中心", url: '' },
+            { name: "讲义管理", url: '' },
+            { name: "讲义列表", url: '/resource/handout/list' },
+            { name: "新增讲义", url: '' },
         ]
     },
     {
@@ -190,10 +206,10 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "知识图谱", url: ''},
-            {name: "知识点汇总", url: '/KnowledgeList'},
-            {name: "新增知识点", url: ''},
+            { name: "资源中心", url: '' },
+            { name: "知识图谱", url: '' },
+            { name: "知识点汇总", url: '/KnowledgeList' },
+            { name: "新增知识点", url: '' },
         ]
     },
     {
@@ -207,25 +223,10 @@ export default [
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
         "parenttitle": [
-            {name: "资源中心", url: ''},
-            {name: "知识图谱", url: ''},
-            {name: "知识点汇总", url: '/KnowledgeList'},
-            {name: "编辑知识点", url: ''},
-        ]
-    },
-    {
-        "AppId": 180302,
-        "Title": "EP课程学习数据统计",
-        "NavigationId": 10012,
-        "ParentID": 0,
-        "Url": "/EducationalClass",
-        "Path": "containers/EducationalClass",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "parenttitle": [
-            {name: "班级列表", url: ''},
-            {name: "班级列表1", url: '/EducationalClass'},
+            { name: "资源中心", url: '' },
+            { name: "知识图谱", url: '' },
+            { name: "知识点汇总", url: '/KnowledgeList' },
+            { name: "编辑知识点", url: '' },
         ]
     }
 ]

@@ -1,4 +1,4 @@
-import { SAAS_USER_INFO, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_CURRENT_SUBMENU,SAAS_CURRENT_MENU, SAAS_MENU,SAAS_USER_FUNCTIONS } from '../util/keys';
+import { SAAS_USER_INFO, SAAS_CURRENT_LEVEL_ONE_MENU, SAAS_CURRENT_SUBMENU, SAAS_CURRENT_MENU, SAAS_MENU, SAAS_USER_FUNCTIONS } from '../util/keys';
 
 export default {
     install(Vue, options) {
@@ -27,10 +27,44 @@ export default {
             }
             return false;
         }
+        Vue.prototype.tableHeight = (that, top) => {
+            that.$nextTick(() => {
+                debugger;
+                let scroll = top || 0;
+                let tableOffsetTop = 0;
+                let thisTable = document.getElementsByClassName('el-table')
+                for (var i = 0; i < thisTable.length; i++) {
+                    if (thisTable[i].offsetTop != 0) {
+                        tableOffsetTop = thisTable[i].offsetTop
+                    }
+                }
+                let maxHeight = that.$el.offsetHeight - tableOffsetTop - 80 - scroll
+                that.$refs['table'].$el.style.maxHeight = maxHeight + 'px'
+                let tableBody = document.getElementsByClassName('el-table__body-wrapper')
+                let tableFixedBody = document.getElementsByClassName('el-table__fixed-body-wrapper')
+
+                if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
+
+                    for (var i = 0; i < tableBody.length; i++) {
+                        tableBody[i].style.maxHeight = maxHeight - 43 + 'px'
+                    }
+
+                } else {
+                    for (var i = 0; i < tableBody.length; i++) {
+                        tableBody[i].style.maxHeight = maxHeight - 61 + 'px'
+                    }
+
+                }
+
+                for (var i = 0; i < tableFixedBody.length; i++) {
+                    tableFixedBody[i].style.maxHeight = maxHeight - 61 + 'px'
+                }
+            })
+        }
         Vue.prototype.printClass = (key) => {
             let userInfo = localStorage.getItem(SAAS_USER_INFO);
             let print = '';
-            
+
             userInfo = JSON.parse(userInfo);
             if (userInfo) {
                 var { SysFunctions } = userInfo;

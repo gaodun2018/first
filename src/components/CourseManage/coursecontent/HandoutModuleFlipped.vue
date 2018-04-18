@@ -15,7 +15,7 @@
                     type="primary"
                     size="small"
                     @click="addTableData"
-                    label-position="right">新增一个讲义
+                    label-position="right">+&nbsp;新增一个讲义
                 </el-button>
 
             </el-form-item>
@@ -58,7 +58,7 @@
         <el-dialog class="addContent tabplane handoutsDialog" :title="Doing=='update'?'编辑讲义':'新增讲义'"
                    :visible.sync="dialogVisible" @close="cancel('NewTableForm')">
             <el-form :model="NewTableForm" ref="NewTableForm" label-width="120px">
-                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',max:20})">
+                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input v-model="NewTableForm.name" auto-complete="off" class="coursetxt"
                               placeholder="请输入显示名称"></el-input>
                 </el-form-item>

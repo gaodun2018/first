@@ -1,11 +1,10 @@
-[
-    {
+[{
         "AppId": 180302,
         "Title": "登陆",
         "NavigationId": 10000,
         "ParentID": 0,
         "Url": "/login",
-        "Path": "containers/Login",
+        "Path": "pages/Login",
         "Iconurl": "",
         "CreateTime": "2017-07-14 10:05:05",
         "ChildNavigations": null,
@@ -29,7 +28,7 @@
         "NavigationId": 10002,
         "ParentID": 0,
         "Url": "/updatePwd",
-        "Path": "containers/UpdatePwd",
+        "Path": "pages/UpdatePwd",
         "Iconurl": "",
         "CreateTime": "2017-10-31 10:05:05",
         "ChildNavigations": null,
@@ -41,7 +40,7 @@
         "NavigationId": 10003,
         "ParentID": 0,
         "Url": "/home",
-        "Path": "containers/Home",
+        "Path": "pages/Home",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null,
@@ -97,7 +96,7 @@
         "NavigationId": "createVideo",
         "ParentID": 0,
         "Url": "/resource/video/create",
-        "Path": "components/resourceCenter/resourceModuleVideoCreate",
+        "Path": "components/resourceCenter/videoManage/resourceModuleVideoCreate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -108,7 +107,18 @@
         "NavigationId": "editVideo",
         "ParentID": 0,
         "Url": "/resource/video/edit/:id",
-        "Path": "components/resourceCenter/resourceModuleVideoEdit",
+        "Path": "components/resourceCenter/videoManage/resourceModuleVideoEdit",
+        "Iconurl": "",
+        "CreateTime": "2017-12-18 10:46:43",
+        "ChildNavigations": null
+    },
+    {
+        "AppId": 180302,
+        "Title": "预览视频",
+        "NavigationId": "previewVideo",
+        "ParentID": 0,
+        "Url": "/resource/video/preview/:id",
+        "Path": "components/resourceCenter/videoManage/resourceModuleVideoPreview",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -119,7 +129,7 @@
         "NavigationId": "createHandout",
         "ParentID": 0,
         "Url": "/resource/handout/create",
-        "Path": "components/resourceCenter/resourceModuleHandoutCreate",
+        "Path": "components/resourceCenter/handoutManage/resourceModuleHandoutCreate",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -130,7 +140,7 @@
         "NavigationId": "editHandout",
         "ParentID": 0,
         "Url": "/resource/handout/edit/:id",
-        "Path": "components/resourceCenter/resourceModuleHandoutEdit",
+        "Path": "components/resourceCenter/handoutManage/resourceModuleHandoutEdit",
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
@@ -156,65 +166,5 @@
         "Iconurl": "",
         "CreateTime": "2017-12-18 10:46:43",
         "ChildNavigations": null
-    },
-    {
-        "AppId": 180302,
-        "Title": "EP课程学习数据统计",
-        "NavigationId": 10012,
-        "ParentID": 0,
-        "Url": "/EducationalClass/:cid/:sid",
-        "Path": "containers/EducationalClass",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "Level": 1
-    },
-    {
-        "AppId": 180302,
-        "Title": "EP定制标杆计划",
-        "NavigationId": 10013,
-        "ParentID": 0,
-        "Url": "/customizedPlan/:cid/:clid",
-        "Path": "containers/CustomizedPlan",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "Level": 1
-    },
-    {
-        "AppId": 180302,
-        "Title": "EP选择标杆计划",
-        "NavigationId": 10014,
-        "ParentID": 0,
-        "Url": "/choosePlan/:cid/:clid",
-        "Path": "containers/ChoosePlan",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "Level": 1
-    },
-    {
-        "AppId": 180302,
-        "Title": "查看完整计划",
-        "NavigationId": 10015,
-        "ParentID": 0,
-        "Url": "/EducationalPlanAll/:cid/:clid/:tabnum",
-        "Path": "containers/EducationalPlanAll",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "Level": 1
-    },
-    {
-        "AppId": 180302,
-        "Title": "全部学员详情",
-        "NavigationId": 10016,
-        "ParentID": 0,
-        "Url": "/EducationalClasslist/:cid/:clid/",
-        "Path": "containers/EducationalClasslist",
-        "Iconurl": "",
-        "CreateTime": "2017-12-18 10:46:43",
-        "ChildNavigations": null,
-        "Level": 1
     }
 ]
