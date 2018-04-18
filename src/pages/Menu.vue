@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-menu background-color="#EFF2F7" :default-active="activeId" :unique-opened="true" :router="false" class="el-menu-vertical-demo" @select="handleSelect">
+        <el-menu background-color="#EFF2F7" :default-active="activeId" :unique-opened="false" :router="false" class="el-menu-vertical-demo" @select="handleSelect">
             <el-submenu :index="item.Url" v-if="item.ChildNavigations&&item.isAuth" v-for="item in menu" :key="item.NavigationId">
                 <template slot="title">
                     <svg class="icon" aria-hidden="true">
@@ -25,12 +25,46 @@
     </div>
 </template>
 <style lang="less">
-.el-menu {
+.el-menu-vertical-demo {
+    > .el-menu-item {
+        padding-left: 10px !important;
+        color: #99a9bf;
+    }
+    .el-submenu {
+        &.is-active {
+            .el-submenu__title {
+                color: #379ed7;
+                .el-submenu__icon-arrow {
+                    color: #379ed7;
+                    font-size: 16px;
+                }
+            }
+        }
+        .el-submenu__title {
+            padding-left: 10px !important;
+            color: #99a9bf;
+            &:hover {
+                background-color: #d1dbe5 !important;
+            }
+        }
+        .el-menu--inline {
+            background: #e4e8f1 !important;
+            .el-menu-item {
+                background: #e4e8f1 !important;
+                min-width: 170px;
+                &:hover {
+                    background-color: #d1dbe5 !important;
+                }
+            }
+            // .el-menu-item.is-active {
+            //     background: #e4e8f1 !important;
+            // }
+        }
+    }
     .el-menu-item {
-        height: 35px;
-        line-height: 35px;
-        min-width: 170px;
-        color: #44576c;
+        &:hover {
+            background-color: #d1dbe5 !important;
+        }
     }
 }
 </style>
@@ -43,7 +77,7 @@ import {
     SAAS_TOKEN,
     SAAS_USER_NAME
 } from "../util/keys";
-import { getCookie, setCookie } from '../util/cookie.js';
+import { getCookie, setCookie } from "../util/cookie.js";
 import { getEnv, getBaseUrl } from "../util/config";
 export default {
     name: "saas-menu",

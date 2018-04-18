@@ -2,7 +2,7 @@
 // promise.polyfill();
 import Vue from 'vue';
 if (process.env.NODE_ENV === 'development') {
-    require('element-ui/lib/theme-chalk/index.css')
+    // require('element-ui/lib/theme-chalk/index.css')
     const ELEMENT = require('element-ui')
     Vue.use(ELEMENT)
     Vue.use(VueRouter)
