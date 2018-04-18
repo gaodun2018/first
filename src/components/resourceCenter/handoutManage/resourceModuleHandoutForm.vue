@@ -42,10 +42,12 @@
         <!--<SelectKnowledge></SelectKnowledge>-->
     </div>
 </template>
-<style>
-.el-upload__tip {
-    line-height: 18px;
-    margin-top: -10px;
+<style lang="less">
+.add-resource {
+    .el-upload__tip {
+        line-height: 18px;
+        margin-top: -10px;
+    }
 }
 </style>
 <script>
@@ -110,7 +112,7 @@ export default {
                     data.tag.children && data.tag.children.length != 0
                         ? String(data.tag.children[0].id)
                         : "0";
-                this. didChangeProjectSelection(data.tag.id);
+                this.didChangeProjectSelection(data.tag.id);
             } else {
                 //没项目，没科目
                 this.ruleForm.region = "";
