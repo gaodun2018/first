@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="breadcrumb-menu">
         <el-row class="breadcrumb">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <template v-for="(item,index) in $store.state.navigation.breadcrumbmenu">
@@ -19,32 +19,37 @@
     </div>
 </template>
 <style lang="less">
-.breadcrumb {
-    height: 28px;
-    background-color: #f8f8f8;
-    font-family: PingFangSC;
-    font-size: 12px;
-    color: #909296;
-    padding-left: 28px;
-    margin-left: 2px;
-    .el-breadcrumb {
-        height: 100%;
-        line-height: 28px;
+.breadcrumb-menu {
+    overflow: hidden;
+    margin-left: 170px;
+    border-bottom: 1px solid #e0e0e0;
+    .breadcrumb {
+        height: 28px;
+        background-color: #f8f8f8;
+        font-family: PingFangSC;
         font-size: 12px;
-        .el-breadcrumb__inner {
-            color: #99a9bf;
-            a {
+        color: #909296;
+        padding-left: 28px;
+        margin-left: 2px;
+        .el-breadcrumb {
+            height: 100%;
+            line-height: 28px;
+            font-size: 12px;
+            .el-breadcrumb__inner {
+                color: #99a9bf;
+                a {
+                    &:hover {
+                        color: #409eff;
+                        cursor: pointer;
+                    }
+                }
+            }
+            .is-link {
+                color: #303133;
                 &:hover {
                     color: #409eff;
                     cursor: pointer;
                 }
-            }
-        }
-        .is-link {
-            color: #303133;
-            &:hover {
-                color: #409eff;
-                cursor: pointer;
             }
         }
     }

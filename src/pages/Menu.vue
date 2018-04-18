@@ -30,6 +30,9 @@
         padding-left: 10px !important;
         color: #99a9bf;
     }
+    > .el-menu-item.is-active {
+        color: #409eff;
+    }
     .el-submenu {
         &.is-active {
             .el-submenu__title {

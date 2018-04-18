@@ -22,7 +22,7 @@
                 </el-col>
             </el-row>
             <el-row type="flex" align="bottom">
-                <el-col :sm="12">
+                <el-col :sm="6">
                     <el-row>
                         <div class="select-search">
                             <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch" @visible-change="visibleChange">
@@ -32,7 +32,7 @@
                         </div>
                     </el-row>
                 </el-col>
-                <el-col :sm="12">
+                <el-col :sm="18">
                     <el-row type="flex" justify="end">
                         <div class="input-search">
                             <el-input placeholder="课程ID／课程名称" size="small" v-model="searchinput" @keydown.native.enter="handleIconClick">
