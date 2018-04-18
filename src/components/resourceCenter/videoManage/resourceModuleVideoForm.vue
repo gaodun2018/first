@@ -69,7 +69,7 @@ export default {
                 subject: "",
                 video_id: "",
                 duration_minutes: "",
-                duration_second: "",
+                duration_second: 0,
                 description: ""
             },
             multipleSelection: []
