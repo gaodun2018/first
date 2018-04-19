@@ -1,7 +1,7 @@
 <template>
     <div class="module-edu-content coursecontent">
         <div class="outlineeat">
-            课程名称：{{course_name}}
+            【课程ID：{{course_id}}】 {{course_name}}
         </div>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="主课程" name="MainCourse">
