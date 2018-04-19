@@ -31,7 +31,7 @@
                     分
                 </el-form-item>
                 <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
-                    <el-input v-model.number="ruleForm.duration_second" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+                    <el-input v-model.number="ruleForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                     秒
                 </el-form-item>
                 <!--<el-form-item label="知识点关联" prop="name">-->
@@ -97,6 +97,12 @@ export default {
                     this.ruleForm.project = "";
                     this.ruleForm.subject = "";
                 }
+            }
+        },
+        //秒数输入框change事件
+        handleInputChange(val){
+            if(val == ''){
+                this.ruleForm.duration_second = 0;
             }
         },
         //解析视频地址获得视频id

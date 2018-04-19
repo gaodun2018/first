@@ -326,7 +326,7 @@ export default {
             console.log(`每页 ${val} 条`);
             this.page_size = val;
             this.currentPage = 1;
-            //        this.getCourseSyllabuses();
+            this.getCourseSyllabuses();
         },
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);

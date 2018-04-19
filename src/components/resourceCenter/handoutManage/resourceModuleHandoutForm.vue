@@ -27,7 +27,7 @@
                         <div class="el-upload__text">将文件拖到此处，或
                             <em>点击上传</em>
                         </div>
-                        <div class="el-upload__tip" slot="tip">只能上传pdf文件</div>
+                        <div class="el-upload__tip" slot="tip">目前仅支持.pdf文件哦！</div>
                     </el-upload>
                 </el-form-item>
                 <!--<el-form-item label="知识点关联" prop="name">
