@@ -133,7 +133,6 @@ export default {
             //     this.$router.push({ path: '/updatePwd?NavigationId=520&nw=1'})
             // }
           } else {
-                   debugger
             this.loading = false
             this.$message({
               message: menuRet.message,
