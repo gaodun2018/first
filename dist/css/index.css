@@ -1,4 +1,4 @@
-/*! xin modified this file at 2018-4-8 15:12:16 */
+/*! xin modified this file at 2018-4-16 11:44:41 */
 
 nav {
     margin-bottom: 10px;
@@ -253,10 +253,6 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
     padding: 0 12px;
     height: 33px
 }
-
-
-
-
 
 
 
@@ -1331,6 +1327,67 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .addResourceDialog .el-pagination {
     text-align: right;
     margin-top: 14px;
@@ -1616,6 +1673,23 @@ body[data-v-0f567158]{font-family:'\5FAE\8F6F\96C5\9ED1'
 }
 .handouts-form-item .el-form-item__content .addhandout {
     float: right;
+}
+
+.download_btn[data-v-f50c85e0] {
+    padding: 7px 9px;
+    font-size: 12px;
+    border-radius: 4px;
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #c4c4c4;
+    color: #1f2d3d;
+    margin: 0;
+    position: absolute;
+    top: 5px;
+    left: 100px;
 }
 
 .handout-upload {

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 let u = url.parse('https://t-baiyiapi.gaodun.com');
 let customRoutes = [];
-let strRequire = `import Entry from '../containers/Entry.vue';\n`;
+let strRequire = `import Entry from '../pages/Entry.vue';\n`;
 // let routes = `export const routes = [\n\t{ path: '/', name:'550',component: Entry ,redirect: '/index',children: [\n`;
 let routes = `export const routes = [\n\t{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [\n`;
 //2017-12-15 16:10:39  修改
@@ -39,7 +39,7 @@ let loadTreeData = () => {
      * @type {Promise}
      */
 let readCustom = new Promise((resolve, reject) => {
-    fs.readFile(path.join(__dirname, '/src/js/routes/index.json'), 'utf-8', (err, data) => {
+    fs.readFile(path.join(__dirname, '/src/routes/index.json'), 'utf-8', (err, data) => {
         customRoutes = JSON.parse(data);
         //resolve(customRoutes)   //无接口开发模式
         loadTreeData().then(value => {
@@ -55,7 +55,7 @@ readCustom.then((data) => {
     // 递归菜单
     function createRoutes(menu) {
         for (let i in menu) {
-            if (menu[i].Url != "" && menu[i].Path!=""&&menu[i].Path!="180302" && menu[i].Url.indexOf('192.168') == -1) {
+            if (menu[i].Url != "" && menu[i].Path != "" && menu[i].Path != "180302" && menu[i].Path != "130555" && menu[i].Path != "130520" && menu[i].Url.indexOf('192.168') == -1) {
                 let lastSymbolPosition = menu[i].Path.lastIndexOf('/');
                 let fileName = menu[i].Path.substr(lastSymbolPosition + 1);
                 let randomName = menu[i].Path.substr(lastSymbolPosition + 1);
@@ -90,7 +90,7 @@ readCustom.then((data) => {
     // 延迟执行完成路由文件的收尾工作
     setTimeout(() => {
         let str = `${strRequire}\n\n${routes}\t]},\n${login}]`
-        fs.writeFile(path.join(__dirname, '/src/js/routes/index.js'), str, (err) => {
+        fs.writeFile(path.join(__dirname, '/src/routes/index.js'), str, (err) => {
             if (err) {
                 console.log(err)
             } else {
