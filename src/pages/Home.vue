@@ -219,9 +219,9 @@ export default {
                         location.reload();
                         return;
                     }
-                    if (data.status === 0) {
+                    if (data.status == 0) {
                         window.open(z_url);
-                    } else if (data.status === 101) {
+                    } else if (data.status == 101) {
                         // 无权限访问
                         this.stopHalt();
                     }
