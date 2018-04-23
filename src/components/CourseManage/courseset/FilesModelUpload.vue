@@ -1,7 +1,7 @@
 <template>
     <div class="FilesUpload">
         <el-row style="position: relative;">
-            <a class="download_btn" :href="fileList[0].response&&fileList[0].response.filePath" download="filename" v-if="isShowDownload" style="color:#4db3ff">下载</a>
+            <!-- <a class="download_btn" :href="fileList[0].response&&fileList[0].response.filePath" download="filename" v-if="isShowDownload" style="color:#4db3ff">下载</a> -->
             <el-col :span="12">
                 <el-upload class="handout-upload" :action="materialUpload" :on-change="handleChange" :on-remove="handleRemove" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :headers="apiHeader" :before-upload="beforeAvatarUpload" :file-list="fileList">
                     <el-button size="small" type="primary" v-if="isShow(1)">点击上传文件</el-button>

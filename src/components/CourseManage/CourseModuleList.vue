@@ -313,6 +313,7 @@ export default {
         },
         handleSizeChange(size) {
             this.pageSize = size;
+            this.currentPage = 1;
             this.searchCourse();
         },
         handleCurrentChange(page) {
