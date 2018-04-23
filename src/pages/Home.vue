@@ -179,6 +179,9 @@ export default {
                         console.log(appid);
                         this.openPages(appid, z_url);
                     } else {
+                        if (!item.isAuth) {
+                            return this.stopHalt();
+                        }
                         this.updateCurrentMenu(this.menu[i]);
                     }
                     return;
@@ -195,6 +198,7 @@ export default {
                 appId: appid,
                 GDSID: GDSID
             };
+            let that = this;
             $.ajax({
                 url: `${getBaseUrl()}apigateway.gaodun.com/saas-service/menu/child`,
                 type: "GET", //
@@ -223,7 +227,9 @@ export default {
                         window.open(z_url);
                     } else if (data.status == 101) {
                         // 无权限访问
-                        this.stopHalt();
+                        that.$message({
+                            message: "您暂未开通权限！"
+                        });
                     }
                 },
                 error: function(xhr, textStatus) {},
@@ -297,9 +303,9 @@ export default {
                 let ChildNavigation = item.ChildNavigations;
 
                 let path = this.checkRouterPath(ChildNavigation);
-                if(parseInt(path) == 0){
+                if (parseInt(path) == 0) {
                     // url为0.xxxx
-                    return this.afterFunction();
+                    return this.stopHalt();
                 }
                 let NavigationId = path;
                 this.$router.push({

@@ -24,6 +24,11 @@
 
         <template v-if="ruleForm.bEnabled==1?true:false">
             <el-table :data="handout" border style="width: 90%;margin-top: 16px;" :show-header="true">
+                <el-table-column label="序号" width="60" align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.$index + 1}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="显示名称" width="350" align="center">
                     <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>

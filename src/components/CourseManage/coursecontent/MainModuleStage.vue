@@ -7,6 +7,11 @@
                 <span class="tittxt">阶段</span>
             </div>
             <el-table :data="tableData" border style="width: 90%;margin-top: 16px;">
+                <el-table-column label="序号" align="center" width="60">
+                    <template slot-scope="scope">
+                        <span>{{scope.$index + 1}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="阶段名称" width="180">
                     <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
