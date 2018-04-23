@@ -133,7 +133,6 @@ export default {
             //     this.$router.push({ path: '/updatePwd?NavigationId=520&nw=1'})
             // }
           } else {
-                   debugger
             this.loading = false
             this.$message({
               message: menuRet.message,
@@ -164,7 +163,7 @@ export default {
         if (menu[i].Url.indexOf('Report') > -1) {
           menu[i].Url = menu[i].Url.replace(/http.*key=/, '/Report/')
         }
-        
+
         if (menu[i].ChildNavigations) {
           this.reWriteEmptyUrl(menu[i].ChildNavigations)
         }
@@ -250,7 +249,7 @@ export default {
         left: 0;
         right: 0;
     }
-    
+
     /*登陆*/
 .login-wrap {
     position: absolute;
