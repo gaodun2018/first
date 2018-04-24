@@ -219,7 +219,7 @@ export default {
                     });
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    this.$router.push({ path: "/login" });
+                    location.href = `//${prefix}yun.gaodun.com/login`;
                 }
             } else if (command == "passwordModify") {
                 // require.ensure([], (require) => {

@@ -94,6 +94,7 @@ import {
     SAAS_REFRESH_TOKEN
 } from "../util/keys";
 import { getEnv, getBaseUrl } from "../util/config";
+import { setToken } from "../util/setToken";
 import { appid } from "../common/config.js";
 import { parseUrl } from "base";
 import { Base64 } from "js-base64";
@@ -120,7 +121,10 @@ export default {
         // console.log(tokenRet)
         // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
-        localStorage.setItem(SAAS_USER_NAME,JSON.stringify(getCookie(SAAS_USER_NAME)));
+        localStorage.setItem(
+            SAAS_USER_NAME,
+            JSON.stringify(getCookie(SAAS_USER_NAME))
+        );
         this.getCurrentUserMenuTree();
         let times = 1 * 60 * 1000; //1分钟查询一次
         let minute = 30; //30分钟过期前更换
@@ -131,13 +135,11 @@ export default {
         }, times);
     },
     computed: {
-        menu:{
-            get:function(){
+        menu: {
+            get: function() {
                 return JSON.parse(localStorage.getItem(SAAS_MENU));
             },
-            set:function(){
-
-            },
+            set: function() {}
         },
         TrueName() {
             return this.userInfo && this.userInfo.TrueName;
@@ -158,7 +160,7 @@ export default {
             let tokenRet = await this.$http.getAccessToken(params);
             if (tokenRet.status === 0) {
                 //name,value,hours
-                setCookie(SAAS_TOKEN, tokenRet.result);
+                setToken(SAAS_TOKEN, tokenRet.result, 2);
             }
         },
         //检查token是否过期
@@ -314,7 +316,7 @@ export default {
                     });
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    this.$router.push({ path: "/login" });
+                    location.href = `//${prefix}yun.gaodun.com/login`;
                 }
             } else if (command == "passwordModify") {
                 /*require.ensure([], (require) => {
@@ -349,10 +351,15 @@ export default {
                     JSON.stringify(menuRet.result.Tpo_sys_Functions)
                 );
 
-                localStorage.setItem(SAAS_USER_INFO, JSON.stringify(menuRet.result.Tpo_Sys_Users));
+                localStorage.setItem(
+                    SAAS_USER_INFO,
+                    JSON.stringify(menuRet.result.Tpo_Sys_Users)
+                );
 
                 this.menu = menuRet.result.Tpo_Sys_Navigations;
-                this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
+                this.userInfo = JSON.parse(
+                    localStorage.getItem(SAAS_USER_INFO)
+                );
             }
         },
         reWriteEmptyUrl(menu) {
