@@ -701,9 +701,21 @@ export default {
             if (!this.sortOptions || !this.sortOptions.parmas.near_by) return;
             let ret = await this.$http.sortSyllabus(
                 this.sortOptions.id,
-                this.sortOptions.parmas
+                this.sortOptions.parmas,
             );
             this.sortOptions = "";
+            if(ret.status == 0){
+                this.message({
+                    type:'success',
+                    message:'排序成功！'
+                })
+                this.getSyllabusItems();
+            }else{
+                this.message({
+                    type:'warning',
+                    message:'排序失败！'
+                })
+            }
         },
         onMoveCallback(evt, originalEvent) {
             let direction = 0;
@@ -717,8 +729,9 @@ export default {
                 parmas: {
                     near_by:
                         evt.relatedContext.element &&
-                        evt.relatedContext.element.id,
-                    direction: direction
+                        evt.relatedContext.element.id,  //参照物，也是大纲条目id
+                    direction: direction,   //1表示参照物的下方，-1表示参照物的上方
+                    course_syllabus_id:this.coursesyllid,  //大纲id
                 }
             };
         }
