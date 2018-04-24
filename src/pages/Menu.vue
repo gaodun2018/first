@@ -135,7 +135,6 @@ export default {
                     ) {
                         localStorage.clear();
                         location.href = `//${getEnv()}yun.gaodun.com/login`;
-                        location.reload();
                         return;
                     }
                     if (data.status == 0) {

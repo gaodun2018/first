@@ -113,7 +113,9 @@ export default {
             },
             loading: false,
             loginFlag: true,
-            checkTokenTimer: ""
+            checkTokenTimer: "",
+            userInfo:'',
+            menu:[],
         };
     },
     async created() {
@@ -121,6 +123,7 @@ export default {
         // console.log(tokenRet)
         // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
+        this.menu = JSON.parse(localStorage.getItem(SAAS_MENU));
         localStorage.setItem(
             SAAS_USER_NAME,
             JSON.stringify(getCookie(SAAS_USER_NAME))
@@ -135,12 +138,6 @@ export default {
         }, times);
     },
     computed: {
-        menu: {
-            get: function() {
-                return JSON.parse(localStorage.getItem(SAAS_MENU));
-            },
-            set: function() {}
-        },
         TrueName() {
             return this.userInfo && this.userInfo.TrueName;
         },
@@ -228,7 +225,6 @@ export default {
                     ) {
                         localStorage.clear();
                         location.href = `//${prefix}yun.gaodun.com/login`;
-                        location.reload();
                         return;
                     }
                     if (data.status == 0) {
@@ -305,15 +301,10 @@ export default {
                 if (logoutRet.status == 0) {
                     let exp = new Date();
                     exp.setTime(exp.getTime() - 1);
-                    setCookie(SAAS_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(SAAS_REFRESH_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    });
+                    setToken(SAAS_TOKEN, undefined, -1);
+                    setToken(SAAS_REFRESH_TOKEN, undefined, -1);
+                    setToken(SAAS_USER_NAME, undefined, -1);
+                    setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
                     location.href = `//${prefix}yun.gaodun.com/login`;
@@ -334,7 +325,6 @@ export default {
         },
         async getCurrentUserMenuTree() {
             let GDSID = getCookie(`${prefix}GDSID`);
-
             //获取菜单树
             let menuRet = await this.$http.getCurrentUserMenuTree({
                 appId: appid,

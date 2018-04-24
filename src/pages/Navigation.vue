@@ -42,6 +42,7 @@ import {
     SAAS_MENU,
     SAAS_USER_INFO,
     SAAS_TOKEN,
+    SAAS_USER_NAME,
     SAAS_REFRESH_TOKEN,
     SAAS_CURRENT_TAB,
     SAAS_OPEN_TABS,
@@ -208,15 +209,10 @@ export default {
                 if (logoutRet.status == 0) {
                     let exp = new Date();
                     exp.setTime(exp.getTime() - 1);
-                    setCookie(SAAS_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(SAAS_REFRESH_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    });
+                    setToken(SAAS_TOKEN, undefined, -1);
+                    setToken(SAAS_REFRESH_TOKEN, undefined, -1);
+                    setToken(SAAS_USER_NAME, undefined, -1);
+                    setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
                     location.href = `//${prefix}yun.gaodun.com/login`;
