@@ -33,6 +33,7 @@
 import Vue from "vue";
 import { mapState, mapActions } from "vuex";
 import { setCookie, getCookie } from "../util/cookie.js";
+import { setToken } from "../util/setToken";
 import { parseUrl } from "base";
 import { getEnv } from "../util/config";
 import { appid } from "../common/config.js";
