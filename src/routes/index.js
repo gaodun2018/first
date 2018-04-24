@@ -138,7 +138,7 @@ export const routes = [{
             { path: '/resource/knowledge/edit/:id', meta: { title: '编辑知识点' }, name: '10011', component: resourceModuleKnowledgeEdit }, // 编辑知识点
         ]
     },
-    { path: '/login', meta: { title: '登陆' }, name: '10000', component: Login }, // 登陆
+    // { path: '/login', meta: { title: '登陆' }, name: '10000', component: Login }, // 登陆
     { path: '*', meta: { title: '404' }, name: '10001', component: Page404 }, // 404
     { path: '/updatePwd', meta: { title: '修改密码' }, name: '10002', component: UpdatePwd }, // 修改密码
     { path: '/home', meta: { title: '财经云' }, name: '10003', component: Home }, // 财经云

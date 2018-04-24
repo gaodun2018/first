@@ -134,7 +134,7 @@ export default {
                         data.status < 563649999
                     ) {
                         localStorage.clear();
-                        location.href = "/#/login";
+                        location.href = `//${getEnv()}yun.gaodun.com/login`;
                         location.reload();
                         return;
                     }
