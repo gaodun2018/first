@@ -121,13 +121,6 @@
         <!--弹层 -->
 
         <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="6%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
-            <!-- <el-col v-for="item in progressText" :key="item.text" :sm="8">
-                <div class="order-progress-bar">
-                    <i class="progress-bar-line" :class="item.isCustomerConfirm ? item.currentLine : ''"></i>
-                    <i class="progress-bar-dot" :class="item.isCustomerConfirm ? item.currentDot : ''"></i>
-                    <span :class="item.isCustomerConfirm ? item.currentText : ''">{{item.text}}</span>
-                </div>
-            </el-col> -->
             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
                 <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
             </el-steps>
@@ -178,10 +171,13 @@
                     </el-select> -->
                     <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
                 </el-input>
-                <el-table ref="multipleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange">
+                <el-table ref="singleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row @current-change="handleTableChange">
                     <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <el-radio class="radio" v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' " v-model="resourceRadio" :label="String(scope.row[item.key])"></el-radio>
+                            <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
+                                <el-radio class="radio"  v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
+                                <span>{{scope.row[item.key]}}</span>
+                            </template>
                             <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
                             <span v-else>{{scope.row[item.key]}}</span>
                         </template>
@@ -233,6 +229,9 @@
     </div>
 </template>
 <style lang="less">
+.tabplane .el-dialog{
+    min-width:680px;
+}
 .addResourceDialog .el-pagination {
     text-align: right;
     margin-top: 14px;
@@ -249,6 +248,9 @@
     //         width: 120px;
     //     }
     // }
+    .el-radio .el-radio__label{
+        display:none;
+    }
 }
 </style>
 <script>
@@ -286,10 +288,6 @@ export default {
                 name: ""
             },
             dialogFormVisible: false,
-            model1: "视频",
-            module1: true,
-            module2: false,
-            module3: false,
             resourceTable: [], //资源列表
             multipleSelection: [],
             dialogVisible: false,
@@ -299,8 +297,6 @@ export default {
             deleteModule: true,
             selcurrent: "video",
             inputPlaceholder: "请输入视频资源ID / 名称",
-            ddd: "",
-            indexs: "",
             refname: "",
             coursesylllevel: "",
             coursesyllid: "",
@@ -320,6 +316,9 @@ export default {
         };
     },
     methods: {
+         handleTableChange(val) {
+            this.resourceRadio = String(val.id);
+        },
         selectclk(discriminator) {
             this.selcurrent = discriminator;
         },
@@ -330,12 +329,13 @@ export default {
             };
             this.$refs[formName].resetFields();
         },
-        //打开新增资源的弹层
+        //弹出新增资源的弹层
         openAddResDialog(id) {
             this.currentId = id;
             this.active = 0;
             this.addResFirFrom.name = "";
             this.resourceRadio = "";
+            this.nativeResourceRadio = "";
             this.dialogFormVisible = true;
             this.resourceAction = "add";
         },
@@ -356,7 +356,6 @@ export default {
                 this.$message.warning("请选择资源类型！");
                 return;
             }
-            console.log(this.selcurrent);
             if (this.active >= this.progressText.length - 1) return;
             resourceTableConfig.forEach(ele => {
                 if (ele.discriminator == this.selcurrent) {
@@ -419,15 +418,6 @@ export default {
         prev() {
             if (this.active <= 0) return;
             this.active--;
-        },
-        toggleSelection(rows) {
-            if (rows) {
-                rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
-                });
-            } else {
-                this.$refs.multipleTable.clearSelection();
-            }
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
