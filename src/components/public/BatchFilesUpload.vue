@@ -118,8 +118,7 @@ export default {
                 return true;
             }
             var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-            const extension =
-                this.fileTypes.indexOf(testmsg) > -1 ? true : false;
+            const extension = this.fileTypes.indexOf(testmsg) > -1 ? true : false;
             // const isLt2M = file.size / 1024 / 1024 < 10;
             if (!extension) {
                 this.$message({
