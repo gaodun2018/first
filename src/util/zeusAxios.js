@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getEnv, getBaseUrl } from './config';
+import { loginPage} from '../common/config.js';
 import { SAAS_TOKEN, SAAS_USER_INFO } from './keys';
 import { getCookie, setCookie } from './cookie.js';
 import { Message } from 'element-ui';
@@ -18,7 +19,7 @@ axios.interceptors.request.use(function(config) {
     // 非登录接口
     if (config.url.indexOf('login') === -1 && token == undefined) {
         localStorage.clear();
-        location.href = `//${prefix}yun.gaodun.com/login`;
+        location.href = loginPage;
         return;
     }
     //非登录接口携带token
@@ -43,7 +44,7 @@ axios.interceptors.response.use(function(response) {
     // 登录失效 553649410～553649444
     if (response.data.status > 553649000 && response.data.status < 563649999) {
         localStorage.clear();
-        location.href = `//${prefix}yun.gaodun.com/login`;
+        location.href = loginPage;
         return;
     }
     /*// 获取token接口不校验，直接返回

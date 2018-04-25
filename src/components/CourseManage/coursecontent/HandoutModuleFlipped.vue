@@ -74,7 +74,7 @@
                 </el-form-item>
                 <el-form-item label="上传文件" prop="file_name">
 
-                    <FilesUpload :file="file"></FilesUpload>
+                    <FilesUpload :file="file" @updateFlies="updateFlies"></FilesUpload>
                 </el-form-item>
 
                 <el-form-item class="coursebtn">
@@ -106,7 +106,7 @@
 <script>
     import {format} from '../../../util/util'
     import FilesUpload from '../courseset/FilesModelUpload.vue'
-    import vue from 'vue'
+    import Vue from '../../../common/vue.js'
 
     export default {
         components: {FilesUpload},
@@ -119,7 +119,7 @@
                 },
                 NewTableForm: {},
                 tableData: [],
-                file: '',
+                file: [],
                 currentIndex: '',
                 Doing: 'addDate',
                 handout: [],//讲义列表
@@ -204,8 +204,8 @@
                     path: ''
                 }
                 this.Doing = 'addDate';
-                this.file = null;
-                this.dialogVisible = true
+                this.file = [];
+                this.dialogVisible = true;
 
             },
             addTable(formName) {
@@ -217,6 +217,7 @@
                     }
                 });
             },
+            // 上传批量讲义
             async AddCourseHandout() {
                 if (this.NewTableForm.path == "") {
                     this.$message({
@@ -244,7 +245,7 @@
                         size: '',
                         path: ''
                     }
-                    this.file = null;
+                    this.file = [];
                     this.getCourseHandout();
                 } else if (ret.status > 0) {
                     this.$message.error('添加失败！');
@@ -256,7 +257,6 @@
                 this.Doing = 'update';
                 this.NewTableForm = {...this.handout[index]};
                 this.currentIndex = index;
-                // this.file = this.NewTableForm
                 this.file = [
                     {
                         name: this.NewTableForm.file_name,
@@ -278,6 +278,7 @@
                     }
                 });
             },
+            // 更新讲义
             async updateCourseHandout() {
                 if (this.NewTableForm.path == "") {
                     this.$message({
@@ -306,7 +307,7 @@
                         size: '',
                         path: ''
                     }
-                    this.file = null;
+                    this.file = [];
                     this.getCourseHandout();
                 } else if (ret.status > 0) {
                     ret.message ? ret.message : '编辑失败！'
@@ -317,7 +318,22 @@
             cancel(formName) {
                 this.$refs[formName].resetFields();
                 this.dialogVisible = false;
-                this.file = null;
+                this.file = [];
+            },
+            //更新文件
+            updateFlies(res, fileList){
+                if(res && res != 'remove'){
+                    this.NewTableForm.path = res.filePath ? res.filePath : '';
+                    this.NewTableForm.upload_size = res.result && res.result.file.size ? res.result.file.size : '';
+                    this.NewTableForm.file_name = res.result && res.result.file.name ? res.result.file.name : '';
+                }else if(res == 'remove'){
+                     this.NewTableForm.path = '';
+                     this.NewTableForm.upload_size = '';
+                     this.NewTableForm.file_name = '';
+                     this.file = [];
+                     return;
+                }
+                this.file = this.file.concat(fileList).slice(-1);
             },
         },
         computed: {
@@ -326,14 +342,9 @@
             }
         },
         mounted() {
-            vue.$on('uploadFile', (res, fileList) => {
-
-                this.NewTableForm.path = res.filePath ? res.filePath : '';
-                this.NewTableForm.upload_size = res.result && res.result.file.size ? res.result.file.size : '';
-                this.NewTableForm.file_name = res.result && res.result.file.name ? res.result.file.name : '';
-
-                this.file = fileList;
-            })
+            // Vue.$on('uploadFile', (res, fileList) => {
+              
+            // })
         },
         created() {
             this.GetCourseDisable();

@@ -36,7 +36,7 @@ import { setCookie, getCookie } from "../util/cookie.js";
 import { setToken } from "../util/setToken";
 import { parseUrl } from "base";
 import { getEnv } from "../util/config";
-import { appid } from "../common/config.js";
+import { appid ,loginPage} from "../common/config.js";
 // import Modal from 'vueModal'
 
 import {
@@ -216,7 +216,7 @@ export default {
                     setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    location.href = `//${prefix}yun.gaodun.com/login`;
+                    location.href = loginPage;
                 }
             } else if (command == "passwordModify") {
                 // require.ensure([], (require) => {

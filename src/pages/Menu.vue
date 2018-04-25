@@ -82,6 +82,7 @@ import {
 } from "../util/keys";
 import { getCookie, setCookie } from "../util/cookie.js";
 import { getEnv, getBaseUrl } from "../util/config";
+import { loginPage } from "../common/config";
 export default {
     name: "saas-menu",
     computed: {
@@ -134,7 +135,7 @@ export default {
                         data.status < 563649999
                     ) {
                         localStorage.clear();
-                        location.href = `//${getEnv()}yun.gaodun.com/login`;
+                        location.href = loginPage;
                         return;
                     }
                     if (data.status == 0) {
