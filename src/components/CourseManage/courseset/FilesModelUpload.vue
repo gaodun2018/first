@@ -78,7 +78,11 @@ export default {
     },
     methods: {
         isShow() {
-             return this.file == null || this.file == "null" ? true : false;
+            if(this.file && this.file.length != 0){
+                return false;
+            }else {
+                return true;
+            }
         },
         beforeAvatarUpload(file) {
             var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -106,18 +110,13 @@ export default {
             // this.fileList = fileList.slice(-1);
         },
         handleRemove(file, fileList) {
-            // this.fileList = fileList;
             if(fileList.length==0){
                 this.$emit("updateFlies", "remove", []);
             }else{
                 this.$emit("updateFlies", '', fileList);
             }
-            console.log(fileList,'fileListfileListfileList`')
-            
         },
         handleAvatarSuccess(res, file) {
-            // console.log(res);
-            // console.log(file);
             if (res.status == 0) {
                 this.$emit("updateFlies", res, file);
                 this.$message({
