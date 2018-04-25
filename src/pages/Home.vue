@@ -95,7 +95,7 @@ import {
 } from "../util/keys";
 import { getEnv, getBaseUrl } from "../util/config";
 import { setToken } from "../util/setToken";
-import { appid } from "../common/config.js";
+import { appid, loginPage} from "../common/config.js";
 import { parseUrl } from "base";
 import { Base64 } from "js-base64";
 //需要npm安装js-base64
@@ -224,7 +224,7 @@ export default {
                         data.status < 563649999
                     ) {
                         localStorage.clear();
-                        location.href = `//${prefix}yun.gaodun.com/login`;
+                        location.href = loginPage;
                         return;
                     }
                     if (data.status == 0) {
@@ -307,7 +307,7 @@ export default {
                     setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    location.href = `//${prefix}yun.gaodun.com/login`;
+                    location.href = loginPage;
                 }
             } else if (command == "passwordModify") {
                 /*require.ensure([], (require) => {
