@@ -4,8 +4,8 @@
             <!-- <a class="download_btn" :href="fileList[0].response&&fileList[0].response.filePath" download="filename" v-if="isShowDownload" style="color:#4db3ff">下载</a> -->
             <el-col :span="12">
                 <el-upload class="handout-upload" :action="materialUpload" :on-change="handleChange" :on-remove="handleRemove" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :headers="apiHeader" :before-upload="beforeAvatarUpload" :file-list="fileList">
-                    <el-button size="small" type="primary" v-if="isShow(1)">点击上传文件</el-button>
-                    <el-button size="small" type="primary" v-if="isShow(2)">重新上传</el-button>
+                    <el-button size="small" type="primary" v-if="isShow()">点击上传文件</el-button>
+                    <el-button size="small" type="primary" v-if="!isShow()">重新上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传zip/rar文件</div>
                 </el-upload>
             </el-col>
@@ -38,17 +38,19 @@
 </style>
 <script>
 import { getBaseUrl, getEnv } from "../../../util/config";
-import vue from "vue";
+import Vue from "../../../common/vue.js";
 import { SAAS_TOKEN } from "../../../util/keys.js";
 import { getCookie, setCookie } from "../../../util/cookie.js";
 
 export default {
     components: {},
-    props: ["file"],
+    props: [
+        "file"
+        ],
     data() {
         return {
             // fileList: [],
-            fileList: this.file == null ? [] : this.file,
+            // fileList: this.file == null ? [] : this.file,
             imageUrl: "",
             apiHeader: {}
         };
@@ -61,11 +63,11 @@ export default {
              }
          },*/
     computed: {
-        // fileList(){
-        //   return this.file == null || this.file == 'null' ? [] : this.file;
-        // },
+        fileList(){
+          return this.file == null || this.file == 'null' ? [] : this.file;
+        },
         isShowDownload() {
-            this.fileList = this.file == null ? [] : this.file;
+            // this.fileList = this.file == null ? [] : this.file;
             return this.file == null || this.file == "null" ? false : true;
         },
         materialUpload() {
@@ -75,12 +77,11 @@ export default {
         }
     },
     methods: {
-        isShow(flag) {
-            if (flag == 1) {
-                return this.file == null || this.file == "null" ? true : false;
-            }
-            if (flag == 2) {
-                return this.file == null || this.file == "null" ? false : true;
+        isShow() {
+            if(this.file && this.file.length != 0){
+                return false;
+            }else {
+                return true;
             }
         },
         beforeAvatarUpload(file) {
@@ -101,42 +102,40 @@ export default {
                 });
             }
 
-            return extension || (extension2 && isLt2M);
+            return (extension && isLt2M) || (extension2 && isLt2M);
         },
         handleChange(file, fileList) {
-            this.fileList = fileList.slice(-1);
+            // console.log(file,fileList)
+            // this.$emit('updateFlies','change',fileList.slice(-1),);
+            // this.fileList = fileList.slice(-1);
         },
         handleRemove(file, fileList) {
-            this.fileList = fileList;
-            vue.$emit("uploadFile", {}, this.fileList);
+            if(fileList.length==0){
+                this.$emit("updateFlies", "remove", []);
+            }else{
+                this.$emit("updateFlies", '', fileList);
+            }
         },
         handleAvatarSuccess(res, file) {
-            // console.log(res);
             if (res.status == 0) {
-                vue.$emit("uploadFile", res, this.fileList);
+                this.$emit("updateFlies", res, file);
                 this.$message({
                     type: "success",
                     message: "上传成功！"
                 });
             } else {
                 this.$message.error("上传失败！");
-                setTimeout(() => {
-                    this.fileList = [];
-                }, 0);
+                this.$emit("updateFlies", '', []);
             }
         },
         handleAvatarError(err, file, fileList) {
             this.$message.error("上传失败！");
             setTimeout(() => {
-                this.fileList = [];
+                this.$emit("updateFlies", '', []);
             }, 0);
         }
     },
-    mounted() {
-        setInterval(() => {
-            console.log(this.file, this.fileList);
-        }, 2000);
-    },
+    mounted() {},
     destroyed() {},
     created() {
         let token = "Basic " + getCookie(SAAS_TOKEN);

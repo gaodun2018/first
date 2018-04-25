@@ -74,6 +74,7 @@ import {
     SAAS_REFRESH_TOKEN
 } from "../util/keys";
 import { getCookie, setCookie } from "../util/cookie.js";
+import { setToken } from "../util/setToken";
 import { mapState } from "vuex";
 import { parseUrl } from "base";
 import Access from "../util/accessControl";
@@ -119,7 +120,7 @@ export default {
             let tokenRet = await this.$http.getAccessToken(params);
             if (tokenRet.status === 0) {
                 //name,value,hours
-                setCookie(SAAS_TOKEN, tokenRet.result);
+                setToken(SAAS_TOKEN, tokenRet.result,2);
             } else {
             }
         },
