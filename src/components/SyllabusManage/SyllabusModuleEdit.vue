@@ -399,12 +399,12 @@ export default {
                     "order_by_field[]": "id", //排序字段
                     keywords: this.resourceinput,
                     project_id: this.project_id,
-                    legacy_live_id:
-                        this.selcurrent == "legacy_live"
-                            ? this.resourceinput
-                            : null, //旧版直播ID
-                    paper_id:
-                        this.selcurrent == "paper" ? this.resourceinput : null //试卷ID
+                    // legacy_live_id:
+                    //     this.selcurrent == "legacy_live"
+                    //         ? this.resourceinput
+                    //         : null, //旧版直播ID
+                    // paper_id:
+                    //     this.selcurrent == "paper" ? this.resourceinput : null //试卷ID
                     // subject_id: this.subject_id,
                 };
                 let ret = await this.$http.getResource(params);

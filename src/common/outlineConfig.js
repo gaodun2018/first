@@ -87,10 +87,12 @@ export const resourceTableConfig = [{
     {
         "discriminator": "paper",
         "table": [{
-            key: 'paper_id',
+            // key: 'paper_id',
+            key: 'id',
             wh: '100',
             sort: false,
-            label: '题库试卷ID',
+            // label: '题库试卷ID',
+            label: '资源ID',
         }, {
             key: 'discriminator',
             wh: '100',
@@ -100,9 +102,11 @@ export const resourceTableConfig = [{
             key: 'title',
             wh: '',
             sort: false,
-            label: '试卷名称',
+            // label: '试卷名称',
+            label: '资源名称',
         }],
-        inputPlaceholder: '请输入题库试卷ID / 名称',
+        // inputPlaceholder: '请输入题库试卷ID / 名称',
+        inputPlaceholder: '请输入试卷资源ID / 名称',
         input: {}
     },
     /* {
@@ -112,10 +116,12 @@ export const resourceTableConfig = [{
     {
         "discriminator": "legacy_live",
         "table": [{
-            key: 'live_id',
+            // key: 'live_id',
+            key: 'id',
             wh: '100',
             sort: false,
-            label: '直播ID',
+            // label: '直播ID',
+            label: '资源ID',
         }, {
             key: 'discriminator',
             wh: '100',
@@ -125,9 +131,11 @@ export const resourceTableConfig = [{
             key: 'title',
             wh: '',
             sort: false,
-            label: '直播名称',
+            // label: '直播名称',
+            label: '资源名称',
         }],
-        inputPlaceholder: '请输入直播ID / 名称',
+        // inputPlaceholder: '请输入直播ID / 名称',
+        inputPlaceholder: '请输入直播资源ID / 名称',
         input: {}
     }
 ];
