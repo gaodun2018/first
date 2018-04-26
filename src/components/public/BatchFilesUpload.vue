@@ -23,7 +23,7 @@
             </el-upload>
         </el-row>
         <el-row>
-            <a href="#" class="mould-download-btn" v-if="urlTitle && url">{{urlTitle}}</a>
+            <a :href="downloadUrl" download='download' class="mould-download-btn" v-if="urlTitle && downloadUrl">{{urlTitle}}</a>
         </el-row>
         <el-row class="upload-tips">
             <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。</span>
@@ -66,7 +66,7 @@ export default {
             // 下载按钮文字
             default: ""
         },
-        url: {
+        downloadUrl: {
             // 下载地址
             default: ""
         },
