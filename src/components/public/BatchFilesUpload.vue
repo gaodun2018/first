@@ -9,11 +9,16 @@
                 :on-remove="handleRemove"
                 :on-success="handleAvatarSuccess"
                 :on-error="handleAvatarError"
+                :on-progress="handleProgress"
                 :headers="apiHeader"
                 :before-upload="beforeAvatarUpload"
                 :file-list="fileList"
                 :data="uploadData"
                 :name="name"
+                v-loading="loading"
+                element-loading-text="正在上传中..."
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.8)"
             >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或
@@ -26,7 +31,7 @@
             <a :href="downloadUrl" download='download' class="mould-download-btn" v-if="urlTitle && downloadUrl">{{urlTitle}}</a>
         </el-row>
         <el-row class="upload-tips">
-            <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。</span>
+            <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。<br>请将.excel文件转程.csv文件上传</span>
         </el-row>
     </el-dialog>
 </template>
@@ -75,7 +80,7 @@ export default {
         },
         uploadUrl: {
             // 上传的地址
-            required:true,
+            required: true,
             default: ""
         },
         fileTypes: {
@@ -83,20 +88,21 @@ export default {
             // required:true,
             default: () => []
         },
-        uploadData:{
+        uploadData: {
             // 上传时附带的额外参数
-            default:() => {},
+            default: () => {}
         },
-        name:{
+        name: {
             // 上传文件的字段名
-            default:'name',
+            default: "name"
         }
     },
     data() {
         return {
             apiHeader: {},
             centerDialogVisible: true,
-            fileList: []
+            fileList: [],
+            loading: false
         };
     },
     computed: {
@@ -118,7 +124,8 @@ export default {
                 return true;
             }
             var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-            const extension = this.fileTypes.indexOf(testmsg) > -1 ? true : false;
+            const extension =
+                this.fileTypes.indexOf(testmsg) > -1 ? true : false;
             // const isLt2M = file.size / 1024 / 1024 < 10;
             if (!extension) {
                 this.$message({
@@ -141,23 +148,38 @@ export default {
             this.fileList = fileList;
             // vue.$emit("uploadFile", {}, this.fileList);
         },
+        handleProgress() {
+            this.loading = true;
+        },
         handleAvatarSuccess(res, file) {
             // console.log(res);
+            this.loading = false;
             if (res.status == 0) {
                 this.$message({
                     type: "success",
                     message: "上传成功！"
                 });
-                this.$emit('uploadSuccessCallback');
+                this.$emit("uploadSuccessCallback");
             } else {
-                this.$message.error("上传失败！");
+                this.$message({
+                    type: "error",
+                    message: `上传失败：${res.message}`,
+                    showClose: true,
+                    duration: 5000
+                });
                 setTimeout(() => {
                     this.fileList = [];
                 }, 0);
             }
         },
         handleAvatarError(err, file, fileList) {
-            this.$message.error("上传失败！");
+            this.$message({
+                type: "error",
+                message: `上传失败：${err}`,
+                showClose: true,
+                duration: 5000
+            });
+            this.loading = false;
             setTimeout(() => {
                 this.fileList = [];
             }, 0);
