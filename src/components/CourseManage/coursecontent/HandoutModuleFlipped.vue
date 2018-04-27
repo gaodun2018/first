@@ -8,17 +8,15 @@
                     <el-radio :label="1">启用</el-radio>
                     <el-radio :label="0">不启用</el-radio>
                 </el-radio-group>
-
                 <el-button v-if="ruleForm.bEnabled==1?true:false" class="addhandout" type="primary" size="small" @click="addTableData" label-position="right">+&nbsp;新增一个讲义
                 </el-button>
-
             </el-form-item>
-
         </el-form>
 
         <template v-if="ruleForm.bEnabled==1?true:false">
-            <div class="table">
-                <div class="table-line table-line-title">
+            <div class="scroll-table">
+                <div class="table">
+                <div class="table-line-title">
                     <span class="table-item center" :style="item.flex" v-for="(item,index) in tableConfig" :key="index">{{item.text}}</span>
                 </div>
                 <draggable v-model="handout" :options="{group:'people',animation:200,draggable:'.table-move'}" element="div" @end="dragEnd(handout)">
@@ -31,47 +29,12 @@
                                 <el-button size="small" type="text" @click="handleEdit(index, item)" style="margin: 0 10px">编辑
                                 </el-button>
                             </template>
-                            <span v-else>{{ele[item.key]}}</span>
+                            <span class="beyond-hidden-2" v-else>{{ele[item.key]}}</span>
                         </span>
                     </div>
                 </draggable>
             </div>
-
-            <!-- <el-table :data="handout" border style="width: 90%;margin-top: 16px;" :show-header="true">
-
-                    <el-table-column label="序号" width="60" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.$index + 1}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="显示名称" width="350" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.name}}</span>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column label="文件" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.file_name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="大小" width="160" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.size}}</span>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column label="操作" align="center" width="200">
-                        <template slot-scope="scope">
-                            <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)" style="margin: 0 10px">删除
-                            </el-button>
-                            <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)" style="margin: 0 10px">编辑
-                            </el-button>
-                        </template>
-                    </el-table-column>
-
-            </el-table> -->
-
+            </div>
         </template>
 
         <el-dialog class="addContent tabplane handoutsDialog" :title="Doing=='update'?'编辑讲义':'新增讲义'" :visible.sync="dialogVisible" @close="cancel('NewTableForm')">
@@ -114,8 +77,14 @@
 }
 </style>
 <style lang="less" scoped>
-.table {
+.scroll-table{
     width: 90%;
+
+    overflow-y: auto;
+}
+.table {
+    // width: 100%;
+    //  min-width: 820px;
     border: 1px solid #ebeef5;
     border-bottom: none;
     .center {
@@ -124,37 +93,45 @@
     .table-move {
         cursor: move;
     }
-    .table-line {
-        height: 50px;
+    .table-item {
+        border-right: 1px solid #ebeef5;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 8px;
+        color: #253342;
+        &:last-child {
+            border-right: none;
+            min-width: 114px;
+        }
+    }
+    .table-line-title {
+        min-height: 50px;
         border-bottom: 1px solid #ebeef5;
         display: flex;
         justify-content: space-around;
         line-height: 50px;
         .table-item {
-            border-right: 1px solid #ebeef5;
-            display: inline-block;
-            width: 100%;
+            background-color: #f5f7fa;
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+    }
+    .table-line {
+        height: 56px;
+        border-bottom: 1px solid #ebeef5;
+        display: flex;
+        justify-content: space-around;
+        .table-item {
+            padding-top: 20px;
+            padding-bottom: 20px;
             box-sizing: border-box;
-            padding: 0 8px;
             font-size: 12px;
-            color: #253342;
-            &:last-child {
-                border-right: none;
-            }
+            line-height: 16px;
         }
         .border-r-n {
             border-right: none;
-        }
-    }
-    .table-line-title {
-        .table-item {
-            background-color: #f5f7fa;
-            font-size: 14px;
-            color: #253342;
-            font-weight: 600;
-            &:last-child {
-                border-right: none;
-            }
         }
     }
     .table-line-bg:hover {
@@ -410,20 +387,20 @@ export default {
             console.log(cids);
             let params = {
                 course_id: this.course_id,
-                handout_sort: cids.join(',')
+                handout_sort: cids.join(",")
             };
             let ret = await this.$http.handoutSort(params);
-            if(ret.status == 0){
+            if (ret.status == 0) {
                 this.message({
-                    type:'success',
-                    message:'排序成功！'
-                })
+                    type: "success",
+                    message: "排序成功！"
+                });
                 this.getCourseHandout();
-            }else{
+            } else {
                 this.message({
-                    type:'warning',
-                    message:'排序失败！'
-                })
+                    type: "warning",
+                    message: "排序失败！"
+                });
             }
         },
         getSortData(data) {

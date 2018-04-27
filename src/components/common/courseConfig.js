@@ -7,7 +7,7 @@ export const handoutTable = [{
     {
         text: '显示名称',
         key: 'name',
-        flex: { flex: 3 }
+        flex: { flex: 4 }
     },
     {
         text: '文件',
@@ -22,6 +22,6 @@ export const handoutTable = [{
     {
         text: '操作',
         key: 'done',
-        flex: { flex: 2 }
+        flex: { flex: 1.5 }
     }
 ];
