@@ -120,7 +120,7 @@
 
         <!--弹层 -->
 
-        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="6%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
+        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
                 <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
             </el-steps>
@@ -175,7 +175,7 @@
                     <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
-                                <el-radio class="radio"  v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
+                                <el-radio class="radio" v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
                                 <span>{{scope.row[item.key]}}</span>
                             </template>
                             <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
@@ -229,8 +229,8 @@
     </div>
 </template>
 <style lang="less">
-.tabplane .el-dialog{
-    min-width:680px;
+.tabplane .el-dialog {
+    min-width: 680px;
 }
 .addResourceDialog .el-pagination {
     text-align: right;
@@ -239,17 +239,21 @@
 .ghostClass {
     opacity: 1;
 }
-.el-dialog__body {
-    .el-steps {
-        line-height: normal;
-    }
-    // .el-select {
-    //     .el-input{
-    //         width: 120px;
-    //     }
-    // }
-    .el-radio .el-radio__label{
-        display:none;
+.outlinebox {
+    .rulemodule {
+        .el-dialog__body {
+            .el-steps {
+                line-height: normal;
+            }
+            // .el-select {
+            //     .el-input{
+            //         width: 120px;
+            //     }
+            // }
+            .el-radio .el-radio__label {
+                display: none;
+            }
+        }
     }
 }
 </style>
@@ -260,7 +264,7 @@ import {
     resourceTypeList,
     resourceTableConfig
 } from "../../common/outlineConfig.js";
-
+import { isNumber } from "../../util/util.js";
 export default {
     name: "SyllabusModuleEdit",
     components: {
@@ -316,7 +320,7 @@ export default {
         };
     },
     methods: {
-         handleTableChange(val) {
+        handleTableChange(val) {
             this.resourceRadio = String(val.id);
         },
         selectclk(discriminator) {
@@ -397,16 +401,29 @@ export default {
                     page: val ? val : 1,
                     "order_by[]": "desc", //顺序   倒序
                     "order_by_field[]": "id", //排序字段
-                    keywords: this.resourceinput,
-                    project_id: this.project_id,
-                    // legacy_live_id:
-                    //     this.selcurrent == "legacy_live"
-                    //         ? this.resourceinput
-                    //         : null, //旧版直播ID
-                    // paper_id:
-                    //     this.selcurrent == "paper" ? this.resourceinput : null //试卷ID
+                    project_id: this.project_id
                     // subject_id: this.subject_id,
                 };
+                let resourceinput = this.resourceinput.trim();
+                switch (this.selcurrent) {
+                    case "legacy_live":
+                        if (isNumber(resourceinput)) {
+                            params.legacy_live_id = resourceinput;
+                        } else {
+                            params.keywords = resourceinput;
+                        }
+                        break;
+                    case "paper":
+                        if (isNumber(resourceinput)) {
+                            params.paper_id = resourceinput;
+                        } else {
+                            params.keywords = resourceinput;
+                        }
+                        break;
+                    default:
+                        params.keywords = resourceinput;
+                        break;
+                }
                 let ret = await this.$http.getResource(params);
                 if (ret.status == 0) {
                     this.resLoading = false;
@@ -691,20 +708,20 @@ export default {
             if (!this.sortOptions || !this.sortOptions.parmas.near_by) return;
             let ret = await this.$http.sortSyllabus(
                 this.sortOptions.id,
-                this.sortOptions.parmas,
+                this.sortOptions.parmas
             );
             this.sortOptions = "";
-            if(ret.status == 0){
+            if (ret.status == 0) {
                 this.message({
-                    type:'success',
-                    message:'排序成功！'
-                })
+                    type: "success",
+                    message: "排序成功！"
+                });
                 this.getSyllabusItems();
-            }else{
+            } else {
                 this.message({
-                    type:'warning',
-                    message:'排序失败！'
-                })
+                    type: "warning",
+                    message: "排序失败！"
+                });
             }
         },
         onMoveCallback(evt, originalEvent) {
@@ -719,9 +736,9 @@ export default {
                 parmas: {
                     near_by:
                         evt.relatedContext.element &&
-                        evt.relatedContext.element.id,  //参照物，也是大纲条目id
-                    direction: direction,   //1表示参照物的下方，-1表示参照物的上方
-                    course_syllabus_id:this.coursesyllid,  //大纲id
+                        evt.relatedContext.element.id, //参照物，也是大纲条目id
+                    direction: direction, //1表示参照物的下方，-1表示参照物的上方
+                    course_syllabus_id: this.coursesyllid //大纲id
                 }
             };
         }
