@@ -94,7 +94,8 @@ import {
     SAAS_REFRESH_TOKEN
 } from "../util/keys";
 import { getEnv, getBaseUrl } from "../util/config";
-import { appid } from "../common/config.js";
+import { setToken } from "../util/setToken";
+import { appid, loginPage} from "../common/config.js";
 import { parseUrl } from "base";
 import { Base64 } from "js-base64";
 //需要npm安装js-base64
@@ -112,7 +113,9 @@ export default {
             },
             loading: false,
             loginFlag: true,
-            checkTokenTimer: ""
+            checkTokenTimer: "",
+            userInfo:'',
+            menu:[],
         };
     },
     async created() {
@@ -120,6 +123,11 @@ export default {
         // console.log(tokenRet)
         // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         this.userInfo = JSON.parse(localStorage.getItem(SAAS_USER_INFO));
+        this.menu = JSON.parse(localStorage.getItem(SAAS_MENU));
+        localStorage.setItem(
+            SAAS_USER_NAME,
+            JSON.stringify(getCookie(SAAS_USER_NAME))
+        );
         this.getCurrentUserMenuTree();
         let times = 1 * 60 * 1000; //1分钟查询一次
         let minute = 30; //30分钟过期前更换
@@ -130,9 +138,6 @@ export default {
         }, times);
     },
     computed: {
-        menu() {
-            return JSON.parse(localStorage.getItem("SAAS_MENU"));
-        },
         TrueName() {
             return this.userInfo && this.userInfo.TrueName;
         },
@@ -152,7 +157,7 @@ export default {
             let tokenRet = await this.$http.getAccessToken(params);
             if (tokenRet.status === 0) {
                 //name,value,hours
-                setCookie(SAAS_TOKEN, tokenRet.result);
+                setToken(SAAS_TOKEN, tokenRet.result, 2);
             }
         },
         //检查token是否过期
@@ -219,8 +224,7 @@ export default {
                         data.status < 563649999
                     ) {
                         localStorage.clear();
-                        location.href = "/#/login";
-                        location.reload();
+                        location.href = loginPage;
                         return;
                     }
                     if (data.status == 0) {
@@ -230,48 +234,6 @@ export default {
                         that.$message({
                             message: "您暂未开通权限！"
                         });
-                    }
-                },
-                error: function(xhr, textStatus) {},
-                complete: function() {}
-            });
-        },
-        //跳转题库
-        openTiku() {
-            let token = getCookie(SAAS_TOKEN);
-            let GDSID = getCookie(`${prefix}GDSID`);
-            let username = localStorage.getItem(SAAS_USER_NAME);
-            username = JSON.parse(username);
-            let params = {
-                session_id: GDSID,
-                username: username
-            };
-            $.ajax({
-                url: `${getBaseUrl()}apigateway.gaodun.com/saas-service/tiku`,
-                type: "POST", //
-                async: false, //或false,是否异步
-                data: params,
-                headers: {
-                    Authentication: `Basic ${token}`,
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                // timeout:5000, //超时时间
-                dataType: "json", //返回的数据格式：
-                beforeSend: function(xhr) {},
-                success: function(data, textStatus, jqXHR) {
-                    // 登录失效 553649410～553649444
-                    if (
-                        data &&
-                        data.status > 553649000 &&
-                        data.status < 563649999
-                    ) {
-                        localStorage.clear();
-                        location.href = "/#/login";
-                        location.reload();
-                        return;
-                    }
-                    if (data.status == 0) {
-                        window.open(data.result);
                     }
                 },
                 error: function(xhr, textStatus) {},
@@ -339,18 +301,13 @@ export default {
                 if (logoutRet.status == 0) {
                     let exp = new Date();
                     exp.setTime(exp.getTime() - 1);
-                    setCookie(SAAS_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(SAAS_REFRESH_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    });
+                    setToken(SAAS_TOKEN, undefined, -1);
+                    setToken(SAAS_REFRESH_TOKEN, undefined, -1);
+                    setToken(SAAS_USER_NAME, undefined, -1);
+                    setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    this.$router.push({ path: "/login" });
+                    location.href = loginPage;
                 }
             } else if (command == "passwordModify") {
                 /*require.ensure([], (require) => {
@@ -368,7 +325,6 @@ export default {
         },
         async getCurrentUserMenuTree() {
             let GDSID = getCookie(`${prefix}GDSID`);
-
             //获取菜单树
             let menuRet = await this.$http.getCurrentUserMenuTree({
                 appId: appid,
@@ -383,6 +339,16 @@ export default {
                 localStorage.setItem(
                     SAAS_USER_FUNCTIONS,
                     JSON.stringify(menuRet.result.Tpo_sys_Functions)
+                );
+
+                localStorage.setItem(
+                    SAAS_USER_INFO,
+                    JSON.stringify(menuRet.result.Tpo_Sys_Users)
+                );
+
+                this.menu = menuRet.result.Tpo_Sys_Navigations;
+                this.userInfo = JSON.parse(
+                    localStorage.getItem(SAAS_USER_INFO)
                 );
             }
         },

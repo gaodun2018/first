@@ -33,15 +33,17 @@
 import Vue from "vue";
 import { mapState, mapActions } from "vuex";
 import { setCookie, getCookie } from "../util/cookie.js";
+import { setToken } from "../util/setToken";
 import { parseUrl } from "base";
 import { getEnv } from "../util/config";
-import { appid } from "../common/config.js";
+import { appid ,loginPage} from "../common/config.js";
 // import Modal from 'vueModal'
 
 import {
     SAAS_MENU,
     SAAS_USER_INFO,
     SAAS_TOKEN,
+    SAAS_USER_NAME,
     SAAS_REFRESH_TOKEN,
     SAAS_CURRENT_TAB,
     SAAS_OPEN_TABS,
@@ -208,18 +210,13 @@ export default {
                 if (logoutRet.status == 0) {
                     let exp = new Date();
                     exp.setTime(exp.getTime() - 1);
-                    setCookie(SAAS_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(SAAS_REFRESH_TOKEN, undefined, {
-                        expires: exp
-                    });
-                    setCookie(`${prefix}GDSID`, undefined, {
-                        expires: exp
-                    });
+                    setToken(SAAS_TOKEN, undefined, -1);
+                    setToken(SAAS_REFRESH_TOKEN, undefined, -1);
+                    setToken(SAAS_USER_NAME, undefined, -1);
+                    setToken(`${prefix}GDSID`, undefined, -1);
                     localStorage.clear();
                     this.$store.state.navigation.currentLevelOneId = 9;
-                    this.$router.push({ path: "/login" });
+                    location.href = loginPage;
                 }
             } else if (command == "passwordModify") {
                 // require.ensure([], (require) => {
