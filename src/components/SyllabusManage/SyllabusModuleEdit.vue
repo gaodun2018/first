@@ -239,17 +239,21 @@
 .ghostClass {
     opacity: 1;
 }
-.el-dialog__body {
-    .el-steps {
-        line-height: normal;
-    }
-    // .el-select {
-    //     .el-input{
-    //         width: 120px;
-    //     }
-    // }
-    .el-radio .el-radio__label {
-        display: none;
+.outlinebox {
+    .rulemodule {
+        .el-dialog__body {
+            .el-steps {
+                line-height: normal;
+            }
+            // .el-select {
+            //     .el-input{
+            //         width: 120px;
+            //     }
+            // }
+            .el-radio .el-radio__label {
+                display: none;
+            }
+        }
     }
 }
 </style>
