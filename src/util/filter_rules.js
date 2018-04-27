@@ -1,6 +1,6 @@
-import {isAllSpace, maxLength, isChinese} from './util.js'
+import { isAllSpace, maxLength, isChinese } from './util.js'
 let Validate = {}
-Validate.install = function (Vue, options) {
+Validate.install = function(Vue, options) {
 
     /**
      * 注意:  定义type 规则时 不用做非空验证
@@ -15,26 +15,24 @@ Validate.install = function (Vue, options) {
             } else {
                 return callback()
             }
-        }
-        else {
+        } else {
             return callback();
         }
     }
 
     /*输入的是否有中文*/
     const ischinese = (rule, value, callback) => {
-        if (value != null && value != "") {
-            if (!isChinese(value)) {
-                return callback(new Error('请不要输入中文！'))
+            if (value != null && value != "") {
+                if (!isChinese(value)) {
+                    return callback(new Error('请不要输入中文！'))
+                } else {
+                    return callback()
+                }
             } else {
-                return callback()
+                return callback();
             }
         }
-        else {
-            return callback();
-        }
-    }
-    /*验证视频*/
+        /*验证视频*/
     const isVideoId = (rule, value, callback) => {
         if (value != null && value != "") {
             if (!isChinese(value)) {
@@ -44,8 +42,7 @@ Validate.install = function (Vue, options) {
             } else {
                 return callback()
             }
-        }
-        else {
+        } else {
             return callback();
         }
     }
@@ -63,10 +60,10 @@ Validate.install = function (Vue, options) {
      *      各种自定义类型   定义在 src/utils/validate 中    持续添加中.......
      * */
 
-    Vue.prototype.filter_rules = function (item) {
+    Vue.prototype.filter_rules = function(item) {
         let rules = [];
         if (item.required) {
-            rules.push({required: true, message: '该输入项为必填项!', trigger: 'blur'});
+            rules.push({ required: true, message: '该输入项为必填项!', trigger: 'blur' });
         }
         if (item.maxLength) {
             rules.push({
@@ -77,11 +74,11 @@ Validate.install = function (Vue, options) {
                         } else {
                             return callback()
                         }
-                    }
-                    else {
+                    } else {
                         return callback();
                     }
-                }, trigger: 'blur,change'
+                },
+                trigger: ['blur', 'change']
             })
         }
         if (item.max) {
@@ -89,20 +86,20 @@ Validate.install = function (Vue, options) {
                 min: item.min ? item.min : 0,
                 max: item.max,
                 message: '最多输入' + item.max + '个字!',
-                trigger: 'blur,change'
+                trigger: ['blur', 'change']
             })
         }
         if (item.type) {
             let type = item.type;
             switch (type) {
                 case 'isAllSpace':
-                    rules.push({validator: isallspace, trigger: 'blur,change'});
+                    rules.push({ validator: isallspace, trigger: ['blur', 'change'] });
                     break;
                 case 'isChinese':
-                    rules.push({validator: ischinese, trigger: 'blur,change'});
+                    rules.push({ validator: ischinese, trigger: ['blur', 'change'] });
                     break;
                 case 'isVideoId':
-                    rules.push({validator: isVideoId, trigger: 'blur,change'});
+                    rules.push({ validator: isVideoId, trigger: ['blur', 'change'] });
                     break;
                 default:
                     rule.push({});
