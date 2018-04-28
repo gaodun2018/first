@@ -1,8 +1,8 @@
-import {post, get, zDelete, put} from '../util/zeusAxios';
-import {formPost, formPut} from '../util/zeusFormAxios.js';
+import { post, get, zDelete, put } from '../util/zeusAxios';
+import { formPost, formPut } from '../util/zeusFormAxios.js';
 
-import {Message} from 'element-ui';
-import {getBaseUrl} from '../util/config'
+import { Message } from 'element-ui';
+import { getBaseUrl } from '../util/config'
 
 //拉取项目科目
 export const getProjectSubject = params => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/manage/get/project/subject/list`, params)
@@ -51,3 +51,7 @@ export const GetCourseDisable = (course_id, params) => get(`${getBaseUrl()}apiga
 
 //课程管理设置（是否启用的设置）
 export const SetCourseDisable = (course_id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/${course_id}/setting`, params);
+
+
+//课程内容 批量讲义 排序
+export const handoutSort = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/course-api/course/handout/sort`, params);
