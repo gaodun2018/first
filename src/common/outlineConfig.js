@@ -100,7 +100,7 @@ export const resourceTableConfig = [{
             key: 'title',
             wh: '',
             sort: false,
-            label: '试卷名称',
+            label: '资源名称',
         }],
         inputPlaceholder: '请输入题库试卷ID / 名称',
         input: {}
@@ -125,7 +125,7 @@ export const resourceTableConfig = [{
             key: 'title',
             wh: '',
             sort: false,
-            label: '直播名称',
+            label: '资源名称',
         }],
         inputPlaceholder: '请输入直播ID / 名称',
         input: {}
