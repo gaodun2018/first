@@ -24,12 +24,12 @@
                         <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i">
                             <span v-if="item.key === 'index'">{{index + 1}}</span>
                             <template v-else-if="item.key === 'done'">
-                                <el-button size="small" type="text" @click="handleDelete(index, item)" style="margin: 0 10px">删除
+                                <el-button size="small" type="text" @click="handleDelete(index, ele)" style="margin: 0 10px">删除
                                 </el-button>
-                                <el-button size="small" type="text" @click="handleEdit(index, item)" style="margin: 0 10px">编辑
+                                <el-button size="small" type="text" @click="handleEdit(index, ele)" style="margin: 0 10px">编辑
                                 </el-button>
                             </template>
-                            <span class="beyond-hidden-2" v-else>{{ele[item.key]}}</span>
+                            <span class="table-item-text beyond-hidden-2" v-else>{{ele[item.key]}}</span>
                         </span>
                     </div>
                 </draggable>
@@ -119,16 +119,20 @@
         }
     }
     .table-line {
-        height: 56px;
+        // height: 56px;
         border-bottom: 1px solid #ebeef5;
         display: flex;
         justify-content: space-around;
         .table-item {
-            padding-top: 20px;
-            padding-bottom: 20px;
+            padding-top: 12px;
+            padding-bottom: 12px;
             box-sizing: border-box;
             font-size: 12px;
             line-height: 16px;
+            .table-item-text{
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
         }
         .border-r-n {
             border-right: none;
