@@ -22,7 +22,7 @@
                 <draggable v-model="handout" :options="{group:'people',animation:200,draggable:'.table-move'}" element="div" @end="dragEnd(handout)">
                     <div class="table-line table-line-bg table-move" v-for="(ele,index) in handout" :key="index">
                         <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i">
-                            <span v-if="item.key === 'index'">{{index + 1}}</span>
+                            <span class='table-item-text beyond-hidden-2' v-if="item.key === 'index'">{{index + 1}}</span>
                             <template v-else-if="item.key === 'done'">
                                 <el-button size="small" type="text" @click="handleDelete(index, ele)" style="margin: 0 10px">删除
                                 </el-button>
@@ -79,12 +79,11 @@
 <style lang="less" scoped>
 .scroll-table{
     width: 90%;
-
-    overflow-y: auto;
+    overflow-x: auto;
 }
 .table {
     // width: 100%;
-    //  min-width: 820px;
+     min-width: 820px;
     border: 1px solid #ebeef5;
     border-bottom: none;
     .center {
@@ -114,7 +113,6 @@
         .table-item {
             background-color: #f5f7fa;
             font-size: 14px;
-
             font-weight: 600;
         }
     }
@@ -130,8 +128,8 @@
             font-size: 12px;
             line-height: 16px;
             .table-item-text{
-                padding-top: 8px;
-                padding-bottom: 8px;
+                padding-top: 9px;
+                padding-bottom: 9px;
             }
         }
         .border-r-n {
