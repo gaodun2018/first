@@ -126,7 +126,7 @@
             </el-steps>
             <!-- 第一步 -->
             <el-form :model="addResFirFrom" ref="addResFirFrom" v-show="active == 0" @submit.native.prevent label-width="100px" class="demo-ruleForm">
-                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',max:20})">
+                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
                 </el-form-item>
                 <!--标签-->
