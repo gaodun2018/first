@@ -79,12 +79,11 @@
 <style lang="less" scoped>
 .scroll-table{
     width: 90%;
-
-    overflow-y: auto;
+    overflow-x: auto;
 }
 .table {
     // width: 100%;
-    //  min-width: 820px;
+    min-width: 820px;
     border: 1px solid #ebeef5;
     border-bottom: none;
     .center {
@@ -130,8 +129,8 @@
             font-size: 12px;
             line-height: 16px;
             .table-item-text{
-                padding-top: 8px;
-                padding-bottom: 8px;
+                padding-top: 9px;
+                padding-bottom: 9px;
             }
         }
         .border-r-n {
