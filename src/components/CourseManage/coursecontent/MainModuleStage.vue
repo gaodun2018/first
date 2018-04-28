@@ -210,6 +210,9 @@ export default {
             let syllabusRet = await this.$http.CourseSyllabus(syllabusParams);
             if (syllabusRet.status == 0) {
                 let outlineList = JSON.parse(JSON.stringify(this.outlineList));
+                if(!(outlineList instanceof Array)){
+                    outlineList = [];
+                }
                 outlineList.unshift(syllabusRet.result);
                 this.$store.dispatch('saveCourseSyllabuses', outlineList);   //更新大纲列表数据
                 let syllabus_id = syllabusRet.result.id; //大纲id
