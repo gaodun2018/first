@@ -239,12 +239,12 @@
 .ghostClass {
     opacity: 1;
 }
-.outlinebox {
-    .rulemodule {
-        .el-dialog__body {
-            .el-steps {
+.permission-outlinemodule {
+    .el-dialog__body {
+        .el-steps {
                 line-height: normal;
-            }
+        }
+        .rulemodule {
             // .el-select {
             //     .el-input{
             //         width: 120px;
