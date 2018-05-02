@@ -22,7 +22,7 @@
                 <draggable v-model="handout" :options="{group:'people',animation:200,draggable:'.table-move'}" element="div" @end="dragEnd(handout)">
                     <div class="table-line table-line-bg table-move" v-for="(ele,index) in handout" :key="index">
                         <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i">
-                            <span v-if="item.key === 'index'">{{index + 1}}</span>
+                            <span class='table-item-text beyond-hidden-2' v-if="item.key === 'index'">{{index + 1}}</span>
                             <template v-else-if="item.key === 'done'">
                                 <el-button size="small" type="text" @click="handleDelete(index, ele)" style="margin: 0 10px">删除
                                 </el-button>
@@ -113,7 +113,6 @@
         .table-item {
             background-color: #f5f7fa;
             font-size: 14px;
-
             font-weight: 600;
         }
     }

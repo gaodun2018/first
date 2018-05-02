@@ -34,12 +34,13 @@
                             </el-input>
                             <router-link class="routerBtn" v-if="unlocking('VIDEO_CREATE')" to="/resource/video/create">+&nbsp;新增视频
                             </router-link>
+                            <!-- <el-button type="primary" size="small" @click="bVisible = true">+&nbsp;批量导入视频资源
+                            </el-button> -->
                         </div>
                     </el-row>
                 </el-col>
             </el-row>
         </div>
-
         <div class="edu_table">
             <el-table ref="table" border v-loading="loading" :data="resource.resources" style="width: 100%">
 
@@ -70,14 +71,15 @@
                 </el-table-column>
             </el-table>
         </div>
-
         <el-row type="flex" align="center">
             <el-col :sm="24">
                 <el-pagination @size-change="didChangePageSize" @current-change="didChangePage" :page-sizes="[50, 200, 300, 400]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationTotal" style="text-align: center;">
                 </el-pagination>
             </el-col>
         </el-row>
-
+        <!-- <el-row>
+            <v-upload @handleCloesDialog="bVisible = false" :file-types="['zip','rar','js']" :title="'批量导入视频资源'" :b-visible="bVisible" :url-title="'视频导入Excel模板'" :url="'www'" :upload-url="'asas'"></v-upload>
+        </el-row> -->
     </div>
 </template>
 <style>
@@ -85,9 +87,12 @@
 </style>
 <script>
 import { number2DateTime } from "../../../util/util.js";
+import vUpload from '../../public/BatchFilesUpload.vue'
 
 export default {
-    components: {},
+    components: {
+        vUpload
+    },
     data() {
         return {
             radio: "全部",
@@ -107,7 +112,8 @@ export default {
             currentPage: 1,
             paginationTotal: 0,
             pageSize: 50,
-            loading: false
+            loading: false,
+            bVisible:false,//批量上传的显示隐藏
         };
     },
     methods: {
