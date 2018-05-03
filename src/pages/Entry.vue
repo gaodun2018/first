@@ -128,6 +128,9 @@ export default {
         checkToken(minute) {
             //minute=>分钟
             let Token = getCookie(SAAS_TOKEN);
+            if(!Token){
+                return true;
+            }
             let str_token = Token.split(".")[1];
             let obj_token = JSON.parse(Base64.decode(str_token));
             let exp = obj_token.exp; //过期时间
