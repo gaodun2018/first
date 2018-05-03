@@ -34,8 +34,8 @@
                             </el-input>
                             <router-link class="routerBtn" v-if="unlocking('VIDEO_CREATE')" to="/resource/video/create">+&nbsp;新增视频
                             </router-link>
-                            <el-button type="primary" size="small" @click="bVisible = true">+&nbsp;批量导入视频资源
-                            </el-button>
+                            <!-- <el-button type="primary" size="small" @click="bVisible = true">+&nbsp;批量导入视频资源
+                            </el-button> -->
                         </div>
                     </el-row>
                 </el-col>
@@ -77,9 +77,9 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
             <v-upload @handleCloesDialog="bVisible = false" :file-types="['zip','rar','js']" :title="'批量导入视频资源'" :b-visible="bVisible" :url-title="'视频导入Excel模板'" :url="'www'" :upload-url="'asas'"></v-upload>
-        </el-row>
+        </el-row> -->
     </div>
 </template>
 <style>

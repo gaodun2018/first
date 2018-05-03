@@ -83,7 +83,7 @@
 }
 .table {
     // width: 100%;
-     min-width: 820px;
+    min-width: 820px;
     border: 1px solid #ebeef5;
     border-bottom: none;
     .center {
