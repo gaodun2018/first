@@ -39,7 +39,6 @@
                         </div>
                     </draggable>
                 </template>
-
                 <template v-if="coursesylllevel == 4">
                     <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
@@ -49,7 +48,6 @@
                                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
                             </div>
-
                             <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                                     <div class="chaptit chapsecd">
@@ -58,7 +56,6 @@
                                         <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                                         <span class="chrgt1" @click="openChildDialog(secItem.id)">增加子目录</span>
                                     </div>
-
                                     <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                                         <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
                                             <div class="knowledge">
@@ -88,7 +85,6 @@
                         </div>
                     </draggable>
                 </template>
-
                 <template v-if="coursesylllevel == 2">
                     <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
@@ -117,9 +113,7 @@
                 </div>
             </div>
         </div>
-
         <!--弹层 -->
-
         <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
                 <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
@@ -129,22 +123,6 @@
                 <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                     <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
                 </el-form-item>
-                <!--标签-->
-                <!--<el-form-item label="性质标签" prop="region">
-                  <el-radio-group v-model="radio1">
-                    <el-radio :label="1">不显示标签</el-radio>
-                    <el-radio :label="2">必修</el-radio>
-                    <el-radio :label="3">选修</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="环节标签" prop="region">
-                  <el-radio-group v-model="radio2">
-                    <el-radio :label="4">不显示标签</el-radio>
-                    <el-radio :label="5">课前</el-radio>
-                    <el-radio :label="6">课中</el-radio>
-                    <el-radio :label="7">课后</el-radio>
-                  </el-radio-group>
-                </el-form-item>-->
                 <el-form-item class="coursebtn">
                     <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
                 </el-form-item>
@@ -163,34 +141,63 @@
             </el-form>
             <!-- 第三步 -->
             <div class="rulemodule" v-show="active == 2">
-                <el-input :placeholder="inputPlaceholder" size="small" v-model="resourceinput" @keydown.native.enter="handleIconClick">
-                    <!-- <el-select v-model="selectType" slot="prepend" placeholder="请选择">
-                        <el-option label="餐厅名" value="1"></el-option>
-                        <el-option label="订单号" value="2"></el-option>
-                        <el-option label="用户电话" value="3"></el-option>
-                    </el-select> -->
-                    <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
-                </el-input>
-                <el-table ref="singleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row @current-change="handleTableChange">
-                    <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
-                                <el-radio class="radio" v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
-                                <span>{{scope.row[item.key]}}</span>
-                            </template>
-                            <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
-                            <span v-else>{{scope.row[item.key]}}</span>
-                        </template>
-                    </el-table-column>
+                <el-form label-position='left' label-width="80px">
+                    <el-form-item label="来源">
+                        <el-radio-group v-model="sourceRadio">
+                            <el-radio :label="1">上传/创建</el-radio>
+                            <el-radio :label="2">资源库检索</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-form>
+                <!-- 讲义 -->
+                <el-row v-show="sourceRadio === 1 && selcurrent === 'lecture_note'">
+                    <el-form label-position='left' :model="handoutForm" ref="handoutForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                            <el-input v-model="handoutForm.title" placeholder="请填写讲义名称" auto-complete="off" class="w_50"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <!-- 视频 -->
+                <el-row v-show="sourceRadio === 1 && selcurrent === 'video'">
+                    <el-form :model="videoForm" ref="videoForm" label-width="120px" class="demo-ruleForm">
+                        <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                            <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off" class="w_50"></el-input>
+                        </el-form-item>
 
-                    <!--<el-table-column label="操作" width="120">-->
-                    <!--<template slot-scope="scope">-->
-                    <!--<span>查看</span>-->
-                    <!--</template>-->
-                    <!--</el-table-column>-->
-                </el-table>
-                <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
-                </el-pagination>
+                        <el-form-item label="视频地址" prop="video_id" :rules="filter_rules({required:true,type:'isVideoId'})">
+                            <el-input v-model="videoForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_60"></el-input>
+                            <!--<span class="gray_12">asdasdasd</span>-->
+                            <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
+                        </el-form-item>
+                        <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
+                            <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                            分
+                        </el-form-item>
+                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
+                            <el-input v-model.number="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+                            秒
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <el-row v-show="sourceRadio === 2">
+                    <el-input :placeholder="inputPlaceholder" size="small" v-model="resourceinput" @keydown.native.enter="handleIconClick">
+                        <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
+                    </el-input>
+                    <el-table ref="singleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row @current-change="handleTableChange">
+                        <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
+                                    <el-radio class="radio" v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
+                                    <span>{{scope.row[item.key]}}</span>
+                                </template>
+                                <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
+                                <span v-else>{{scope.row[item.key]}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
+                    </el-pagination>
+                </el-row>
                 <div class="coursebtn" style="padding-top: 0;margin-top: 40px;">
                     <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
                     <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
@@ -242,7 +249,7 @@
 .permission-outlinemodule {
     .el-dialog__body {
         .el-steps {
-                line-height: normal;
+            line-height: normal;
         }
         .rulemodule {
             // .el-select {
@@ -316,7 +323,23 @@ export default {
             resLoading: false, //loading
             resourceinput: "", //根据id或者名称搜索
             searchResourceTimer: "", //搜索资源演示器
-            sortOptions: "" //排序参数
+            sortOptions: "", //排序参数
+            sourceRadio: 1, //资源选择的来源
+            handoutForm: {
+                project_id: "",
+                subject_id: "",
+                title: "",
+                fileName: "",
+                path: "",
+            },
+            videoForm: {
+                title: "",
+                project_id: "",
+                subject_id: "",
+                video_id: "",
+                duration_minutes: "",
+                duration_second: 0,
+            },
         };
     },
     methods: {
