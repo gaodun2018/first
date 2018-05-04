@@ -31,7 +31,7 @@
             <a :href="downloadUrl" download='download' class="mould-download-btn" v-if="urlTitle && downloadUrl">{{urlTitle}}</a>
         </el-row>
         <el-row class="upload-tips">
-            <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。<br>请将.excel文件转程.csv文件上传</span>
+            <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。</span>
         </el-row>
     </el-dialog>
 </template>
