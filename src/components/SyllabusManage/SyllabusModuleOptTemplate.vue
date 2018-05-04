@@ -40,7 +40,7 @@
         :name="'import_from'"
         @uploadSuccessCallback="uploadSuccessCallback"
         @handleCloesDialog="uploaddialogVisible = false"
-        :fileTypes="['csv']"
+        :fileTypes="['csv','xls','xlsx']"
     ></v-upload>
   </div>
 </template>
