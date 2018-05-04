@@ -4,7 +4,7 @@
       课程大纲：{{title}}
       <!--<span class="eaticon"></span>-->
       <!--<span class="cloneoutline" @click="clonedialogVisible = true">克隆旧课程大纲</span>-->
-      <!-- <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span> -->
+      <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>
     </div>
     <div class="outlinebox">
       <div class="outlinetit">请先为该课程大纲选择合适的结构模板</div>
