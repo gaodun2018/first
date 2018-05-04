@@ -3,14 +3,8 @@ export const initial_info = '<span style="color:#97a8be;">请输入课程简介�
 
 //网课类型
 export const course_type = [{
-    course_type_id: '0',
-    name: '普通网课',
-}, {
-    course_type_id: '1',
-    name: '任务制网课（选择考试时间）',
-}, {
-    course_type_id: '2',
-    name: '任务制网课（选择自主学习时间）',
+    course_type_id: '10',
+    name: '网课2.0',
 }, {
     course_type_id: '3',
     name: '自适应学习网课-EP',
@@ -24,14 +18,8 @@ export const options = [{
     value: '',
     label: '全部课程类型'
 }, {
-    value: '0',
-    label: '普通网课',
-}, {
-    value: '1',
-    label: '任务制网课（选择考试时间）',
-}, {
-    value: '2',
-    label: '任务制网课（选择自主学习时间）',
+    value: '10',
+    label: '网课2.0',
 }, {
     value: '3',
     label: '自适应学习网课-EP',
