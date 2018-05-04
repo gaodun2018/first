@@ -1,5 +1,5 @@
-// import promise from 'es6-promise';
-// promise.polyfill();
+import promise from 'es6-promise';
+promise.polyfill();
 import Vue from 'vue';
 if (process.env.NODE_ENV === 'development') {
     // require('element-ui/lib/theme-chalk/index.css')

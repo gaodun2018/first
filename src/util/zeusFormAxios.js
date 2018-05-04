@@ -19,15 +19,21 @@ var instance = axios.create({
 
 instance.interceptors.request.use(function(config) {
     let token = getCookie(SAAS_TOKEN);
-    // 非登录接口
-    if (config.url.indexOf('login') === -1 && token == undefined) {
-        localStorage.clear();
-        location.href = loginPage;
-        return;
+
+    // 登录接口直接返回
+    if (config.url.indexOf('login') !== -1) {
+        return Promise.resolve(config);
     }
-    // 非登录接口携带token
-    if (config.url.indexOf('login') === -1) {
+
+    // 换取token接口直接返回验证
+    if (config.url.indexOf('refreshtoken') !== -1) {
+        return Promise.resolve(config);
+    }
+
+    // 非登录接口 & 非换取token接口 携带token
+    if (config.url.indexOf('login') === -1 && config.url.indexOf('refreshtoken') === -1 && token != undefined) {
         config.headers.common['Authentication'] = `Basic ${token}`;
+        return Promise.resolve(config);
     }
 
     return Promise.resolve(config);
@@ -40,12 +46,18 @@ instance.interceptors.response.use(function(response) {
     if (response.config.url.indexOf('login') !== -1) {
         return Promise.resolve(response);
     }
+    // 获取token不校验，直接返回
+    if (response.config.url.indexOf('refreshtoken') !== -1) {
+        return Promise.resolve(response.data);
+    }
+
     // 登录失效 553649410～553649444
     if (response.data.status > 553649000 && response.data.status < 563649999) {
         localStorage.clear();
         location.href = loginPage;
-        return;
+        return Promise.resolve(response.data);
     }
+
     return Promise.resolve(response.data);
 }, function(error) {
     return Promise.reject(error);
