@@ -114,7 +114,7 @@
             </div>
         </div>
         <!--弹层 -->
-        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
+        <el-dialog title="选择学习资源" width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
                 <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
             </el-steps>
@@ -130,7 +130,7 @@
             <!-- 第二步 -->
             <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm">
                 <div class="selectmodel">
-                    <span :class="[selcurrent == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
+                    <span :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
                         {{item.label}}
                     </span>
                 </div>
@@ -141,7 +141,7 @@
             </el-form>
             <!-- 第三步 -->
             <div class="rulemodule" v-show="active == 2">
-                <el-form label-position='left' label-width="80px">
+                <el-form label-position='left' label-width="80px" v-show="resourceType === 'video' || resourceType === 'lecture_note'">
                     <el-form-item label="来源">
                         <el-radio-group v-model="sourceRadio">
                             <el-radio :label="1">上传/创建</el-radio>
@@ -150,7 +150,7 @@
                     </el-form-item>
                 </el-form>
                 <!-- 讲义 -->
-                <el-row v-show="sourceRadio === 1 && selcurrent === 'lecture_note'">
+                <el-row v-show="sourceRadio === 1 && resourceType === 'lecture_note'">
                     <el-form label-position='left' :model="handoutForm" ref="handoutForm" label-width="100px" class="demo-ruleForm">
                         <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                             <el-input v-model="handoutForm.title" placeholder="请填写讲义名称" auto-complete="off" class="w_50"></el-input>
@@ -158,8 +158,8 @@
                     </el-form>
                 </el-row>
                 <!-- 视频 -->
-                <el-row v-show="sourceRadio === 1 && selcurrent === 'video'">
-                    <el-form :model="videoForm" ref="videoForm" label-width="120px" class="demo-ruleForm">
+                <el-row v-show="sourceRadio === 1 && resourceType === 'video'">
+                    <el-form :model="videoForm" label-position='left' ref="videoForm" label-width="120px" class="demo-ruleForm">
                         <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
                             <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off" class="w_50"></el-input>
                         </el-form-item>
@@ -257,9 +257,12 @@
             //         width: 120px;
             //     }
             // }
-            .el-radio .el-radio__label {
-                display: none;
+            .el-table{
+                .el-radio .el-radio__label {
+                    display: none;
+                }
             }
+
         }
     }
 }
@@ -306,7 +309,7 @@ export default {
             Moduledialog: true, //增加子目录的弹层的标题
             bigdislog: false,
             deleteModule: true,
-            selcurrent: "video",
+            resourceType: "video",
             inputPlaceholder: "请输入视频资源ID / 名称",
             refname: "",
             coursesylllevel: "",
@@ -326,16 +329,16 @@ export default {
             sortOptions: "", //排序参数
             sourceRadio: 1, //资源选择的来源
             handoutForm: {
-                project_id: "",
-                subject_id: "",
+                project_id: '',
+                subject_id: '',
                 title: "",
                 fileName: "",
                 path: "",
             },
             videoForm: {
                 title: "",
-                project_id: "",
-                subject_id: "",
+                project_id: '',
+                subject_id: '',
                 video_id: "",
                 duration_minutes: "",
                 duration_second: 0,
@@ -347,7 +350,7 @@ export default {
             this.resourceRadio = String(val.id);
         },
         selectclk(discriminator) {
-            this.selcurrent = discriminator;
+            this.resourceType = discriminator;
         },
         //关闭新增资源的弹层
         closeDialog(formName) {
@@ -379,18 +382,19 @@ export default {
         },
         //第二步往下一步
         async secondSubmit() {
-            if (!this.selcurrent) {
+            if (!this.resourceType) {
                 this.$message.warning("请选择资源类型！");
                 return;
             }
             if (this.active >= this.progressText.length - 1) return;
             resourceTableConfig.forEach(ele => {
-                if (ele.discriminator == this.selcurrent) {
+                if (ele.discriminator == this.resourceType) {
                     this.resourceTableConfig = ele.table;
                     this.inputPlaceholder = ele.inputPlaceholder;
                 }
             });
             this.active++;
+            this.sourceRadio = 2;
             this.resourceinput = ""; //输入框搜索初始化
             this.resourceTable = []; //初始化资源列表
             if (this.pagination.current_page != 1) {
@@ -419,7 +423,7 @@ export default {
             this.searchResourceTimer = setTimeout(async () => {
                 clearTimeout(this.searchResourceTimer);
                 let params = {
-                    discriminator: this.selcurrent,
+                    discriminator: this.resourceType,
                     page_size: 50,
                     page: val ? val : 1,
                     "order_by[]": "desc", //顺序   倒序
@@ -428,7 +432,7 @@ export default {
                     // subject_id: this.subject_id,
                 };
                 let resourceinput = this.resourceinput.trim();
-                switch (this.selcurrent) {
+                switch (this.resourceType) {
                     case "legacy_live":
                         if (isNumber(resourceinput)) {
                             params.legacy_live_id = resourceinput;
@@ -464,30 +468,51 @@ export default {
         },
         //新增大纲资源
         async addSyllabusResource() {
-            if (!this.resourceRadio) {
-                this.$message.error("请选择资源");
-                return;
-            }
-            //先查询时候挂载了该资源
-            this.btnLoading = true;
-            let res = await this.$http.checkResIsInOutline(
-                this.coursesyllid,
-                this.resourceRadio
-            );
-            if (res.status == 0) {
-                if (res.result.length > 0) {
-                    this.resourceRadio = "";
-                    this.$message({
-                        type: "error",
-                        message: "该资源已经挂载在这个大纲上！"
-                    });
+            if(this.sourceRadio === 2){
+                // 资源库检索流程
+                if (!this.resourceRadio) {
+                    this.$message.error("请选择资源");
+                    return;
+                }
+                //先查询时候挂载了该资源
+                this.btnLoading = true;
+                let res = await this.$http.checkResIsInOutline(
+                    this.coursesyllid,
+                    this.resourceRadio
+                );
+                if (res.status == 0) {
+                    if (res.result.length > 0) {
+                        this.resourceRadio = "";
+                        this.$message({
+                            type: "error",
+                            message: "该资源已经挂载在这个大纲上！"
+                        });
+                        this.btnLoading = false;
+                        return;
+                    }
+                } else {
                     this.btnLoading = false;
                     return;
                 }
-            } else {
-                this.btnLoading = false;
-                return;
+            }else if(this.sourceRadio === 1){
+                // 走上传创建流程
+                switch (this.resourceType) {
+                    case 'lecture_note':
+
+                        break;
+                    case 'video':
+                        console.log('video - 1 liucheng');
+                         this.$refs['videoForm'].validate(valid => {
+                            if (valid) {
+                                this.createVideoResource();
+                            } else {
+                                console.log("error submit!!");
+                            }
+                        });
+                        break;
+                }
             }
+            return;
             //先走新增资源名字
             let ret = await this.$http.CourseSyllabusItem({
                 name: this.addResFirFrom.name,
@@ -580,7 +605,7 @@ export default {
             this.resourceRadio = item.resource && String(item.resource.id);
             this.nativeResourceRadio =
                 item.resource && String(item.resource.id); //原来的选项
-            this.selcurrent = item.resource && item.resource.discriminator;
+            this.resourceType = item.resource && item.resource.discriminator;
             this.dialogFormVisible = true;
             this.resourceAction = "update";
         },
@@ -764,7 +789,78 @@ export default {
                     course_syllabus_id: this.coursesyllid //大纲id
                 }
             };
-        }
+        },
+        //秒数输入框change事件
+        handleInputChange(val){
+            if(val == ''){
+                this.ruleForm.duration_second = 0;
+            }
+        },
+        //解析视频地址获得视频id
+        async getVideoPath() {
+            let url = getSrcStr(this.videoForm.video_id);
+            let params = {
+                url: url
+            };
+            let ret = await this.$http.getVideoPath(params);
+            return ret;
+        },
+        //新增视频
+        async createVideoResource() {
+            let pathRet = await this.getVideoPath();
+            let video_id = "";
+            if (pathRet.status == 0) {
+                if (!pathRet.result.video_id) {
+                    return this.$message({
+                        type: "warning",
+                        message: "视频地址解析失败！"
+                    });
+                }
+                video_id = pathRet.result.video_id;
+            } else if (pathRet.status == 1) {
+                //为1时使用用户输入的地址
+                video_id = this.videoForm.video_id;
+            } else {
+                return this.$message({
+                    type: "warning",
+                    message: "视频地址解析失败！"
+                });
+            }
+            let params = {
+                title: this.videoForm.title,
+                tag_id:
+                    this.ruleForm.subject == "0"
+                        ? this.ruleForm.project
+                        : this.ruleForm.subject,
+                // duration: `${this.ruleForm.duration_minutes}:${this.ruleForm.duration_second}`,
+                duration_minutes: this.ruleForm.duration_minutes,
+                duration_seconds: this.ruleForm.duration_second
+                    ? this.ruleForm.duration_second
+                    : 0,
+                video_id: video_id
+            };
+            this.loading = true;
+            let createResponse = await this.$http.storeResource(params);
+            this.loading = false;
+            if (createResponse.status == 0) {
+                this.$message({
+                    message: "保存成功",
+                    type: "success"
+                });
+                setTimeout(() => {
+                    this.$router.push({
+                        path: "/resource/video/list"
+                    });
+                }, 1000);
+                // this.resetForm('ruleForm');
+            } else {
+                this.$message({
+                    message: "保存失败",
+                    type: "error"
+                });
+            }
+        },
+
     },
     computed: {},
     mounted() {},
