@@ -330,8 +330,8 @@ export default {
         //     this.projectlist = ret.result;
         // },
         previewCourse(row){
-            console.log(row)
             let GDSID = getCookie(`${getEnv()}GDSID`)
+            console.log(GDSID, 'gdsid')
             this.$http.previewCourse({session_id: GDSID})
             .then(res => {
                 console.log(res)
