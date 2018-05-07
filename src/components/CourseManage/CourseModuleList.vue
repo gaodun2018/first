@@ -51,7 +51,7 @@
                 </el-table-column>
                 <el-table-column prop="course_name" label="课程名称" min-width="260">
                 </el-table-column>
-                <el-table-column prop="" label="项目" min-width="200">
+                <el-table-column prop="" label="项目" min-width="170">
                     <template slot-scope="scope">
                         <span>{{scope.row.project&&scope.row.project.project_name}}</span>
                     </template>
@@ -71,12 +71,13 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column fixed="right" label="操作" width="200" align="center">
+                <el-table-column fixed="right" label="操作" width="250" align="center">
                     <template slot-scope="scope">
                         <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')" class="routerBtn" :to="'/course/manage/basic/set/'+scope.row.course_id">基本设置
                         </router-link>
                         <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')" class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
                         </router-link>
+                        <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -138,8 +139,11 @@
 }
 </style>
 <script>
+import { getCookie } from '../../util/cookie.js'
 import { options } from "../../common/courseConfig.js";
+import {getEnv} from '../../util/config'
 import { mapState } from "vuex";
+let prefix = getEnv()
 export default {
     data() {
         return {
@@ -188,7 +192,7 @@ export default {
             eduTotal: 0, //总数
             currentPage: 1, //默认当前页
             pageSize: 15 //默认分页数量
-        };
+        }
     },
     computed: {
         ...mapState({
@@ -320,15 +324,24 @@ export default {
             console.log(page);
             this.currentPage = page;
             this.searchCourse();
-        }
+        },
         // async getProjectSubject() {
         //     let ret = await this.$http.getProjectSubject();
         //     this.projectlist = ret.result;
-        // }
+        // },
+        previewCourse(row){
+            console.log(row)
+            let GDSID = getCookie(`${getEnv()}GDSID`)
+            this.$http.previewCourse({session_id: GDSID})
+            .then(res => {
+                console.log(res)
+            })
+        }
     },
     mounted() {
-        this.$store.dispatch("getProjectSubjectList");
+        this.$store.dispatch("getProjectSubjectList")
         this.searchCourse();
+        console.log(this.decrypt('WGdlVwN5ZVwMZnEaXUhcXkxF'), '122222')
     },
     created() {}
 };
