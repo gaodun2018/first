@@ -57,4 +57,4 @@ export const SetCourseDisable = (course_id, params) => formPut(`${getBaseUrl()}a
 export const handoutSort = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/course-api/course/handout/sort`, params);
 
 // 预览课程
-export const previewCourse = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/user`, params);
+export const previewCourse = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/user/verify`, params);
