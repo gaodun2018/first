@@ -139,6 +139,8 @@
 }
 </style>
 <script>
+import { Base64 } from 'js-base64'
+import md5 from 'md5'
 import { getCookie } from '../../util/cookie.js'
 import { options } from "../../common/courseConfig.js";
 import {getEnv} from '../../util/config'
@@ -191,7 +193,8 @@ export default {
             videoList: [],
             eduTotal: 0, //总数
             currentPage: 1, //默认当前页
-            pageSize: 15 //默认分页数量
+            pageSize: 15, //默认分页数量,
+            authCodeKey: 'iTSe2NQd9PG6lzojysC48BHuXgvIcAqw'
         }
     },
     computed: {
@@ -331,17 +334,63 @@ export default {
         // },
         previewCourse(row){
             let GDSID = getCookie(`${getEnv()}GDSID`)
-            console.log(GDSID, 'gdsid')
-            this.$http.previewCourse({session_id: GDSID})
+            this.$http.previewCourse({session_id: GDSID, course_id : row.course_id})
             .then(res => {
                 console.log(res)
             })
+        },
+                    //加密
+        encrypt($data){
+            let $key = this.authCodeKey;
+            $key = md5($key);
+            let $char = ''
+            let $x = 0;
+            let $len = $data.length
+            let $l = $key.length
+            let $str
+            for (let $i = 0; $i < $len; $i++) {
+                if ($x == $l) {
+                    $x = 0;
+                }
+                $char += $key.charAt($x)
+                $x++;
+            }
+            for (let $i = 0; $i < $len; $i++) {
+                $str += String.fromCharCode($data.charAt($i).charCodeAt() + ($char.charAt($i).charCodeAt()) % 256);
+            }
+            return Base64.encodeURI($str);
+        },
+
+    //解密
+        decrypt($data){
+            let $key = this.authCodeKey;
+            $key = md5($key);
+            let $x = 0;
+            $data = Base64.decode($data);
+            let $len = $data.length;
+            let $l = $key.length
+            let $char = ''
+            let $str = ''
+            for (let $i = 0; $i < $len; $i++) {
+                if ($x == $l) {
+                    $x = 0;
+                }
+                $char += $key.substring($x, 1)
+                $x++;
+            }
+            for (let $i = 0; $i < $len; $i++) {
+                if ($data.substring($i, 1).charCodeAt() < $char.substring($i, 1).charCodeAt()) {
+                    $str += String.fromCharCode(($data.substring($i, 1).charCodeAt() + 256) - $char.substring($i, 1).charCodeAt())
+                } else {
+                    $str += String.fromCharCode($data.substring($i, 1).charCodeAt() - $char.substring($i, 1).charCodeAt());
+                }
+            }
+            return $str;
         }
     },
     mounted() {
         this.$store.dispatch("getProjectSubjectList")
-        this.searchCourse();
-        console.log(this.decrypt('WGdlVwN5ZVwMZnEaXUhcXkxF'), '122222')
+        this.searchCourse()
     },
     created() {}
 };
