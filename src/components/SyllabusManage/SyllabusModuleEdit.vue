@@ -169,11 +169,11 @@
                             <!--<span class="gray_12">asdasdasd</span>-->
                             <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                         </el-form-item>
-                        <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
+                        <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: ['change','blur']}]">
                             <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                             分
                         </el-form-item>
-                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
+                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: ['change','blur']}]">
                             <el-input v-model.number="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                             秒
                         </el-form-item>
@@ -385,6 +385,10 @@ export default {
             if (!this.resourceType) {
                 this.$message.warning("请选择资源类型！");
                 return;
+            }else if(this.resourceType === 'lecture_note'){
+                this.resetForm('handoutForm');   //重置表单
+            }else if(this.resourceType === 'video'){
+                this.resetForm('videoForm');   //重置表单
             }
             if (this.active >= this.progressText.length - 1) return;
             resourceTableConfig.forEach(ele => {
@@ -860,7 +864,10 @@ export default {
                 });
             }
         },
-
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        }
     },
     computed: {},
     mounted() {},
