@@ -63,11 +63,10 @@
                 </el-table-column>
                 <el-table-column prop="course_type" label="网课类型" min-width="260">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.course_type==0">普通网课</span>
-                        <span v-if="scope.row.course_type==1">任务制网课（选择考试时间）</span>
-                        <span v-if="scope.row.course_type==2">任务制网课（选择自主学习时间）</span>
-                        <span v-if="scope.row.course_type==3">自适应学习网课-EP</span>
-                        <span v-if="scope.row.course_type==4">私播课-Glive+</span>
+                        <span v-if="scope.row.course_type==10">网课2.0</span>
+                        <span v-else-if="scope.row.course_type==3">自适应学习网课-EP</span>
+                        <span v-else-if="scope.row.course_type==4">私播课-Glive+</span>
+                        <span v-else>{{scope.row.course_type}}</span>
                     </template>
                 </el-table-column>
 
@@ -142,8 +141,6 @@
 }
 </style>
 <script>
-import { Base64 } from 'js-base64'
-import md5 from 'md5'
 import { SAAS_TOKEN } from "../../util/keys";
 import {setToken} from './../../util/setToken'
 import { getCookie, setCookie } from '../../util/cookie.js'
@@ -162,16 +159,8 @@ export default {
             bSubject: false, //是否可以选择科目
             course_type: [
                 {
-                    course_type_id: "0",
-                    name: "普通网课"
-                },
-                {
-                    course_type_id: "1",
-                    name: "任务制网课（选择考试时间）"
-                },
-                {
-                    course_type_id: "2",
-                    name: "任务制网课（选择自主学习时间）"
+                    course_type_id: "10",
+                    name: "网课2.0"
                 },
                 {
                     course_type_id: "3",
