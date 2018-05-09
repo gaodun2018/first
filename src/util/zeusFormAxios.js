@@ -24,10 +24,7 @@ instance.interceptors.request.use(function(config) {
     if (config.url.indexOf('login') !== -1) {
         return Promise.resolve(config);
     }
-    // 预览
-    if (response.config.url.indexOf('user/verify') !== -1) {
-      return Promise.resolve(response);
-    }
+
     // 换取token接口直接返回验证
     if (config.url.indexOf('refreshtoken') !== -1) {
         return Promise.resolve(config);
@@ -48,6 +45,11 @@ instance.interceptors.response.use(function(response) {
     //登陆接口直接返回response (需要headers头信息)
     if (response.config.url.indexOf('login') !== -1) {
         return Promise.resolve(response);
+    }
+
+    // 预览
+    if (response.config.url.indexOf('user/verify') !== -1) {
+      return Promise.resolve(response);
     }
     // 获取token不校验，直接返回
     if (response.config.url.indexOf('refreshtoken') !== -1) {
