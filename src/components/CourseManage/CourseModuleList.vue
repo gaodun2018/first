@@ -330,9 +330,10 @@ export default {
             let GDSID = getCookie(`${getEnv()}GDSID`)
             this.$http.previewCourse({session_id: GDSID, course_id : row.course_id})
             .then(res => {
+              setToken('Identification', res.headers.identification, '.gaodun.com')
               setToken('Accesstoken', res.headers.accesstoken, '.gaodun.com')
               setToken('Refreshtoken', res.headers.refreshtoken, '.gaodun.com')
-              window.open(res.data.result.call_back)
+                window.open(res.data.result.call_back)
             })
         }
     },

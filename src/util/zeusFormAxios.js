@@ -24,10 +24,7 @@ instance.interceptors.request.use(function(config) {
     if (config.url.indexOf('login') !== -1) {
         return Promise.resolve(config);
     }
-    // 预览
-    if (response.config.url.indexOf('user/verify') !== -1) {
-      return Promise.resolve(response);
-    }
+
     // 换取token接口直接返回验证
     if (config.url.indexOf('refreshtoken') !== -1) {
         return Promise.resolve(config);
@@ -53,7 +50,10 @@ instance.interceptors.response.use(function(response) {
     if (response.config.url.indexOf('refreshtoken') !== -1) {
         return Promise.resolve(response.data);
     }
-
+    // 预览
+    if (response.config.url.indexOf('user/verify') !== -1) {
+        return Promise.resolve(response);
+      }
     // 登录失效 553649410～553649444
     if (response.data.status > 553649000 && response.data.status < 563649999) {
         localStorage.clear();
