@@ -20,6 +20,7 @@
     "element-ui": "2.3.4",
     "es6-promise": "^4.2.4",
     "js-base64": "^2.4.3",
+    "md5": "^2.2.1",
     "normalize.css": "^8.0.0",
     "qs": "^6.5.1",
     "raven-js": "^3.24.1",
