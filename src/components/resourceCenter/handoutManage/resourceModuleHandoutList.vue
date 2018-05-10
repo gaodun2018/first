@@ -31,6 +31,10 @@
                             </el-input>
                             <router-link class="routerBtn" to="/resource/handout/create" v-if="unlocking('HANDOUT_CREATE')">+&nbsp;新增讲义
                             </router-link>
+                            <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
+                                <i class="el-icon-question"></i>
+                                使用帮助
+                            </a>
                         </div>
                     </el-row>
                 </el-col>
@@ -87,10 +91,12 @@ import {
     getTags
 } from "../../../api/resource";
 import { number2DateTime } from "../../../util/util.js";
+import {getDocumentUrl} from '../../../util/config.js'
 
 export default {
     data() {
         return {
+            docUrl:getDocumentUrl,
             radio: "全部",
             radio2: "全部",
             keywords: "",

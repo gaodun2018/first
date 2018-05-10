@@ -40,6 +40,10 @@
                             </el-input>
                             <el-button type="primary" size="small" @click="dialogCourseVisible = true" v-if="unlocking('COURSE_CREATE')">+&nbsp;新增一个课程
                             </el-button>
+                            <a class='docBtn' :href="`${docUrl}#/createCourse`" target="_blank">
+                                <i class="el-icon-question"></i>
+                                使用帮助
+                            </a>
                         </div>
                     </el-row>
                 </el-col>
@@ -139,6 +143,7 @@
 <script>
 import { options } from "../../common/courseConfig.js";
 import { mapState } from "vuex";
+import {getDocumentUrl} from '../../util/config.js'
 export default {
     data() {
         return {
@@ -178,7 +183,8 @@ export default {
             videoList: [],
             eduTotal: 0, //总数
             currentPage: 1, //默认当前页
-            pageSize: 15 //默认分页数量
+            pageSize: 15, //默认分页数量
+            docUrl:getDocumentUrl,
         };
     },
     computed: {
