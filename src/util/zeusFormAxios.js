@@ -46,6 +46,11 @@ instance.interceptors.response.use(function(response) {
     if (response.config.url.indexOf('login') !== -1) {
         return Promise.resolve(response);
     }
+
+    // 预览
+    if (response.config.url.indexOf('user/verify') !== -1) {
+      return Promise.resolve(response);
+    }
     // 获取token不校验，直接返回
     if (response.config.url.indexOf('refreshtoken') !== -1) {
         return Promise.resolve(response.data);
