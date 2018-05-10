@@ -27,9 +27,21 @@
         <div class="contentHome">
             <transition name="fade" mode="out-in" appear>
                 <ul class="console-menu clear">
-                    <li class="console-menu-items" v-for="item in menu" :key="item.NavigationId" @click="clickRouter(item)">
-                        <span class="item-icon" :id="item.Iconurl"></span>
-                        <span class="item-title">{{item.Title}}</span>
+                    <li class="console-menu-items" v-for="item in menu" :key="item.NavigationId">
+                        <template v-if="item.Path === '180302'">
+                            <a :href="item.Url" target="_blank" style="display:block;">
+                                <span class="item-icon" :id="item.Iconurl"></span>
+                                <span class="item-title">{{item.Title}}</span>
+                            </a>
+                        </template>
+                        <template v-else>
+                            <div class="console-menu-items-wrapper" @click="clickRouter(item)">
+                                <span class="item-icon" :id="item.Iconurl"></span>
+                                <span class="item-title">{{item.Title}}</span>
+                            </div>
+
+                        </template>
+
                         <!--<span class="item-sub-title">Custom Relation Management</span>-->
                     </li>
                 </ul>
