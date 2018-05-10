@@ -76,7 +76,7 @@
                         </router-link>
                         <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')" class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
                         </router-link>
-                        <el-tooltip class="item" effect="dark" placement="top-end">
+                        <el-tooltip class="item" effect="dark" placement="top-end" :disabled="isTooldisabled">
                           <div slot="content">如果没有打开预览页面<br/>请注意浏览器右上角，允许弹框！</div>
                           <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
                         </el-tooltip>
@@ -118,7 +118,6 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-
     </div>
 </template>
 <style>
@@ -196,7 +195,11 @@ export default {
             projectlist: state => {
                 return state.common.project_subject_list;
             }
-        })
+        }),
+        isTooldisabled() {
+            return getCookie(`Identification`) ? true : false
+        }
+
     },
     methods: {
         async searchCourse() {
