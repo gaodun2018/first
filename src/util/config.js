@@ -38,6 +38,12 @@ export const getBaseUrl = () => {
     }
 
 }
+export const getDocumentUrl = (
+    () => {
+        let prev = getEnv();
+        return `//${prev}cloud.gaodun.com/document/`;
+    }
+)();
 export const setWindowNBID = (menu, path) => {
     for (var i in menu) {
         if (menu[i].Url == path) {
