@@ -40,6 +40,10 @@
                             </el-input>
                             <el-button type="primary" size="small" @click="dialogCourseVisible = true" v-if="unlocking('COURSE_CREATE')">+&nbsp;新增一个课程
                             </el-button>
+                            <a class='docBtn' :href="`${docUrl}#/createCourse`" target="_blank">
+                                <i class="el-icon-question"></i>
+                                使用帮助
+                            </a>
                         </div>
                     </el-row>
                 </el-col>
@@ -51,7 +55,7 @@
                 </el-table-column>
                 <el-table-column prop="course_name" label="课程名称" min-width="260">
                 </el-table-column>
-                <el-table-column prop="" label="项目" min-width="200">
+                <el-table-column prop="" label="项目" min-width="170">
                     <template slot-scope="scope">
                         <span>{{scope.row.project&&scope.row.project.project_name}}</span>
                     </template>
@@ -70,12 +74,16 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column fixed="right" label="操作" width="200" align="center">
+                <el-table-column fixed="right" label="操作" width="250" align="center">
                     <template slot-scope="scope">
                         <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')" class="routerBtn" :to="'/course/manage/basic/set/'+scope.row.course_id">基本设置
                         </router-link>
                         <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')" class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
                         </router-link>
+                        <el-tooltip class="item" effect="dark" placement="top-end" :disabled="isTooldisabled">
+                          <div slot="content">如果没有打开预览页面<br/>请注意浏览器右上角，允许弹框！</div>
+                          <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -114,7 +122,6 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-
     </div>
 </template>
 <style>
@@ -137,8 +144,13 @@
 }
 </style>
 <script>
+import { SAAS_TOKEN } from "../../util/keys";
+import {setToken} from './../../util/setToken'
+import { getCookie, setCookie } from '../../util/cookie.js'
 import { options } from "../../common/courseConfig.js";
+import {getEnv, getBaseUrl,getDocumentUrl} from '../../util/config'
 import { mapState } from "vuex";
+let prefix = getEnv()
 export default {
     data() {
         return {
@@ -178,7 +190,9 @@ export default {
             videoList: [],
             eduTotal: 0, //总数
             currentPage: 1, //默认当前页
-            pageSize: 15 //默认分页数量
+            pageSize: 15, //默认分页数量
+            docUrl:getDocumentUrl,
+            authCodeKey: 'iTSe2NQd9PG6lzojysC48BHuXgvIcAqw'
         };
     },
     computed: {
@@ -186,7 +200,11 @@ export default {
             projectlist: state => {
                 return state.common.project_subject_list;
             }
-        })
+        }),
+        isTooldisabled() {
+            return getCookie(`Identification`) ? true : false
+        }
+
     },
     methods: {
         async searchCourse() {
@@ -311,16 +329,25 @@ export default {
             console.log(page);
             this.currentPage = page;
             this.searchCourse();
-        }
+        },
         // async getProjectSubject() {
         //     let ret = await this.$http.getProjectSubject();
         //     this.projectlist = ret.result;
-        // }
+        // },
+        previewCourse(row){
+            let GDSID = getCookie(`${getEnv()}GDSID`)
+            this.$http.previewCourse({session_id: GDSID, course_id : row.course_id})
+            .then(res => {
+              setToken('Identification', res.headers.identification, '.gaodun.com')
+              setToken('Accesstoken', res.headers.accesstoken, '.gaodun.com')
+              setToken('Refreshtoken', res.headers.refreshtoken, '.gaodun.com')
+                window.open(res.data.result.call_back)
+            })
+        }
     },
     mounted() {
-        this.$store.dispatch("getProjectSubjectList");
-        this.searchCourse();
-    },
-    created() {}
-};
+        this.$store.dispatch("getProjectSubjectList")
+        this.searchCourse()
+    }
+}
 </script>

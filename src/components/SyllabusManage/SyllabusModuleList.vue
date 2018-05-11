@@ -35,6 +35,10 @@
                                 <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
                             </el-input>
                             <el-button type="primary" size="small" @click="addCourseOutline" v-if="unlocking('SY_CREATE')">+&nbsp;新建一个课程大纲</el-button>
+                            <a class='docBtn' :href="`${docUrl}#/outlineCourse`" target="_blank">
+                                <i class="el-icon-question"></i>
+                                使用帮助
+                            </a>
                         </div>
                     </el-row>
                 </el-col>
@@ -110,9 +114,12 @@
 </style>
 <script>
 import { mapState } from "vuex";
+import {getDocumentUrl} from '../../util/config.js'
+
 export default {
     data() {
         return {
+            docUrl:getDocumentUrl,
             tableLoading: false, //列表loading
             btnLoading: false, //按钮loading
             searchinput: "",

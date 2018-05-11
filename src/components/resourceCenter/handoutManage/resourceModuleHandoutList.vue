@@ -33,6 +33,10 @@
                             </router-link>
                              <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入讲义资源
                             </el-button>
+                            <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
+                                <i class="el-icon-question"></i>
+                                使用帮助
+                            </a>
                         </div>
                     </el-row>
                 </el-col>
@@ -103,12 +107,15 @@ import {
 } from "../../../api/resource";
 import { number2DateTime } from "../../../util/util.js";
 import vUpload from '../../public/BatchFilesUpload.vue'
+import {getDocumentUrl} from '../../../util/config.js'
+
 export default {
     components:{
         vUpload
     },
     data() {
         return {
+            docUrl:getDocumentUrl,
             radio: "全部",
             radio2: "全部",
             keywords: "",

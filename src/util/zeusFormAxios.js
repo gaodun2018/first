@@ -46,11 +46,15 @@ instance.interceptors.response.use(function(response) {
     if (response.config.url.indexOf('login') !== -1) {
         return Promise.resolve(response);
     }
+
+    // 预览
+    if (response.config.url.indexOf('user/verify') !== -1) {
+      return Promise.resolve(response);
+    }
     // 获取token不校验，直接返回
     if (response.config.url.indexOf('refreshtoken') !== -1) {
         return Promise.resolve(response.data);
     }
-
     // 登录失效 553649410～553649444
     if (response.data.status > 553649000 && response.data.status < 563649999) {
         localStorage.clear();
