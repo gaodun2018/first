@@ -34,8 +34,8 @@
                             </el-input>
                             <router-link class="routerBtn" v-if="unlocking('VIDEO_CREATE')" to="/resource/video/create">+&nbsp;新增视频
                             </router-link>
-                            <!-- <el-button type="primary" size="small" @click="bVisible = true">+&nbsp;批量导入视频资源
-                            </el-button> -->
+                            <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入视频资源
+                            </el-button>
                             <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
                                 <i class="el-icon-question"></i>
                                 使用帮助
@@ -81,9 +81,19 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <!-- <el-row>
-            <v-upload @handleCloesDialog="bVisible = false" :file-types="['zip','rar','js']" :title="'批量导入视频资源'" :b-visible="bVisible" :url-title="'视频导入Excel模板'" :url="'www'" :upload-url="'asas'"></v-upload>
-        </el-row> -->
+        <el-row>
+            <v-upload
+                :b-visible="uploaddialogVisible"
+                :title="'批量导入视频资源'"
+                :url-title="'批量视频资源Excel模板下载'"
+                :download-url="'//simg01.gaodunwangxiao.com/video_template.xlsx'"
+                :upload-url="uploadUrl"
+                :name="'file'"
+                @uploadSuccessCallback="uploadSuccessCallback"
+                @handleCloesDialog="uploaddialogVisible = false"
+                :fileTypes="['xlsx']"
+            ></v-upload>
+        </el-row>
     </div>
 </template>
 <style>
@@ -119,10 +129,20 @@ export default {
             paginationTotal: 0,
             pageSize: 50,
             loading: false,
-            bVisible:false,//批量上传的显示隐藏
+            uploaddialogVisible:false,//批量上传的显示隐藏
         };
     },
+    computed: {
+        uploadUrl(){
+            return `calais/resource/v1/video/batch`
+        },
+    },
     methods: {
+         // 批量导入视频资源回调
+        uploadSuccessCallback(){
+            this.loadResources();
+            this.uploaddialogVisible = false
+        },
         outlinechange(reid) {
             this.clver = reid;
             this.clversm = "0";

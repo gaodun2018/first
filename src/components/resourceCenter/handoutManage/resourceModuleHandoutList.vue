@@ -31,6 +31,8 @@
                             </el-input>
                             <router-link class="routerBtn" to="/resource/handout/create" v-if="unlocking('HANDOUT_CREATE')">+&nbsp;新增讲义
                             </router-link>
+                             <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入讲义资源
+                            </el-button>
                             <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
                                 <i class="el-icon-question"></i>
                                 使用帮助
@@ -75,6 +77,19 @@
                 <el-pagination @size-change="didChangePageSize" @current-change="didChangePage" :page-sizes="[50, 200, 300, 400]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationTotal" style="text-align: center;">
                 </el-pagination>
             </div>
+            <el-row>
+                <v-upload
+                    :b-visible="uploaddialogVisible"
+                    :title="'批量导入讲义资源'"
+                    :url-title="'批量讲义资源Excel模板下载'"
+                    :download-url="'//simg01.gaodunwangxiao.com/lecture_notes_template.xlsx'"
+                    :upload-url="uploadUrl"
+                    :name="'file'"
+                    @uploadSuccessCallback="uploadSuccessCallback"
+                    @handleCloesDialog="uploaddialogVisible = false"
+                    :fileTypes="['xlsx']"
+                ></v-upload>
+            </el-row>
         </div>
 
     </div>
@@ -91,9 +106,13 @@ import {
     getTags
 } from "../../../api/resource";
 import { number2DateTime } from "../../../util/util.js";
+import vUpload from '../../public/BatchFilesUpload.vue'
 import {getDocumentUrl} from '../../../util/config.js'
 
 export default {
+    components:{
+        vUpload
+    },
     data() {
         return {
             docUrl:getDocumentUrl,
@@ -114,10 +133,21 @@ export default {
             paginationTotal: 0,
             pageSize: 50,
             loading: false,
-            videoList: []
+            videoList: [],
+            uploaddialogVisible:false,//批量上传的显示隐藏
         };
     },
+    computed: {
+        uploadUrl(){
+            return `calais/resource/v1/lecture-note/batch`
+        },
+    },
     methods: {
+        // 批量导入视频资源回调
+        uploadSuccessCallback(){
+            this.loadResources();
+            this.uploaddialogVisible = false
+        },
         handleIconClick() {
             // 搜索
             this.loadResources();
