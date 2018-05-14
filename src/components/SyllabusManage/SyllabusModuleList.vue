@@ -217,11 +217,16 @@ export default {
                 this.clversm = null; //科目id
                 this.currentPage = 1;
                 this.page_size = 15;
-//                this.getCourseSyllabuses();
+                this.getCourseSyllabuses();
                 this.$message({
                     message: "已复制成功",
                     type: "success"
                 });
+            }else{
+              this.$message({
+                message: "复制失败",
+                type: "error"
+              });
             }
         },
         submitForm(formName) {
@@ -385,6 +390,7 @@ export default {
             //判断是编辑还是复制
             if(copy){
                 //复制一个课程大纲
+                this.btnLoading = false;
                 this.dialogTitle = "复制课程大纲";
                 this.substatus = "copyoutline";
                 this.issubject = false;
