@@ -67,7 +67,7 @@
                     <template slot-scope="scope">
                         <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
                         <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
-                        <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row, 'true')" >基本设置</el-button>
+                        <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row, 'true')" >复制大纲</el-button>
                     </template>
                 </el-table-column>
             </el-table>
