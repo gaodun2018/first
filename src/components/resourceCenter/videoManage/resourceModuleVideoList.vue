@@ -82,7 +82,7 @@
                 :b-visible="uploaddialogVisible"
                 :title="'批量导入视频资源'"
                 :url-title="'批量视频资源Excel模板下载'"
-                :download-url="'//simg01.gaodunwangxiao.com/video_template.xlsx'"
+                :download-url="'//s.gaodun.com/web/static-saas/file/video_template.xlsx'"
                 :upload-url="uploadUrl"
                 :name="'file'"
                 @uploadSuccessCallback="uploadSuccessCallback"

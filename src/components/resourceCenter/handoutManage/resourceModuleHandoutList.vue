@@ -78,7 +78,7 @@
                     :b-visible="uploaddialogVisible"
                     :title="'批量导入讲义资源'"
                     :url-title="'批量讲义资源Excel模板下载'"
-                    :download-url="'//simg01.gaodunwangxiao.com/lecture_notes_template.xlsx'"
+                    :download-url="'//s.gaodun.com/web/static-saas/file/lecture_notes_template.xlsx'"
                     :upload-url="uploadUrl"
                     :name="'file'"
                     @uploadSuccessCallback="uploadSuccessCallback"
