@@ -392,6 +392,7 @@ export default {
                 //复制一个课程大纲
                 this.btnLoading = false;
                 this.dialogTitle = "复制课程大纲";
+                this.ruleForm.title = "";
                 this.substatus = "copyoutline";
                 this.issubject = false;
                 this.ruleForm.id = row.id;
