@@ -90,7 +90,7 @@ export default {
         },
         uploadData: {
             // 上传时附带的额外参数
-            default: () => {}
+            default: undefined
         },
         name: {
             // 上传文件的字段名
