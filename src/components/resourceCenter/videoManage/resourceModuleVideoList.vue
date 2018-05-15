@@ -34,14 +34,12 @@
                             </el-input>
                             <router-link class="routerBtn" v-if="unlocking('VIDEO_CREATE')" to="/resource/video/create">+&nbsp;新增视频
                             </router-link>
-                            <!-- <el-button type="primary" size="small" @click="bVisible = true">+&nbsp;批量导入视频资源
-                            </el-button> -->
+                            <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入视频资源
+                            </el-button>
                             <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
                                 <i class="el-icon-question"></i>
                                 使用帮助
                             </a>
-                            <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入视频资源
-                            </el-button>
                         </div>
                     </el-row>
                 </el-col>

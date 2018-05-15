@@ -31,12 +31,12 @@
                             </el-input>
                             <router-link class="routerBtn" to="/resource/handout/create" v-if="unlocking('HANDOUT_CREATE')">+&nbsp;新增讲义
                             </router-link>
+                             <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入讲义资源
+                            </el-button>
                             <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
                                 <i class="el-icon-question"></i>
                                 使用帮助
                             </a>
-                             <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入讲义资源
-                            </el-button>
                         </div>
                     </el-row>
                 </el-col>
