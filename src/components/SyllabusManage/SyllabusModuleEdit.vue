@@ -126,7 +126,7 @@
             </el-steps>
             <!-- 第一步 -->
             <el-form :model="addResFirFrom" ref="addResFirFrom" v-show="active == 0" @submit.native.prevent label-width="100px" class="demo-ruleForm">
-                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
                     <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
                 </el-form-item>
                 <!--标签-->
@@ -212,7 +212,7 @@
 
         <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" :visible.sync="adddialogVisible" size="tiny">
             <el-form :model="ruleProject" ref="ruleProject" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
                     <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
                 </el-form-item>
                 <el-form-item>
