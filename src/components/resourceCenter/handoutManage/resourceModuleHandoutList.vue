@@ -107,7 +107,6 @@ import {
 } from "../../../api/resource";
 import { number2DateTime } from "../../../util/util.js";
 import {getDocumentUrl} from '../../../util/config.js'
-
 import vUpload from '../../public/BatchFilesUpload.vue'
 export default {
     components:{
