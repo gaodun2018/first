@@ -397,6 +397,11 @@ export default {
                 this.issubject = false;
                 this.ruleForm.id = row.id;
                 this.isCopy = true;
+                if(row.template){
+                  this.ruleForm.template_id = row.template.id;
+                }else{
+                  this.ruleForm.template_id = 0;
+                }
             }else{
                 // 修改一个课程大纲 弹出框
                 this.btnLoading = false;
@@ -405,6 +410,9 @@ export default {
                 console.log(row);
                 if(this.ruleForm.hasOwnProperty("id")){
                     delete this.ruleForm.id;
+                }
+                if(this.ruleForm.hasOwnProperty("template_id")){
+                  delete this.ruleForm.template_id;
                 }
                 this.substatus = "updateoutline";
                 this.dialogCourse = false;
