@@ -480,7 +480,7 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        //新增大纲资源
+        //新增大纲资源条目
         async addSyllabusResource() {
             if(this.sourceRadio === 2){
                 // 资源库检索流程
@@ -494,7 +494,7 @@ export default {
                     this.coursesyllid,
                     this.resourceRadio
                 );
-                if (res.status == 0) {
+                if (res.status === 0) {
                     if (res.result.length > 0) {
                         this.resourceRadio = "";
                         this.$message({
@@ -560,6 +560,7 @@ export default {
                 this.btnLoading = false;
             }
         },
+        // 检查大纲是否挂载在大纲上
         //修改大纲的资源 包含名称&挂载资源
         async updateSyllabusResource() {
             if (!this.resourceRadio) {
@@ -788,6 +789,7 @@ export default {
                 });
             }
         },
+        // 排序拖动事件
         onMoveCallback(evt, originalEvent) {
             let direction = 0;
             if (evt.draggedContext.futureIndex > evt.draggedContext.index) {
