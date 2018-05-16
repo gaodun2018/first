@@ -7,7 +7,7 @@
         <div class="outlinebox">
             <div class="chapterbox">
                 <template v-if="coursesylllevel == 3">
-                    <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
+                    <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
                             <div class="chaptit">
                                 <span class="chlft">{{firstItem.name}}</span>
@@ -37,11 +37,11 @@
                                 </div>
                             </draggable>
                         </div>
-                    </draggable>
+                    <!-- </draggable> -->
                 </template>
 
                 <template v-if="coursesylllevel == 4">
-                    <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
+                    <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
                             <div class="chaptit">
                                 <span class="chlft">{{firstItem.name}}</span>
@@ -86,11 +86,11 @@
                                 </div>
                             </draggable>
                         </div>
-                    </draggable>
+                    <!-- </draggable> -->
                 </template>
 
                 <template v-if="coursesylllevel == 2">
-                    <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
+                    <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
                             <div class="chaptit">
                                 <span class="chlft">{{firstItem.name}}</span>
@@ -110,7 +110,7 @@
                                 </div>
                             </draggable>
                         </div>
-                    </draggable>
+                    <!-- </draggable> -->
                 </template>
                 <div class="chaptit additem">
                     <span @click="openFirLvDialog">新增一级大纲目录</span>
@@ -191,7 +191,7 @@
                 </el-table>
                 <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
                 </el-pagination>
-                <div class="coursebtn" style="padding-top: 0;margin-top: 40px;">
+                <div class="coursebtn" style="padding-top: 0;margin-top: 10px;">
                     <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
                     <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
                     <el-button type="primary" v-if="resourceAction=='add'" :loading="btnLoading" @click="addSyllabusResource">{{btnLoading?'新增中':'确 定'}}
@@ -240,6 +240,14 @@
     opacity: 1;
 }
 .permission-outlinemodule {
+    .addResourceDialog{
+        .el-dialog__header{
+            padding-top: 15px;
+        }
+        .el-dialog__body{
+            padding-top: 10px;
+        }
+    }
     .el-dialog__body {
         .el-steps {
                 line-height: normal;
@@ -253,6 +261,30 @@
             .el-radio .el-radio__label {
                 display: none;
             }
+        }
+    }
+}
+@media screen and (min-height: 320px) and (max-height: 650px) {
+    .permission-outlinemodule {
+        .addResourceDialog{
+            .el-dialog{
+                margin-top: 1px!important;
+                margin-bottom: 0px;
+                .el-dialog__header{
+                    padding-top: 10px;
+                }
+                .el-dialog__body{
+                    padding-top: 0px;
+                    padding-bottom: 10px;
+                    .el-table{
+                        margin-top: 5px!important;
+                    }
+                    .coursebtn{
+                        margin-top: 0!important;
+                    }
+                }
+            }
+
         }
     }
 }
