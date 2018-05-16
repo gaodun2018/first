@@ -17,7 +17,7 @@ module.exports = {
         //   }
         // },
 
-        host: 'dev-yun-console.gaodun.com',
+        host: 'dev-cloud-console.gaodun.com',
         proxy: {
             '/api/': {
                 target: 'http://127.0.0.1:8090',
