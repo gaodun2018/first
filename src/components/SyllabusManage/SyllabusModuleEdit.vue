@@ -151,23 +151,26 @@
                 </el-form>
                 <!-- 讲义 -->
                 <el-row v-show="sourceRadio === 1 && resourceType === 'lecture_note'">
-                    <el-form label-position='left' :model="handoutForm" ref="handoutForm" label-width="100px" class="demo-ruleForm">
+                    <el-form label-position='left' :model="handoutForm" ref="handoutForm" label-width="100px" class="resource-ruleForm">
                         <el-form-item label="讲义名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
-                            <el-input v-model="handoutForm.title" placeholder="请填写讲义名称" auto-complete="off" class="w_50"></el-input>
+                            <el-input v-model="handoutForm.title" placeholder="请填写讲义名称" auto-complete="off"></el-input>
                         </el-form-item>
                     </el-form>
                 </el-row>
                 <!-- 视频 -->
                 <el-row v-show="sourceRadio === 1 && resourceType === 'video'">
-                    <el-form :model="videoForm" label-position='left' ref="videoForm" label-width="120px" class="demo-ruleForm">
+                    <el-form :model="videoForm" label-position='left' ref="videoForm" label-width="120px" class="resource-ruleForm">
                         <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
-                            <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off" class="w_50"></el-input>
+                            <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off"></el-input>
                         </el-form-item>
 
                         <el-form-item label="视频地址" prop="video_id" :rules="filter_rules({required:true,type:'isVideoId'})">
-                            <el-input v-model="videoForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_60"></el-input>
-                            <!--<span class="gray_12">asdasdasd</span>-->
-                            <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
+                            <el-input v-model="videoForm.video_id" placeholder="请输入视频ID" auto-complete="off"></el-input>
+                            <el-tooltip placement="top">
+                                <div slot="content">
+                                只需要输入地址中不同部分即可,如示例:红色部分：<br/>{{urltip}}<span style="color:red;">16oe3We00h1ye2hZ</span>{{urltip2}}</div>
+                                <i class="el-icon-info"></i>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: ['change','blur']}]">
                             <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
@@ -265,6 +268,11 @@
 
         }
     }
+    .resource-ruleForm{
+        .el-input{
+            width: 94%;
+        }
+    }
 }
 </style>
 <script>
@@ -274,7 +282,7 @@ import {
     resourceTypeList,
     resourceTableConfig
 } from "../../common/outlineConfig.js";
-import { isNumber } from "../../util/util.js";
+import { isNumber ,getSrcStr} from "../../util/util.js";
 export default {
     name: "SyllabusModuleEdit",
     components: {
@@ -343,6 +351,8 @@ export default {
                 duration_minutes: "",
                 duration_second: 0,
             },
+            urltip:'[<script src="https://s.gaodun.com/web/static-player/loader.js?',
+            urltip2:`-3" type="text/javascript">${'</'}script>]`,
         };
     },
     methods: {
@@ -506,9 +516,10 @@ export default {
                         break;
                     case 'video':
                         console.log('video - 1 liucheng');
-                         this.$refs['videoForm'].validate(valid => {
+                         this.$refs['videoForm'].validate(async valid => {
                             if (valid) {
-                                this.createVideoResource();
+                                let cvrRet = await this.createVideoResource();
+                                console.log(cvrRet);
                             } else {
                                 console.log("error submit!!");
                             }
@@ -516,6 +527,7 @@ export default {
                         break;
                 }
             }
+            console.log('1111111111');
             return;
             //先走新增资源名字
             let ret = await this.$http.CourseSyllabusItem({
@@ -830,33 +842,25 @@ export default {
                     message: "视频地址解析失败！"
                 });
             }
-            let params = {
+             let params = {
                 title: this.videoForm.title,
-                tag_id:
-                    this.ruleForm.subject == "0"
-                        ? this.ruleForm.project
-                        : this.ruleForm.subject,
-                // duration: `${this.ruleForm.duration_minutes}:${this.ruleForm.duration_second}`,
-                duration_minutes: this.ruleForm.duration_minutes,
-                duration_seconds: this.ruleForm.duration_second
-                    ? this.ruleForm.duration_second
+                tag_payload_id:this.subject_id == '0'?this.project_id:this.subject_id,
+                tag_payload_type:this.subject_id == '0'?'project':'subject',
+                duration_minutes: this.videoForm.duration_minutes,
+                duration_seconds: this.videoForm.duration_second
+                    ? this.videoForm.duration_second
                     : 0,
                 video_id: video_id
             };
-            this.loading = true;
+            // this.loading = true;
             let createResponse = await this.$http.storeResource(params);
-            this.loading = false;
+            // this.loading = false;
             if (createResponse.status == 0) {
                 this.$message({
                     message: "保存成功",
                     type: "success"
                 });
-                setTimeout(() => {
-                    this.$router.push({
-                        path: "/resource/video/list"
-                    });
-                }, 1000);
-                // this.resetForm('ruleForm');
+                return 1;
             } else {
                 this.$message({
                     message: "保存失败",
