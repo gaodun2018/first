@@ -86,7 +86,7 @@
                 :b-visible="uploaddialogVisible"
                 :title="'批量导入视频资源'"
                 :url-title="'批量视频资源Excel模板下载'"
-                :download-url="'//s.gaodun.com/web/static-saas/file/video_template.xlsx'"
+                :download-url="'//s.gaodun.com/web/static-saas/file/%E6%89%B9%E9%87%8F%E8%A7%86%E9%A2%91%E5%AF%BC%E5%85%A5%E6%A8%A1%E7%89%88.xlsx'"
                 :upload-url="uploadUrl"
                 :name="'file'"
                 @uploadSuccessCallback="uploadSuccessCallback"

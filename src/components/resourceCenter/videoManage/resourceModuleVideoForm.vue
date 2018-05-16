@@ -22,7 +22,12 @@
                     <el-input v-model="ruleForm.description" placeholder="备注说明" auto-complete="off" class="w_50"></el-input>
                 </el-form-item>
                 <el-form-item label="视频地址" prop="video_id" :rules="filter_rules({required:true,type:'isVideoId'})">
-                    <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_60"></el-input>
+                    <el-input v-model="ruleForm.video_id" placeholder="请输入视频ID" auto-complete="off" class="w_50"></el-input>
+                    <el-tooltip placement="top">
+                      <div slot="content">
+                      只需要输入地址中不同部分即可,如示例:红色部分：<br/>{{urltip}}<span style="color:red;">16oe3We00h1ye2hZ</span>{{urltip2}}</div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
                     <!--<span class="gray_12">asdasdasd</span>-->
                     <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
                 </el-form-item>
@@ -72,7 +77,9 @@ export default {
                 duration_second: 0,
                 description: ""
             },
-            multipleSelection: []
+            multipleSelection: [],
+            urltip:'[<script src="https://s.gaodun.com/web/static-player/loader.js?',
+            urltip2:`-3" type="text/javascript">${'</'}script>]`,
         };
     },
     methods: {
