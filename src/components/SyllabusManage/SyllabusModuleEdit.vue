@@ -561,6 +561,27 @@ export default {
             }
         },
         // 检查大纲是否挂载在大纲上
+        async checkResIsInOutline(){
+            let res = await this.$http.checkResIsInOutline(
+                this.coursesyllid,
+                this.resourceRadio
+            );
+            if (res.status === 0) {
+                if (res.result.length > 0) {
+                    this.resourceRadio = "";
+                    this.$message({
+                        type: "error",
+                        message: "该资源已经挂载在这个大纲上！"
+                    });
+                    // this.btnLoading = false;
+                    // return
+                }
+            } else {
+                // this.btnLoading = false;
+                // return;
+            }
+            return res;
+        },
         //修改大纲的资源 包含名称&挂载资源
         async updateSyllabusResource() {
             if (!this.resourceRadio) {
