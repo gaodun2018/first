@@ -148,9 +148,9 @@ import { SAAS_TOKEN } from "../../util/keys";
 import {setToken} from './../../util/setToken'
 import { getCookie, setCookie } from '../../util/cookie.js'
 import { options } from "../../common/courseConfig.js";
-import {getEnv, getBaseUrl} from '../../util/config'
+import {getEnv, getBaseUrl,getDocumentUrl} from '../../util/config'
 import { mapState } from "vuex";
-import {getDocumentUrl} from '../../util/config.js'
+let prefix = getEnv()
 export default {
     data() {
         return {
@@ -192,6 +192,7 @@ export default {
             currentPage: 1, //默认当前页
             pageSize: 15, //默认分页数量
             docUrl:getDocumentUrl,
+            authCodeKey: 'iTSe2NQd9PG6lzojysC48BHuXgvIcAqw'
         };
     },
     computed: {

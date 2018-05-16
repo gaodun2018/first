@@ -67,6 +67,7 @@
                     <template slot-scope="scope">
                         <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
                         <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
+                        <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row, 'true')" >复制大纲</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -76,13 +77,13 @@
             </div>
         </div>
 
-        <el-dialog :title="dialogCourse ? '新建课程大纲' : '编辑课程大纲'" class="tabplane" :visible.sync="dialogFormVisible" @close="resetForm('ruleForm')">
+        <el-dialog :title="dialogTitle" class="tabplane" :visible.sync="dialogFormVisible" @close="resetForm('ruleForm')">
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="课程大纲名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
                 </el-form-item>
                 <el-form-item label="所属项目" prop="project_id" :rules="[ { required: true, message: '请选择所属项目', trigger: 'change' }]">
-                    <el-select v-model="ruleForm.project_id" @change="checkproject" @visible-change="visibleChange" placeholder="请选择所属项目">
+                    <el-select v-model="ruleForm.project_id" @change="checkproject" @visible-change="visibleChange" placeholder="请选择所属项目" :disabled="isCopy">
                         <el-option v-for="rev in projectlist" :key="rev.project_id" :label="rev.project_name" :value="String(rev.project_id)"></el-option>
                     </el-select>
                 </el-form-item>
@@ -93,7 +94,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否启用" prop="status" :rules="[ { required: true, message: '请选择是否启用', trigger: 'change' }]">
-                    <el-select v-model="ruleForm.status" placeholder="是否启用">
+                    <el-select v-model="ruleForm.status" placeholder="是否启用" :disabled="isCopy">
                         <el-option label="是" value="0"></el-option>
                         <el-option label="否" value="1"></el-option>
                     </el-select>
@@ -102,6 +103,8 @@
                     <el-button type="primary" v-if="substatus=='addoutline'" :loading="btnLoading" @click="submitForm('ruleForm')">{{btnLoading?'保存中':'确 定'}}
                     </el-button>
                     <el-button type="primary" v-if="substatus=='updateoutline'" :loading="btnLoading" @click="updateForm('ruleForm')">{{btnLoading?'保存中':'保 存'}}
+                    </el-button>
+                    <el-button type="primary" v-if="substatus=='copyoutline'" :loading="btnLoading" @click="submitForm('ruleForm')">{{btnLoading?'保存中':'复 制'}}
                     </el-button>
                     <el-button @click="resetForm('ruleForm')">取 消</el-button>
                 </el-form-item>
@@ -158,7 +161,9 @@ export default {
             substatus: "addoutline",
             outlineid: "",
             dialogCourse: true,
-            selectcur: false //项目选择器开关
+            selectcur: false, //项目选择器开关
+            isCopy:false,//复制大纲状态
+            dialogTitle: '新建课程大纲'
         };
     },
     methods: {
@@ -201,12 +206,43 @@ export default {
                 });
             }
         },
+        async coursesubmitcopy(ruleForm) {
+            // 复制一个课程大纲提交
+            this.btnLoading = true;
+            let ret = await this.$http.CourseSyllabusCopy({ ...ruleForm });
+            this.btnLoading = false;
+            if (ret.status == 0) {
+                this.dialogFormVisible = false;
+                this.clver = null; //项目id
+                this.clversm = null; //科目id
+                this.currentPage = 1;
+                this.page_size = 15;
+                this.getCourseSyllabuses();
+                this.$message({
+                    message: "已复制成功",
+                    type: "success"
+                });
+            }else{
+              this.$message({
+                message: "复制失败",
+                type: "error"
+              });
+            }
+        },
         submitForm(formName) {
             // 添加一个课程大纲
             if (this.substatus == "addoutline") {
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         this.coursesubmit(this.ruleForm);
+                    } else {
+                        return false;
+                    }
+                });
+            }else if(this.substatus == "copyoutline"){
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        this.coursesubmitcopy(this.ruleForm);
                     } else {
                         return false;
                     }
@@ -248,8 +284,11 @@ export default {
         },
         addCourseOutline() {
             // 新增一个课程大纲 弹出框
+            this.btnLoading = false;
             this.substatus = "addoutline";
             this.dialogCourse = true;
+            this.isCopy = false;
+            this.dialogTitle = "新建课程大纲";
             this.ruleForm = {
                 title: "",
                 project_id: "",
@@ -340,13 +379,7 @@ export default {
             this.currentPage = val;
             this.getCourseSyllabuses();
         },
-        UpdateOutlineTitle(index, row) {
-            // 修改一个课程大纲 弹出框
-            console.log(row);
-            this.substatus = "updateoutline";
-            this.dialogCourse = false;
-            this.issubject = true;
-            this.outlineid = row.id;
+        UpdateOutlineTitle(index, row, copy) {
 
             this.ruleForm = {
                 title: row.title,
@@ -354,6 +387,38 @@ export default {
                 subject_id: String(row.subject.id),
                 status: String(row.status)
             };
+            //判断是编辑还是复制
+            if(copy){
+                //复制一个课程大纲
+                this.btnLoading = false;
+                this.dialogTitle = "复制课程大纲";
+                this.ruleForm.title = "";
+                this.substatus = "copyoutline";
+                this.issubject = false;
+                this.ruleForm.id = row.id;
+                this.isCopy = true;
+                if(row.template){
+                  this.ruleForm.template_id = row.template.id;
+                }else{
+                  this.ruleForm.template_id = 0;
+                }
+            }else{
+                // 修改一个课程大纲 弹出框
+                this.btnLoading = false;
+                this.isCopy = false;
+                this.dialogTitle = "编辑课程大纲";
+                console.log(row);
+                if(this.ruleForm.hasOwnProperty("id")){
+                    delete this.ruleForm.id;
+                }
+                if(this.ruleForm.hasOwnProperty("template_id")){
+                  delete this.ruleForm.template_id;
+                }
+                this.substatus = "updateoutline";
+                this.dialogCourse = false;
+                this.issubject = true;
+                this.outlineid = row.id;
+            }
             for (var i = 0; i < this.projectlist.length; i++) {
                 if (this.projectlist[i].project_id == row.project.id) {
                     let subjectall = [...this.projectlist[i]["subject_list"]];
