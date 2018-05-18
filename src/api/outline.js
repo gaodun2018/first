@@ -46,7 +46,7 @@ export const CourseSyllabusItem = params => formPost(`${getBaseUrl()}apigateway.
 export const ChangeSyllabusItem = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}`, params);
 
 //大纲条目上挂资源
-export const addSyllabusResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/resource`, params);
+export const mountSyllabusResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/resource`, params);
 
 
 // 班级列表
