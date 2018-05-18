@@ -21,7 +21,7 @@ export const CourseSyllabusTemplates = params => get(`${getBaseUrl()}apigateway.
 //查看大纲
 export const checkSyllabus = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course-syllabus/${id}`, params);
 
-//拉取某个大纲的条目 
+//拉取某个大纲的条目
 export const getSyllabusItems = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/items`, params);
 
 //删除大纲条目
@@ -43,7 +43,7 @@ export const CourseSyllabusItem = params => formPost(`${getBaseUrl()}apigateway.
 export const ChangeSyllabusItem = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}`, params);
 
 //大纲条目上挂资源
-export const addSyllabusResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/resource`, params);
+export const mountSyllabusResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/resource`, params);
 
 
 // 班级列表
