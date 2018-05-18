@@ -39,7 +39,6 @@
                         </div>
                     <!-- </draggable> -->
                 </template>
-
                 <template v-if="coursesylllevel == 4">
                     <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
@@ -49,7 +48,6 @@
                                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
                             </div>
-
                             <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                                     <div class="chaptit chapsecd">
@@ -58,7 +56,6 @@
                                         <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                                         <span class="chrgt1" @click="openChildDialog(secItem.id)">增加子目录</span>
                                     </div>
-
                                     <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                                         <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
                                             <div class="knowledge">
@@ -88,7 +85,6 @@
                         </div>
                     <!-- </draggable> -->
                 </template>
-
                 <template v-if="coursesylllevel == 2">
                     <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
                         <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
@@ -117,10 +113,8 @@
                 </div>
             </div>
         </div>
-
         <!--弹层 -->
-
-        <el-dialog title="选择学习资源" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
+        <el-dialog title="选择学习资源" width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
             <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
                 <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
             </el-steps>
@@ -129,22 +123,6 @@
                 <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
                     <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
                 </el-form-item>
-                <!--标签-->
-                <!--<el-form-item label="性质标签" prop="region">
-                  <el-radio-group v-model="radio1">
-                    <el-radio :label="1">不显示标签</el-radio>
-                    <el-radio :label="2">必修</el-radio>
-                    <el-radio :label="3">选修</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="环节标签" prop="region">
-                  <el-radio-group v-model="radio2">
-                    <el-radio :label="4">不显示标签</el-radio>
-                    <el-radio :label="5">课前</el-radio>
-                    <el-radio :label="6">课中</el-radio>
-                    <el-radio :label="7">课后</el-radio>
-                  </el-radio-group>
-                </el-form-item>-->
                 <el-form-item class="coursebtn">
                     <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
                 </el-form-item>
@@ -152,7 +130,7 @@
             <!-- 第二步 -->
             <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm">
                 <div class="selectmodel">
-                    <span :class="[selcurrent == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
+                    <span :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
                         {{item.label}}
                     </span>
                 </div>
@@ -163,38 +141,66 @@
             </el-form>
             <!-- 第三步 -->
             <div class="rulemodule" v-show="active == 2">
-                <el-input :placeholder="inputPlaceholder" size="small" v-model="resourceinput" @keydown.native.enter="handleIconClick">
-                    <!-- <el-select v-model="selectType" slot="prepend" placeholder="请选择">
-                        <el-option label="餐厅名" value="1"></el-option>
-                        <el-option label="订单号" value="2"></el-option>
-                        <el-option label="用户电话" value="3"></el-option>
-                    </el-select> -->
-                    <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
-                </el-input>
-                <el-table ref="singleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row @current-change="handleTableChange">
-                    <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
-                                <el-radio class="radio" v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
-                                <span>{{scope.row[item.key]}}</span>
-                            </template>
-                            <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
-                            <span v-else>{{scope.row[item.key]}}</span>
-                        </template>
-                    </el-table-column>
+                <el-form label-position='left' label-width="80px" v-show="resourceType === 'video' || resourceType === 'lecture_note'">
+                    <el-form-item label="来源">
+                        <el-radio-group v-model="sourceRadio">
+                            <el-radio :label="1">上传/创建资源</el-radio>
+                            <el-radio :label="2">从已有资源选择</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-form>
+                <!-- 讲义 -->
+                <el-row v-show="sourceRadio === 1 && resourceType === 'lecture_note'">
+                    <HandoutUpload ref="handoutUpload" @getHandoutPath="getHandoutPath"></HandoutUpload>
+                </el-row>
+                <!-- 视频 -->
+                <el-row v-show="sourceRadio === 1 && resourceType === 'video'">
+                    <el-form :model="videoForm" label-position='left' ref="videoForm" label-width="120px" class="resource-ruleForm">
+                        <!-- <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+                            <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off"></el-input>
+                        </el-form-item> -->
 
-                    <!--<el-table-column label="操作" width="120">-->
-                    <!--<template slot-scope="scope">-->
-                    <!--<span>查看</span>-->
-                    <!--</template>-->
-                    <!--</el-table-column>-->
-                </el-table>
-                <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
-                </el-pagination>
-                <div class="coursebtn" style="padding-top: 0;margin-top: 10px;">
+                        <el-form-item label="视频地址" prop="video_id" :rules="filter_rules({required:true,type:'isVideoId'})">
+                            <el-input v-model="videoForm.video_id" placeholder="请输入视频地址" auto-complete="off"></el-input>
+                            <el-tooltip placement="top">
+                                <div slot="content">
+                                只需要输入地址中不同部分即可,如示例:红色部分：<br/>{{urltip}}<span style="color:red;">16oe3We00h1ye2hZ</span>{{urltip2}}</div>
+                                <i class="el-icon-info"></i>
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: ['change','blur']}]">
+                            <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                            分
+                        </el-form-item>
+                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: ['change','blur']}]">
+                            <el-input v-model.number="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+                            秒
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <el-row v-show="sourceRadio === 2">
+                    <el-input :placeholder="inputPlaceholder" size="small" v-model="resourceinput" @keydown.native.enter="handleIconClick">
+                        <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
+                    </el-input>
+                    <el-table ref="singleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row @current-change="handleTableChange">
+                        <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
+                                    <el-radio class="radio" v-model="resourceRadio" :label="String(scope.row.id)"></el-radio>
+                                    <span>{{scope.row[item.key]}}</span>
+                                </template>
+                                <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
+                                <span v-else>{{scope.row[item.key]}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
+                    </el-pagination>
+                </el-row>
+                <div class="coursebtn" style="padding-top: 0;margin-top: 20px;">
                     <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
                     <!-- <el-button style="margin-top:12px;" v-show="nextclk" @click="next">下一步</el-button> -->
-                    <el-button type="primary" v-if="resourceAction=='add'" :loading="btnLoading" @click="addSyllabusResource">{{btnLoading?'新增中':'确 定'}}
+                    <el-button type="primary" v-if="resourceAction=='add'" :loading="btnLoading" @click="addSyllabusResourceItem">{{btnLoading?'新增中':'确 定'}}
                     </el-button>
                     <el-button type="primary" v-if="resourceAction=='update'" :loading="btnLoading" @click="updateSyllabusResource">{{btnLoading?'新增中':'确 定'}}
                     </el-button>
@@ -231,6 +237,7 @@
 <style lang="less">
 .tabplane .el-dialog {
     min-width: 680px;
+    margin-bottom:0px;
 }
 .addResourceDialog .el-pagination {
     text-align: right;
@@ -249,8 +256,9 @@
         }
     }
     .el-dialog__body {
+        padding:20px 20px;
         .el-steps {
-                line-height: normal;
+            line-height: normal;
         }
         .rulemodule {
             // .el-select {
@@ -258,9 +266,17 @@
             //         width: 120px;
             //     }
             // }
-            .el-radio .el-radio__label {
-                display: none;
+            .el-table{
+                .el-radio .el-radio__label {
+                    display: none;
+                }
             }
+
+        }
+    }
+    .resource-ruleForm{
+        .el-input{
+            width: 94%;
         }
     }
 }
@@ -296,11 +312,12 @@ import {
     resourceTypeList,
     resourceTableConfig
 } from "../../common/outlineConfig.js";
-import { isNumber } from "../../util/util.js";
+import { isNumber ,getSrcStr} from "../../util/util.js";
+import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
 export default {
     name: "SyllabusModuleEdit",
     components: {
-        draggable
+        draggable,HandoutUpload
     },
     data() {
         return {
@@ -331,7 +348,7 @@ export default {
             Moduledialog: true, //增加子目录的弹层的标题
             bigdislog: false,
             deleteModule: true,
-            selcurrent: "video",
+            resourceType: "video",
             inputPlaceholder: "请输入视频资源ID / 名称",
             refname: "",
             coursesylllevel: "",
@@ -348,7 +365,19 @@ export default {
             resLoading: false, //loading
             resourceinput: "", //根据id或者名称搜索
             searchResourceTimer: "", //搜索资源演示器
-            sortOptions: "" //排序参数
+            sortOptions: "", //排序参数
+            sourceRadio: 1, //资源选择的来源
+            handoutForm: {
+                path: "",
+            },
+            videoForm: {
+                title: "",
+                video_id: "",
+                duration_minutes: "",
+                duration_second: "",
+            },
+            urltip:'[<script src="https://s.gaodun.com/web/static-player/loader.js?',
+            urltip2:`-3" type="text/javascript">${'</'}script>]`,
         };
     },
     methods: {
@@ -356,7 +385,7 @@ export default {
             this.resourceRadio = String(val.id);
         },
         selectclk(discriminator) {
-            this.selcurrent = discriminator;
+            this.resourceType = discriminator;
         },
         //关闭新增资源的弹层
         closeDialog(formName) {
@@ -388,18 +417,25 @@ export default {
         },
         //第二步往下一步
         async secondSubmit() {
-            if (!this.selcurrent) {
+            if (!this.resourceType) {
                 this.$message.warning("请选择资源类型！");
                 return;
+            }else if(this.resourceType === 'lecture_note'){
+                this.handoutForm.path = '';//清除讲义地址
+                //清除上传的文件
+                this.$refs.handoutUpload.clearAllFileList();
+            }else if(this.resourceType === 'video'){
+                this.resetForm('videoForm');   //重置表单
             }
             if (this.active >= this.progressText.length - 1) return;
             resourceTableConfig.forEach(ele => {
-                if (ele.discriminator == this.selcurrent) {
+                if (ele.discriminator == this.resourceType) {
                     this.resourceTableConfig = ele.table;
                     this.inputPlaceholder = ele.inputPlaceholder;
                 }
             });
             this.active++;
+            this.sourceRadio = 2;
             this.resourceinput = ""; //输入框搜索初始化
             this.resourceTable = []; //初始化资源列表
             if (this.pagination.current_page != 1) {
@@ -428,7 +464,7 @@ export default {
             this.searchResourceTimer = setTimeout(async () => {
                 clearTimeout(this.searchResourceTimer);
                 let params = {
-                    discriminator: this.selcurrent,
+                    discriminator: this.resourceType,
                     page_size: 50,
                     page: val ? val : 1,
                     "order_by[]": "desc", //顺序   倒序
@@ -437,7 +473,7 @@ export default {
                     // subject_id: this.subject_id,
                 };
                 let resourceinput = this.resourceinput.trim();
-                switch (this.selcurrent) {
+                switch (this.resourceType) {
                     case "legacy_live":
                         if (isNumber(resourceinput)) {
                             params.legacy_live_id = resourceinput;
@@ -471,115 +507,368 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        //新增大纲资源
-        async addSyllabusResource() {
+        //新增大纲资源条目
+        async addSyllabusResourceItem() {
+            if(this.sourceRadio === 2){
+                // 资源库检索流程
+                this.sourceRadio2Syllabus();
+            }else if(this.sourceRadio === 1){
+                // 走上传创建流程
+                this.sourceRadio1Syllabus();
+            }
+        },
+        // 数据库检索流程 sourceRadio-2
+        async sourceRadio2Syllabus(){
             if (!this.resourceRadio) {
-                this.$message.error("请选择资源");
+                return this.$message({
+                    message:"请选择资源",
+                    type:'warning'
+                });
+            }
+            this.btnLoading = true;
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.2)'
+            });
+            //查询时候挂载了该资源
+            let boolRet = await this.checkResIsInOutline();
+            if(!boolRet){
+                this.btnLoading = false;
+                loading.close();
                 return;
             }
-            //先查询时候挂载了该资源
+            //新增/修改资源名字
+            let nameRet;
+            if(this.resourceAction === 'add'){
+                nameRet = await this.CourseSyllabusItem();
+            }else if(this.resourceAction === 'update'){
+                nameRet = await this.ChangeSyllabusItem();
+            }
+            let sy_item_id;
+            if(nameRet.status === 0){
+                sy_item_id = nameRet.result.id;
+                // 大纲资源条目挂载资源
+                await this.mountSyllabusResource(sy_item_id);
+                this.btnLoading = false;
+                loading.close();
+            }else{
+                this.btnLoading = false;
+                loading.close();
+                return;
+            }
+        },
+        // 走上传创建流程 sourceRadio-1
+        sourceRadio1Syllabus(){
+            if(this.resourceType === 'lecture_note'){
+                this.lectureSourceCreateIntoSyllabus();
+            }else if(this.resourceType === 'video'){
+                this.$refs['videoForm'].validate(valid => {
+                    if (valid) {
+                         this.videoSourceCreateIntoSyllabus();
+                    } else {
+                        console.log("error submit!!");
+                    }
+                });
+            }
+        },
+        // 视频走上传创建流程 resourceType - video
+        async videoSourceCreateIntoSyllabus(){
             this.btnLoading = true;
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.2)'
+            });
+            let pathRet = await this.getVideoPath();
+            let video_id = "";
+            if (pathRet.status === 0) {
+                if (!pathRet.result.video_id) {
+                    this.btnLoading = false;
+                    loading.close();
+                    return this.$message({
+                        type: "warning",
+                        message: "视频地址解析失败！"
+                    });
+                }
+                video_id = pathRet.result.video_id;
+            } else if (pathRet.status == 1) {
+                //为1时使用用户输入的地址
+                video_id = this.videoForm.video_id;
+            } else {
+                this.btnLoading = false;
+                loading.close();
+                return this.$message({
+                    type: "warning",
+                    message: "视频地址解析失败！"
+                });
+            }
+            let params = {
+                title: this.addResFirFrom.name,   //视频资源名称使用大纲条目名称
+                tag_payload_id:this.subject_id == '0'?this.project_id:this.subject_id,
+                tag_payload_type:this.subject_id == '0'?'project':'subject',
+                duration_minutes: this.videoForm.duration_minutes,
+                duration_seconds: this.videoForm.duration_second
+                    ? this.videoForm.duration_second
+                    : 0,
+                video_id: video_id
+            };
+            let createResponse = await this.$http.storeResource(params);
+            if (createResponse.status === 0) {
+                // 资源id
+                try {
+                    this.resourceRadio = createResponse.result.resource.id ;
+                } catch (error) {
+                    this.btnLoading = false;
+                    loading.close();
+                    return this.$message({
+                        message: "视频资源创建失败！",
+                        type: "error"
+                    });
+                }
+                // //新增资源名字
+                // let nameRet = await this.CourseSyllabusItem();
+                //新增/修改资源名字
+                let nameRet;
+                if(this.resourceAction === 'add'){
+                    nameRet = await this.CourseSyllabusItem();
+                }else if(this.resourceAction === 'update'){
+                    nameRet = await this.ChangeSyllabusItem();
+                }
+                let sy_item_id;
+                if(nameRet.status === 0){
+                    sy_item_id = nameRet.result.id;
+                    // 大纲资源条目挂载资源
+                    await this.mountSyllabusResource(sy_item_id);
+                    this.btnLoading = false;
+                    loading.close();
+                }else{
+                    this.btnLoading = false;
+                    loading.close();
+                    return;
+                }
+            } else {
+                this.btnLoading = false;
+                loading.close();
+                return this.$message({
+                    message: "视频资源创建失败！",
+                    type: "error"
+                });
+            }
+        },
+        // 讲义走上传创建流程 resourceType - lecture_note
+        async lectureSourceCreateIntoSyllabus(){
+            if(!this.handoutForm.path){
+                return this.$message({
+                    message:'请选择讲义上传！',
+                    type:'warning'
+                })
+            }
+            this.btnLoading = true;
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.2)'
+            });
+            let params = {
+                tag_payload_id:this.subject_id == '0'?this.project_id:this.subject_id,
+                tag_payload_type:this.subject_id == '0'?'project':'subject',
+                title: this.addResFirFrom.name,   //讲义资源名称使用大纲条目名称
+                path:this.handoutForm.path
+            };
+            let saveHandoutRet = await this.$http.saveLecturenote(params);
+            if (saveHandoutRet.status === 0) {
+                console.log(saveHandoutRet);
+                // 资源id
+                try {
+                    this.resourceRadio = saveHandoutRet.result.id ;
+                } catch (error) {
+                    console.log(error);
+                    this.btnLoading = false;
+                    loading.close();
+                    return this.$message({
+                        message: "讲义资源创建失败！",
+                        type: "error"
+                    });
+                }
+                // //新增资源名字
+                // let nameRet = await this.CourseSyllabusItem();
+                //新增/修改资源名字
+                let nameRet;
+                if(this.resourceAction === 'add'){
+                    nameRet = await this.CourseSyllabusItem();
+                }else if(this.resourceAction === 'update'){
+                    nameRet = await this.ChangeSyllabusItem();
+                }
+                let sy_item_id;
+                if(nameRet.status === 0){
+                    sy_item_id = nameRet.result.id;
+                    // 大纲资源条目挂载资源
+                    await this.mountSyllabusResource(sy_item_id);
+                    this.btnLoading = false;
+                    loading.close();
+                }else{
+                    this.btnLoading = false;
+                    loading.close();
+                    return;
+                }
+            } else {
+                this.btnLoading = false;
+                loading.close();
+                return this.$message({
+                    message: "讲义资源创建失败！",
+                    type: "error"
+                });
+            }
+        },
+        // 获取讲义上传的地址
+        getHandoutPath(path){
+            this.handoutForm.path = path;
+        },
+        // 检查大纲是否挂载在大纲上
+        async checkResIsInOutline(){
+            console.log('检查大纲是否挂载在大纲上');
             let res = await this.$http.checkResIsInOutline(
                 this.coursesyllid,
                 this.resourceRadio
             );
-            if (res.status == 0) {
+            if (res.status === 0) {
                 if (res.result.length > 0) {
                     this.resourceRadio = "";
                     this.$message({
                         type: "error",
                         message: "该资源已经挂载在这个大纲上！"
                     });
-                    this.btnLoading = false;
-                    return;
+                    // this.btnLoading = false;
+                    return false;
+                }else{
+                    return true;
                 }
             } else {
-                this.btnLoading = false;
-                return;
+                // this.btnLoading = false;
+                return false;
             }
-            //先走新增资源名字
+        },
+        // 新增大纲资源条目名称
+        async CourseSyllabusItem(){
+            console.log('新增大纲资源条目名称');
             let ret = await this.$http.CourseSyllabusItem({
-                name: this.addResFirFrom.name,
+                name: this.addResFirFrom.name,  //大纲条目名称
                 pid: this.currentId,
                 course_syllabus_id: this.coursesyllid
             });
-            if (ret.status == 0) {
-                //再走新增大纲资源
-                let id = ret.result.id;
-                let params = {
-                    resource_id: this.resourceRadio,
-                    tag_id: this.tag_id,
-                    course_syllabus_id: this.coursesyllid
-                };
-                let retv = await this.$http.addSyllabusResource(id, params);
-                this.btnLoading = false;
-                if (retv.status == 0) {
-                    this.$message({
-                        type: "success",
-                        message: "新增资源成功！"
-                    });
-                    this.dialogFormVisible = false;
-                    this.getSyllabusItems();
-                } else if (retv.status == 2) {
-                    this.$message.error("添加失败！");
-                }
-            } else if (ret.status == 2) {
+            if (ret.status === 0) {
+                return ret;
+            } else if (ret.status === 2) {
                 this.$message.error("添加失败！");
-                this.btnLoading = false;
+                return ret;
             }
         },
-        //修改大纲的资源 包含名称&挂载资源
-        async updateSyllabusResource() {
-            if (!this.resourceRadio) {
-                this.$message.error("请选择资源");
-                return;
-            }
-            if (this.nativeResourceRadio != this.resourceRadio) {
-                //先查询时候挂载了该资源
-                let res = await this.$http.checkResIsInOutline(
-                    this.coursesyllid,
-                    this.resourceRadio
-                );
-                if (res.status == 0) {
-                    if (res.result.length > 0) {
-                        this.resourceRadio = "";
-                        this.$message({
-                            type: "error",
-                            message: "该资源已经挂载在这个大纲上！"
-                        });
-                        return;
-                    }
-                }
-            }
-            //先走修改大纲条目名字
+        // 修改大纲资源条目名称
+        async ChangeSyllabusItem(){
+            console.log('修改大纲资源条目名称');
             let id = this.currentId;
             let name = {
                 name: this.addResFirFrom.name,
                 course_syllabus_id: this.coursesyllid
             };
             let ret = await this.$http.ChangeSyllabusItem(id, name);
-            if (ret.status == 0) {
-                //再走修改大纲资源
-                let id = ret.result.id ? ret.result.id : this.currentId;
-                let params = {
-                    resource_id: this.resourceRadio,
-                    tag_id: this.tag_id,
-                    course_syllabus_id: this.coursesyllid
-                };
-                let retv = await this.$http.addSyllabusResource(id, params);
-                if (retv.status == 0) {
-                    this.$message({
-                        type: "success",
-                        message: "修改资源成功！"
-                    });
-                    this.dialogFormVisible = false;
-                    this.getSyllabusItems();
-                } else if (retv.status == 2) {
-                    this.$message.error("修改资源失败！");
-                }
-            } else if (ret.status == 2) {
-                this.$message.error("修改资源失败！");
+            if (ret.status === 0) {
+                return ret;
+            } else {
+                this.$message.error("添加失败！");
+                return ret;
             }
+        },
+
+        // 大纲资源条目挂载资源
+        async mountSyllabusResource(id){
+            console.log('大纲资源条目挂载资源');
+            let params = {
+                resource_id: this.resourceRadio,   //资源id
+                tag_id: this.tag_id,
+                course_syllabus_id: this.coursesyllid
+            };
+            let retv = await this.$http.mountSyllabusResource(id, params);
+            // this.btnLoading = false;
+            if (retv.status === 0) {
+                this.$message({
+                    type: "success",
+                    message: this.resourceAction === 'add'?"新增资源成功！":"修改资源成功！"
+                });
+                this.dialogFormVisible = false;
+                this.getSyllabusItems();
+            } else if (retv.status === 2) {
+                this.$message({
+                    message:this.resourceAction === 'add'?"新增资源失败！":"修改资源失败！",
+                    type:'error',
+                });
+            }
+        },
+        //修改大纲资源条目 包含名称&挂载资源
+        async updateSyllabusResource() {
+             if(this.sourceRadio === 2){
+                // 资源库检索流程
+                this.sourceRadio2Syllabus();
+            }else if(this.sourceRadio === 1){
+                // 走上传创建流程
+                this.sourceRadio1Syllabus();
+            }
+
+
+            // if (!this.resourceRadio) {
+            //     this.$message.error("请选择资源");
+            //     return;
+            // }
+            // if (this.nativeResourceRadio != this.resourceRadio) {
+            //     //先查询时候挂载了该资源
+            //     let res = await this.$http.checkResIsInOutline(
+            //         this.coursesyllid,
+            //         this.resourceRadio
+            //     );
+            //     if (res.status == 0) {
+            //         if (res.result.length > 0) {
+            //             this.resourceRadio = "";
+            //             this.$message({
+            //                 type: "error",
+            //                 message: "该资源已经挂载在这个大纲上！"
+            //             });
+            //             return;
+            //         }
+            //     }
+            // }
+            // //先走修改大纲条目名字
+            // let id = this.currentId;
+            // let name = {
+            //     name: this.addResFirFrom.name,
+            //     course_syllabus_id: this.coursesyllid
+            // };
+            // let ret = await this.$http.ChangeSyllabusItem(id, name);
+            // if (ret.status == 0) {
+            //     //再走修改大纲资源
+            //     let id = ret.result.id ? ret.result.id : this.currentId;
+            //     let params = {
+            //         resource_id: this.resourceRadio,
+            //         tag_id: this.tag_id,
+            //         course_syllabus_id: this.coursesyllid
+            //     };
+            //     let retv = await this.$http.mountSyllabusResource(id, params);
+            //     if (retv.status == 0) {
+            //         this.$message({
+            //             type: "success",
+            //             message: "修改资源成功！"
+            //         });
+            //         this.dialogFormVisible = false;
+            //         this.getSyllabusItems();
+            //     } else if (retv.status == 2) {
+            //         this.$message.error("修改资源失败！");
+            //     }
+            // } else if (ret.status == 2) {
+            //     this.$message.error("修改资源失败！");
+            // }
         },
         //弹出修改资源的弹层
         openeEditResource(item) {
@@ -589,7 +878,7 @@ export default {
             this.resourceRadio = item.resource && String(item.resource.id);
             this.nativeResourceRadio =
                 item.resource && String(item.resource.id); //原来的选项
-            this.selcurrent = item.resource && item.resource.discriminator;
+            this.resourceType = item.resource && item.resource.discriminator;
             this.dialogFormVisible = true;
             this.resourceAction = "update";
         },
@@ -716,12 +1005,23 @@ export default {
         },
         //拉取这个大纲的条目
         async getSyllabusItems() {
+            const loading = this.$loading({
+                lock: true,
+                text: '正在拼命获取课程大纲数据...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             let course_syllabus_id = {
                 course_syllabus_id: this.coursesyllid
             };
             let ret = await this.$http.getSyllabusItems(course_syllabus_id);
+            loading.close();
             if (ret.status == 0) {
                 this.tabledata = ret.result;
+            }else{
+                this.$message({
+                    message:'获取课程大纲条目失败！'
+                })
             }
         },
         //查看大纲的详情
@@ -756,6 +1056,7 @@ export default {
                 });
             }
         },
+        // 排序拖动事件
         onMoveCallback(evt, originalEvent) {
             let direction = 0;
             if (evt.draggedContext.futureIndex > evt.draggedContext.index) {
@@ -773,6 +1074,25 @@ export default {
                     course_syllabus_id: this.coursesyllid //大纲id
                 }
             };
+        },
+        //秒数输入框change事件
+        handleInputChange(val){
+            if(val == ''){
+                this.videoForm.duration_second = 0;
+            }
+        },
+        //解析视频地址获得视频id
+        async getVideoPath() {
+            let url = getSrcStr(this.videoForm.video_id);
+            let params = {
+                url: url
+            };
+            let ret = await this.$http.getVideoPath(params);
+            return ret;
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
         }
     },
     computed: {},
