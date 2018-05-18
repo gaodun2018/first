@@ -156,10 +156,6 @@
                 <!-- 视频 -->
                 <el-row v-show="sourceRadio === 1 && resourceType === 'video'">
                     <el-form :model="videoForm" label-position='left' ref="videoForm" label-width="120px" class="resource-ruleForm">
-                        <!-- <el-form-item label="视频名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
-                            <el-input v-model="videoForm.title" placeholder="请填写视频名称" auto-complete="off"></el-input>
-                        </el-form-item> -->
-
                         <el-form-item label="视频地址" prop="video_id" :rules="filter_rules({required:true,type:'isVideoId'})">
                             <el-input v-model="videoForm.video_id" placeholder="请输入视频地址" auto-complete="off"></el-input>
                             <el-tooltip placement="top">
@@ -172,8 +168,8 @@
                             <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                             分
                         </el-form-item>
-                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒',type:'number', trigger: ['change','blur']}]">
-                            <el-input v-model.number="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+                        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒', trigger: ['change','blur']}]">
+                            <el-input v-model="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                             秒
                         </el-form-item>
                     </el-form>
@@ -817,58 +813,6 @@ export default {
                 // 走上传创建流程
                 this.sourceRadio1Syllabus();
             }
-
-
-            // if (!this.resourceRadio) {
-            //     this.$message.error("请选择资源");
-            //     return;
-            // }
-            // if (this.nativeResourceRadio != this.resourceRadio) {
-            //     //先查询时候挂载了该资源
-            //     let res = await this.$http.checkResIsInOutline(
-            //         this.coursesyllid,
-            //         this.resourceRadio
-            //     );
-            //     if (res.status == 0) {
-            //         if (res.result.length > 0) {
-            //             this.resourceRadio = "";
-            //             this.$message({
-            //                 type: "error",
-            //                 message: "该资源已经挂载在这个大纲上！"
-            //             });
-            //             return;
-            //         }
-            //     }
-            // }
-            // //先走修改大纲条目名字
-            // let id = this.currentId;
-            // let name = {
-            //     name: this.addResFirFrom.name,
-            //     course_syllabus_id: this.coursesyllid
-            // };
-            // let ret = await this.$http.ChangeSyllabusItem(id, name);
-            // if (ret.status == 0) {
-            //     //再走修改大纲资源
-            //     let id = ret.result.id ? ret.result.id : this.currentId;
-            //     let params = {
-            //         resource_id: this.resourceRadio,
-            //         tag_id: this.tag_id,
-            //         course_syllabus_id: this.coursesyllid
-            //     };
-            //     let retv = await this.$http.mountSyllabusResource(id, params);
-            //     if (retv.status == 0) {
-            //         this.$message({
-            //             type: "success",
-            //             message: "修改资源成功！"
-            //         });
-            //         this.dialogFormVisible = false;
-            //         this.getSyllabusItems();
-            //     } else if (retv.status == 2) {
-            //         this.$message.error("修改资源失败！");
-            //     }
-            // } else if (ret.status == 2) {
-            //     this.$message.error("修改资源失败！");
-            // }
         },
         //弹出修改资源的弹层
         openeEditResource(item) {
