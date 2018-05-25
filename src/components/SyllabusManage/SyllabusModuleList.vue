@@ -63,7 +63,7 @@
                         <span class="rowtype" v-else>禁用</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" min-width="200" fixed="right" align="center">
+                <el-table-column label="操作" width="260" fixed="right" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
                         <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>

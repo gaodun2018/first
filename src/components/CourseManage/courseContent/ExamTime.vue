@@ -350,7 +350,7 @@ export default {
       isAddPlan: true, //标记是否新增学习计划
       palnBtnLoading: false, //保存计划的loading
       currentPlanIndex: "", //当前修改的计划的索引
-      seasonId:'',   //当前修改的考季的id
+      seasonId: "" //当前修改的考季的id
     };
   },
   methods: {
@@ -405,6 +405,7 @@ export default {
     },
     // 修改考季时创建新的学习计划
     async httpCreatePlan() {
+      const { content, target, date } = this.planForm;
       let params = {
         "content[]": content, //内容 ，大纲id
         start_time: date[0], //开始时间
@@ -412,7 +413,7 @@ export default {
         target: target, //目标
         course_id: this.course_id //课程id
       };
-      let ret = await this.$http.createPlan(this.seasonId,params);
+      let ret = await this.$http.createPlan(this.seasonId, params);
     },
     // 删除学习计划
     delplan(v, i) {
@@ -636,7 +637,7 @@ export default {
       // debugger;
       let item = row;
       this.active = 0;
-      this.seasonId = row.season_id;  //考季id
+      this.seasonId = row.season_id; //考季id
       this.isAddSeason = false;
       this.firstAddForm.dateFormat = parseInt(item.time_type); //考季日期格式
       this.firstAddForm.date = item.time; //考季时间
