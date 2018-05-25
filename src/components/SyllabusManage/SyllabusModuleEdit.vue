@@ -727,6 +727,10 @@ export default {
         // 检查大纲是否挂载在大纲上
         async checkResIsInOutline(){
             console.log('检查大纲是否挂载在大纲上');
+            if(this.resourceAction === 'update' && this.nativeResourceRadio == this.resourceRadio){
+              //当操作为修改大纲时，原资源和现在资源一样时，无需检测直接返回true
+              return true;
+            }
             let res = await this.$http.checkResIsInOutline(
                 this.coursesyllid,
                 this.resourceRadio
