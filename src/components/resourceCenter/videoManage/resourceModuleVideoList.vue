@@ -47,8 +47,7 @@
         </div>
         <div class="edu_table">
             <el-table ref="table" border v-loading="loading" :data="resource.resources" style="width: 100%">
-
-                <el-table-column prop="id" label="视频id" min-width="100" fixed>
+                <el-table-column prop="id" label="视频ID" min-width="100" fixed>
                 </el-table-column>
                 <el-table-column prop="title" label="视频名称" min-width="200">
                 </el-table-column>
@@ -63,13 +62,14 @@
                 </el-table-column>
                 <el-table-column prop="creator.username" label="操作员" min-width="150">
                 </el-table-column>
-                <el-table-column fixed="right" label="操作" align="center" min-width="160">
+                <el-table-column fixed="right" label="操作" align="center" min-width="220">
                     <template slot-scope="scope">
                         <router-link class="el-button el-button--text" :to="{name:'previewVideo',params: { id: scope.row.id }}" tag="a" target="_blank" v-if="unlocking('VIDEO_PREVIEW')">预览</router-link>
                         <el-button type="text" v-if="unlocking('VIDEO_EDIT')" @click="didClickEdit(scope)">修改
                         </el-button>
                         <el-button type="text" v-if="unlocking('VIDEO_DELETE')" @click="onRemove(scope.row)">删除
                         </el-button>
+                         <router-link class="el-button el-button--text" :to="{name:'interactiveVideo',params: { id: scope.row.id }}" tag="a" target="_blank">课中交互</router-link>
                         <!--<el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>-->
                     </template>
                 </el-table-column>

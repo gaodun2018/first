@@ -1,4 +1,4 @@
-import {COURSE_INFO,COURSE_SYLLABUSES,COURSE_COVER,RESOURCE_INTRO,RESOURCE_UPDATE} from '../mutation-types';
+import {COURSE_INFO,COURSE_SYLLABUSES,COURSE_COVER,RESOURCE_INTRO,RESOURCE_UPDATE,DRADATION_LIST} from '../mutation-types';
 const state = {
   course_info:'',    //课程的所有信息
   course_Syllabuses:'',    //课程下的大纲
@@ -9,6 +9,7 @@ const state = {
   course_update_ids:[],   //修改的资源介绍的id
   course_update_titles:[],   //修改的资源介绍的标题
   course_update_contents:[],   //修改的资源介绍的内容
+  course_daration_list:[],  //课程下阶段列表
 };
 const getters = {}
 // 方法调用逻辑
@@ -49,6 +50,10 @@ const actions = {
     resourceData[data.index].content = data.content;
     commit(RESOURCE_INTRO, resourceData);
     commit(RESOURCE_UPDATE, data);
+  },
+  // 课程下所有阶段列表
+  getDradationList({commit, state}, data){
+    commit(DRADATION_LIST, data);
   },
 };
 // 逻辑代码
@@ -96,6 +101,9 @@ const mutations = {
     console.log(state.course_update_ids,state.course_update_titles,state.course_update_contents);
 
   },
+  [DRADATION_LIST](state,data){
+    state.course_daration_list = data;
+  }
 };
 export default {
   state,

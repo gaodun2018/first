@@ -144,7 +144,7 @@
 
 <script>
 import { format } from "../../../util/util";
-import FilesUpload from "../courseset/FilesModelUpload.vue";
+import FilesUpload from "./HandoutModelUpload.vue";
 import Vue from "../../../common/vue.js";
 import draggable from "vuedraggable";
 import { handoutTable } from "../../common/courseConfig.js";

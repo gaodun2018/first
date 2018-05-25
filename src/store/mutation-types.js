@@ -22,3 +22,4 @@ export const RESOURCE_UPDATE = "RESOURCE_UPDATE"; //保存修改过的资源介�
 export const COURSE_INFO = "COURSE_INFO"; //保存课程的所有信息
 export const COURSE_SYLLABUSES = "COURSE_SYLLABUSES"; //保存课程下的大纲Syllabuses
 export const GET_USER_TREE = "GET_USER_TREE";
+export const DRADATION_LIST = "DRADATION_LIST";

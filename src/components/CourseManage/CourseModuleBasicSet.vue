@@ -128,8 +128,8 @@
 }
 </style>
 <script>
-import ImgUpload from "./courseset/CourseModelUpload.vue";
-import ResourceIntro from "./courseset/CourseModelResourceIntro.vue";
+import ImgUpload from "./courseSet/CourseModelUpload.vue";
+import ResourceIntro from "./courseSet/CourseModelResourceIntro.vue";
 import {
     initial_info,
     course_type,
