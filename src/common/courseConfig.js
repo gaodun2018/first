@@ -6,8 +6,8 @@ export const course_type = [{
     course_type_id: '10',
     name: '网课2.0',
 }, {
-    course_type_id: '3',
-    name: '自适应学习网课-EP',
+    course_type_id: '11',
+    name: 'EP2.0',
 }, {
     course_type_id: '4',
     name: '私播课-Glive+',
@@ -21,8 +21,8 @@ export const options = [{
     value: '10',
     label: '网课2.0',
 }, {
-    value: '3',
-    label: '自适应学习网课-EP',
+    value: '11',
+    label: 'EP2.0',
 }, {
     value: '4',
     label: '私播课-Glive+',
