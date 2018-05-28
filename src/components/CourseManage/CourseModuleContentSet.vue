@@ -143,10 +143,6 @@ export default {
   vertical-align: middle;
 }
 
-.coursecontent .el-form-item {
-  padding-left: 12px;
-}
-
 .coursecontent .el-form-item.w_350 .el-input__inner {
   width: 330px;
 }

@@ -74,8 +74,24 @@
             <el-checkbox :label="3">复习阶段</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item style="margin-top:-24px;" v-if="attribute.length > 0" label="" prop="attribute_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
-          <el-select v-model="stageForm.attribute_id" style="width: 90%;" filterable :placeholder="attribute[0]===1?'请选择学前测试的试卷ID':attribute[0]===2?'请选择该翻转阶段适用的考季':'请选择该复习阶段适用的考季'">
+        <el-row class="attribute-box">
+          <el-col :span="5" class="attribute-type-select" v-if="attribute[0] === 1">
+            <el-select v-model="searchType">
+              <el-option label="试卷名称搜索" :value="1"></el-option>
+              <el-option label="试卷ID搜索" :value="2"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="19" class="attribute-paper-select">
+            <el-form-item v-if="attribute[0] === 1" label="" prop="paper_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
+              <el-select style="width: 90%;" placeholder="请选择学前测试的试卷ID" v-model="stageForm.paper_id" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+                <el-option v-for="item in paperList" :key="item.paper_id" :label="item.title" :value="item.paper_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item style="" v-if="attribute[0] === 2 || attribute[0] === 3" label="" prop="season_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
+          <el-select v-model="stageForm.season_id" style="width: 90%;" filterable :placeholder="attribute[0]===2?'请选择该翻转阶段适用的考季':'请选择该复习阶段适用的考季'">
             <el-option v-for="item in seaconList" :key="item.season_id" :label="item.time" :value="item.season_id">
             </el-option>
           </el-select>
@@ -99,6 +115,26 @@
     border-radius: 50%;
   }
 }
+.attribute-box {
+  margin-top: -20px;
+  .attribute-type-select {
+    margin-right: -2px;
+    .el-input__inner {
+      border-radius: 4px 0 0 4px;
+    }
+  }
+  .attribute-paper-select {
+    .el-input__inner {
+      border-radius: 0px 4px 4px 0px;
+    }
+    .el-form-item {
+      margin-bottom: 0;
+      .el-form-item__content {
+        margin-left: 0 !important;
+      }
+    }
+  }
+}
 </style>
 
 <script>
@@ -115,7 +151,8 @@ export default {
         syllabus_id: "", //阶段挂载的大纲id
         title: "", //新建的大纲标题
         // attribute: [] //属性，1:前导阶段；2:翻转阶段；3：复习阶段；0:普通阶段
-        attribute_id: "" //试卷id， 考季id，
+        season_id: "", //试卷id， 考季id，
+        paper_id: "" // 试卷id
       },
       attribute: [], //属性，1:前导阶段；2:翻转阶段；3：复习阶段；0:普通阶段
       dialogVisible: false, //
@@ -125,9 +162,55 @@ export default {
       gradation_id: "", //阶段的id 用于修改、删除
       chooseOutlineRadio: "2", //新增阶段时候的大纲选择
       btnLoading: false, //按钮loading
+      options4: [],
+      list: [],
+      loading: false,
+      searchResourceTimer: null, //搜索延时器
+      searchType: 1, //搜索资源的字段
+      paperList: [] //试卷列表
     };
   },
   methods: {
+    //搜索资源
+    searchResource(query) {
+      clearTimeout(this.searchResourceTimer);
+      this.resLoading = true;
+      this.searchResourceTimer = setTimeout(async () => {
+        clearTimeout(this.searchResourceTimer);
+        let params = {
+          discriminator: "paper", //标注该资源属于什么类型，可能的类型有视频、讲义、题目等……
+          page_size: 50, // 分页
+          page: 1, //页数
+          "order_by[]": "desc", //顺序   倒序
+          "order_by_field[]": "id", //排序字段
+          project_id: this.project_id
+        };
+        if (this.searchType === 1) {
+          params.keywords = query;
+        } else if (this.searchType === 2) {
+          params.paper_id = query;
+        }
+        let ret = await this.$http.getResource(params);
+        this.loading = false;
+        if (ret.status === 0) {
+          // this.resLoading = false;
+
+          this.paperList = ret.result.resources;
+          // this.pagination.total = ret.result.pagination.total;
+        } else {
+          this.paperList = [];
+        }
+      }, 500);
+    },
+    remoteMethod(query) {
+      console.log(query, "queryqueryqueryqueryquery");
+      if (query !== "") {
+        this.loading = true;
+        this.searchResource(query);
+      } else {
+        this.paperList = [];
+      }
+    },
     //新增数据 确定
     addTable(formName) {
       this.$refs[formName].validate(valid => {
@@ -201,13 +284,13 @@ export default {
         switch (attribute) {
           case 1:
             // 前导阶段
-            paper_id = 1;
+            paper_id = this.stageForm.paper_id;
             season_id = 0;
             break;
           case 2:
           case 3:
             paper_id = 0;
-            season_id = 1;
+            season_id = this.stageForm.season_id;
             // 翻转/复习阶段
             break;
         }
@@ -302,13 +385,13 @@ export default {
         switch (attribute) {
           case 1:
             // 前导阶段
-            paper_id = 1;
+            paper_id = this.stageForm.paper_id;
             season_id = 0;
             break;
           case 2:
           case 3:
             paper_id = 0;
-            season_id = 1;
+            season_id = this.stageForm.season_id;
             // 翻转/复习阶段
             break;
         }
@@ -386,9 +469,9 @@ export default {
         name: "",
         description: "",
         syllabus_id: "",
-        title: "",
-        attribute: 0
+        title: ""
       };
+      this.attribute = [];
       this.chooseOutlineRadio = "2";
       this.uAction = "addDate";
       this.dialogVisible = true;
@@ -399,7 +482,20 @@ export default {
       this.gradation_id = row.id;
       let sy_id = row.syllabus_id;
       this.chooseOutlineRadio = "2";
+      debugger;
+      this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
+      if (this.attribute.length!==0 && this.attribute[0] === 1) {
+        console.log('11111');
+        this.stageForm.season_id = "";
+      } else if (
+        this.attribute.length!==0 &&
+       ( this.attribute[0] === 2 ||
+        this.attribute[0] === 3)
+      ) {
+        console.log('22222');
+        this.stageForm.paper_id = "";
+      }
       this.dialogVisible = true;
       this.handleChange(sy_id);
     },
@@ -421,9 +517,9 @@ export default {
       let ret = await this.$http.getSeasonList(course_id);
       if (ret.status === 0) {
         // this.seasonList = ret.result.list;
-        this.$store.dispatch('getSeasonList',ret.result.list);
+        this.$store.dispatch("getSeasonList", ret.result.list);
       }
-    },
+    }
   },
   computed: {
     course_id() {
@@ -442,7 +538,7 @@ export default {
         return this.$store.state.course.course_info.subject_id;
       }
     },
-    seaconList(){
+    seaconList() {
       return this.$store.state.course.seaconList;
     }
   },
