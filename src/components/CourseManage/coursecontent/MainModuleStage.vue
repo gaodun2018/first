@@ -76,7 +76,7 @@
         </el-form-item>
         <el-form-item style="margin-top:-24px;" v-if="attribute.length > 0" label="" prop="attribute_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
           <el-select v-model="stageForm.attribute_id" style="width: 90%;" filterable :placeholder="attribute[0]===1?'请选择学前测试的试卷ID':attribute[0]===2?'请选择该翻转阶段适用的考季':'请选择该复习阶段适用的考季'">
-            <el-option v-for="item in attrOptions" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="item in seaconList" :key="item.season_id" :label="item.time" :value="item.season_id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -87,9 +87,7 @@
           <el-button type="primary" :loading="btnLoading" @click="addTable('stageForm')" v-if="uAction==='addDate'">确 定</el-button>
         </el-form-item>
       </el-form>
-
     </el-dialog>
-
   </div>
 </template>
 <style lang="less">
@@ -127,28 +125,6 @@ export default {
       gradation_id: "", //阶段的id 用于修改、删除
       chooseOutlineRadio: "2", //新增阶段时候的大纲选择
       btnLoading: false, //按钮loading
-      attrOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ]
     };
   },
   methods: {
@@ -436,9 +412,18 @@ export default {
       let ret = await this.$http.getStageAndOutline(course_id);
       if (ret.status == 0) {
         this.tableData = ret.result.gradation_list;
-        this.$store.dispatch('getDradationList',ret.result.gradation_list);
+        this.$store.dispatch("getDradationList", ret.result.gradation_list);
       }
-    }
+    },
+    //获取考季列表
+    async getCourseSeasonList() {
+      let course_id = this.course_id;
+      let ret = await this.$http.getSeasonList(course_id);
+      if (ret.status === 0) {
+        // this.seasonList = ret.result.list;
+        this.$store.dispatch('getSeasonList',ret.result.list);
+      }
+    },
   },
   computed: {
     course_id() {
@@ -456,11 +441,15 @@ export default {
       if (this.$store.state.course.course_info) {
         return this.$store.state.course.course_info.subject_id;
       }
+    },
+    seaconList(){
+      return this.$store.state.course.seaconList;
     }
   },
   mounted() {},
   created() {
     this.getStageAndOutline();
+    this.getCourseSeasonList();
   }
 };
 </script>

@@ -1,14 +1,17 @@
 <template>
   <div class="exam-time">
-    <el-form ref="firstForm" :model="ruleForms" label-width="100%" label-position="left" :inline="true">
-      <el-form-item label="本课程是否启用考季管理的功能" class="set-form-item">
-        <el-radio-group v-model="ruleForms.bEnabled" @change="handleChange">
+    <el-row class="set-tab-wrapper">
+      <el-row class="tab-title">
+        本课程是否启用考季管理的功能
+      </el-row>
+      <el-row class="tab-radio">
+        <el-radio-group v-model="isEnabled" @change="handleChange">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">不启用</el-radio>
         </el-radio-group>
-      </el-form-item>
-    </el-form>
-    <template v-if="ruleForms.bEnabled===1?true:false">
+      </el-row>
+    </el-row>
+    <template v-if="isEnabled===1?true:false">
       <el-table :data="seasonList" border style="width: 90%;margin-top: 16px;">
         <el-table-column label="序号" align="center" width="60">
           <template slot-scope="scope">
@@ -133,7 +136,7 @@
         </div>
         <div class="coursebtn" style="text-align:center;">
           <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-          <el-button type="primary" @click="handleCreateSeason()">确 定</el-button>
+          <el-button type="primary" :loading="btnLoading" @click="handleCreateSeason()">确 定</el-button>
         </div>
         <el-dialog width="60%" center class="innerDialog" top="8%" :title="isAddPlan?'新增一段学习计划':'修改学习计划'" :visible.sync="innerVisible" append-to-body>
           <el-form :model="planForm" ref="planForm" @submit.native.prevent label-width="140px" class="el-ruleForm">
@@ -324,9 +327,6 @@ export default {
       planlist: [],
       dialogVisible: false,
       innerVisible: false,
-      ruleForms: {
-        bEnabled: 1
-      },
       tableData: [],
       file: [],
       currentIndex: "",
@@ -348,6 +348,7 @@ export default {
       },
       isAddSeason: true, //标记是否新增考季
       isAddPlan: true, //标记是否新增学习计划
+      btnLoading: false, //按钮loading
       palnBtnLoading: false, //保存计划的loading
       currentPlanIndex: "", //当前修改的计划的索引
       seasonId: "" //当前修改的考季的id
@@ -358,70 +359,42 @@ export default {
     handleSavePlan(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 是否是新增考纪
-          if (this.isAddSeason) {
-            // 保存在本地
-            const { content, target, date } = this.planForm;
-            let gradation = new Array();
-            content.forEach(id => {
-              this.daration_list.forEach(ele => {
-                if (ele.id == id) {
-                  gradation.push(ele);
-                }
-              });
+          // 保存在本地
+          const { content, target, date } = this.planForm;
+          let gradation = new Array();
+          content.forEach(id => {
+            this.daration_list.forEach(ele => {
+              if (ele.id == id) {
+                gradation.push(ele);
+              }
             });
-            debugger;
-            // 是否是新增学习计划
-            if (this.isAddPlan) {
-              this.planlist.push({
-                gradation: gradation,
-                target,
-                start_time: date[0],
-                end_time: date[1]
-              });
-            } else {
-              this.planlist[this.currentPlanIndex] = {
-                content,
-                target,
-                start_time: date[0],
-                end_time: date[1]
-              };
-            }
-            this.resetForm("planForm");
-            this.innerVisible = false;
+          });
+          // 是否是新增学习计划
+          if (this.isAddPlan) {
+            this.planlist.push({
+              gradation: gradation,
+              target,
+              start_time: date[0],
+              end_time: date[1]
+            });
           } else {
-            // 接口请求
-            if (this.isAddPlan) {
-              // 新增计划
-              this.httpCreatePlan();
-            } else {
-              // 修改计划
-            }
+            this.planlist[this.currentPlanIndex] = {
+              gradation: gradation,
+              target,
+              start_time: date[0],
+              end_time: date[1]
+            };
           }
+          this.resetForm("planForm");
+          this.innerVisible = false;
         } else {
           return false;
         }
       });
     },
-    // 修改考季时创建新的学习计划
-    async httpCreatePlan() {
-      const { content, target, date } = this.planForm;
-      let params = {
-        "content[]": content, //内容 ，大纲id
-        start_time: date[0], //开始时间
-        end_time: date[1], //结束事件
-        target: target, //目标
-        course_id: this.course_id //课程id
-      };
-      let ret = await this.$http.createPlan(this.seasonId, params);
-    },
     // 删除学习计划
     delplan(v, i) {
-      // 是否是新增考季
-      if (this.isAddSeason) {
-        this.planlist.splice(i, 1);
-      } else {
-      }
+      this.planlist.splice(i, 1);
     },
     // 编辑学习计划
     eidtplan(v, i) {
@@ -479,11 +452,11 @@ export default {
       this.isAddPlan = true;
       this.innerVisible = true;
     },
-    // 创建考季
+    // 创建新增/修改考季
     async handleCreateSeason() {
       let params = {
         course_id: this.course_id, //课程id
-        enable: this.ruleForms.bEnabled, //是否启用（0:不启用;1:启用;2:仅启用考季管理）
+        enable: this.isEnabled, //是否启用（0:不启用;1:启用;2:仅启用考季管理）
         time: this.firstAddForm.date, //考季设置时间，  年-月/年-月-日
         time_type: this.firstAddForm.dateFormat, //时间格式：1:（年-月）2:（年-月-日）
         "confirm[second][start_time]": this.secondAddForm.date1[0], //第二次考季问卷确认开始时间
@@ -504,18 +477,40 @@ export default {
         return;
       }
       this.planlist.forEach((val, index) => {
-        params[`plan[${index}][content][]`] = val.content;
+        let gradation = val.gradation;
+        let content = [];
+        gradation.forEach(item => {
+          //  = item.id;
+          content.push(item.id);
+        });
+        params[`plan[${index}][content][]`] = content;
         params[`plan[${index}][start_time]`] = val.start_time;
         params[`plan[${index}][end_time]`] = val.end_time;
         params[`plan[${index}][target]`] = val.target;
       });
-      let ret = await this.$http.createSeason(params);
+      let ret;
+      if (this.isAddSeason) {
+        this.btnLoading = true;
+        ret = await this.$http.createSeason(params);
+      } else {
+        let seasonId = this.seasonId;
+        this.btnLoading = true;
+        ret = await this.$http.updateSeason(seasonId, params);
+      }
+
+      this.btnLoading = false;
       if (ret.status === 0) {
         this.$message({
-          message: "新增考季成功",
+          message: this.isAddSeason ? "新增考季成功！" : "修改考季成功！",
           type: "success"
         });
+        this.getCourseSeasonList();
         this.dialogVisible = false;
+      } else {
+        this.$message({
+          message: this.isAddSeason ? "新增考季失败:"+ret.message : "修改考季失败:"+ret.message,
+          type: "error"
+        });
       }
     },
     handleRaidoChange(r) {
@@ -553,37 +548,37 @@ export default {
       if (this.active <= 0) return;
       this.active--;
     },
-    //获取讲义是否设置
-    // async GetCourseDisable() {
-    //   let course_id = this.$route.params.cid;
-    //   let ret = await this.$http.GetCourseDisable(course_id);
-    //   if (ret.status == 0) {
-    //     //0是没启用 1是启用了
-    //     this.ruleForms = {
-    //       bEnabled: ret.result.handout_download_open
-    //         ? Number(ret.result.handout_download_open)
-    //         : 0
-    //     };
-    //   }
-    // },
     handleChange(value) {
       this.SetCourseDisable();
     },
-    //设置讲义模块的启用
-    // async SetCourseDisable() {
-    //   let cource_id = this.$route.params.cid;
-    //   let params = {
-    //     setting_value: this.ruleForms.bEnabled, //是否启用，0:不启用，1:启用
-    //     setting_key: "handout_download_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；
-    //   };
-    //   let ret = await this.$http.SetCourseDisable(cource_id, params);
-    // },
+    // 设置讲义模块的启用
+    async SetCourseDisable() {
+      let cource_id = this.course_id;
+      let params = {
+        setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
+        setting_key: "season_manage_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；season_manage_open ：考季开关
+      };
+      let ret = await this.$http.SetCourseDisable(cource_id, params);
+      if (ret.status === 0) {
+        this.$message({
+          message: "启用考季成功！",
+          type: "success"
+        });
+      } else {
+        this.$message({
+          message: "启用考季失败！",
+          type: "error"
+        });
+        this.isEnabled = this.isEnabled === 1 ? 0 : 1;
+      }
+    },
     // //获取考季列表
     async getCourseSeasonList() {
       let course_id = this.course_id;
       let ret = await this.$http.getSeasonList(course_id);
       if (ret.status === 0) {
         this.seasonList = ret.result.list;
+        this.$store.dispatch('getSeasonList',ret.result.list);
       }
     },
     //删除考季确认
@@ -719,6 +714,16 @@ export default {
     },
     daration_list() {
       return this.$store.state.course.course_daration_list;
+    },
+    isEnabled: {
+      get() {
+        return this.$store.state.course.course_disable.season_manage_open;
+      },
+      set(v) {
+        let data = {};
+        data.season_manage_open = v;
+        this.$store.dispatch("courseDisable", data);
+      }
     }
   },
   mounted() {

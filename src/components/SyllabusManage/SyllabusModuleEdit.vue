@@ -127,13 +127,13 @@
           <span class="ep-tips">以下设置为EP专用：（选填）</span>
         </el-row>
         <el-form-item label="资源应用">
-          <el-checkbox-group v-model="attribute" @change="handleCheckboxChange">
+          <el-checkbox-group v-model="addResFirFrom.attribute" @change="handleCheckboxChange">
             <el-checkbox :label="1">跳级测试</el-checkbox>
             <el-checkbox :label="2">提分盒子</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="开启时间" prop="bbb">
-           <el-date-picker v-model="addResFirFrom.date" type="month" value-format="yyyy-MM" placeholder="请设置开启时间">
+           <el-date-picker v-model="addResFirFrom.date" type="date" value-format="yyyy-MM-dd" placeholder="请设置开启时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="建议学习时长" prop="ccc" :rules="filter_rules({type:'isAllSpace',maxLength:100})">
@@ -367,8 +367,8 @@ export default {
         name: "",
         bbb:'',
         ccc:'',
+        attribute:[],
       },
-      attribute:[],  //资源应用
       ruleProject: {
         name: ""
       },
@@ -417,9 +417,9 @@ export default {
     handleCheckboxChange(d) {
       console.log(d);
       if (d.length > 1) {
-        this.attribute = d.splice(-1);
+        this.addResFirFrom.attribute = d.splice(-1);
       }
-      console.log(this.attribute);
+      console.log(this.addResFirFrom.attribute);
     },
     handleTableChange(val) {
       this.resourceRadio = String(val.id);

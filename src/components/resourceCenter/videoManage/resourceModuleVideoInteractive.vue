@@ -1,5 +1,5 @@
 <template>
-  <div class="module-edu-content">
+  <div class="module-edu-content video-interactice-wrapper">
     <div class="outlineeat">
       课中交互：【视频资源ID：{{id}}】{{title}}
     </div>
@@ -34,19 +34,19 @@
         <el-form-item label="时间点" required>
           <el-col :span="7">
             <el-form-item prop="hour">
-              <el-input @change="handleInputChange" class="coursetxt" v-model="ruleForm.hour"></el-input>
+              <el-autocomplete :fetch-suggestions="querySearchH" class="coursetxt" v-model="ruleForm.hour"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :span="1">时</el-col>
           <el-col :span="7">
             <el-form-item prop="minute">
-              <el-input @change="handleInputChange" class="coursetxt" v-model="ruleForm.minute"></el-input>
+              <el-autocomplete :fetch-suggestions="querySearchMS" class="coursetxt" v-model="ruleForm.minute"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :span="1">分</el-col>
           <el-col :span="7">
             <el-form-item prop="second">
-              <el-input @change="handleInputChange" class="coursetxt" v-model="ruleForm.second"></el-input>
+              <el-autocomplete :fetch-suggestions="querySearchMS" class="coursetxt" v-model="ruleForm.second"></el-autocomplete>
             </el-form-item>
           </el-col>
           <el-col :span="1">秒</el-col>
@@ -54,14 +54,14 @@
         <el-form-item label="节点名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input class="coursetxt" placeholder="请输入节点名称" v-model="ruleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="课中练习（选填 ）" prop="timu" :rules="filter_rules({type:'isAllSpace'})">
-          <el-input class="coursetxt" placeholder="请输入题目，多道题目请用英文逗号隔开" v-model="ruleForm.timu"></el-input>
+        <el-form-item label="课中练习（选填 ）" prop="item_ids" :rules="filter_rules({type:'isAllSpace'})">
+          <el-input class="coursetxt" placeholder="请输入题目，多道题目请用英文逗号隔开" v-model="ruleForm.item_ids"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <!-- <el-button type="primary" :loading="btnLoading" @click="submitForm('ruleForm')">{{btnLoading?'保存中':'确 定'}} -->
-        <!-- </el-button> -->
-        <!-- <el-button @click="resetForm('ruleForm')">取 消</el-button> -->
+        <el-button @click="resetForm('ruleForm')">重 置</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="submitForm('ruleForm')">{{btnLoading?'保存中':'确 定'}}
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -69,7 +69,6 @@
 <script>
 import VideoPlayer from "../../../util/play.js";
 import { secondToDate } from "../../../util/util.js";
-console.log(VideoPlayer);
 export default {
   components: {},
   props: [],
@@ -86,19 +85,49 @@ export default {
         minute: "",
         second: "",
         title: "",
-        timu:''
+        item_ids: ""
       },
-      openTime:{
-        h:'',
-        h:'',
-        h:'',
+      openTime: {
+        h: "",
+        h: "",
+        h: ""
       },
-      duration: 0 //时间总时常
+      duration: 0, //时间总时常
+      btnLoading: false,
+      suggestHour: [],
+      suggestMinuteAndSecond: [],
+      checkTimer: null //延迟起
     };
   },
+  mounted() {
+    for (let i = 0; i <= 10; i++) {
+      let k = i < 10 ? "0" + i : "" + i;
+      let value = { value: k };
+      this.suggestHour.push(value);
+    }
+    for (let i = 0; i <= 60; i++) {
+      let k = i < 10 ? "0" + i : "" + i;
+      let value = { value: k };
+      this.suggestMinuteAndSecond.push(value);
+    }
+  },
   methods: {
-    handleInputChange(v) {
-      this.checkVideoTime();
+    querySearchH(queryString, cb) {
+      // 调用 callback 返回建议列表的数据
+      cb(this.suggestHour);
+    },
+    querySearchMS(queryString, cb) {
+      // 调用 callback 返回建议列表的数据
+      cb(this.suggestMinuteAndSecond);
+    },
+    resetForm(formName) {
+      this.ruleForm = {
+        hour: "",
+        minute: "",
+        second: "",
+        title: "",
+        item_ids: ""
+      };
     },
     // 校验时间
     checkVideoTime() {
@@ -106,11 +135,10 @@ export default {
         parseInt(this.ruleForm.hour) * 60 * 60 +
         parseInt(this.ruleForm.minute) * 60 +
         parseInt(this.ruleForm.second);
-      console.log(aTime);
       if (aTime > this.duration) {
         this.$message({
           message: "设置时间节点已超过视频总时长，请重新设置！",
-          type:'warning',
+          type: "warning"
         });
         this.ruleForm.hour = this.openTime.h;
         this.ruleForm.minute = this.openTime.m;
@@ -120,10 +148,48 @@ export default {
         return true;
       }
     },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if(!this.checkVideoTime())return;
+          this.httpCreateInsteractive();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    //添加一条节点
+    async httpCreateInsteractive(){
+      let aTime =
+        parseInt(this.ruleForm.hour) * 60 * 60 +
+        parseInt(this.ruleForm.minute) * 60 +
+        parseInt(this.ruleForm.second);
+      let params ={
+        times :aTime,//时间戳(秒)
+        type :'2',//类型 1：题目   2：视频（现没有）
+        item_ids :this.ruleForm.item_ids,//题目id
+        name :this.ruleForm.title,//节点名称
+      }
+      let ret = await this.$http.createInsteractive(params);
+    },
+    //更新一条节点
+    async httpUpdateInsteractive(){
+       let aTime =
+        parseInt(this.ruleForm.hour) * 60 * 60 +
+        parseInt(this.ruleForm.minute) * 60 +
+        parseInt(this.ruleForm.second);
+      let params ={
+        times :aTime,//时间戳(秒)
+        type :'2',//类型 1：题目   2：视频（现没有）
+        item_ids :this.ruleForm.item_ids,//题目id
+        name :this.ruleForm.title,//节点名称
+      }
+      let ret = await this.$http.updateInsteractive(params);
+    },
     //打标记
     handleFlag() {
       this.videoPlayer = VideoPlayer.getVideoPlayer(); //获取播放器
-      console.log(this.videoPlayer);
       if (!this.videoPlayer) {
         return this.$message({
           message: "请确认视频是否正常播放！"
@@ -139,9 +205,14 @@ export default {
       this.openTime.h = h;
       this.openTime.m = m;
       this.openTime.s = s;
-      console.log(this.duration, timer, h, m, s);
       this.dialogFormVisible = true;
     },
+    //获取节点列表
+    async getInsteractiveList(){
+      // let ret = await this.$http.getInsteractiveList();
+      // console.log(ret);
+    },
+    //获取视频地址
     async initData() {
       let ret = await this.$http.getOneResource(this.$route.params.id);
       try {
@@ -181,6 +252,7 @@ export default {
   async created() {
     this.id = this.$route.params.id;
     this.initData();
+    this.getInsteractiveList();
   }
 };
 </script>
@@ -201,6 +273,15 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 40px;
+}
+</style>
+<style lang="less">
+.video-interactice-wrapper {
+  .el-dialog__wrapper {
+    .el-dialog__footer {
+      padding-top: 60px;
+    }
+  }
 }
 </style>
 

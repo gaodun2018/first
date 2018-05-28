@@ -72,7 +72,21 @@ export default {
       if (ret.status == 0) {
         this.$store.dispatch("saveCourseSyllabuses", ret.result.list);
       }
-    }
+    },
+    // 获取课程多项启用设置
+     async GetCourseDisable() {
+      let course_id = this.course_id;
+      let ret = await this.$http.GetCourseDisable(course_id);
+      if (ret.status === 0) {
+        //0是没启用 1是启用了
+        this.$store.dispatch('courseDisable',ret.result);
+        // this.ruleForm = {
+        //   bEnabled: ret.result.handout_download_open
+        //     ? Number(ret.result.handout_download_open)
+        //     : 0
+        // };
+      }
+    },
   },
   computed: {
     course_id() {
@@ -85,6 +99,7 @@ export default {
   mounted() {},
   created() {
     this.getCourseInfo();
+    this.GetCourseDisable();
   }
 };
 </script>

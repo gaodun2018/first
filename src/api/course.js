@@ -71,6 +71,9 @@ export const getSeasonList = (courseId,params) => get(`${getBaseUrl()}apigateway
 //修改计划（不含阶段）
 export const editPlan = (planId,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/plan/${planId}`, params);
 
+//修改考季（考季及计划）
+export const updateSeason = (seasonId,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/plan/item/${seasonId}`, params);
+
 //创建计划
 export const createPlan = (seasonId,params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/${seasonId}/plan`, params);
 

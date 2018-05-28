@@ -30,3 +30,12 @@ export const resourceFile = params => formPost(`${getBaseUrl()}apigateway.gaodun
 export const saveMidfyLecturenote = (id, params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note/${id}`, params)
 // 删除资源
 export const removeLecturenote = (id) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/${id}`)
+
+//添加节点(后台)
+export const createInsteractive = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/add`, params)
+
+//节点列表（后台）
+export const getInsteractiveList = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/list`, params)
+
+//修改节点(后台)
+export const updateInsteractive = params => formPut(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/update`, params)
