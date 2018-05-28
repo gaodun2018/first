@@ -10,12 +10,12 @@
 </template>
 
 <script>
-  import Special from './MainModuleSpecial.vue'
+  import Guide from './MainModuleGuide.vue'
   import Stage from './MainModuleStage.vue'
   import MockExam from './MainModuleMockExam.vue'
   export default {
     components: {
-      Special,Stage,MockExam
+      Guide,Stage,MockExam
     },
     data() {
       return {

@@ -58,3 +58,24 @@ export const handoutSort = (params) => formPost(`${getBaseUrl()}apigateway.gaodu
 
 // 预览课程
 export const previewCourse = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/user/verify`, params);
+
+//创建考季&计划
+export const createSeason = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season`, params);
+
+//删除考季及计划
+export const deleteSeason = (seasonId,params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/${seasonId}`, params);
+
+//考季及计划详情列表--后台
+export const getSeasonList = (courseId,params) => get(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/item/${courseId}`, params);
+
+//修改计划（不含阶段）
+export const editPlan = (planId,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/plan/${planId}`, params);
+
+//修改考季（考季及计划）
+export const updateSeason = (seasonId,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/plan/item/${seasonId}`, params);
+
+//创建计划
+export const createPlan = (seasonId,params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/${seasonId}/plan`, params);
+
+// 搜索老师
+export const searchTeacher = (params) => get(`//192.168.6.101:6073/v1/teachers`, params);

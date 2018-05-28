@@ -63,7 +63,7 @@
                         <span class="rowtype" v-else>禁用</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" min-width="200" fixed="right" align="center">
+                <el-table-column label="操作" width="260" fixed="right" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
                         <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
@@ -78,7 +78,7 @@
         </div>
 
         <el-dialog :title="dialogTitle" class="tabplane" :visible.sync="dialogFormVisible" @close="resetForm('ruleForm')">
-            <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form :model="ruleForm" ref="ruleForm" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="课程大纲名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input class="coursetxt" v-model="ruleForm.title"></el-input>
                 </el-form-item>
