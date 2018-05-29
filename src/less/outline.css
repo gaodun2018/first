@@ -221,15 +221,16 @@
     color: #2CA4D9;
     float: right;
     cursor: pointer;
+    padding: 0 10px;
 }
 
-.chapterbox .chrgt {
-    width: 60px;
+/* .chapterbox .chrgt {
+    width: 40px;
 }
 
 .chapterbox .chrgt1 {
-    width: 100px;
-}
+    width: 60px;
+} */
 
 .chapterbox .chrgt1.yellow {
     color: #F09964;
@@ -1340,7 +1341,7 @@
     color: #00AEFF;
 }
 
-/* .resource .el-table__body-wrapper { 
+/* .resource .el-table__body-wrapper {
     margin-top:10px;border-left:1px solid #dfe6ec;
 } */
 

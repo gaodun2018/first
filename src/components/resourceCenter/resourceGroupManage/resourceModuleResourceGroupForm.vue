@@ -50,7 +50,6 @@
               </template>
               <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
               <span v-else>{{scope.row[item.key]}}</span>
-
             </template>
           </el-table-column>
         </el-table>

@@ -39,3 +39,6 @@ export const getInsteractiveList = params => get(`${getBaseUrl()}apigateway.gaod
 
 //修改节点(后台)
 export const updateInsteractive = params => formPut(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/update`, params)
+
+// 【后台】删除节点
+export const removeInsteractive = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/detele`,params)

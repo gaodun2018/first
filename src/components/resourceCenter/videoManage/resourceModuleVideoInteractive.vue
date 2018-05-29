@@ -13,15 +13,18 @@
       <el-table ref="table" border :data="tableData" style="width: 100%">
         <el-table-column label="序号" type="index" width="50">
         </el-table-column>
-        <el-table-column prop="title" align="center" label="重要节点时间点" width="200">
+        <el-table-column align="center" label="重要节点时间点" width="200">
+          <template slot-scope="scope">
+            {{scope.row.Times | secondToDate}}
+          </template>
         </el-table-column>
-        <el-table-column prop="project_name" align="center" label="重要节点名称">
+        <el-table-column prop="Name" align="center" label="重要节点名称">
         </el-table-column>
-        <el-table-column prop="updated_at" align="center" label="课中练习（题目ID）" width="320">
+        <el-table-column prop="Item_ids" align="center" label="课中练习（题目ID）" width="320">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="220">
           <template slot-scope="scope">
-            <el-button type="text" @click="didClickEdit(scope)">修改
+            <el-button type="text" @click="didClickEdit(scope.row)">修改
             </el-button>
             <el-button type="text" @click="onRemove(scope.row)">删除
             </el-button>
@@ -92,6 +95,7 @@ export default {
         h: "",
         h: ""
       },
+      isCreate: false,
       duration: 0, //时间总时常
       btnLoading: false,
       suggestHour: [],
@@ -151,40 +155,115 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(!this.checkVideoTime())return;
-          this.httpCreateInsteractive();
+          if (!this.checkVideoTime()) return;
+          if (this.isCreate) {
+            this.httpCreateInsteractive();
+          } else {
+            this.httpUpdateInsteractive();
+          }
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
+    onRemove(row) {
+      // 删除
+      this.$confirm("此操作将删除该节点, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = {
+            id:row.Id
+          }
+          this.$http.removeInsteractive(params).then(ret => {
+            if (ret.status === 0) {
+              this.$message({
+                type: "success",
+                message: "删除成功"
+              });
+              this.getInsteractiveList();
+            } else {
+              this.$message({
+                type: "warning",
+                message: "删除失败"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    //xiugai
+    didClickEdit(row) {
+      this.videoPlayer = VideoPlayer.getVideoPlayer(); //获取播放器
+      if (!this.videoPlayer) {
+        return this.$message({
+          message: "请确认视频是否正常播放！"
+        });
+      }
+      this.videoPlayer.pause(); //暂停
+      this.duration = this.videoPlayer.getDuration(); //总时间
+      const { Id, Isdel, Item_ids, Name, Resource_id, Times, Type } = row;
+      const { h, m, s } = secondToDate(Times);
+      this.openTime.h = h.toString(10);
+      this.openTime.m = m.toString(10);
+      this.openTime.s = s.toString(10);
+      (this.ruleForm.hour = h.toString(10)),
+        (this.ruleForm.minute = m.toString(10)),
+        (this.ruleForm.second = s.toString(10)),
+        (this.ruleForm.title = Name),
+        (this.ruleForm.item_ids = Item_ids);
+      this.isCreate = false;
+      this.dialogFormVisible = true;
+    },
     //添加一条节点
-    async httpCreateInsteractive(){
+    async httpCreateInsteractive() {
       let aTime =
         parseInt(this.ruleForm.hour) * 60 * 60 +
         parseInt(this.ruleForm.minute) * 60 +
         parseInt(this.ruleForm.second);
-      let params ={
-        times :aTime,//时间戳(秒)
-        type :'2',//类型 1：题目   2：视频（现没有）
-        item_ids :this.ruleForm.item_ids,//题目id
-        name :this.ruleForm.title,//节点名称
-      }
+      let params = {
+        times: aTime, //时间戳(秒)
+        type: "1", //类型 1：题目   2：视频（现没有）
+        item_ids: this.ruleForm.item_ids, //题目id
+        name: this.ruleForm.title, //节点名称
+        resource_id: this.id //视频id
+      };
       let ret = await this.$http.createInsteractive(params);
+      if (ret.status === 0) {
+        this.$message({
+          message: "添加节点成功！",
+          type: "success"
+        });
+        this.getInsteractiveList();
+        this.dialogFormVisible = false;
+      } else {
+        this.$message({
+          message: "添加节点失败！",
+          type: "success"
+        });
+      }
     },
     //更新一条节点
-    async httpUpdateInsteractive(){
-       let aTime =
+    async httpUpdateInsteractive() {
+      let aTime =
         parseInt(this.ruleForm.hour) * 60 * 60 +
         parseInt(this.ruleForm.minute) * 60 +
         parseInt(this.ruleForm.second);
-      let params ={
-        times :aTime,//时间戳(秒)
-        type :'2',//类型 1：题目   2：视频（现没有）
-        item_ids :this.ruleForm.item_ids,//题目id
-        name :this.ruleForm.title,//节点名称
-      }
+      let params = {
+        times: aTime, //时间戳(秒)
+        type: "1", //类型 1：题目   2：视频（现没有）
+        item_ids: this.ruleForm.item_ids, //题目id
+        name: this.ruleForm.title, //节点名称
+        resource_id: this.id //视频id
+      };
       let ret = await this.$http.updateInsteractive(params);
     },
     //打标记
@@ -199,18 +278,24 @@ export default {
       let timer = this.videoPlayer.getPosition(); //当前时间
       this.duration = this.videoPlayer.getDuration(); //总时间
       const { h, m, s } = secondToDate(parseInt(timer));
-      this.ruleForm.hour = h;
-      this.ruleForm.minute = m;
-      this.ruleForm.second = s;
-      this.openTime.h = h;
-      this.openTime.m = m;
-      this.openTime.s = s;
+      this.ruleForm.hour = h.toString(10);
+      this.ruleForm.minute = m.toString(10);
+      this.ruleForm.second = s.toString(10);
+      this.openTime.h = h.toString(10);
+      this.openTime.m = m.toString(10);
+      this.openTime.s = s.toString(10);
       this.dialogFormVisible = true;
     },
     //获取节点列表
-    async getInsteractiveList(){
-      // let ret = await this.$http.getInsteractiveList();
-      // console.log(ret);
+    async getInsteractiveList() {
+      let params = {
+        resource_id: this.id, //资源id
+        types: 1 //默认1     类型  1：题目   2：视频（暂不使用）
+      };
+      let ret = await this.$http.getInsteractiveList(params);
+      if (ret.status === 0) {
+        this.tableData = ret.result;
+      }
     },
     //获取视频地址
     async initData() {

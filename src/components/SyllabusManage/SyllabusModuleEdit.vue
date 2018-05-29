@@ -1,11 +1,17 @@
 <template>
   <div class="module-edu-content permission-outlinemodule">
-    <div class="outlineeat">
-      课程大纲：{{title}}
-    </div>
+    <el-row class="outlineeat">
+      <el-col :span="18">
+        课程大纲：{{title}}
+      </el-col>
+      <el-col :span="6" v-if="coursesylllevel === 4" style="text-align:right;">
+        <el-switch v-model="value4" active-text="是否启用知识点关联">
+        </el-switch>
+      </el-col>
+    </el-row>
     <div class="outlinebox">
       <div class="chapterbox">
-        <template v-if="coursesylllevel == 3">
+        <template v-if="coursesylllevel === 3">
           <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
           <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
             <div class="chaptit">
@@ -38,7 +44,7 @@
           </div>
           <!-- </draggable> -->
         </template>
-        <template v-if="coursesylllevel == 4">
+        <template v-if="coursesylllevel === 4">
           <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
           <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
             <div class="chaptit">
@@ -53,7 +59,7 @@
                   <span class="chlft">{{secItem.name}}</span>
                   <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                   <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
-                  <span class="chrgt1" @click="openChildDialog(secItem.id)">增加子目录</span>
+                  <span class="chrgt1" @click="openChildDialog(secItem.id,true)">增加子目录</span>
                 </div>
                 <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                   <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
@@ -64,6 +70,7 @@
                       </span>
                       <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
                       <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
+                      <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">关联知识点</span>
                       <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                     </div>
                     <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
@@ -84,7 +91,7 @@
           </div>
           <!-- </draggable> -->
         </template>
-        <template v-if="coursesylllevel == 2">
+        <template v-if="coursesylllevel === 2">
           <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
           <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
             <div class="chaptit">
@@ -133,7 +140,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="开启时间" prop="bbb">
-           <el-date-picker v-model="addResFirFrom.date" type="date" value-format="yyyy-MM-dd" placeholder="请设置开启时间">
+          <el-date-picker v-model="addResFirFrom.date" type="date" value-format="yyyy-MM-dd" placeholder="请设置开启时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="建议学习时长" prop="ccc" :rules="filter_rules({type:'isAllSpace',maxLength:100})">
@@ -229,20 +236,50 @@
       </span>
     </el-dialog>
 
-    <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" :visible.sync="adddialogVisible" size="tiny">
+    <!-- <el-dialog title="关联知识点" center :visible.sync="dialogKnowledge"></el-dialog> -->
+
+    <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" center :visible.sync="adddialogVisible" size="tiny">
       <el-form :model="ruleProject" ref="ruleProject" label-width="120px" class="demo-ruleForm">
         <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="adddialogVisible = false">取 消</el-button>
-          <el-button type="primary" v-if="Moduledialog == true" :loading="btnLoading" @click="addruleProject('ruleProject')">{{btnLoading?'新增中':'确 定'}}
-          </el-button>
-          <el-button type="primary" v-else :loading="btnLoading" @click="updateruleProject('ruleProject')">
-            {{btnLoading?'保存中':'保 存'}}
-          </el-button>
+        <!-- <el-form-item label="知识点关联" prop="knowledge" :rules="[{required:true}]">
+          <el-row class="scroll-content" style="margin-bottom:10px;">
+            <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              <span class="tag-title" :title="tag.title">{{tag.title}}</span>
+              <span class="tag-id">（ID：{{tag.id}}）</span>
+            </el-tag>
+          </el-row>
         </el-form-item>
+        <el-row>
+          <el-input placeholder="请输入知识点ID/名称搜索" size="small" v-model="searchInput" @keydown.native.enter="handleIconClick">
+            <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
+          </el-input>
+          <el-table ref="multipleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row :row-key="getRowKeys">
+            <el-table-column :reserve-selection="true" type="selection" width="55">
+            </el-table-column>
+            <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
+                  <span>{{scope.row[item.key]}}</span>
+                </template>
+                <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
+                <span v-else>{{scope.row[item.key]}}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
+          </el-pagination>
+        </el-row> -->
       </el-form>
+      <div class="footer" slot="footer">
+        <el-button @click="adddialogVisible = false">取 消</el-button>
+        <el-button type="primary" v-if="Moduledialog == true" :loading="btnLoading" @click="addruleProject('ruleProject')">{{btnLoading?'新增中':'确 定'}}
+        </el-button>
+        <el-button type="primary" v-else :loading="btnLoading" @click="updateruleProject('ruleProject')">
+          {{btnLoading?'保存中':'保 存'}}
+        </el-button>
+      </div>
     </el-dialog>
 
   </div>
@@ -269,16 +306,16 @@
     }
   }
   .el-dialog__body {
-    .ep-set-box{
-        height: 40px;
-        position: relative;
-      .ep-line{
+    .ep-set-box {
+      height: 40px;
+      position: relative;
+      .ep-line {
         height: 1px;
         margin-top: 20px;
         background: #d3d3d3;
       }
-      .ep-tips{
-        color:#969696;
+      .ep-tips {
+        color: #969696;
         text-align: center;
         width: 200px;
         height: 24px;
@@ -350,6 +387,7 @@ export default {
   },
   data() {
     return {
+      value4: false,
       project_id: "", //项目id
       subject_id: "", //科目id
       btnLoading: false, //按钮loading
@@ -365,9 +403,9 @@ export default {
       progressText: progressText,
       addResFirFrom: {
         name: "",
-        bbb:'',
-        ccc:'',
-        attribute:[],
+        bbb: "",
+        ccc: "",
+        attribute: []
       },
       ruleProject: {
         name: ""
@@ -773,7 +811,10 @@ export default {
     // 检查大纲是否挂载在大纲上
     async checkResIsInOutline() {
       console.log("检查大纲是否挂载在大纲上");
-      if(this.resourceAction === 'update' && this.nativeResourceRadio == this.resourceRadio){
+      if (
+        this.resourceAction === "update" &&
+        this.nativeResourceRadio == this.resourceRadio
+      ) {
         //当操作为修改大纲时，原资源和现在资源一样时，无需检测直接返回true
         return true;
       }
@@ -907,7 +948,10 @@ export default {
       this.dialogVisible = false;
     },
     // 新增课程大纲子目录的弹层
-    openChildDialog(currentId) {
+    openChildDialog(currentId, bool) {
+      if (bool) {
+        debugger;
+      }
       this.adddialogVisible = true;
       this.Moduledialog = true;
       this.bigdislog = false;

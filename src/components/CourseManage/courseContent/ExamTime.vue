@@ -431,15 +431,7 @@ export default {
           return false;
         }
       } else {
-        if (beginTime2 == beginTime1) {
-          return false;
-        }
-        status2 = endTime2 - beginTime1;
-        if (status2 < 0) {
-          return true;
-        } else {
-          return false;
-        }
+        return false;
       }
     },
     // 打开新增学习计划的弹层
@@ -561,12 +553,12 @@ export default {
       let ret = await this.$http.SetCourseDisable(cource_id, params);
       if (ret.status === 0) {
         this.$message({
-          message: "启用考季成功！",
+          message: this.isEnabled === 0 ? "关闭考季成功":"启用考季成功！",
           type: "success"
         });
       } else {
         this.$message({
-          message: "启用考季失败！",
+          message: this.isEnabled === 0 ? "关闭考季失败":"启用考季失败！",
           type: "error"
         });
         this.isEnabled = this.isEnabled === 1 ? 0 : 1;

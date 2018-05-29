@@ -53,7 +53,7 @@
                 </el-table-column>
                 <el-table-column label="时长" min-width="100">
                     <template slot-scope="scope">
-                        {{scope.row.duration_minutes > 10 ? scope.row.duration_minutes : "0"+scope.row.duration_minutes}}分 {{scope.row.duration_seconds > 10 ? scope.row.duration_seconds : "0"+scope.row.duration_seconds}}秒
+                        {{scope.row.duration_minutes >= 10 ? scope.row.duration_minutes : "0"+scope.row.duration_minutes}}分 {{scope.row.duration_seconds >= 10 ? scope.row.duration_seconds : "0"+scope.row.duration_seconds}}秒
                     </template>
                 </el-table-column>
                 <el-table-column prop="project_name" label="项目" min-width="115">
