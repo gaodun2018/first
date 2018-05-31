@@ -10,19 +10,35 @@
       </el-form-item>
     </el-form>
     <template v-if="ruleForm.bEnabled===1?true:false">
-      <el-form :model="teacherForm" ref="teacherForm" label-width="0">
-        <el-form-item label="" prop="teacher">
-          <el-select style="width:90%;" filterable multiple remote reserve-keyword :remote-method="remoteMethod" :loading="loading" v-model="teacherForm.teacher" placeholder="请选择一个老师（可输入老师姓名搜索）">
-            <el-option v-for="item in options" :key="item.user_id" :label="item.name" :value="item.user_id">
+      <el-row>
+        <el-tag class="teacher-tag" v-for="tag in teacherList" :key="tag.user_id" closable @close="removeTeacher(tag)">
+          {{tag.name}}（老师ID：{{tag.user_id}}）
+        </el-tag>
+      </el-row>
+      <el-row>
+        <el-col :span="20">
+          <el-select style="width:90%;" v-model="selectValue" filterable remote reserve-keyword placeholder="请选择一个老师（可输入老师姓名搜索）" :remote-method="remoteMethod" :loading="loading">
+            <el-option v-for="item in options" :key="item.user_id" :label="item.name+'-ID:'+item.user_id" :value="item.user_id">
             </el-option>
           </el-select>
-        </el-form-item>
-      </el-form>
+        </el-col>
+        <el-col :span="4">
+          <el-button :disabled="selectValue==undefined||selectValue==null||selectValue==''" type="primary" @click="addTeacher">增加一位老师</el-button>
+        </el-col>
+      </el-row>
     </template>
   </div>
 </template>
+<style lang="less">
+.teacher-tag {
+  margin: 0 10px 10px 0;
+}
+</style>
 
 <script>
+// change	选中值发生变化时触发	目前的选中值
+// visible-change	下拉框出现/隐藏时触发	出现则为 true，隐藏则为 false
+// remove-tag	多选模式下移除tag时触发	移除的tag值
 export default {
   components: {},
   props: [],
@@ -32,49 +48,87 @@ export default {
       ruleForm: {
         bEnabled: 1
       },
-      teacherForm: {
-        teacher: ""
-      },
+      selectValue: [],
       loading: false,
-      seachTimeOut: null
+      seachTimeOut: null,
+      isHandle: false,
+      teacherList: []
     };
   },
   methods: {
+    handleVisibleChange(bool) {
+      this.isHandle = bool;
+    },
+    //增加老师
+    async addTeacher() {
+      let params = {
+        course_id: this.course_id,
+        teacher_id: this.selectValue
+      };
+      let ret = await this.$http.addTeacher(params);
+      if (ret.status === 0) {
+        this.$message({
+          message: "添加老师成功！",
+          type: "success"
+        });
+        this.selectValue = '';
+        this.getTeacherList();
+      } else {
+        this.$message({
+          message: "添加老师失败！",
+          type: "error"
+        });
+      }
+    },
+    // 删除老师
+    async removeTeacher(tag) {
+      let id = tag.user_id;
+      let params = {
+        course_id: this.course_id,
+        teacher_id: id
+      };
+      let ret = await this.$http.removeTeacher(params);
+      if (ret.status === 0) {
+        this.$message({
+          message: "删除成功！",
+          type: "success"
+        });
+        this.getTeacherList();
+      } else {
+        this.$message({
+          message: "删除失败！",
+          type: "error"
+        });
+      }
+    },
+    async handleRemoveTag(val) {},
     //  搜索老师
     remoteMethod(query) {
-      // console.log(query);
-      // if (query !== "") {
+      if (query !== '') {
       clearTimeout(this.seachTimeOut);
       this.seachTimeOut = setTimeout(() => {
         console.log(query);
         this.loading = true;
-        // this.loading = false;
-        // {
-        //     "name": "江伟东",
-        //     "user_id": "57",
-        //     "english_name": "Jokki.Jiang",
-        //     "introduction": "",
-        //     "picture": "",
-        //     "video": "0"
-        // }
-        this.$http.searchTeacher().then(res => {
+        let params = {
+          name: query
+        };
+        this.$http
+          .searchTeacher(params)
+          .then(res => {
             console.log(res);
-            if(res.status === 0){
+            this.loading = false;
+            if (res.status === 0) {
               this.options = res.result;
             }
           })
           .catch(err => {
+            this.loading = false;
             console.log(err);
           });
-        // this.$http
-        // this.options4 = this.list.filter(item => {
-        //   return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
-        // });
       }, 500);
-      // }
-      // else {
-      //   this.options4 = [];
-      // }
+      }else{
+        this.options = [];
+      }
     },
     // 启用设置
     handleChange(value) {
@@ -88,6 +142,18 @@ export default {
         setting_key: "handout_download_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；
       };
       let ret = await this.$http.SetCourseDisable(cource_id, params);
+    },
+    // 获取老师列表
+    async getTeacherList() {
+      let ret = await this.$http.getTeacherList(this.course_id);
+      if (ret.status === 0) {
+        this.teacherList = ret.result;
+        //   let list = ret.result;
+        //   list.forEach(element => {
+        //     this.teacherList.push(element.user_id);
+        //   });
+        //   this.teacherForm.teacher = ret.result;
+      }
     }
   },
   computed: {
@@ -96,6 +162,8 @@ export default {
     }
   },
   mounted() {},
-  created() {}
+  created() {
+    this.getTeacherList();
+  }
 };
 </script>

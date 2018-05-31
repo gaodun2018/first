@@ -34,7 +34,7 @@
                       <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to">{{thirdItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                       <span class="chlft">
                         {{thirdItem.name}}
-                        <template v-if="thirdItem.study_time"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
+                        <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
                         <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
                       </span>
                       <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
@@ -82,7 +82,7 @@
                           <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to">{{fourthItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                           <span class="chlft">
                             {{fourthItem.name}}
-                            <template v-if="fourthItem.study_time"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
+                            <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
                             <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
                             </span>
                           <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
@@ -112,7 +112,7 @@
                    <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to">{{secItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                   <span class="chlft">
                     {{secItem.name}}
-                    <template v-if="secItem.study_time"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                    <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                    <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
                   </span>
                   <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
@@ -129,7 +129,7 @@
       </div>
     </div>
     <!--弹层 -->
-    <el-dialog title="选择学习资源" width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
+    <el-dialog title="选择学习资源" width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible">
       <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:10px;">
         <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
       </el-steps>
@@ -143,7 +143,7 @@
           <span class="ep-tips">以下设置为EP专用：（选填）</span>
         </el-row>
         <el-form-item label="建议学习时长" prop="study_time">
-          <el-select style="" v-model="addResFirFrom.study_time" clearable placeholder="请选择">
+          <el-select style="" v-model="addResFirFrom.study_time" popper-class='study-time-select' clearable placeholder="请选择">
             <el-option v-for="item in study_time_options" :key="item.value" :label="item.value" :value="item.value">
             </el-option>
           </el-select>
@@ -360,6 +360,15 @@
     }
   }
 }
+.el-select-dropdown.study-time-select{
+  .el-scrollbar__view{
+    width: 254px;
+    .el-select-dropdown__item{
+      display: inline-block;
+      width: 61px;
+    }
+  }
+}
 @media screen and (min-height: 320px) and (max-height: 650px) {
   .permission-outlinemodule {
     .addResourceDialog {
@@ -479,13 +488,6 @@ export default {
     },
     selectclk(discriminator) {
       this.resourceType = discriminator;
-    },
-    //关闭新增资源的弹层
-    closeDialog(formName) {
-      this.addResFirFrom = {
-        name: ""
-      };
-      this.$refs[formName].resetFields();
     },
     //弹出新增资源的弹层
     openAddResDialog(id) {

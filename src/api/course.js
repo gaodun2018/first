@@ -77,5 +77,14 @@ export const updateSeason = (seasonId,params) => formPut(`${getBaseUrl()}apigate
 //创建计划
 export const createPlan = (seasonId,params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/${seasonId}/plan`, params);
 
+//查询课程全部老师
+export const getTeacherList = (course,params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/course/teacher/${course}`, params);
+
 // 查询老师接口（后台）
-export const searchTeacher = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/course/teacher`, params);
+export const searchTeacher = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/teachers`, params);
+
+//增加课程老师(后台)
+export const addTeacher = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/course/teacher`, params);
+
+//删除课程老师（后台）
+export const removeTeacher = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/course/teacher`, params);

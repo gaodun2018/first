@@ -155,11 +155,11 @@ export default {
       }, 500);
     },
     async initData() {
-      // let ret = await this.$http.getOneResource(this.$route.params.id);
-      let params = {
-        group_id : this.$route.params.id
-      }
-      let ret = await this.$http.getResourceGroup(params);
+      let ret = await this.$http.getOneResource(this.$route.params.id);
+      // let params = {
+      //   group_id : this.$route.params.id
+      // }
+      // let ret = await this.$http.getResourceGroup(params);
       if (ret.status == 0) {
         let data = ret.result.resource;
         this.ruleForm.title = data.title;
