@@ -112,8 +112,8 @@
                    <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to">{{secItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                   <span class="chlft">
                     {{secItem.name}}
-                    <template v-if="fourthItem.study_time"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
-                   <template v-if="fourthItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
+                    <template v-if="secItem.study_time"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                   <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
                   </span>
                   <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                   <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>

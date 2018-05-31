@@ -77,5 +77,5 @@ export const updateSeason = (seasonId,params) => formPut(`${getBaseUrl()}apigate
 //创建计划
 export const createPlan = (seasonId,params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/plan-api/season/${seasonId}/plan`, params);
 
-// 搜索老师
-export const searchTeacher = (params) => get(`//192.168.6.101:6073/v1/teachers`, params);
+// 查询老师接口（后台）
+export const searchTeacher = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/course/teacher`, params);
