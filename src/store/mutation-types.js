@@ -23,5 +23,8 @@ export const COURSE_INFO = "COURSE_INFO"; //保存课程的所有信息
 export const COURSE_SYLLABUSES = "COURSE_SYLLABUSES"; //保存课程下的大纲Syllabuses
 export const GET_USER_TREE = "GET_USER_TREE";
 export const DRADATION_LIST = "DRADATION_LIST";
-export const COURSE_DISABLE = "COURSE_DISABLE";
-export const SEASON_LIST = "SEASON_LIST";
+export const COURSE_DISABLE = "COURSE_DISABLE";   //课程下个设置
+export const SEASON_LIST = "SEASON_LIST";  //考季列表
+
+export const TAGS_LIST = "TAGS_LIST";   //标签列表
+

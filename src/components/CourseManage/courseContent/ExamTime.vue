@@ -598,8 +598,8 @@ export default {
           type: "success",
           message: "删除成功!"
         });
-        this.getCourseHandout();
-      } else if (ret.status > 0) {
+        this.getCourseSeasonList();
+      } else {
         ret.message ? ret.message : "删除失败！";
         this.$message.error(ret.message);
       }
@@ -649,52 +649,6 @@ export default {
       this.currentIndex = index;
       this.dialogVisible = true;
     },
-    // //更新数据
-    // updateTable(formName) {
-    //   this.$refs[formName].validate(valid => {
-    //     if (valid) {
-    //       this.updateCourseHandout();
-    //     } else {
-    //       return false;
-    //     }
-    //   });
-    // },
-    // // 更新讲义
-    // async updateCourseHandout() {
-    //   if (this.NewTableForm.path == "") {
-    //     this.$message({
-    //       showClose: true,
-    //       message: "你必须要上传一个讲义！",
-    //       type: "warning"
-    //     });
-    //     return;
-    //   }
-    //   let params = {
-    //     ...this.NewTableForm,
-    //     course_id: this.course_id
-    //   };
-    //   console.log(params);
-    //   let ret = await this.$http.updateCourseHandout(params.id, params);
-    //   if (ret.status == 0) {
-    //     this.$message({
-    //       type: "success",
-    //       message: ret.message ? ret.message : "编辑成功！"
-    //     });
-    //     this.dialogVisible = false;
-    //     this.NewTableForm = {
-    //       name: "",
-    //       content: "",
-    //       file_name: "",
-    //       size: "",
-    //       path: ""
-    //     };
-    //     this.file = [];
-    //     this.getCourseHandout();
-    //   } else if (ret.status > 0) {
-    //     ret.message ? ret.message : "编辑失败！";
-    //     this.$message.error(ret.message);
-    //   }
-    // },
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();

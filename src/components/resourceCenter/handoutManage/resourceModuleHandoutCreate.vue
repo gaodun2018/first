@@ -1,17 +1,16 @@
 <template>
-    <HandoutForm>
-    </HandoutForm>
+  <HandoutForm>
+  </HandoutForm>
 </template>
 <style>
 </style>
 <script>
-    import HandoutForm from './resourceModuleHandoutForm.vue'
+import HandoutForm from "./resourceModuleHandoutForm.vue";
 
-    export default {
-        name:'resourceModuleHandoutCreate',
-        components: {
-            HandoutForm
-        }
-
-    }
+export default {
+  name: "resourceModuleHandoutCreate",
+  components: {
+    HandoutForm
+  }
+};
 </script>

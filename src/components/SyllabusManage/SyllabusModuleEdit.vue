@@ -31,9 +31,12 @@
                 <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                   <div class="resourcebox third-chapter-box" v-for="thirdItem in secItem.children" :key="thirdItem.id">
                     <div class="knowledge">
+                      <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to">{{thirdItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                       <span class="chlft">
                         {{thirdItem.name}}
-                        <span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}} </span>
+                        <template v-if="thirdItem.study_time"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
+                        <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
+                      </span>
                       <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
                       <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
                     </div>
@@ -76,9 +79,12 @@
                     <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
                       <div class="resourcebox fourth-chapter-box" v-for="fourthItem in thirdItem.children" :key="fourthItem.id">
                         <div class="knowledge">
+                          <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to">{{fourthItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                           <span class="chlft">
                             {{fourthItem.name}}
-                            <span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </span>
+                            <template v-if="fourthItem.study_time"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
+                            <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
+                            </span>
                           <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
                           <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
                         </div>
@@ -103,9 +109,12 @@
             <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
               <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
                 <div class="knowledge">
+                   <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to">{{secItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
                   <span class="chlft">
                     {{secItem.name}}
-                    <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </span>
+                    <template v-if="fourthItem.study_time"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
+                   <template v-if="fourthItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
+                  </span>
                   <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                   <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
                 </div>
@@ -133,18 +142,12 @@
           <p class="ep-line"></p>
           <span class="ep-tips">以下设置为EP专用：（选填）</span>
         </el-row>
-        <el-form-item label="资源应用">
-          <el-checkbox-group v-model="addResFirFrom.attribute" @change="handleCheckboxChange">
-            <el-checkbox :label="1">跳级测试</el-checkbox>
-            <el-checkbox :label="2">提分盒子</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="开启时间" prop="bbb">
-          <el-date-picker v-model="addResFirFrom.date" type="date" value-format="yyyy-MM-dd" placeholder="请设置开启时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="建议学习时长" prop="ccc" :rules="filter_rules({type:'isAllSpace',maxLength:100})">
-          <el-input class="coursetxt" v-model="addResFirFrom.ccc" placeholder="请输入该任务的建议学习时长，单位为小时，eg:1.5"></el-input>
+        <el-form-item label="建议学习时长" prop="study_time">
+          <el-select style="" v-model="addResFirFrom.study_time" clearable placeholder="请选择">
+            <el-option v-for="item in study_time_options" :key="item.value" :label="item.value" :value="item.value">
+            </el-option>
+          </el-select>
+          分钟
         </el-form-item>
         <el-form-item class="coursebtn">
           <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
@@ -157,6 +160,17 @@
             {{item.label}}
           </span>
         </div>
+        <el-form-item label="资源应用" v-if="resourceType === 'paper'">
+          <el-checkbox-group v-model="addResFirFrom.apply_to" @change="handleCheckboxChange">
+            <el-checkbox label="1">跳级测试</el-checkbox>
+            <el-checkbox label="2">提分盒子</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        {{addResFirFrom.start_time}}
+        <el-form-item label="开启时间" prop="start_time" v-if="resourceType === 'paper'">
+          <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item class="coursebtn">
           <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
           <el-button style="margin-top:12px;" @click="secondSubmit">下一步</el-button>
@@ -403,10 +417,11 @@ export default {
       progressText: progressText,
       addResFirFrom: {
         name: "",
-        bbb: "",
-        ccc: "",
-        attribute: []
+        start_time: "", //开启时间
+        study_time: "", //建议学习时长， 单位分钟
+        apply_to: [] //1表示跳级测试，2表示提分盒子
       },
+      study_time_options: [], //选择学习时间列表
       ruleProject: {
         name: ""
       },
@@ -455,9 +470,9 @@ export default {
     handleCheckboxChange(d) {
       console.log(d);
       if (d.length > 1) {
-        this.addResFirFrom.attribute = d.splice(-1);
+        this.addResFirFrom.apply_to = d.splice(-1);
       }
-      console.log(this.addResFirFrom.attribute);
+      console.log(this.addResFirFrom.apply_to);
     },
     handleTableChange(val) {
       this.resourceRadio = String(val.id);
@@ -477,7 +492,11 @@ export default {
       this.currentId = id;
       this.active = 0;
       this.addResFirFrom.name = "";
+      this.addResFirFrom.start_time = "";//开启时间
+      this.addResFirFrom.study_time = ""; //建议学习时长， 单位分钟
+      this.addResFirFrom.apply_to = [];//1表示跳级测试，2表示提分盒子
       this.resourceRadio = "";
+      this.resourceType = "video";
       this.nativeResourceRadio = "";
       this.dialogFormVisible = true;
       this.resourceAction = "add";
@@ -617,7 +636,7 @@ export default {
         loading.close();
         return;
       }
-      //新增/修改资源名字
+      //新增/修改大纲条目
       let nameRet;
       if (this.resourceAction === "add") {
         nameRet = await this.CourseSyllabusItem();
@@ -707,8 +726,6 @@ export default {
             type: "error"
           });
         }
-        // //新增资源名字
-        // let nameRet = await this.CourseSyllabusItem();
         //新增/修改资源名字
         let nameRet;
         if (this.resourceAction === "add") {
@@ -774,8 +791,6 @@ export default {
             type: "error"
           });
         }
-        // //新增资源名字
-        // let nameRet = await this.CourseSyllabusItem();
         //新增/修改资源名字
         let nameRet;
         if (this.resourceAction === "add") {
@@ -842,14 +857,30 @@ export default {
     // 新增大纲资源条目名称
     async CourseSyllabusItem() {
       console.log("新增大纲资源条目名称");
-      let ret = await this.$http.CourseSyllabusItem({
+      let params = {
         name: this.addResFirFrom.name, //大纲条目名称
         pid: this.currentId,
         course_syllabus_id: this.coursesyllid
-      });
+      };
+      if (this.addResFirFrom.study_time) {
+        //学习时长， 单位分钟
+        params.study_time = this.addResFirFrom.study_time;
+      }
+      if (this.addResFirFrom.start_time) {
+        //开启时间 时间戳
+        params.start_time = this.addResFirFrom.start_time;
+      }
+      if (
+        this.addResFirFrom.apply_to != undefined &&
+        this.addResFirFrom.apply_to != null &&
+        this.addResFirFrom.apply_to.length !== 0
+      ) {
+        params.apply_to = this.addResFirFrom.apply_to[0]; //1表示跳级测试，2表示提分盒子
+      }
+      let ret = await this.$http.CourseSyllabusItem(params);
       if (ret.status === 0) {
         return ret;
-      } else if (ret.status === 2) {
+      } else {
         this.$message.error("添加失败！");
         return ret;
       }
@@ -858,11 +889,26 @@ export default {
     async ChangeSyllabusItem() {
       console.log("修改大纲资源条目名称");
       let id = this.currentId;
-      let name = {
+      let params = {
         name: this.addResFirFrom.name,
         course_syllabus_id: this.coursesyllid
       };
-      let ret = await this.$http.ChangeSyllabusItem(id, name);
+      if (this.addResFirFrom.study_time) {
+        //学习时长， 单位分钟
+        params.study_time = this.addResFirFrom.study_time;
+      }
+      if (this.addResFirFrom.start_time) {
+        //开启时间 时间戳
+        params.start_time = this.addResFirFrom.start_time;
+      }
+      if (
+        this.addResFirFrom.apply_to != undefined &&
+        this.addResFirFrom.apply_to != null &&
+        this.addResFirFrom.apply_to.length !== 0
+      ) {
+        params.apply_to = this.addResFirFrom.apply_to[0]; //1表示跳级测试，2表示提分盒子
+      }
+      let ret = await this.$http.ChangeSyllabusItem(id, params);
       if (ret.status === 0) {
         return ret;
       } else {
@@ -870,7 +916,6 @@ export default {
         return ret;
       }
     },
-
     // 大纲资源条目挂载资源
     async mountSyllabusResource(id) {
       console.log("大纲资源条目挂载资源");
@@ -910,7 +955,10 @@ export default {
     //弹出修改资源的弹层
     openeEditResource(item) {
       this.active = 0;
-      this.addResFirFrom.name = item.name;
+      this.addResFirFrom.name = item.name;  //名称
+      this.addResFirFrom.apply_to = item.apply_to?[item.apply_to]:[];  //1表示跳级测试，2表示提分盒子
+      this.addResFirFrom.start_time = item.start_time;  //开启时间
+      this.addResFirFrom.study_time = item.study_time;  //学习时长
       this.currentId = item.id;
       this.resourceRadio = item.resource && String(item.resource.id);
       this.nativeResourceRadio = item.resource && String(item.resource.id); //原来的选项
@@ -1131,7 +1179,11 @@ export default {
     }
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    for (let i = 1; i <= 120; i++) {
+      this.study_time_options.push({ value: i });
+    }
+  },
   created() {
     this.coursesyllid = this.$route.params.sid;
     this.getSyllabusItems();

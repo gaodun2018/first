@@ -4,17 +4,18 @@
       {{id?'编辑资源组':'新增资源组'}}
     </div>
     <div class="frombox">
-      <el-form :model="ruleForm" ref="ruleForm" label-width="120px" class="demo-ruleForm" v-loading="loading">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="120px" class="demo-ruleForm" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.8)">
         <el-form-item label="资源组名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
           <el-input v-model="ruleForm.title" placeholder="请填写资源组名称" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project" :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
           <el-select v-model="ruleForm.project" filterable placeholder="请选择所属项目" @change="didChangeProjectSelection" @visible-change="visibleChange">
-            <el-option :label="tag.name" :value="String(tag.id)" v-for="(tag, index) in tags" :key="index"></el-option>
+            <el-option :label="tag.name" :value="String(tag.id)" v-for="(tag, index) in tagsList" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="科目" prop="subject" :rules="[{required: true, message: '请选择所属科目', trigger: 'change'}]">
           <el-select :disabled="ruleForm.project==''||ruleForm.project==undefined||ruleForm.project==null" v-model="ruleForm.subject" filterable placeholder="请选择所属科目">
+            <el-option :label="'不限科目'" :value="'0'"></el-option>
             <el-option :label="tag.name" :value="String(tag.id)" v-for="(tag,index) in subjectData" :key="index"></el-option>
           </el-select>
         </el-form-item>
@@ -23,6 +24,12 @@
         </el-form-item>
         <el-form-item label="选择资源">
           <el-button :disabled="ruleForm.project==''||ruleForm.project==undefined||ruleForm.project==null" type="primary" @click="handleOpenDialog">选择资源</el-button>
+          <el-row>
+            <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              <span class="tag-title" :title="tag.title">{{tag.title}}</span>
+              <span class="tag-id">（ID：{{tag.id}}）</span>
+            </el-tag>
+          </el-row>
         </el-form-item>
         <el-form-item style="text-align: right;margin-top:60px;">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -30,10 +37,11 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="选择资源" center width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible" @close="closeDialog('addResFirFrom')">
+    <el-dialog title="选择资源" center width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible">
       <el-row class="scroll-content" style="margin-bottom:10px;">
         <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
-          <span class="tag-title" :title="tag.title">{{tag.title}}</span><span class="tag-id">（ID：{{tag.id}}）</span>
+          <span class="tag-title" :title="tag.title">{{tag.title}}</span>
+          <span class="tag-id">（ID：{{tag.id}}）</span>
         </el-tag>
       </el-row>
       <el-row>
@@ -57,20 +65,19 @@
         </el-pagination>
       </el-row>
       <div slot="footer" class="coursebtn" style="padding-top: 0;margin-top: 20px;">
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="selectResource">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { resourceTableConfig } from "../../common/courseConfig.js";
-console.log(resourceTableConfig);
+import { mapState } from "vuex";
 export default {
   components: {},
   props: ["id"],
   data() {
     return {
-      tags: [],
       subjectData: [],
       loading: false,
       selectFalg: false,
@@ -78,8 +85,7 @@ export default {
         title: "",
         project: "",
         subject: "",
-        description: "",
-        resource: ""
+        description: ""
       },
       resourceinput: "", //搜索资源输入框
       multipleSelection: [], //所有选择段资源
@@ -105,6 +111,8 @@ export default {
     },
     // 打开选择资源的弹层
     handleOpenDialog() {
+      // 搜索资源...
+      this.searchResource();
       this.dialogFormVisible = true;
     },
     //分页搜索
@@ -119,6 +127,9 @@ export default {
       } else {
         this.searchResource();
       }
+    },
+    selectResource() {
+      this.dialogFormVisible = false;
     },
     //搜索资源
     searchResource(val) {
@@ -144,7 +155,11 @@ export default {
       }, 500);
     },
     async initData() {
-      let ret = await this.$http.getOneResource(this.$route.params.id);
+      // let ret = await this.$http.getOneResource(this.$route.params.id);
+      let params = {
+        group_id : this.$route.params.id
+      }
+      let ret = await this.$http.getResourceGroup(params);
       if (ret.status == 0) {
         let data = ret.result.resource;
         this.ruleForm.title = data.title;
@@ -178,7 +193,7 @@ export default {
     },
     // 项目
     didChangeProjectSelection(id) {
-      this.tags.forEach(item => {
+      this.tagsList.forEach(item => {
         if (item.id == id) {
           let subject_list = [...item.children];
           this.subjectData = subject_list;
@@ -191,6 +206,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          if (
+            this.multipleSelection == undefined ||
+            this.multipleSelection == null ||
+            this.multipleSelection.length === 0
+          ) {
+            return this.$message({
+              message: "请选择资源！",
+              type: "error"
+            });
+          }
           if (this.$route.params.id) {
             //修改'
             this.editVideoResource();
@@ -203,13 +228,42 @@ export default {
         }
       });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    //新增资源组
+    async createResourceForm() {
+      let resource_id = [];
+      this.multipleSelection.forEach(ele => {
+        resource_id.push(ele.id);
+      });
+      let params = {
+        title: this.ruleForm.title,
+        description: this.ruleForm.description,
+        tag_id:
+          this.ruleForm.subject == "0"
+            ? this.ruleForm.project
+            : this.ruleForm.subject,
+        'resource_id[]': resource_id
+      };
+      this.loading = true;
+      let createResponse = await this.$http.createResourceGroup(params);
+      this.loading = false;
+      if (createResponse.status == 0) {
+        this.$message({
+          message: "保存成功",
+          type: "success"
+        });
+        setTimeout(() => {
+          this.$router.push({
+            path: "/resource/resource-group/list"
+          });
+        }, 1000);
+      } else {
+        this.$message({
+          message: "保存失败",
+          type: "error"
+        });
+      }
     },
-    //关闭弹层
-    closeDialog(formName) {
-      this.bSubject = false;
-      this.dialogCourseVisible = false;
+    resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     // 多选资源
@@ -235,30 +289,46 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      tagsList: state => {
+        return state.resources.tagsList;
+      }
+    })
+  },
   async created() {
     this.loading = true;
     this.id = this.$route.params.id;
     // this.resource = (await getOneResource(this.id)).result
-    let projectRet = await this.$http.getTags("project");
-    let result = projectRet.result;
-    result.forEach(element => {
-      element.children &&
-        element.children.unshift({
-          id: "0",
-          name: "不限科目"
-        });
-    });
-    this.tags = result;
+    await this.$store.dispatch("getTagsList", "project");
     if (this.$route.params.id) {
       await this.initData();
     }
     this.loading = false;
-    this.searchResource(); //12123123
   }
 };
 </script>
 <style lang="less">
 .resource-group-form-wrapper {
+  .frombox {
+    .el-tag {
+      margin-bottom: 10px;
+      .tag-title {
+        display: inline-block;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .tag-id {
+        vertical-align: middle;
+      }
+    }
+    .el-tag + .el-tag {
+      margin-left: 10px;
+    }
+  }
   .tabplane .el-dialog {
     min-width: 680px;
     margin-bottom: 0px;
@@ -270,8 +340,8 @@ export default {
     .el-dialog__body {
       padding-top: 10px;
       padding-bottom: 0;
-      .scroll-content{
-         max-height: 150px;
+      .scroll-content {
+        max-height: 100px;
         overflow-y: auto;
         &::-webkit-scrollbar {
           width: 6px;
@@ -288,15 +358,15 @@ export default {
       }
       .el-tag {
         margin-bottom: 10px;
-        .tag-title{
+        .tag-title {
           display: inline-block;
           max-width: 200px;
           overflow: hidden;
-          text-overflow:ellipsis;
+          text-overflow: ellipsis;
           vertical-align: middle;
           white-space: nowrap;
         }
-        .tag-id{
+        .tag-id {
           vertical-align: middle;
         }
       }
@@ -313,7 +383,7 @@ export default {
         }
       }
     }
-    .el-dialog__footer{
+    .el-dialog__footer {
       padding-bottom: 10px;
     }
     .el-pagination {

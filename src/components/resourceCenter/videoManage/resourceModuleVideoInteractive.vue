@@ -10,7 +10,7 @@
       <el-button type="primary" @click="handleFlag" round>标记为重要节点</el-button>
     </el-row>
     <el-row>
-      <el-table ref="table" border :data="tableData" style="width: 100%">
+      <el-table ref="table" border :data="tableData" height="300" style="width: 100%">
         <el-table-column label="序号" type="index" width="50">
         </el-table-column>
         <el-table-column align="center" label="重要节点时间点" width="200">
@@ -32,7 +32,7 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog title="新增一个重要节点" center class="tabplane" :visible.sync="dialogFormVisible">
+    <el-dialog :title="isCreate?'新增一个重要节点':'修改一个重要节点'" center class="tabplane" :visible.sync="dialogFormVisible">
       <el-form :model="ruleForm" ref="ruleForm" label-width="140px">
         <el-form-item label="时间点" required>
           <el-col :span="7">
@@ -54,7 +54,7 @@
           </el-col>
           <el-col :span="1">秒</el-col>
         </el-form-item>
-        <el-form-item label="节点名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
+        <el-form-item label="节点名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
           <el-input class="coursetxt" placeholder="请输入节点名称" v-model="ruleForm.title"></el-input>
         </el-form-item>
         <el-form-item label="课中练习（选填 ）" prop="item_ids" :rules="filter_rules({type:'isAllSpace'})">
@@ -176,8 +176,8 @@ export default {
       })
         .then(() => {
           let params = {
-            id:row.Id
-          }
+            id: row.Id
+          };
           this.$http.removeInsteractive(params).then(ret => {
             if (ret.status === 0) {
               this.$message({
@@ -200,7 +200,7 @@ export default {
           });
         });
     },
-    //xiugai
+    //打开修改节点窗口
     didClickEdit(row) {
       this.videoPlayer = VideoPlayer.getVideoPlayer(); //获取播放器
       if (!this.videoPlayer) {
@@ -215,11 +215,11 @@ export default {
       this.openTime.h = h.toString(10);
       this.openTime.m = m.toString(10);
       this.openTime.s = s.toString(10);
-      (this.ruleForm.hour = h.toString(10)),
-        (this.ruleForm.minute = m.toString(10)),
-        (this.ruleForm.second = s.toString(10)),
-        (this.ruleForm.title = Name),
-        (this.ruleForm.item_ids = Item_ids);
+      this.ruleForm.hour = h.toString(10);
+      this.ruleForm.minute = m.toString(10);
+      this.ruleForm.second = s.toString(10);
+      this.ruleForm.title = Name;
+      this.ruleForm.item_ids = Item_ids;
       this.isCreate = false;
       this.dialogFormVisible = true;
     },
@@ -236,7 +236,9 @@ export default {
         name: this.ruleForm.title, //节点名称
         resource_id: this.id //视频id
       };
+      this.btnLoading = true;
       let ret = await this.$http.createInsteractive(params);
+      this.btnLoading = false;
       if (ret.status === 0) {
         this.$message({
           message: "添加节点成功！",
@@ -247,7 +249,7 @@ export default {
       } else {
         this.$message({
           message: "添加节点失败！",
-          type: "success"
+          type: "error"
         });
       }
     },
@@ -264,9 +266,24 @@ export default {
         name: this.ruleForm.title, //节点名称
         resource_id: this.id //视频id
       };
+      this.btnLoading = true;
       let ret = await this.$http.updateInsteractive(params);
+      this.btnLoading = false;
+      if (ret.status === 0) {
+        this.$message({
+          message: "更新节点成功！",
+          type: "success"
+        });
+        this.getInsteractiveList();
+        this.dialogFormVisible = false;
+      } else {
+        this.$message({
+          message: "更新节点失败！",
+          type: "error"
+        });
+      }
     },
-    //打标记
+    //打开新增节点窗口
     handleFlag() {
       this.videoPlayer = VideoPlayer.getVideoPlayer(); //获取播放器
       if (!this.videoPlayer) {
@@ -274,6 +291,7 @@ export default {
           message: "请确认视频是否正常播放！"
         });
       }
+      this.isCreate = true;
       this.videoPlayer.pause(); //暂停
       let timer = this.videoPlayer.getPosition(); //当前时间
       this.duration = this.videoPlayer.getDuration(); //总时间
@@ -281,6 +299,8 @@ export default {
       this.ruleForm.hour = h.toString(10);
       this.ruleForm.minute = m.toString(10);
       this.ruleForm.second = s.toString(10);
+      this.ruleForm.title = '';
+      this.ruleForm.item_ids = '';
       this.openTime.h = h.toString(10);
       this.openTime.m = m.toString(10);
       this.openTime.s = s.toString(10);
@@ -347,7 +367,7 @@ export default {
 }
 .video-content {
   width: 100%;
-  height: 500px;
+  height: 400px;
   .videoPlay {
     width: 100%;
     height: 100%;
@@ -365,6 +385,12 @@ export default {
   .el-dialog__wrapper {
     .el-dialog__footer {
       padding-top: 60px;
+    }
+  }
+  .el-table__body-wrapper,
+  .el-table__fixed-body-wrapper{
+    td{
+      padding:6px 0;
     }
   }
 }

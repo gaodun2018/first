@@ -224,9 +224,9 @@ export default [{
       "ChildNavigations": null,
       "parenttitle": [
           { name: "资源中心", url: '' },
-          { name: "视频管理", url: '' },
-          { name: "视频列表", url: '/resource/resource-group/list' },
-          { name: "新增视频", url: '' },
+          { name: "资源组管理", url: '' },
+          { name: "资源组列表", url: '/resource/resource-group/list' },
+          { name: "新增资源组", url: '' },
       ]
   },
   {
@@ -241,9 +241,9 @@ export default [{
       "ChildNavigations": null,
       "parenttitle": [
           { name: "资源中心", url: '' },
-          { name: "视频管理", url: '' },
-          { name: "视频列表", url: '/resource/resource-group/list' },
-          { name: "编辑视频", url: '' },
+          { name: "资源组管理", url: '' },
+          { name: "资源组列表", url: '/resource/resource-group/list' },
+          { name: "编辑资源组", url: '' },
       ]
   },
     {

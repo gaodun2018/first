@@ -1,16 +1,16 @@
 <template>
-    <VideoForm>
-    </VideoForm>
+  <VideoForm>
+  </VideoForm>
 </template>
 <style>
 </style>
 <script>
-import VideoForm from './resourceModuleVideoForm.vue'
+import VideoForm from "./resourceModuleVideoForm.vue";
 
 export default {
-  name:'resourceModuleVideoCreate',
+  name: "resourceModuleVideoCreate",
   components: {
     VideoForm
   }
-}
+};
 </script>

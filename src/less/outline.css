@@ -275,8 +275,15 @@
     border: 0 none;
     margin-left: 0;
     padding: 6px 0 6px 98px;
+    position: relative;
 }
-
+.chapterbox .resourcebox .knowledge .attribute-tag{
+  position: absolute;
+  left: 24px;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+}
 .chapterbox .resourcebox .knowledge:hover {
     background: #E6F7FF;
 }

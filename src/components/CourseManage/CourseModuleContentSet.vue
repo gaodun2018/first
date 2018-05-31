@@ -6,8 +6,8 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="主课程" name="MainCourse"></el-tab-pane>
       <el-tab-pane label="批量讲义" name="Handout"></el-tab-pane>
-      <el-tab-pane label="选老师" name="Teacher"></el-tab-pane>
-      <el-tab-pane label="考季管理" name="ExamTime"></el-tab-pane>
+      <el-tab-pane label="选老师" name="Teacher" v-if="course_type == '11'"></el-tab-pane>
+      <el-tab-pane label="考季管理" name="ExamTime" v-if="course_type == '11'"></el-tab-pane>
     </el-tabs>
     <div class="el-tabs__content">
       <div class="el-tab-pane">
@@ -94,6 +94,9 @@ export default {
     },
     course_name() {
       return this.$store.state.course.course_info.course_name;
+    },
+    course_type(){
+      return this.$store.state.course.course_info.course_type;
     }
   },
   mounted() {},
