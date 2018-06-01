@@ -166,7 +166,6 @@
             <el-checkbox label="2">提分盒子</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        {{addResFirFrom.start_time}}
         <el-form-item label="开启时间" prop="start_time" v-if="resourceType === 'paper'">
           <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间">
           </el-date-picker>

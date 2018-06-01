@@ -359,7 +359,7 @@ export default {
         this.editor && this.editor.destroy();
     },
     created() {
-        if(this.projectlist[0].project_id != ''){
+        if(this.projectlist != undefined && this.projectlist != null && this.projectlist.length!== 0){
              this.getCourseInfo();
         }else {
             this.getProjectSubjectList();
