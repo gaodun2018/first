@@ -67,7 +67,7 @@
         <el-form-item v-if="chooseOutlineRadio == 1" label="" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
           <el-input class="coursetxt" v-model="stageForm.title" placeholder="请输入课程大纲名称（限50字内）"></el-input>
         </el-form-item>
-        <el-form-item label="阶段特殊属性（选填）">
+        <el-form-item label="阶段特殊属性（选填）" v-if="course_type == '11'">
           <el-checkbox-group v-model="attribute" @change="handleCheckboxChange">
             <el-checkbox :label="1">前导阶段</el-checkbox>
             <el-checkbox :label="2">翻转阶段</el-checkbox>
@@ -540,6 +540,9 @@ export default {
     },
     seaconList() {
       return this.$store.state.course.seaconList;
+    },
+    course_type(){
+      return this.$store.state.course.course_info.course_type;
     }
   },
   mounted() {},

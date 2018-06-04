@@ -30,8 +30,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
-            <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
+            <!-- <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button> -->
             <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)" style="margin: 0 10px">编辑
             </el-button>
           </template>
@@ -44,7 +44,7 @@
         </div>
       </div>
     </template>
-    <el-dialog :title="isAddSeason?'增加一个考季及学习规划设置':'修改一个考季及学习规划设置'" width="60%" center class="tabplane" top="8%" :visible.sync="dialogVisible">
+    <el-dialog :title="isAddSeason?'增加一个考季及学习规划设置':'修改一个考季及学习规划设置'" width="60%" center class="tabplane" top="8%" :visible.sync="dialogVisible"  @close='handleCloseSeasonDialog'>
       <el-steps :active="active" finish-status="finish" simple style="margin-top: -10px;margin-bottom:30px;">
         <el-step :title="item.text" :key="index" v-for="(item,index) in progressText" description=""></el-step>
       </el-steps>
@@ -109,15 +109,15 @@
               <div class="plantab">
                 <div class="planmil">
                   <div class="plan-date black_14">{{val.start_time}} 至 {{val.end_time}}</div>
-                  <div class="plan-target" v-if="val.target != ''">
-                    学习目标：{{val.target}}
-                  </div>
                   <div class="plan-content">
                     学习内容：
                     <template v-for="(ol,index) in val.gradation" class="planref">
                       {{ol.name}}
                       <template v-if="(index+1) != val.gradation.length">，</template>
                     </template>
+                  </div>
+                  <div class="plan-target" v-if="val.target != ''">
+                    学习目标：{{val.target}}
                   </div>
                 </div>
                 <div class="plan-btns">
@@ -215,7 +215,8 @@
       .plantab {
         overflow: hidden;
         padding-left: 20px;
-        padding-bottom: 4px;
+        padding-bottom: 14px;
+        position: relative;
         &:hover {
           background: #fbfbfb;
         }
@@ -264,8 +265,12 @@
     }
     .plan-btns {
       width: 8%;
-      float: left;
-      margin-top: 40px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 10px;
+      height: 50px;
+      margin: auto;
       .deleitd {
         color: #898b92;
         margin: 0 4px;
@@ -354,7 +359,26 @@ export default {
       seasonId: "" //当前修改的考季的id
     };
   },
+  // watch:{
+  //   planlist:function () {
+  //     this.planlist.sort(this.compare('start_time'));
+  //     console.log(this.planlist,'////////////');
+  //     // start_time
+  //   }
+  // },
   methods: {
+    //技术排序
+    compare(property) {
+      return function(a, b) {
+        try {
+          var value1 = new Date(a[property]).getTime();
+          var value2 = new Date(b[property]).getTime();
+        } catch (error) {
+          console.log(error);
+        }
+        return value1 - value2;
+      };
+    },
     // 保存计划
     handleSavePlan(formName) {
       this.$refs[formName].validate(valid => {
@@ -385,6 +409,7 @@ export default {
               end_time: date[1]
             };
           }
+          this.planlist.sort(this.compare("start_time"));
           this.resetForm("planForm");
           this.innerVisible = false;
         } else {
@@ -395,6 +420,11 @@ export default {
     // 删除学习计划
     delplan(v, i) {
       this.planlist.splice(i, 1);
+    },
+    // 关闭考季弹层
+    handleCloseSeasonDialog(){
+      this.getCourseSeasonList();
+      // 获取数据
     },
     // 编辑学习计划
     eidtplan(v, i) {
@@ -421,17 +451,20 @@ export default {
       let endTime1 = new Date(dateForm.date1[1]).getTime();
       let beginTime2 = new Date(dateForm.date2[0]).getTime();
       let endTime2 = new Date(dateForm.date2[1]).getTime();
+      if (beginTime1 > endTime1 || beginTime2 > endTime2) {
+        return { bool: false, message: "问卷开始时间不可大于结束时间！" };
+      }
       let status = beginTime2 - beginTime1;
       let status2;
       if (status > 0) {
         status2 = beginTime2 - endTime1;
         if (status2 > 0) {
-          return true;
+          return { bool: true };
         } else {
-          return false;
+          return { bool: false, message: "考季问卷时间设置有重叠！" };
         }
       } else {
-        return false;
+        return { bool: false, message: "问卷确认时间第二次不可大于第三次！" };
       }
     },
     // 打开新增学习计划的弹层
@@ -496,11 +529,12 @@ export default {
           message: this.isAddSeason ? "新增考季成功！" : "修改考季成功！",
           type: "success"
         });
-        this.getCourseSeasonList();
         this.dialogVisible = false;
       } else {
         this.$message({
-          message: this.isAddSeason ? "新增考季失败:"+ret.message : "修改考季失败:"+ret.message,
+          message: this.isAddSeason
+            ? "新增考季失败:" + ret.message
+            : "修改考季失败:" + ret.message,
           type: "error"
         });
       }
@@ -523,9 +557,10 @@ export default {
     secondSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (!this.checkSeasonTime(this.secondAddForm)) {
+          let ret = this.checkSeasonTime(this.secondAddForm);
+          if (!ret.bool) {
             return this.$message({
-              message: "考季问卷时间设置有重叠！",
+              message: ret.message,
               type: "error"
             });
           }
@@ -553,12 +588,12 @@ export default {
       let ret = await this.$http.SetCourseDisable(cource_id, params);
       if (ret.status === 0) {
         this.$message({
-          message: this.isEnabled === 0 ? "关闭考季成功":"启用考季成功！",
+          message: this.isEnabled === 0 ? "关闭考季成功" : "启用考季成功！",
           type: "success"
         });
       } else {
         this.$message({
-          message: this.isEnabled === 0 ? "关闭考季失败":"启用考季失败！",
+          message: this.isEnabled === 0 ? "关闭考季失败" : "启用考季失败！",
           type: "error"
         });
         this.isEnabled = this.isEnabled === 1 ? 0 : 1;
@@ -570,7 +605,7 @@ export default {
       let ret = await this.$http.getSeasonList(course_id);
       if (ret.status === 0) {
         this.seasonList = ret.result.list;
-        this.$store.dispatch('getSeasonList',ret.result.list);
+        this.$store.dispatch("getSeasonList", ret.result.list);
       }
     },
     //删除考季确认
@@ -598,7 +633,6 @@ export default {
           type: "success",
           message: "删除成功!"
         });
-        this.getCourseSeasonList();
       } else {
         ret.message ? ret.message : "删除失败！";
         this.$message.error(ret.message);
