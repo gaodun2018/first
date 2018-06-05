@@ -41,10 +41,10 @@ export const getInsteractiveList = params => get(`${getBaseUrl()}apigateway.gaod
 export const updateInsteractive = params => formPut(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/update`, params)
 
 // 【后台】删除节点
-export const removeInsteractive = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/detele`,params)
+export const removeInsteractive = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/delete`,params)
 
 // 资源组增加
 export const createResourceGroup = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group`,params)
 
 //查询资源组
-export const getResourceGroup = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/resource/group`, params)
+export const getResourceGroup = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group`, params)

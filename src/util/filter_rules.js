@@ -1,7 +1,8 @@
 import {
   isAllSpace,
   maxLength,
-  isChinese
+  isChinese,
+  isNumber
 } from './util.js'
 let Validate = {}
 Validate.install = function (Vue, options) {
@@ -51,6 +52,29 @@ Validate.install = function (Vue, options) {
     }
   }
 
+  /* 验证是否题目数组 */
+  const isQuestionArray = (rule, value, callback) => {
+    if (value != null && value != "") {
+      let arr = value.split(',');
+      // debugger;
+      let flag = true;
+      arr.forEach(element => {
+        if (!isNumber(element)) {
+          // debugger;
+          flag = false;
+        } else if (!isAllSpace(element)) {
+          flag = false;
+        }
+      });
+      if(flag){
+        return callback()
+      }else{
+        return callback(new Error('请按英文逗号正确的输入题目ID！'))
+      }
+    } else {
+      return callback();
+    }
+  }
 
   /**
    * 参数 item
@@ -115,6 +139,12 @@ Validate.install = function (Vue, options) {
         case 'isVideoId':
           rules.push({
             validator: isVideoId,
+            trigger: ['blur', 'change']
+          });
+          break;
+        case 'isQuestionArray':
+          rules.push({
+            validator: isQuestionArray,
             trigger: ['blur', 'change']
           });
           break;

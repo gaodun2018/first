@@ -9,7 +9,7 @@
           <el-input v-model="ruleForm.title" placeholder="请填写资源组名称" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project" :rules="[{required: true, message: '请选择所属项目', trigger: 'change'}]">
-          <el-select v-model="ruleForm.project" filterable placeholder="请选择所属项目" @change="didChangeProjectSelection" @visible-change="visibleChange">
+          <el-select v-model="ruleForm.project" filterable placeholder="请选择所属项目" @focus="handleSelectFocus" @change="didChangeProjectSelection" @visible-change="visibleChange">
             <el-option :label="tag.name" :value="String(tag.id)" v-for="(tag, index) in tagsList" :key="index"></el-option>
           </el-select>
         </el-form-item>
@@ -100,6 +100,10 @@ export default {
       resourceTableConfig: resourceTableConfig[0]["table"], //表单配置
       getRowKeys(row) {
         return row.id;
+      },
+      lastSelect: {
+        project: "",
+        subject: ""
       }
     };
   },
@@ -128,6 +132,13 @@ export default {
         this.searchResource();
       }
     },
+    // 项目框获得焦点时
+    handleSelectFocus() {
+      // 记录下当前选中的项目科目
+      (this.lastSelect.project = this.ruleForm.project),
+        (this.lastSelect.subject = this.ruleForm.subject),
+        console.log("handleSelectFocushandleSelectFocus");
+    },
     selectResource() {
       this.dialogFormVisible = false;
     },
@@ -155,18 +166,17 @@ export default {
       }, 500);
     },
     async initData() {
-      let ret = await this.$http.getOneResource(this.$route.params.id);
-      // let params = {
-      //   group_id : this.$route.params.id
-      // }
-      // let ret = await this.$http.getResourceGroup(params);
-      if (ret.status == 0) {
+      let arrRet = await Promise.all([
+        this.$http.getOneResource(this.$route.params.id),
+        this.$http.getResourceGroup({ group_id: this.$route.params.id })
+      ]);
+      let ret = arrRet[0];
+      let ret1 = arrRet[1];
+      if (ret.status === 0) {
         let data = ret.result.resource;
         this.ruleForm.title = data.title;
         this.ruleForm.description = data.description;
-        this.ruleForm.video_id = data.video_id;
-        this.ruleForm.duration_minutes = Number(data.duration_minutes);
-        this.ruleForm.duration_second = Number(data.duration_seconds);
+
         if (data.tag && data.tag.id && data.tag.id != 0) {
           this.ruleForm.project = String(data.tag.id);
           this.ruleForm.subject =
@@ -180,6 +190,35 @@ export default {
           this.ruleForm.subject = "";
         }
       }
+      if (ret1.status === 0) {
+        this.multipleSelection = ret1.result;
+      }
+      debugger;
+      // let ret = await this.$http.getOneResource(this.$route.params.id);
+      // // let params = {
+      // //   group_id : this.$route.params.id
+      // // }
+      // // let ret = await this.$http.getResourceGroup(params);
+      // if (ret.status == 0) {
+      //   let data = ret.result.resource;
+      //   this.ruleForm.title = data.title;
+      //   this.ruleForm.description = data.description;
+      //   this.ruleForm.video_id = data.video_id;
+      //   this.ruleForm.duration_minutes = Number(data.duration_minutes);
+      //   this.ruleForm.duration_second = Number(data.duration_seconds);
+      //   if (data.tag && data.tag.id && data.tag.id != 0) {
+      //     this.ruleForm.project = String(data.tag.id);
+      //     this.ruleForm.subject =
+      //       data.tag.children && data.tag.children.length != 0
+      //         ? String(data.tag.children[0].id)
+      //         : "0";
+      //     this.didChangeProjectSelection(data.tag.id); //项目id
+      //   } else {
+      //     //没项目，没科目
+      //     this.ruleForm.project = "";
+      //     this.ruleForm.subject = "";
+      //   }
+      // }
     },
     //秒数输入框change事件
     handleInputChange(val) {
@@ -193,6 +232,9 @@ export default {
     },
     // 项目
     didChangeProjectSelection(id) {
+      if (this.selectFalg) {
+        // return
+      }
       this.tagsList.forEach(item => {
         if (item.id == id) {
           let subject_list = [...item.children];
@@ -216,19 +258,13 @@ export default {
               type: "error"
             });
           }
-          if (this.$route.params.id) {
-            //修改'
-            this.editVideoResource();
-          } else {
-            //新增
-            this.createResourceForm();
-          }
+          this.createResourceForm();
         } else {
           console.log("error submit!!");
         }
       });
     },
-    //新增资源组
+    //新增/修改资源组
     async createResourceForm() {
       let resource_id = [];
       this.multipleSelection.forEach(ele => {
@@ -241,8 +277,11 @@ export default {
           this.ruleForm.subject == "0"
             ? this.ruleForm.project
             : this.ruleForm.subject,
-        'resource_id[]': resource_id
+        "resource_id[]": resource_id
       };
+      if (this.$route.params.id) {
+        params.id = this.$route.params.id;
+      }
       this.loading = true;
       let createResponse = await this.$http.createResourceGroup(params);
       this.loading = false;

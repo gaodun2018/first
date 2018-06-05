@@ -15,12 +15,12 @@
         </el-table-column>
         <el-table-column align="center" label="重要节点时间点" width="200">
           <template slot-scope="scope">
-            {{scope.row.Times | secondToDate}}
+            {{scope.row.times | secondToDate}}
           </template>
         </el-table-column>
-        <el-table-column prop="Name" align="center" label="重要节点名称">
+        <el-table-column prop="name" align="center" label="重要节点名称">
         </el-table-column>
-        <el-table-column prop="Item_ids" align="center" label="课中练习（题目ID）" width="320">
+        <el-table-column prop="item_ids" align="center" label="课中练习（题目ID）" width="320">
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="220">
           <template slot-scope="scope">
@@ -57,7 +57,7 @@
         <el-form-item label="节点名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
           <el-input class="coursetxt" placeholder="请输入节点名称" v-model="ruleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="课中练习（选填 ）" prop="item_ids" :rules="filter_rules({type:'isAllSpace'})">
+        <el-form-item label="课中练习（选填 ）" prop="item_ids" :rules="filter_rules({type:'isQuestionArray'})">
           <el-input class="coursetxt" placeholder="请输入题目，多道题目请用英文逗号隔开" v-model="ruleForm.item_ids"></el-input>
         </el-form-item>
       </el-form>
@@ -79,6 +79,7 @@ export default {
     return {
       id: "", //视频id
       video_id: "", //视频地址
+      currentId:'',//修改节点id
       title: "", //视频名称
       tableData: [],
       videoPlayer: null,
@@ -176,7 +177,7 @@ export default {
       })
         .then(() => {
           let params = {
-            id: row.Id
+            id: row.id
           };
           this.$http.removeInsteractive(params).then(ret => {
             if (ret.status === 0) {
@@ -210,16 +211,17 @@ export default {
       }
       this.videoPlayer.pause(); //暂停
       this.duration = this.videoPlayer.getDuration(); //总时间
-      const { Id, Isdel, Item_ids, Name, Resource_id, Times, Type } = row;
-      const { h, m, s } = secondToDate(Times);
+      const { id, item_ids, name, resource_id, times, type } = row;
+      const { h, m, s } = secondToDate(times);
+      this.currentId = id;
       this.openTime.h = h.toString(10);
       this.openTime.m = m.toString(10);
       this.openTime.s = s.toString(10);
       this.ruleForm.hour = h.toString(10);
       this.ruleForm.minute = m.toString(10);
       this.ruleForm.second = s.toString(10);
-      this.ruleForm.title = Name;
-      this.ruleForm.item_ids = Item_ids;
+      this.ruleForm.title = name;
+      this.ruleForm.item_ids = item_ids;
       this.isCreate = false;
       this.dialogFormVisible = true;
     },
@@ -248,7 +250,7 @@ export default {
         this.dialogFormVisible = false;
       } else {
         this.$message({
-          message: "添加节点失败！",
+          message: ret.message?ret.message:"添加节点失败！",
           type: "error"
         });
       }
@@ -260,6 +262,7 @@ export default {
         parseInt(this.ruleForm.minute) * 60 +
         parseInt(this.ruleForm.second);
       let params = {
+        id:this.currentId,
         times: aTime, //时间戳(秒)
         type: "1", //类型 1：题目   2：视频（现没有）
         item_ids: this.ruleForm.item_ids, //题目id
@@ -278,7 +281,7 @@ export default {
         this.dialogFormVisible = false;
       } else {
         this.$message({
-          message: "更新节点失败！",
+          message: "更新节点失败或无修改！",
           type: "error"
         });
       }
@@ -299,8 +302,8 @@ export default {
       this.ruleForm.hour = h.toString(10);
       this.ruleForm.minute = m.toString(10);
       this.ruleForm.second = s.toString(10);
-      this.ruleForm.title = '';
-      this.ruleForm.item_ids = '';
+      this.ruleForm.title = "";
+      this.ruleForm.item_ids = "";
       this.openTime.h = h.toString(10);
       this.openTime.m = m.toString(10);
       this.openTime.s = s.toString(10);
@@ -388,9 +391,9 @@ export default {
     }
   }
   .el-table__body-wrapper,
-  .el-table__fixed-body-wrapper{
-    td{
-      padding:6px 0;
+  .el-table__fixed-body-wrapper {
+    td {
+      padding: 6px 0;
     }
   }
 }

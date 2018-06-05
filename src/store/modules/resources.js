@@ -26,11 +26,9 @@ const actions = {
     return new Promise(function (resolve, reject) {
       if (state.tagsList == undefined || state.tagsList == null || state.tagsList.length === 0) {
         getTags(params).then((result) => {
-          console.log(result,'22222222');
           try {
             if (result.status === 0) {
               let list = result.result;
-
               commit(TAGS_LIST, list);
               //成功后调用
               resolve(result);
