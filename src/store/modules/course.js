@@ -23,6 +23,7 @@ const state = {
     class_room_pk_open: 0,
     classroom_open: 0,
     course_syllabus_open: 0,
+    course_teacher_open:0,//选老师
     exam_key_point_open: 0,
     exam_syllabus_id: 0,
     gaodun_course_id: 0,
@@ -167,7 +168,10 @@ const mutations = {
     state.course_daration_list = data;
   },
   [COURSE_DISABLE](state, data) {
-    state.course_disable.class_room_pk_open = data.class_room_pk_open !== undefined ? data.class_room_pk_open : state.course_disable.class_room_pk_open;
+    for (let ele in data){
+      state.course_disable[ele] = data[ele] != undefined ? data[ele] : state.course_disable[ele]
+    }
+   /* state.course_disable.class_room_pk_open = data.class_room_pk_open !== undefined ? data.class_room_pk_open : state.course_disable.class_room_pk_open;
     state.course_disable.classroom_open = data.classroom_open !== undefined ? data.classroom_open : state.course_disable.classroom_open;
     state.course_disable.course_syllabus_open = data.course_syllabus_open !== undefined ? data.course_syllabus_open : state.course_disable.course_syllabus_open;
     state.course_disable.exam_key_point_open = data.exam_key_point_open !== undefined ? data.exam_key_point_open : state.course_disable.exam_key_point_open;
@@ -181,7 +185,7 @@ const mutations = {
     state.course_disable.pre_gradation_open = data.pre_gradation_open !== undefined ? data.pre_gradation_open : state.course_disable.pre_gradation_open;
     state.course_disable.review_gradation_open = data.review_gradation_open !== undefined ? data.review_gradation_open : state.course_disable.review_gradation_open;
     state.course_disable.season_manage_open = data.season_manage_open !== undefined ? data.season_manage_open : state.course_disable.season_manage_open;
-    state.course_disable.study_record_open = data.study_record_open !== undefined ? data.study_record_open : state.course_disable.study_record_open;
+    state.course_disable.study_record_open = data.study_record_open !== undefined ? data.study_record_open : state.course_disable.study_record_open;*/
   },
   [SEASON_LIST](state, data) {
     state.seaconList = data;

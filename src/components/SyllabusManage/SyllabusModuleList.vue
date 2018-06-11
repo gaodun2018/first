@@ -380,7 +380,8 @@ export default {
         title: row.title,
         project_id: String(row.project.id),
         subject_id: String(row.subject.id),
-        status: String(row.status)
+        status: String(row.status),
+        is_knowledge_open:row.is_knowledge_open
       };
       //判断是编辑还是复制
       if (copy) {

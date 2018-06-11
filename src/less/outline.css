@@ -221,9 +221,11 @@
     color: #2CA4D9;
     float: right;
     cursor: pointer;
-    padding: 0 10px;
+    padding: 0 6px;
 }
-
+.chapterbox .chrgt1:hover, .chapterbox .chrgt:hover{
+  opacity: .7;
+}
 /* .chapterbox .chrgt {
     width: 40px;
 }

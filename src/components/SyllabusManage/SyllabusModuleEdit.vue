@@ -5,7 +5,7 @@
         课程大纲：{{title}}
       </el-col>
       <el-col :span="6" v-if="coursesylllevel === 4" style="text-align:right;">
-        <el-switch v-model="value4" active-text="是否启用知识点关联">
+        <el-switch v-model="is_knowledge_open" @change="handleChangeIsKnowledgeOpen" active-text="是否启用知识点关联">
         </el-switch>
       </el-col>
     </el-row>
@@ -73,7 +73,7 @@
                       </span>
                       <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
                       <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
-                      <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">关联知识点</span>
+                      <span class="chrgt1 yellow" @click="handleOpenKnowledgeDialog(thirdItem.id)">关联知识点</span>
                       <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                     </div>
                     <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
@@ -249,41 +249,13 @@
       </span>
     </el-dialog>
 
-    <!-- <el-dialog title="关联知识点" center :visible.sync="dialogKnowledge"></el-dialog> -->
+    <SelectKnowledge :dialog-knowledge-visible="dialogKnowledgeVisible" :knowledge-list="knowledgeList"></SelectKnowledge>
 
     <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" center :visible.sync="adddialogVisible" size="tiny">
       <el-form :model="ruleProject" ref="ruleProject" label-width="120px" class="demo-ruleForm">
         <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
           <el-input class="coursetxt" v-model="ruleProject.name"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="知识点关联" prop="knowledge" :rules="[{required:true}]">
-          <el-row class="scroll-content" style="margin-bottom:10px;">
-            <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
-              <span class="tag-title" :title="tag.title">{{tag.title}}</span>
-              <span class="tag-id">（ID：{{tag.id}}）</span>
-            </el-tag>
-          </el-row>
-        </el-form-item>
-        <el-row>
-          <el-input placeholder="请输入知识点ID/名称搜索" size="small" v-model="searchInput" @keydown.native.enter="handleIconClick">
-            <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
-          </el-input>
-          <el-table ref="multipleTable" :data="resourceTable" border tooltip-effect="dark" v-loading="resLoading" style="width:100%;margin-top:20px;" max-height="400" @selection-change="handleSelectionChange" highlight-current-row :row-key="getRowKeys">
-            <el-table-column :reserve-selection="true" type="selection" width="55">
-            </el-table-column>
-            <el-table-column :label="item.label" :width="item.wh" v-for="(item,index) in resourceTableConfig" :key="index" show-overflow-tooltip>
-              <template slot-scope="scope">
-                <template v-if="item.key == 'id' || item.key == 'paper_id' || item.key == 'live_id' ">
-                  <span>{{scope.row[item.key]}}</span>
-                </template>
-                <span v-else-if="item.key == 'discriminator'">{{scope.row[item.key] | Resource2chn}}</span>
-                <span v-else>{{scope.row[item.key]}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-pagination @current-change="handleCurrentChange" :current-page.sync="pagination.current_page" :page-size="50" layout="total, prev, pager, next, jumper" :total="pagination.total">
-          </el-pagination>
-        </el-row> -->
       </el-form>
       <div class="footer" slot="footer">
         <el-button @click="adddialogVisible = false">取 消</el-button>
@@ -401,17 +373,20 @@ import {
 } from "../../common/outlineConfig.js";
 import { isNumber, getSrcStr } from "../../util/util.js";
 import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
+import SelectKnowledge from '../public/SelectKnowledgeDialog.vue'
 export default {
   name: "SyllabusModuleEdit",
   components: {
     draggable,
-    HandoutUpload
+    HandoutUpload,
+    SelectKnowledge
   },
   data() {
     return {
-      value4: false,
+      is_knowledge_open: false,
       project_id: "", //项目id
       subject_id: "", //科目id
+      isAllowUse:0,//大纲是否允许使用
       btnLoading: false, //按钮loading
       active: 0, //步骤条active
       resourceRadio: "", //选择的资源
@@ -434,6 +409,8 @@ export default {
         name: ""
       },
       dialogFormVisible: false,
+      dialogKnowledgeVisible:false,//选择知识点弹层
+      knowledgeList:[],//知识点列表
       resourceTable: [], //资源列表
       multipleSelection: [],
       dialogVisible: false,
@@ -445,7 +422,6 @@ export default {
       inputPlaceholder: "请输入视频资源ID / 名称",
       refname: "",
       coursesylllevel: "",
-      coursesyllid: "",
       currentId: "0", //0是最外层父级大纲   pid也表示当前需要操作的id
       title: "", //课程大纲标题
       resourceTypeList: resourceTypeList,
@@ -474,6 +450,28 @@ export default {
     };
   },
   methods: {
+    //启用知识点
+    async handleChangeIsKnowledgeOpen(bool){
+      console.log(bool);
+      let ret = await this.$http.UpdateCourseSyllabus(this.syllabus_id, {
+        is_knowledge_open: bool ? 1 : 0,
+        project_id: this.project_id,
+        subject_id: this.subject_id,
+        status: this.isAllowUse,
+        title: this.title,
+      });
+      if (ret.status === 0) {
+        this.$message({
+          message: "修改大纲成功！",
+          type: "success"
+        });
+      }else{
+        this.$message({
+          message: "修改大纲失败！",
+          type: "error"
+        });
+      }
+    },
     // 资源应用 选择
     handleCheckboxChange(d) {
       console.log(d);
@@ -835,7 +833,7 @@ export default {
         return true;
       }
       let res = await this.$http.checkResIsInOutline(
-        this.coursesyllid,
+        this.syllabus_id,
         this.resourceRadio
       );
       if (res.status === 0) {
@@ -861,7 +859,7 @@ export default {
       let params = {
         name: this.addResFirFrom.name, //大纲条目名称
         pid: this.currentId,
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       };
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
@@ -892,7 +890,7 @@ export default {
       let id = this.currentId;
       let params = {
         name: this.addResFirFrom.name,
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       };
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
@@ -923,7 +921,7 @@ export default {
       let params = {
         resource_id: this.resourceRadio, //资源id
         tag_id: this.tag_id,
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       };
       let retv = await this.$http.mountSyllabusResource(id, params);
       // this.btnLoading = false;
@@ -983,7 +981,7 @@ export default {
     async confirmDelete() {
       let id = this.currentId;
       let params = {
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       };
       let ret = await this.$http.DeleteSyllabusItem(id, params);
       if (ret.status == 0) {
@@ -1039,7 +1037,7 @@ export default {
         name: this.ruleProject.name,
         pid: this.currentId,
         //          level:this.coursesylllevel,
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       });
       this.btnLoading = false;
       if (ret.status == 0) {
@@ -1061,7 +1059,7 @@ export default {
           let id = this.currentId;
           let name = {
             name: this.ruleProject.name,
-            course_syllabus_id: this.coursesyllid
+            course_syllabus_id: this.syllabus_id
           };
           this.btnLoading = true;
           let ret = await this.$http.ChangeSyllabusItem(id, name);
@@ -1098,7 +1096,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       let course_syllabus_id = {
-        course_syllabus_id: this.coursesyllid
+        course_syllabus_id: this.syllabus_id
       };
       let ret = await this.$http.getSyllabusItems(course_syllabus_id);
       loading.close();
@@ -1112,11 +1110,13 @@ export default {
     },
     //查看大纲的详情
     async checkSyllabus() {
-      let ret = await this.$http.checkSyllabus(this.coursesyllid);
+      let ret = await this.$http.checkSyllabus(this.syllabus_id);
       if (ret.status == 0) {
         this.title = ret.result.title;
         this.tag_id = ret.result.tag_id;
+        this.is_knowledge_open = ret.result.is_knowledge_open === 0 ? false : true;
         this.project_id = ret.result.project.id;
+        this.isAllowUse = ret.result.status;
         this.subject_id = ret.result.subject.id;
         this.coursesylllevel = ret.result.template.level_max; //大纲的层级
       }
@@ -1155,7 +1155,7 @@ export default {
         parmas: {
           near_by: evt.relatedContext.element && evt.relatedContext.element.id, //参照物，也是大纲条目id
           direction: direction, //1表示参照物的下方，-1表示参照物的上方
-          course_syllabus_id: this.coursesyllid //大纲id
+          course_syllabus_id: this.syllabus_id //大纲id
         }
       };
     },
@@ -1177,16 +1177,35 @@ export default {
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    //  打开关联知识点弹层
+    handleOpenKnowledgeDialog(){
+      this.getOutlineKnowledgeList();
+      this.dialogKnowledgeVisible = true;
+    },
+    //获取大纲所属项目科目最新考试大纲
+    async getOutlineKnowledgeList(){
+      let params = {
+        project_id:this.project_id,//项目id
+        subject_id:this.subject_id,//课程id
+      }
+      let ret = await this.$http.getOutlineKnowledgeList(params);
+      if (ret.status === 0){
+        this.knowledgeList = ret.result;
+      }
     }
   },
-  computed: {},
+  computed: {
+    syllabus_id(){
+      return this.$route.params.sid;
+    }
+  },
   mounted() {
     for (let i = 1; i <= 120; i++) {
       this.study_time_options.push({ value: i });
     }
   },
   created() {
-    this.coursesyllid = this.$route.params.sid;
     this.getSyllabusItems();
     this.checkSyllabus();
   }
