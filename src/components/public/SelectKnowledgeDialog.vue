@@ -3,8 +3,7 @@
     class="selectknowledge"
     center
     title="请选择知识点关联"
-    :visible.sync="dialogKnowledgeVisible"
-    @close="closeDialog">
+    :visible.sync="dialogKnowledgeVisible">
     <el-row class="searchtools">
       <el-col :span="10">
         <el-select
@@ -13,7 +12,7 @@
           style="width: 100%;"
           @change="handleFirstChange"
           class="group-search">
-          <el-option v-for="item in knowledgeList" :key="item.icid" :label="item.title" :value="item.icid">
+          <el-option v-for="item in knowledgeList" :key="item.id" :label="item.title" :value="item.id">
           </el-option>
         </el-select>
       </el-col>
@@ -39,12 +38,12 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column label="日期" align="center">
-        <template slot-scope="scope">{{ scope.row.date }}</template>
+      <el-table-column label="知识点ID" width="100" align="center">
+        <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column prop="name" label="姓名" align="center">
+      <el-table-column prop="title" label="知识点名" align="center" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="address" label="地址" align="center" show-overflow-tooltip>
+      <el-table-column prop="definition" label="定义" align="center" show-overflow-tooltip>
       </el-table-column>
     </el-table>
     <div slot="footer" class="dialog-footer last-form-item">
@@ -65,6 +64,9 @@
       },
       knowledgeList: {
         type: Array
+      },
+      currentSyllabusItemKnowledge:{
+
       }
     },
     computed: {
@@ -74,6 +76,15 @@
         } else {
           return false;
         }
+      },
+      multipleSelection:{
+        get :function () {
+          return this.currentSyllabusItemKnowledge;
+        },
+        set:function (v) {
+          console.log(v);
+          this.$emit('changeCurrentSyllabusItemKnowledge',v);
+        }
       }
     },
     data() {
@@ -82,23 +93,25 @@
         secondVal: '',
         secondList: [],
         tableData: [],
-        multipleSelection: []
+        // multipleSelection: []
       }
     },
     methods: {
       handleFirstChange(vid) {
-        console.log(vid);
+        this.secondList = [];
+        this.secondVal = '';
+        this.tableData = [];
         for (let i = 0; i < this.knowledgeList.length; i++) {
-          if (this.knowledgeList[i].icid === vid) {
-            this.secondList = this.knowledgeList[i].childlist;
+          if (this.knowledgeList[i].id === vid) {
+            this.secondList = this.knowledgeList[i].children;
           }
         }
       },
       handleSecondChange(vid) {
-        console.log(vid);
+        this.tableData = [];
         for (let i = 0; i < this.secondList.length; i++) {
-          if (this.secondList[i].icid === vid) {
-            this.tableData = this.secondList[i].childList;
+          if (this.secondList[i].if === vid) {
+            this.tableData = this.secondList[i].children;
           }
         }
       },
@@ -112,11 +125,37 @@
         }
       },
       handleSelectionChange(val) {
+        if (val.length > 1) {
+          /* this.$message({
+             message: "最多选择10个资源！",
+             type: "warning"
+           });*/
+          this.toggleSelection([val[val.length - 1]]);
+          return;
+        }
         this.multipleSelection = val;
       },
       closeDialog() {
-        this.$store.dispatch('changeDialog', false)
+        this.$emit('handleCloseKnowledgeDialog')
       }
     }
   }
 </script>
+<style lang="less">
+  .selectknowledge {
+    .el-table {
+      .el-table__header {
+        > thead {
+          > tr {
+            th:nth-child(1) {
+              .cell {
+                display: none;
+                opacity: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

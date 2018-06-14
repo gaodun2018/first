@@ -154,8 +154,7 @@ export default {
           page: val ? val : 1,
           "order_by[]": "desc", //顺序   倒序
           "order_by_field[]": "id", //排序字段
-          project_id: this.ruleForm.project
-          // subject_id: this.subject_id,
+          tag_id: this.ruleForm.project
         };
         let ret = await this.$http.getResource(params);
         if (ret.status == 0) {
@@ -193,32 +192,6 @@ export default {
       if (ret1.status === 0) {
         this.multipleSelection = ret1.result;
       }
-      debugger;
-      // let ret = await this.$http.getOneResource(this.$route.params.id);
-      // // let params = {
-      // //   group_id : this.$route.params.id
-      // // }
-      // // let ret = await this.$http.getResourceGroup(params);
-      // if (ret.status == 0) {
-      //   let data = ret.result.resource;
-      //   this.ruleForm.title = data.title;
-      //   this.ruleForm.description = data.description;
-      //   this.ruleForm.video_id = data.video_id;
-      //   this.ruleForm.duration_minutes = Number(data.duration_minutes);
-      //   this.ruleForm.duration_second = Number(data.duration_seconds);
-      //   if (data.tag && data.tag.id && data.tag.id != 0) {
-      //     this.ruleForm.project = String(data.tag.id);
-      //     this.ruleForm.subject =
-      //       data.tag.children && data.tag.children.length != 0
-      //         ? String(data.tag.children[0].id)
-      //         : "0";
-      //     this.didChangeProjectSelection(data.tag.id); //项目id
-      //   } else {
-      //     //没项目，没科目
-      //     this.ruleForm.project = "";
-      //     this.ruleForm.subject = "";
-      //   }
-      // }
     },
     //秒数输入框change事件
     handleInputChange(val) {
@@ -273,10 +246,7 @@ export default {
       let params = {
         title: this.ruleForm.title,
         description: this.ruleForm.description,
-        tag_id:
-          this.ruleForm.subject == "0"
-            ? this.ruleForm.project
-            : this.ruleForm.subject,
+        tag_id: this.ruleForm.subject == "0" ? this.ruleForm.project : this.ruleForm.subject,
         "resource_id[]": resource_id
       };
       if (this.$route.params.id) {
@@ -297,7 +267,7 @@ export default {
         }, 1000);
       } else {
         this.$message({
-          message: "保存失败",
+          message: "保存失败:"+createResponse.message,
           type: "error"
         });
       }
