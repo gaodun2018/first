@@ -29,4 +29,22 @@ export const resourceFile = params => formPost(`${getBaseUrl()}apigateway.gaodun
 // 修改讲义
 export const saveMidfyLecturenote = (id, params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/lecture-note/${id}`, params)
 // 删除资源
-export const removeLecturenote = (id) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/${id}`)
+export const removeResource = (id) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/${id}`)
+
+//添加节点(后台)
+export const createInsteractive = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/add`, params)
+
+//节点列表（后台）
+export const getInsteractiveList = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/list`, params)
+
+//修改节点(后台)
+export const updateInsteractive = params => formPut(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/update`, params)
+
+// 【后台】删除节点
+export const removeInsteractive = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/insteractive/delete`,params)
+
+// 资源组增加
+export const createResourceGroup = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group`,params)
+
+//查询资源组
+export const getResourceGroup = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group`, params)

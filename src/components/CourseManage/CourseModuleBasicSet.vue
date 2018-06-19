@@ -128,8 +128,8 @@
 }
 </style>
 <script>
-import ImgUpload from "./courseset/CourseModelUpload.vue";
-import ResourceIntro from "./courseset/CourseModelResourceIntro.vue";
+import ImgUpload from "./courseSet/CourseModelUpload.vue";
+import ResourceIntro from "./courseSet/CourseModelResourceIntro.vue";
 import {
     initial_info,
     course_type,
@@ -359,7 +359,7 @@ export default {
         this.editor && this.editor.destroy();
     },
     created() {
-        if(this.projectlist[0].project_id != ''){
+        if(this.projectlist != undefined && this.projectlist != null && this.projectlist.length!== 0){
              this.getCourseInfo();
         }else {
             this.getProjectSubjectList();

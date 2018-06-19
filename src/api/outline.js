@@ -67,20 +67,6 @@ export const checkclass = (studentId, page, pageSize, params) => get(`${getBaseU
 // 大纲条目排序
 export const sortSyllabus = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/syllabus/item/${id}/rank`, params);
 
+//大纲获取考纲列表知识点
+export const getOutlineKnowledgeList = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/knowledge/syllabuses/course`, params);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 班级列表
-// export const getStudentList = parameters => get(`${getBaseUrl()}jerusalemapi.gaodun.com/Student/getStudentList`, parameters);
