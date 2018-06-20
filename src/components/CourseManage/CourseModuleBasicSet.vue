@@ -82,7 +82,7 @@
 
                       <el-form-item>
                           <el-row v-if="isTrue==false?true:false">
-                              <el-input  type="textarea" :rows="1" v-model="str" disabled="disabled"></el-input>
+                              <el-input  type="textarea" :rows="1" v-model="vid_id" disabled="disabled"></el-input>
                           </el-row>
 
                             <!-- <el-input
@@ -241,14 +241,10 @@ export default {
       },
       resourceinput: "",
       place: "选择视频",
-      str: "53322211", //测试添加字符串
+      vid_id: "53322211", //默认EPid
       index: "1",
       value: "",
       resourceTable: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
 
       zLoading: false,
       btnLoading: false, //按钮loading
@@ -450,7 +446,7 @@ export default {
       let url = this.course_id;
       let ret = await this.$http.getCourseInfo(url);
       if (ret.status == 0) {
-        console.log(ret.result);
+        console.log("初始获取的值",ret.result);
         this.ruleForm.name = ret.result.course_name;
         this.ruleForm.project_id = ret.result.project_id;
         this.ruleForm.subject_id = ret.result.subject_id;
@@ -479,6 +475,17 @@ export default {
         //          this.kForm.allow_exam = ret.result.allow_exam;
         this.kForm.allow_investigate = ret.result.allow_investigate;
         this.kForm.investigate_url = ret.result.investigate_url;
+
+        // 添加判断EP2.0视频判断
+        if(ret.result.course_type == "11" && ret.result.video_id == this.vid_id){
+          this.isTrue = false;
+        }else if(ret.result.course_type == "11" && ret.result.video_id != this.vid_id && '0'){
+          this.isTrue = true;
+          this.place = ret.result.video_id
+          this.index = "2";
+        }else{
+          this.vid_id = video_id
+        }
         setTimeout(() => {
           ret.result.brief_introduction &&
             this.editor.setContent(ret.result.brief_introduction);
@@ -515,7 +522,7 @@ export default {
      if(this.ruleForm.course_type === '11' && this.isTrue){
        formData.video_id = this.place;
      }else if(this.ruleForm.course_type === '11' && !this.isTrue){
-      formData.video_id = this.str;
+      formData.video_id = this.vid_id;
      }else{
        formData.video_id = "";
      }
