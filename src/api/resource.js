@@ -13,7 +13,8 @@ export const getOneResource = (id, params) => get(`${getBaseUrl()}apigateway.gao
 export const getTags = (slug, params) => get(`${getBaseUrl()}apigateway.gaodun.com/resource-api/tag/slug/${slug}`, params)
 
 //保存视频资源
-export const storeResource = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video`, params)
+// export const storeResource = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video`, params)
+export const storeResource = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/video`, params)
 
 //修改视频资源
 export const editVideoResource = (id, params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video/${id}`, params)
@@ -48,3 +49,6 @@ export const createResourceGroup = (params) => formPost(`${getBaseUrl()}apigatew
 
 //查询资源组
 export const getResourceGroup = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group`, params)
+
+//资源获取考纲和知识点
+export const getResourceKnowledgeList = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/knowledge/syllabuses/tag`, params)
