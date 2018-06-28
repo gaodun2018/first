@@ -3,7 +3,7 @@
         <el-row style="position: relative;">
             <!-- <a class="download_btn" :href="fileList[0].response&&fileList[0].response.filePath" download="filename" v-if="isShowDownload" style="color:#4db3ff">下载</a> -->
             <el-col :span="12">
-                <el-upload class="handout-upload" :action="materialUpload" :on-change="handleChange" :on-remove="handleRemove" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :headers="apiHeader" :before-upload="beforeAvatarUpload" :file-list="fileList">
+                <el-upload class="handout-upload" :action="materialUpload" :on-change="handleChange" :on-remove="handleRemove" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :headers="apiHeader" :before-upload="beforeAvatarUpload" :file-list="fileList" :on-progress	='progressUpload'>
                     <el-button size="small" type="primary" v-if="isShow()">点击上传文件</el-button>
                     <el-button size="small" type="primary" v-if="!isShow()">重新上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传zip/rar文件</div>
@@ -88,21 +88,21 @@ export default {
             var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
             const extension = testmsg === "zip";
             const extension2 = testmsg === "rar";
-            const isLt2M = file.size / 1024 / 1024 < 10;
+            // const isLt2M = file.size / 1024 / 1024 < 10;
             if (!extension && !extension2) {
                 this.$message({
                     message: "上传文件只能是 zip、rar格式!",
                     type: "warning"
                 });
             }
-            if (!isLt2M) {
+            /*if (!isLt2M) {
                 this.$message({
                     message: "上传文件大小不能超过 10MB!",
                     type: "warning"
                 });
-            }
+            }*/
 
-            return (extension && isLt2M) || (extension2 && isLt2M);
+            return extension || extension2 ;
         },
         handleChange(file, fileList) {
             // console.log(file,fileList)
@@ -133,6 +133,9 @@ export default {
             setTimeout(() => {
                 this.$emit("updateFlies", '', []);
             }, 0);
+        },
+        progressUpload(event, file, fileList){
+            //上传中事件
         }
     },
     mounted() {},
