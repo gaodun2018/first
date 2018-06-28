@@ -42,6 +42,7 @@
         <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
           <span class="tag-title" :title="tag.title">{{tag.title}}</span>
           <span class="tag-id">（ID：{{tag.id}}）</span>
+          <router-link  :to="{name:'previewVideo',params: { id: tag.id }}" tag="a" target="_blank"> <span class="tag-watch">预览</span></router-link>
         </el-tag>
       </el-row>
       <el-row>
@@ -318,6 +319,12 @@ export default {
 };
 </script>
 <style lang="less">
+// 添加了预览样式编写
+.tag-watch{
+  cursor: pointer;
+  color: #0677ea;
+  font-weight: 900;
+}
 .resource-group-form-wrapper {
   .frombox {
     .el-tag {

@@ -52,3 +52,6 @@ export const getResourceGroup = params => get(`${getBaseUrl()}apigateway.gaodun.
 
 //资源获取考纲和知识点
 export const getResourceKnowledgeList = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/knowledge/syllabuses/tag`, params)
+
+//获取视频资源&知识点&老师
+export const getAllKnowledge = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/video/${id}`, params)

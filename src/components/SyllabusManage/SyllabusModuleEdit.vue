@@ -4,7 +4,7 @@
       <el-col :span="18">
         课程大纲：{{title}}
       </el-col>
-      <el-col :span="6" v-if="coursesylllevel === 4" style="text-align:right;">
+      <el-col :span="6" v-if="coursesylllevel === 4 && subject_id != 0" style="text-align:right;">
         <el-switch v-model="is_knowledge_open" @change="handleChangeIsKnowledgeOpen" active-text="是否启用知识点关联">
         </el-switch>
       </el-col>
@@ -69,11 +69,11 @@
                     <div class="knowledge">
                       <span class="chlft">
                         <i></i>
-                        <span>{{thirdItem.name}}</span>
+                        <span>{{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
                       </span>
                       <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
                       <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
-                      <!--<span class="chrgt1 yellow" @click="handleOpenKnowledgeDialog(thirdItem)">关联知识点</span>-->
+                      <span class="chrgt1 yellow" v-if="subject_id != 0" @click="handleOpenKnowledgeDialog(thirdItem)">关联知识点</span>
                       <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                     </div>
                     <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
@@ -249,12 +249,15 @@
       </span>
     </el-dialog>
 
+
     <SelectKnowledge
+       ref="selectKnowledge"
       :dialog-knowledge-visible="dialogKnowledgeVisible"
       :knowledge-list="knowledgeList"
       :current-syllabus-item-knowledge="currentSyllabusItemKnowledge"
       @changeCurrentSyllabusItemKnowledge="changeCurrentSyllabusItemKnowledge"
-      @handleCloseKnowledgeDialog="dialogKnowledgeVisible = false"
+      @handleCloseKnowledgeDialog="handleCloseKnowledgeDialog"
+      @handleSaveKnowledgeDialog="handleSaveKnowledgeDialog"
     ></SelectKnowledge>
 
     <el-dialog :title="Moduledialog ? bigdislog ? '新增一级大纲目录' : '新增课程大纲子目录' : '修改课程大纲名称'" class="tabplane" center :visible.sync="adddialogVisible" size="tiny">
@@ -276,6 +279,17 @@
   </div>
 </template>
 <style lang="less">
+.connect-knowledage{
+  display: inline-block;
+  height: 23px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 102, 0, 1);
+  background-color: rgba(255, 227, 185, 1);
+  color:#FF0000;
+  font-size: 11px;
+  line-height: 23px;
+  padding: 0 5px;
+}
 .tabplane .el-dialog {
   min-width: 680px;
   margin-bottom: 0px;
@@ -379,7 +393,7 @@ import {
 } from "../../common/outlineConfig.js";
 import { isNumber, getSrcStr } from "../../util/util.js";
 import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
-import SelectKnowledge from '../public/SelectKnowledgeDialog.vue'
+import SelectKnowledge from '../public/SelectKnowledgeDialog2.vue'
 export default {
   name: "SyllabusModuleEdit",
   components: {
@@ -389,6 +403,10 @@ export default {
   },
   data() {
     return {
+      getId:'',
+      judgeid:'',
+      knowledgeInfo:"",//添加关联知识点名字字段
+
       is_knowledge_open: false,
       project_id: "", //项目id
       subject_id: "", //科目id
@@ -457,9 +475,31 @@ export default {
     };
   },
   methods: {
+    // 知识点的保存
+    async handleSaveKnowledgeDialog(){
+      let knowledageData = this.currentSyllabusItemKnowledge;
+      let item_id = this.currentId
+      let params = {
+        knowledge_name:this.knowledgeInfo,
+        syllabus_id:this.$route.params.sid
+      }
+      if(this.judgeid){
+        params.kid = this.judgeid;
+      }
+      let knowledage_id = knowledageData[0].id;
+      let ret = await this.$http.saveOutlineKnowledgeList(item_id,knowledage_id,params);
+      if(ret.status === 0){
+        this.dialogKnowledgeVisible = false;
+        this.getSyllabusItems();
+      }
+    },
+    handleCloseKnowledgeDialog () {
+      this.dialogKnowledgeVisible = false;
+    },
     changeCurrentSyllabusItemKnowledge(v){
       //切换关联的知识点
       this.currentSyllabusItemKnowledge = v;
+      this.knowledgeInfo = v[0].title;
     },
     //启用知识点
     async handleChangeIsKnowledgeOpen(bool){
@@ -485,7 +525,6 @@ export default {
     },
     // 资源应用 选择
     handleCheckboxChange(d) {
-      console.log(d);
       if (d.length > 1) {
         this.addResFirFrom.apply_to = d.splice(-1);
       }
@@ -1008,7 +1047,7 @@ export default {
     // 新增课程大纲子目录的弹层
     openChildDialog(currentId, bool) {
       if (bool) {
-        debugger;
+        // debugger;
       }
       this.adddialogVisible = true;
       this.Moduledialog = true;
@@ -1110,8 +1149,11 @@ export default {
         course_syllabus_id: this.syllabus_id
       };
       let ret = await this.$http.getSyllabusItems(course_syllabus_id);
+      console.log("拉取大纲条目",ret)
       loading.close();
       if (ret.status == 0) {
+        // ret.result[0].children[0].children[0].knowledgeId =  '112';
+        // ret.result[0].children[0].children[0].knowledgeName = 'shiian';
         this.tabledata = ret.result;
       } else {
         this.$message({
@@ -1122,6 +1164,7 @@ export default {
     //查看大纲的详情
     async checkSyllabus() {
       let ret = await this.$http.checkSyllabus(this.syllabus_id);
+      console.log("查看大纲详情",ret);
       if (ret.status == 0) {
         this.title = ret.result.title;
         this.tag_id = ret.result.tag_id;
@@ -1190,1459 +1233,30 @@ export default {
       this.$refs[formName].resetFields();
     },
     //  打开关联知识点弹层
-    handleOpenKnowledgeDialog(item){
-      debugger
-      this.currentSyllabusItemKnowledge = [1,1];
-      this.getOutlineKnowledgeList();
+    async handleOpenKnowledgeDialog(item){
+      this.currentId = item.id;
+      if(item.kid){
+        this.judgeid = item.kid;
+      }
+      await this.getOutlineKnowledgeList();
+      let id = -1;
+      if(item.knowledge_id){
+        id = item.knowledge_id
+      }
+      setTimeout(() => {
+          this.$refs.selectKnowledge.showSelectSyllabusKnowledge(id);
+        }, 0)
       this.dialogKnowledgeVisible = true;
     },
     //获取大纲所属项目科目最新考试大纲
     async getOutlineKnowledgeList(){
       let params = {
-        project_id:this.project_id,//项目id
-        subject_id:this.subject_id,//课程id
+        // project_id:this.project_id,//项目id
+        // subject_id:this.subject_id,//课程id
+         project_id:5,
+        subject_id:30,
       }
       let ret = await this.$http.getOutlineKnowledgeList(params);
-      ret = {
-        "status": 0,
-        "message": "请求成功",
-        "result": {
-          "status": 0,
-          "message": "",
-          "result": {
-            "id": 149,
-            "title": "CMA",
-            "contents": [
-              {
-                "parent": null,
-                "depth": 1,
-                "children": [
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21057,
-                        "relation_type": 5,
-                        "id": 21058,
-                        "title": "资产负债表",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21057,
-                        "relation_type": 5,
-                        "id": 21059,
-                        "title": "损益表",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21057,
-                        "relation_type": 5,
-                        "id": 21060,
-                        "title": "现金流量表",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21057,
-                    "title": "财务报表",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21061,
-                        "relation_type": 5,
-                        "id": 21062,
-                        "title": "应收",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21061,
-                        "relation_type": 5,
-                        "id": 21063,
-                        "title": "存货",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21061,
-                        "relation_type": 5,
-                        "id": 21064,
-                        "title": "投资",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21061,
-                        "relation_type": 5,
-                        "id": 21065,
-                        "title": "固定资产",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21061,
-                    "title": "资产",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21066,
-                        "relation_type": 5,
-                        "id": 21067,
-                        "title": "负债",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 1,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21066,
-                    "title": "负债",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 1,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21068,
-                        "relation_type": 5,
-                        "id": 21069,
-                        "title": "所得税",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21068,
-                    "title": "所得税",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21070,
-                        "relation_type": 5,
-                        "id": 21071,
-                        "title": "租赁",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21070,
-                    "title": "租赁",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21072,
-                        "relation_type": 5,
-                        "id": 21073,
-                        "title": "权益",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21072,
-                    "title": "权益",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21074,
-                        "relation_type": 5,
-                        "id": 21075,
-                        "title": "收入确认",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21074,
-                    "title": "收入确认",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21076,
-                        "relation_type": 5,
-                        "id": 21077,
-                        "title": "美国准则和国际准则",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21076,
-                    "title": "美国准则和国际准则",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  }
-                ],
-                "knowledges": null,
-                "examination_syllabus_id": 149,
-                "question_type": 0,
-                "id": 21056,
-                "title": "对外财务报告决策",
-                "difficulty": 0,
-                "created_at": 1527737061,
-                "updated_at": 1527737061,
-                "score": 0,
-                "test_rate": 0,
-                "important": 2,
-                "number_of_questions": 0,
-                "project_id": 2,
-                "subject_id": 76,
-                "definition": null
-              },
-              {
-                "parent": null,
-                "depth": 1,
-                "children": [
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21079,
-                        "relation_type": 5,
-                        "id": 21080,
-                        "title": "战略框架",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21079,
-                    "title": "战略框架",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 4,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21081,
-                        "relation_type": 5,
-                        "id": 21082,
-                        "title": "预算的概念",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21081,
-                        "relation_type": 5,
-                        "id": 21083,
-                        "title": "预算的编制方法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21081,
-                    "title": "预算的概念",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21084,
-                        "relation_type": 5,
-                        "id": 21085,
-                        "title": "回归分析",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21084,
-                        "relation_type": 5,
-                        "id": 21086,
-                        "title": "学习曲线",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21084,
-                        "relation_type": 5,
-                        "id": 21087,
-                        "title": "期望值",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21084,
-                    "title": "预测技术",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21088,
-                        "relation_type": 5,
-                        "id": 21089,
-                        "title": "经营预算",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21088,
-                        "relation_type": 5,
-                        "id": 21090,
-                        "title": "财务预算",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21088,
-                    "title": "编制预算",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  }
-                ],
-                "knowledges": null,
-                "examination_syllabus_id": 149,
-                "question_type": 0,
-                "id": 21078,
-                "title": "规划、预算编制与预测",
-                "difficulty": 0,
-                "created_at": 1527737061,
-                "updated_at": 1527737061,
-                "score": 0,
-                "test_rate": 0,
-                "important": 4,
-                "number_of_questions": 0,
-                "project_id": 2,
-                "subject_id": 76,
-                "definition": null
-              },
-              {
-                "parent": null,
-                "depth": 1,
-                "children": [
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21092,
-                        "relation_type": 5,
-                        "id": 21093,
-                        "title": "差异分析总体概述",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21092,
-                        "relation_type": 5,
-                        "id": 21094,
-                        "title": "直接材料和直接人工差异",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21092,
-                        "relation_type": 5,
-                        "id": 21095,
-                        "title": "变动制造费用和固定制造费用差异",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21092,
-                        "relation_type": 5,
-                        "id": 21096,
-                        "title": "销售量差异",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21092,
-                    "title": "差异分析",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 4,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21097,
-                        "relation_type": 5,
-                        "id": 21098,
-                        "title": "责任中心",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21097,
-                    "title": "责任中心",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21099,
-                        "relation_type": 5,
-                        "id": 21100,
-                        "title": "转移定价",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21099,
-                    "title": "转移定价",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21101,
-                        "relation_type": 5,
-                        "id": 21102,
-                        "title": "投资回报率和剩余收益",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21101,
-                        "relation_type": 5,
-                        "id": 21103,
-                        "title": "平衡计分卡",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21101,
-                    "title": "绩效评估",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 4,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  }
-                ],
-                "knowledges": null,
-                "examination_syllabus_id": 149,
-                "question_type": 0,
-                "id": 21091,
-                "title": "绩效管理",
-                "difficulty": 0,
-                "created_at": 1527737061,
-                "updated_at": 1527737061,
-                "score": 0,
-                "test_rate": 0,
-                "important": 4,
-                "number_of_questions": 0,
-                "project_id": 2,
-                "subject_id": 76,
-                "definition": null
-              },
-              {
-                "parent": null,
-                "depth": 1,
-                "children": [
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21105,
-                        "relation_type": 5,
-                        "id": 21106,
-                        "title": "成本基础",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21105,
-                    "title": "成本基础",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21107,
-                        "relation_type": 5,
-                        "id": 21108,
-                        "title": "成本系统",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21107,
-                    "title": "成本系统",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21109,
-                        "relation_type": 5,
-                        "id": 21110,
-                        "title": "吸收成本法和变动成本法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21109,
-                    "title": "吸收成本法和变动成本法",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21111,
-                        "relation_type": 5,
-                        "id": 21112,
-                        "title": "分批法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21111,
-                        "relation_type": 5,
-                        "id": 21113,
-                        "title": "分步法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21111,
-                        "relation_type": 5,
-                        "id": 21114,
-                        "title": "作业成本法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 4,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21111,
-                        "relation_type": 5,
-                        "id": 21115,
-                        "title": "生命周期成本法",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21111,
-                    "title": "成本计量系统",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 4,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21116,
-                        "relation_type": 5,
-                        "id": 21117,
-                        "title": "联合成本分配",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21116,
-                    "title": "联合成本分配",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21118,
-                        "relation_type": 5,
-                        "id": 21119,
-                        "title": "服务部门间接费用分配",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21118,
-                    "title": "服务部门间接费用分配",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21120,
-                        "relation_type": 5,
-                        "id": 21121,
-                        "title": "供应链管理",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21120,
-                    "title": "供应链管理",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21122,
-                        "relation_type": 5,
-                        "id": 21123,
-                        "title": "业务流程改进",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21122,
-                    "title": "业务流程改进",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  }
-                ],
-                "knowledges": null,
-                "examination_syllabus_id": 149,
-                "question_type": 0,
-                "id": 21104,
-                "title": "成本管理",
-                "difficulty": 0,
-                "created_at": 1527737061,
-                "updated_at": 1527737061,
-                "score": 0,
-                "test_rate": 0,
-                "important": 3,
-                "number_of_questions": 0,
-                "project_id": 2,
-                "subject_id": 76,
-                "definition": null
-              },
-              {
-                "parent": null,
-                "depth": 1,
-                "children": [
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21125,
-                        "relation_type": 5,
-                        "id": 21126,
-                        "title": "内部控制",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21125,
-                    "title": "内部控制",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21127,
-                        "relation_type": 5,
-                        "id": 21128,
-                        "title": "法律",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      },
-                      {
-                        "relation_id": 21127,
-                        "relation_type": 5,
-                        "id": 21129,
-                        "title": "审计意见",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21127,
-                    "title": "法律",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21130,
-                        "relation_type": 5,
-                        "id": 21131,
-                        "title": "内部审计",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 3,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21130,
-                    "title": "内部审计",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 3,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  },
-                  {
-                    "parent": null,
-                    "depth": 2,
-                    "children": [
-                      {
-                        "relation_id": 21132,
-                        "relation_type": 5,
-                        "id": 21133,
-                        "title": "系统安全",
-                        "difficulty": 0,
-                        "created_at": 1527737061,
-                        "updated_at": 1527737061,
-                        "score": 0,
-                        "test_rate": 0,
-                        "important": 2,
-                        "number_of_questions": 0,
-                        "project_id": 2,
-                        "subject_id": 76,
-                        "definition": ""
-                      }
-                    ],
-                    "knowledges": null,
-                    "examination_syllabus_id": 149,
-                    "question_type": 0,
-                    "id": 21132,
-                    "title": "系统安全",
-                    "difficulty": 0,
-                    "created_at": 1527737061,
-                    "updated_at": 1527737061,
-                    "score": 0,
-                    "test_rate": 0,
-                    "important": 2,
-                    "number_of_questions": 0,
-                    "project_id": 2,
-                    "subject_id": 76,
-                    "definition": null
-                  }
-                ],
-                "knowledges": null,
-                "examination_syllabus_id": 149,
-                "question_type": 0,
-                "id": 21124,
-                "title": "内部控制",
-                "difficulty": 0,
-                "created_at": 1527737061,
-                "updated_at": 1527737061,
-                "score": 0,
-                "test_rate": 0,
-                "important": 3,
-                "number_of_questions": 0,
-                "project_id": 2,
-                "subject_id": 76,
-                "definition": null
-              }
-            ],
-            "project": {
-              "id": 2,
-              "name": "CMA",
-              "spell": null
-            },
-            "subject": {
-              "id": 76,
-              "project": null,
-              "name": "新纲 中文Part 1"
-            },
-            "version": 201809,
-            "old_version": "",
-            "enabled": false
-          }
-        }
-      };
       if (ret.status === 0){
         this.knowledgeList = ret.result.result.contents;
       }

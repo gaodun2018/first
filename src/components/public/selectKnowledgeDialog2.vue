@@ -5,7 +5,7 @@
     title="请选择知识点关联"
     @close="closeDialog('ruleForm')"
     :visible.sync="dialogKnowledgeVisible">
-    <el-row class="searchtools">
+    <!-- <el-row class="searchtools">
       <el-col :span="10">
         <el-select
           v-model="firstVal"
@@ -29,7 +29,18 @@
           </el-option>
         </el-select>
       </el-col>
-    </el-row>
+    </el-row> -->
+
+    <!-- 级联选择器 -->
+    <el-cascader
+      @change="changeSelect"
+      :options="knowledgeList"
+      :props="props"
+      style="width:100%"
+      placeholder="请选择关联知识点"
+      :show-all-levels="true">
+    </el-cascader>
+
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -51,6 +62,7 @@
       <el-button @click="closeDialog('ruleForm')">取消</el-button>
       <el-button type="primary" :disabled="isBtnDisabled" @click="submitForm()">保存</el-button>
     </div>
+
   </el-dialog>
 </template>
 <style>
@@ -94,6 +106,8 @@
     },
     data() {
       return {
+        myobject:{},
+        list:[],
         infoData:{},
         firstVal: '',
         secondVal: '',
@@ -101,21 +115,78 @@
         tableData: [],
         selectId: '',
         curIndex:'',
+        props: {
+          value: 'id',
+          children: 'childrens'
+        }
       }
     },
     methods: {
+      // 修改值的时候调用
+      changeSelect (val) {
+        console.log(val);
+        let id = val[val.length-1];
+        console.log(id);
+        this.findData(this.knowledgeList,id);
+      },
+      //晓冬添加修改数组的方法
+      changeList(list){
+        list.forEach( (o,index) => {
+           o.label = o.title;
+           o.value = o.id;
+           if(o.children !== null){
+             o.children.forEach((x,i)=>{
+               if(x.children !== null){
+                o.childrens = o.children;
+                return this.changeList(o.children);
+               }
+             })
+            }
+         });
+      },
+      // 寻找最底层table的数组
+      findData(list,id){
+        list.forEach((o,i)=>{
+          if(o.id == id){
+            this.tableData = o.children;
+            console.log('寻找的数组',this.tableData);
+          }
+           if(o.children != null){
+              return this.findData(o.children,id);
+            }
+        })
+      },
+      // 初始寻找数组的值
+      firstFind(list,id){
+        list.forEach( (o,index) => {
+           if(o.children !== null){
+             o.children.forEach((x,i)=>{
+               if(x.id == id){
+                this.curIndex = i
+                this.tableData = o.children
+               }
+             })
+             return this.firstFind(o.children,id);
+            }
+         });
+      },
+
       // 添加保存信息函数
       saveinformation(val){
         this.multipleSelection = val;
       },
       //展示已经选中到知识点
       showSelectSyllabusKnowledge(id) {
-        this.selectId = id;
-        let {parentTitle} = this.loopKnowledgeList(this.knowledgeList);
-        this.firstVal = parentTitle[0].pid;
-        this.handleFirstChange(this.firstVal);
-        this.secondVal = parentTitle[1].pid;
-        this.handleSecondChange(this.secondVal);
+        this.changeList(this.knowledgeList);
+        // this.selectId = id;
+        // let {parentTitle} = this.loopKnowledgeList(this.knowledgeList);
+        // this.firstVal = parentTitle[0].pid;
+        // this.handleFirstChange(this.firstVal);
+        // this.secondVal = parentTitle[1].pid;
+        // this.handleSecondChange(this.secondVal);
+        if(id != -1){
+          this.firstFind(this.knowledgeList,id);
+        }
         setTimeout(() => {
           this.toggleSelection([this.tableData[this.curIndex]]);
         }, 0)
@@ -132,7 +203,6 @@
             list[i].parentTitle = [...Item, ...list[i].parentTitle]
           }
           if (list[i].id === id) {
-            console.log("递归数据",list[i]);
             this.curIndex = i;
             return list[i];
           }
@@ -153,11 +223,12 @@
       },
       handleSecondChange(vid) {
         this.tableData = [];
-        for (let i = 0; i < this.secondList.length; i++) {
-          if (this.secondList[i].id === vid) {
-            this.tableData = this.secondList[i].children;
-          }
-        }
+        // for (let i = 0; i < this.secondList.length; i++) {
+        //   if (this.secondList[i].id === vid) {
+        //     this.tableData = this.secondList[i].children;
+        //   }
+        // }
+        this.findData(this.knowledgeList,vid);
       },
       toggleSelection(rows) {
         if (rows) {
@@ -181,9 +252,7 @@
       },
       //保存选中知识点
       submitForm(){
-        this.infoData = {name:'333'}
-        console.log
-        this.$emit('handleCloseKnowledgeDialog',this.infoData,'lalala')
+        this.$emit('handleSaveKnowledgeDialog')
       }
     }
   }
