@@ -534,6 +534,7 @@ export default {
       this.resourceRadio = String(val.id);
     },
     selectclk(discriminator) {
+      console.log('查看切换选项',discriminator);
       this.resourceType = discriminator;
     },
     //弹出新增资源的弹层
@@ -639,6 +640,8 @@ export default {
             break;
         }
         let ret = await this.$http.getResource(params);
+        console.log("保存的数据",params);
+        console.log("对应资源组",ret);
         if (ret.status == 0) {
           this.resLoading = false;
           this.resourceTable = ret.result.resources;
@@ -1234,9 +1237,12 @@ export default {
     },
     //  打开关联知识点弹层
     async handleOpenKnowledgeDialog(item){
+      console.log("知识点弹层数据",item)
       this.currentId = item.id;
-      if(item.kid){
+      if(item.kid){//判断知识点是否存在不存在不传值
         this.judgeid = item.kid;
+      }else{
+        this.judgeid = '';
       }
       await this.getOutlineKnowledgeList();
       let id = -1;

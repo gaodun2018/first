@@ -39,6 +39,10 @@ export const resourceTypeList = [{
     {
         "discriminator": "legacy_live",
         "label": "直播"
+    },
+    {
+      "discriminator": "resource_group",
+      "label": "资源组"
     }
 ];
 //表单配置
@@ -128,6 +132,27 @@ export const resourceTableConfig = [{
             label: '资源名称',
         }],
         inputPlaceholder: '请输入直播ID / 名称',
+        input: {}
+    },
+    {
+        "discriminator": "resource_group",
+        "table": [{
+            key: 'id',
+            wh: '120',
+            sort: false,
+            label: '资源组ID',
+        }, {
+            key: 'discriminator',
+            wh: '100',
+            sort: false,
+            label: '资源类型',
+        }, {
+            key: 'title',
+            wh: '',
+            sort: false,
+            label: '资源组名称',
+        }],
+        inputPlaceholder: '请输入资源组ID / 名称',
         input: {}
     }
 ];

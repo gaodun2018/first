@@ -479,12 +479,10 @@ export default {
         // 添加判断EP2.0视频判断
         if(ret.result.course_type == "11" && ret.result.video_id == this.vid_id){
           this.isTrue = false;
-        }else if(ret.result.course_type == "11" && ret.result.video_id != this.vid_id && '0'){
+        }else if(ret.result.course_type == "11" && ret.result.video_id != this.vid_id && ret.result.video_id != 0){
           this.isTrue = true;
           this.place = ret.result.video_id
           this.index = "2";
-        }else{
-          this.vid_id = video_id
         }
         setTimeout(() => {
           ret.result.brief_introduction &&
@@ -591,6 +589,7 @@ export default {
   border-radius: 3px;
 }
 .place {
+  cursor: default;
   width: 100%;
   height: 40px;
   line-height: 40px;

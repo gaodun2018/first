@@ -129,6 +129,7 @@
       async init(){
         await this.$http.getAllKnowledge(this.$route.params.id).then(res=>{
               if (res.status == 0) {
+                console.log("132测试初始页面值",res);
                 let data = res.result.video;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
@@ -178,12 +179,19 @@
       },
       //  打开关联知识点弹层
       async handleOpenKnowledgeDialog(item) {
+        if(this.ruleForm.subject == 0){
+          this.$message({
+              message: '请选择科目',
+              type: 'warning'
+            });
+            return false;
+        }
         await this.getResourceKnowledgeList();
         if(this.knowledgeList.length != 0){
            this.dialogKnowledgeVisible = true;
         }else{
           this.$message({
-              message: '请选择科目',
+              message: '没有知识点数据',
               type: 'warning'
             });
             return false;
@@ -199,6 +207,8 @@
           tag_id: this.ruleForm.subject,//id
         }
         let ret = await this.$http.getResourceKnowledgeList(params);
+        console.log(this.ruleForm.subject)
+        console.log('获取的知识点',ret)
         if (ret.status === 0) {
           this.knowledgeList = ret.result.result.contents;
         }

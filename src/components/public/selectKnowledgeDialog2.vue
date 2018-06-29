@@ -38,6 +38,7 @@
       :props="props"
       style="width:100%"
       placeholder="请选择关联知识点"
+      v-model="selectOp"
       :show-all-levels="true">
     </el-cascader>
 
@@ -106,6 +107,7 @@
     },
     data() {
       return {
+        selectOp:[],//默认选中
         myobject:{},
         list:[],
         infoData:{},
@@ -151,7 +153,7 @@
             this.tableData = o.children;
             console.log('寻找的数组',this.tableData);
           }
-           if(o.children != null){
+           if(o.children !== null){
               return this.findData(o.children,id);
             }
         })
@@ -170,6 +172,20 @@
             }
          });
       },
+      // 添加寻找初始级联选择到的值
+      // upward(list,id){
+      //   list.forEach(o=>{
+      //     if(o.children != null){
+      //       o.children.forEach(x=>{
+      //         if(x.id == id){
+      //           console.log('这里面走了吗');
+      //           this.selectOp.push(o.id)
+      //           return this.upward(list,o.id)
+      //         }
+      //       })
+      //     }
+      //   })
+      // },
 
       // 添加保存信息函数
       saveinformation(val){
@@ -186,6 +202,8 @@
         // this.handleSecondChange(this.secondVal);
         if(id != -1){
           this.firstFind(this.knowledgeList,id);
+          // this.upward(this.knowledgeList,id);
+          // console.log('在寻找默认值',this.selectOp);
         }
         setTimeout(() => {
           this.toggleSelection([this.tableData[this.curIndex]]);
@@ -258,6 +276,9 @@
   }
 </script>
 <style lang="less">
+.el-dialog{
+  min-width: 800px;
+}
   .selectknowledge {
     .el-table {
       .el-table__header {
