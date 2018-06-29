@@ -88,7 +88,7 @@ export default {
             var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
             const extension = testmsg === "zip";
             const extension2 = testmsg === "rar";
-            const isLt2M = file.size / 1024 / 1024 <= 1024;
+            const isLt2M = file.size / 1024 / 1024 < 90;
             if (!extension && !extension2) {
                 this.$message({
                     message: "上传文件只能是 zip、rar格式!",
@@ -97,7 +97,7 @@ export default {
             }
             if (!isLt2M) {
                 this.$message({
-                    message: "上传文件大小不能超过 1G（1024MB）!",
+                    message: "上传文件大小不能超过 90MB!",
                     type: "warning"
                 });
             }
