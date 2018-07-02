@@ -187,7 +187,8 @@
             return false;
         }
         await this.getResourceKnowledgeList();
-        if(this.knowledgeList.length != 0){
+        // this.knowledgeList = null;
+        if(this.knowledgeList != null){
            this.dialogKnowledgeVisible = true;
         }else{
           this.$message({
@@ -208,9 +209,11 @@
         }
         let ret = await this.$http.getResourceKnowledgeList(params);
         console.log(this.ruleForm.subject)
-        console.log('获取的知识点',ret)
+        console.log('获取的知识点',ret);
         if (ret.status === 0) {
           this.knowledgeList = ret.result.result.contents;
+        }else{
+          this.knowledgeList = null;
         }
       },
       //  搜索老师

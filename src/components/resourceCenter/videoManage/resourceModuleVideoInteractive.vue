@@ -238,6 +238,16 @@ export default {
         name: this.ruleForm.title, //节点名称
         resource_id: this.id //视频id
       };
+      if(this.ruleForm.item_ids){
+        let list = this.ruleForm.item_ids.split(",");
+        if(new Set(list).size != list.length){// 添加判断数组中是否有重复元素
+          this.$message({
+            message: '课中练习题目id重复',
+            type: 'warning'
+          });
+          return false;
+        }
+      }
       this.btnLoading = true;
       let ret = await this.$http.createInsteractive(params);
       this.btnLoading = false;
@@ -365,6 +375,10 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+// 添加知table表格外边距
+.el-table--fit {
+    margin-bottom: 20px;
+}
 .outlineeat {
   margin-bottom: 20px;
 }
