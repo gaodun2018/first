@@ -108,21 +108,10 @@
       saveinformation(val){
         this.multipleSelection = val;
       },
-      // 添加新的改变函数的方法
-      changeList (list, id) {
-        if(id){
-
-        }
-
-      },
-
-
       //展示已经选中到知识点
       showSelectSyllabusKnowledge(id) {
-        console.log('116',id);
         this.selectId = id;
         let {parentTitle} = this.loopKnowledgeList(this.knowledgeList);
-        console.log('115',this.knowledgeList);
         this.firstVal = parentTitle[0].pid;
         this.handleFirstChange(this.firstVal);
         this.secondVal = parentTitle[1].pid;
