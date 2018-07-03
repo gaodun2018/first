@@ -41,9 +41,12 @@
                     <el-form-item label="课程简介" class="pad_10">
                         <div id="ed" type="text/plain"></div>
                     </el-form-item>
-                    <el-form-item label="资源介绍" class="res_intro pad_10">
+                    <template  v-if="ruleForm.course_type != 11">
+                       <el-form-item label="资源介绍" class="res_intro pad_10">
                         <ResourceIntro></ResourceIntro>
                     </el-form-item>
+
+                    </template>
 
                     <!-- 给学员的信模块 -->
                     <template v-if="ruleForm.course_type != 11">
@@ -82,17 +85,10 @@
 
                       <el-form-item>
                           <el-row v-if="isTrue==false?true:false">
-                              <el-input  type="textarea" :rows="1" v-model="vid_id" disabled="disabled"></el-input>
+                              <el-input  type="textarea" :rows="1" v-model="moren" disabled="disabled"></el-input>
                           </el-row>
 
-                            <!-- <el-input
-                              v-show="isTrue"
-                              @focus="isShowBox"
-                              placeholder="请选择视频"
-                              suffix-icon="el-icon-arrow-down"
-                              v-model="value">
-                            </el-input> -->
-                            <div class="place" v-if="isTrue" @click="isShowBox">{{place}}</div>
+                            <div class="place" v-if="isTrue" @click="isShowBox">{{ isChangeVideo }} <i v-show="isIcon" class="el-icon-arrow-right ps"></i> <i v-show="!isIcon" class="el-icon-arrow-down ps"></i> </div>
 
                             <!-- 弹出框 -->
                               <div v-if="isBox" class="messagebox">
@@ -125,7 +121,7 @@
                                       label="资源类型"
                                       width="180">
                                       <template slot-scope="scope">
-                                        <span>{{ scope.row.discriminator }}</span>
+                                        <span>{{ scope.row.discriminator | changeVal }}</span>
                                       </template>
                                     </el-table-column>
                                     <el-table-column
@@ -212,6 +208,7 @@
 <script>
 import ImgUpload from "./courseSet/CourseModelUpload.vue";
 import ResourceIntro from "./courseSet/CourseModelResourceIntro.vue";
+import { getEnv } from "./../../util/config.js";
 import {
   initial_info,
   course_type,
@@ -227,6 +224,8 @@ export default {
   },
   data() {
     return {
+      chName:"",
+      isIcon:true,
       resourceType: "video",//资源类型
       resourceRadio: "", //选择的资源
       multipleSelection: [],
@@ -240,8 +239,8 @@ export default {
         total: 1 //资源列表总数量
       },
       resourceinput: "",
-      place: "选择视频",
-      vid_id: "53322211", //默认EPid
+      place: "请选择视频",
+      vid_id: "", //默认EPid
       index: "1",
       value: "",
       resourceTable: [],
@@ -286,6 +285,16 @@ export default {
     }),
     course_id() {
       return this.$route.params.cid;
+    },
+    moren(){
+      return "默认视频-ID:" + this.vid_id
+    },
+    isChangeVideo(){
+      if(this.chName == ""){
+        return this.place;
+      }else{
+        return this.chName + "-ID:" + this.place;
+      }
     }
   },
   watch: {
@@ -313,13 +322,15 @@ export default {
       }
       if (value == 2) {
         this.isTrue = true;
+        this.isIcon = true;
       }
     },
     handleRow(row) {
-      console.log(333);
       console.log(row);
       this.place = row.id;
+      this.chName = row.title;
       this.isBox = false;
+      this.isIcon = true;
     },
     // 添加分页控件函数
     async handleIconClick() {
@@ -336,8 +347,8 @@ export default {
     },
     // 判断是否显示弹出框
     isShowBox() {
-      console.log(this.isBox);
       this.isBox = !this.isBox;
+      this.isIcon = !this.isIcon;
       if (this.isBox == true) {
         this.searchResource(1);
       }
@@ -410,6 +421,13 @@ export default {
       }
     },
     next(formName) {
+      if( this.isTrue && this.ruleForm.course_type == 11&&this.place=="请选择视频"){
+            this.$message({
+                message: '请选择自定义视频',
+                type: 'warning',
+              });
+              return false;
+          }
       if (this.active >= this.progressText.length - 1) return;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -429,13 +447,6 @@ export default {
       console.log(this.kForm);
       this.$refs[formName].validate(valid => {
         if (valid) {
-           if( this.isTrue && this.ruleForm.course_type == 11&&this.place=="选择视频"){
-              this.$message({
-                message: '请返回上一步选择自定义视频',
-                type: 'warning',
-              });
-              return false;
-            }
           this.SetCourse();
         } else {
           return false;
@@ -481,8 +492,16 @@ export default {
           this.isTrue = false;
         }else if(ret.result.course_type == "11" && ret.result.video_id != this.vid_id && ret.result.video_id != 0){
           this.isTrue = true;
-          this.place = ret.result.video_id
+          this.place = ret.result.video_id;
           this.index = "2";
+          await this.$http.searchResource(ret.result.video_id).then(res=>{
+              console.log(res);
+              if(res.status == 0){
+                this.chName = res.result.resource.title;
+              }else{
+                console.log("自定义视频名称获取失败");
+              }
+            })
         }
         setTimeout(() => {
           ret.result.brief_introduction &&
@@ -566,7 +585,6 @@ export default {
     this.editor && this.editor.destroy();
   },
   created() {
-    console.log(this.$route.params);
     if (
       this.projectlist != undefined &&
       this.projectlist != null &&
@@ -575,6 +593,21 @@ export default {
       this.getCourseInfo();
     } else {
       this.getProjectSubjectList();
+    }
+
+    let env = getEnv();
+    console.log("584",env);
+    if( env == ''){ // 判断环境给初始视频id
+      this.vid_id = '242241';
+    }else{
+      this.vid_id = '600616';
+    }
+  },
+  filters:{
+    changeVal: (val) => {
+      if(val == "video"){
+        return "视频";
+      }
     }
   }
 };
@@ -597,7 +630,16 @@ export default {
   border: 1px solid #dcdfe6;
   color: #c0c4cc;
   border-radius: 3px;
+  position: relative;
 }
+.ps{
+  position: absolute;
+  right: 10px;
+  top:13px;
+  /* color:#409EFF; */
+}
+
+
 .courseset {
   padding: 0 110px 0 0;
 }
