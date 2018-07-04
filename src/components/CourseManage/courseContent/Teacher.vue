@@ -67,24 +67,27 @@
       async addTeacher() {
         console.log('选中的老师',this.teacherList);
         console.log(this.selectValue);
-         if(this.teacherList.length == 4){//判断老师数量
-              this.$message({
-              message: '最多可添加四个老师',
-              type: 'warning'
-          });
-          return false;
-        }
-        if(this.teacherList.length != 0 ){//判断老师是否重复
-           for(let i=0;i<this.teacherList.length;i++){
-             if(this.teacherList[i].user_id == this.selectValue) {
+        if(this.teacherList != null){ // 初始回调会将数组指向空对象
+          if(this.teacherList.length == 4){//判断老师数量
                 this.$message({
-                    message: '此老师已选择，请勿重复添加',
-                    type: 'warning'
-                });
-                return false;
+                message: '最多可添加四个老师',
+                type: 'warning'
+            });
+            return false;
+          }
+          if(this.teacherList.length != 0 ){//判断老师是否重复
+            for(let i=0;i<this.teacherList.length;i++){
+              if(this.teacherList[i].user_id == this.selectValue) {
+                  this.$message({
+                      message: '此老师已选择，请勿重复添加',
+                      type: 'warning'
+                  });
+                  return false;
+              }
             }
           }
         }
+
         let params = {
           course_id: this.course_id,
           teacher_id: this.selectValue

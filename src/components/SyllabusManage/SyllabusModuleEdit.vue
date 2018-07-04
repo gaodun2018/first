@@ -393,7 +393,7 @@ import {
 } from "../../common/outlineConfig.js";
 import { isNumber, getSrcStr } from "../../util/util.js";
 import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
-import SelectKnowledge from '../public/SelectKnowledgeDialog2.vue'
+import SelectKnowledge from '../public/SelectKnowledgeDialog.vue'
 export default {
   name: "SyllabusModuleEdit",
   components: {
@@ -476,7 +476,9 @@ export default {
   },
   methods: {
     // 知识点的保存
-    async handleSaveKnowledgeDialog(){
+    async handleSaveKnowledgeDialog( data ){
+      this.currentSyllabusItemKnowledge = data;
+      this.knowledgeInfo = data[0].title;
       let knowledageData = this.currentSyllabusItemKnowledge;
       let item_id = this.currentId
       let params = {
@@ -487,7 +489,9 @@ export default {
         params.kid = this.judgeid;
       }
       let knowledage_id = knowledageData[0].id;
+      console.log(params);
       let ret = await this.$http.saveOutlineKnowledgeList(item_id,knowledage_id,params);
+      console.log(492,ret);
       if(ret.status === 0){
         this.dialogKnowledgeVisible = false;
         this.getSyllabusItems();
@@ -1236,7 +1240,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     //  打开关联知识点弹层
-    async handleOpenKnowledgeDialog(item){
+    handleOpenKnowledgeDialog(item){
       console.log("知识点弹层数据",item)
       this.currentId = item.id;
       if(item.kid){//判断知识点是否存在不存在不传值
@@ -1244,7 +1248,7 @@ export default {
       }else{
         this.judgeid = '';
       }
-      await this.getOutlineKnowledgeList();
+      this.getOutlineKnowledgeList();
       let id = -1;
       if(item.knowledge_id){
         id = item.knowledge_id
@@ -1257,10 +1261,10 @@ export default {
     //获取大纲所属项目科目最新考试大纲
     async getOutlineKnowledgeList(){
       let params = {
-        // project_id:this.project_id,//项目id
-        // subject_id:this.subject_id,//课程id
-         project_id:5,
-        subject_id:30,
+        project_id:this.project_id,//项目id
+        subject_id:this.subject_id,//课程id
+        //  project_id:5,
+        // subject_id:30,
       }
       let ret = await this.$http.getOutlineKnowledgeList(params);
       if (ret.status === 0){

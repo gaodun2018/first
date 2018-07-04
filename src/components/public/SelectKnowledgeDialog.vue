@@ -49,7 +49,7 @@
     </el-table>
     <div slot="footer" class="dialog-footer last-form-item">
       <el-button @click="closeDialog('ruleForm')">取消</el-button>
-      <el-button type="primary" :disabled="isBtnDisabled" @click="submitForm()">保存</el-button>
+      <el-button type="primary" :disabled="isForbid" @click="submitForm()">保存</el-button>
     </div>
   </el-dialog>
 </template>
@@ -76,14 +76,6 @@
           return false;
         }
       },
-      multipleSelection: {
-        get: function () {
-          return this.currentSyllabusItemKnowledge;
-        },
-        set: function (v) {
-          this.$emit('changeCurrentSyllabusItemKnowledge', v);
-        }
-      },
       isBtnDisabled() {
         if (this.multipleSelection != undefined && this.multipleSelection.length != 0) {
           return false;
@@ -94,6 +86,9 @@
     },
     data() {
       return {
+        isForbid:true,
+        multipleSelection:[],
+        getData:{},
         infoData:{},
         firstVal: '',
         secondVal: '',
@@ -108,49 +103,48 @@
       saveinformation(val){
         this.multipleSelection = val;
       },
-      // 添加新的改变函数的方法
-      changeList (list, id) {
-        if(id){
-
-        }
-
-      },
-
-
       //展示已经选中到知识点
       showSelectSyllabusKnowledge(id) {
-        console.log('116',id);
+        console.log(107,this.multipleSelection);
         this.selectId = id;
-        let {parentTitle} = this.loopKnowledgeList(this.knowledgeList);
-        console.log('115',this.knowledgeList);
-        this.firstVal = parentTitle[0].pid;
-        this.handleFirstChange(this.firstVal);
-        this.secondVal = parentTitle[1].pid;
-        this.handleSecondChange(this.secondVal);
+        this.loopKnowledgeList(this.knowledgeList);
+        let {parentTitle} = this.getData;
+        if(id && id != -1 && parentTitle != undefined){//parentTile 为undefined 是没有查到有对应id的数据
+          console.log(110,this.getData);
+          this.firstVal = parentTitle[0].pid;
+          this.handleFirstChange(this.firstVal);
+          this.secondVal = parentTitle[1].pid;
+          this.handleSecondChange(this.secondVal);
+        }else{
+          this.firstVal = null;
+          this.secondVal = null;
+          this.tableData = [];
+        }
+
         setTimeout(() => {
           this.toggleSelection([this.tableData[this.curIndex]]);
         }, 0)
       },
       //遍历树拿到父级
-      loopKnowledgeList(list, Item) {
+       loopKnowledgeList(list, Item) {
         let id = this.selectId;
-        for (let i = 0; i < list.length; i++) {
-          list[i].parentTitle = list[i].parentTitle ? list[i].parentTitle : [{
-            name: list[i].title,
-            pid: list[i].id
-          }];
-          if (Item) {
-            list[i].parentTitle = [...Item, ...list[i].parentTitle]
+        list.forEach((o,i)=>{
+          o.parentTitle = [{
+            name: o.title,
+            pid:o.id
+          }]
+           if (Item) {
+            o.parentTitle = [...Item, ...o.parentTitle]
           }
-          if (list[i].id === id) {
-            console.log("递归数据",list[i]);
+          if(o.id == id){
+            console.log("递归数组",o)
             this.curIndex = i;
-            return list[i];
+            this.getData = o
           }
-          if (list[i].children != undefined) {
-            return this.loopKnowledgeList(list[i].children, list[i].parentTitle);
+          if(o.children != null){
+            return this.loopKnowledgeList(o.children,o.parentTitle);
           }
-        }
+        })
       },
       handleFirstChange(vid) {
         this.secondList = [];
@@ -172,6 +166,7 @@
       },
       toggleSelection(rows) {
         if (rows) {
+          console.log(166,rows)
           rows.forEach(row => {
             this.infoData = row;
             this.$refs.multipleTable.toggleRowSelection(row);
@@ -181,20 +176,26 @@
         }
       },
       handleSelectionChange(val) {
+        console.log('查询选中的值',val);
+        if(val.length == 0){
+          this.isForbid = true;
+        }else{
+          val[0] == undefined? this.isForbid = true:this.isForbid = false;
+        }
         if (val.length > 1) {
-          this.toggleSelection([val[val.length - 1]]);
+          this.toggleSelection([val[0]]);
           return;
         }
         this.multipleSelection = val;
+        console.log(val)
+        console.log(182,this.multipleSelection);
       },
       closeDialog() {
         this.$emit('handleCloseKnowledgeDialog')
       },
       //保存选中知识点
       submitForm(){
-        this.infoData = {name:'333'}
-        console.log
-        this.$emit('handleCloseKnowledgeDialog',this.infoData,'lalala')
+        this.$emit('handleSaveKnowledgeDialog',this.multipleSelection)
       }
     }
   }

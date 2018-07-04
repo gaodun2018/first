@@ -66,7 +66,7 @@
               {{tag.title}} -{{tag.id}}
             </el-tag>
           </el-row>
-          <el-button type="text" @click="handleOpenKnowledgeDialog">选择知识点</el-button>
+          <el-button type="text" @click="handleOpenKnowledgeDialog">选择/修改知识点</el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -86,7 +86,7 @@
   </div>
 </template>
 <script>
-  import SelectKnowledge from "../../public/SelectKnowledgeDialog2.vue";
+  import SelectKnowledge from "../../public/SelectKnowledgeDialog.vue";
   import {getSrcStr} from "../../../util/util.js";
   import {mapState} from "vuex";
 
@@ -165,12 +165,15 @@
           })
       },
 
-      handleSaveKnowledgeDialog(){
+      handleSaveKnowledgeDialog( data ){
         this.dialogKnowledgeVisible = false;
+        console.log('170',data);
+        this.currentSyllabusItemKnowledge = data
         this.ruleForm.knowledge_id = this.currentSyllabusItemKnowledge;
         this.getId = this.ruleForm.knowledge_id[0].id;
       },
       handleCloseKnowledgeDialog(){
+        console.log('取消')
         this.dialogKnowledgeVisible = false;
       },
       changeCurrentSyllabusItemKnowledge(v) {
