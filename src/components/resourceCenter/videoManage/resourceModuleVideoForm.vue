@@ -62,7 +62,7 @@
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
           <el-row>
-            <el-tag class="teacher-tag" v-for="tag in ruleForm.knowledge_id" :key="tag.id" closable >
+            <el-tag class="teacher-tag" v-for="tag in ruleForm.knowledge_id" :key="tag.id" >
               {{tag.title}} -{{tag.id}}
             </el-tag>
           </el-row>

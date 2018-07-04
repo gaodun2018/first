@@ -20,7 +20,10 @@
         </el-table-column>
         <el-table-column prop="name" align="center" label="重要节点名称">
         </el-table-column>
-        <el-table-column prop="item_ids" align="center" label="课中练习（题目ID）" width="320">
+        <el-table-column align="center" label="课中练习（题目ID）" width="320">
+          <template slot-scope="scope">
+            {{ scope.row.item_ids | changeQuestionId }}
+          </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="220">
           <template slot-scope="scope">
@@ -114,6 +117,15 @@ export default {
       let k = i < 10 ? "0" + i : "" + i;
       let value = { value: k };
       this.suggestMinuteAndSecond.push(value);
+    }
+  },
+  filters:{
+    changeQuestionId:(val) =>{
+      if(val != "" && val != null && val != undefined){
+        return val;
+      }else{
+        return "无";
+      }
     }
   },
   methods: {
