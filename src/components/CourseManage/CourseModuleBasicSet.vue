@@ -94,7 +94,7 @@
                               <div v-if="isBox" class="messagebox">
                                 <!-- 搜索框 -->
                                 <div style="margin-top: 15px;">
-                                    <el-input placeholder="请输入内容" v-model="resourceinput"  @keydown.native.enter="handleIconClick" class="input-with-select">
+                                    <el-input placeholder="请输入视频资源ID/名称" v-model="resourceinput"  @keydown.native.enter="handleIconClick" class="input-with-select">
                                       <el-button slot="append" icon="el-icon-search" @click="handleIconClick"></el-button>
                                     </el-input>
                                 </div>
