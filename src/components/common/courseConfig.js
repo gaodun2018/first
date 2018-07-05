@@ -43,7 +43,7 @@ export const examTimeProgressText = [{
   currentText: 'current-text',
   isCustomerConfirm: true
 }, {
-  text: '确认学院考季的问卷',
+  text: '确认学员考季的问卷',
   currentLine: 'bar-line-current',
   currentDot: 'bar-dot-current',
   currentText: 'current-text',

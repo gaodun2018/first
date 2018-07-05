@@ -15,9 +15,9 @@
         <el-table-column label="阶段名称" width="240">
           <template slot-scope="scope">
             <span>{{scope.row.name}}</span>
-            <el-tag type="danger" size="small" v-if="scope.row.attribute == '1'">前导阶段</el-tag>
-            <el-tag type="danger" size="small" v-if="scope.row.attribute == '2'">翻转阶段</el-tag>
-            <el-tag type="danger" size="small" v-if="scope.row.attribute == '3'">复习阶段</el-tag>
+            <el-tag type="danger" size="small" v-if="scope.row.attribute == '1' && course_type == '11' ">前导阶段</el-tag>
+            <el-tag type="danger" size="small" v-if="scope.row.attribute == '2' && course_type == '11' ">翻转阶段</el-tag>
+            <el-tag type="danger" size="small" v-if="scope.row.attribute == '3' && course_type == '11' ">复习阶段</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="阶段描述" width="220">
@@ -482,7 +482,6 @@ export default {
       this.gradation_id = row.id;
       let sy_id = row.syllabus_id;
       this.chooseOutlineRadio = "2";
-      debugger;
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
       if (this.attribute.length!==0 && this.attribute[0] === 1) {
@@ -507,6 +506,7 @@ export default {
       let course_id = this.course_id;
       let ret = await this.$http.getStageAndOutline(course_id);
       if (ret.status == 0) {
+        console.log('查找初始值',ret)
         this.tableData = ret.result.gradation_list;
         this.$store.dispatch("getDradationList", ret.result.gradation_list);
       }
@@ -515,6 +515,7 @@ export default {
     async getCourseSeasonList() {
       let course_id = this.course_id;
       let ret = await this.$http.getSeasonList(course_id);
+      console.log('考季列表数据',ret)
       if (ret.status === 0) {
         // this.seasonList = ret.result.list;
         this.$store.dispatch("getSeasonList", ret.result.list);
@@ -545,7 +546,10 @@ export default {
       return this.$store.state.course.course_info.course_type;
     }
   },
-  mounted() {},
+  mounted() {
+    console.log('科目id',this.subject_id,this.project_id);
+    console.log('科目类型',this.course_type)
+  },
   created() {
     this.getStageAndOutline();
     this.getCourseSeasonList();

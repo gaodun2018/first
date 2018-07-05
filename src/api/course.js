@@ -88,3 +88,6 @@ export const addTeacher = (params) => formPost(`${getBaseUrl()}apigateway.gaodun
 
 //删除课程老师（后台）
 export const removeTeacher = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/course/teacher`, params);
+
+// 考季的新接口
+export const getNewSeason = (id,params) => get(`${getBaseUrl()}apigateway.gaodun.com/plan-api/course/${id}/admin/gradation`, params);

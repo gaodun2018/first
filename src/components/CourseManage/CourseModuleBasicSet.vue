@@ -487,6 +487,14 @@ export default {
         this.kForm.allow_investigate = ret.result.allow_investigate;
         this.kForm.investigate_url = ret.result.investigate_url;
 
+        setTimeout(() => {
+          if(this.editor === undefined || this.editor === null){
+            this.setEditor();
+          }
+          ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
+          //brief_introduction  富文本
+        }, 500);
+
         // 添加判断EP2.0视频判断
         if(ret.result.course_type == "11" && ret.result.video_id == this.vid_id){
           this.isTrue = false;
@@ -494,20 +502,18 @@ export default {
           this.isTrue = true;
           this.place = ret.result.video_id;
           this.index = "2";
-          await this.$http.searchResource(ret.result.video_id).then(res=>{
+          this.$http.searchResource(ret.result.video_id).then(res=>{
               console.log(res);
               if(res.status == 0){
                 this.chName = res.result.resource.title;
               }else{
                 console.log("自定义视频名称获取失败");
               }
+            }).catch((err) => {
+              console.log('获取视频名失败',err);
             })
         }
-        setTimeout(() => {
-          ret.result.brief_introduction &&
-            this.editor.setContent(ret.result.brief_introduction);
-          //brief_introduction  富文本
-        }, 500);
+
       }
     },
     SetCourse() {
@@ -559,27 +565,48 @@ export default {
           this.$message.error("设置失败！");
         }
       });
+    },
+    setEditor(){
+        //富文本编辑器
+        this.editor = UE.getEditor("ed", {
+        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+        toolbars: [["fullscreen", "undo", "redo", "|", "bold", "cleardoc"]],
+        //focus时自动清空初始化时的内容
+        autoClearinitialContent: true,
+        //初始化编辑器的内容，
+        initialContent: initial_info,
+        //关闭字数统计
+        wordCount: true,
+        //允许的最大字符数
+        maximumWords: 500,
+        //关闭elementPath
+        elementPathEnabled: false,
+        //默认的编辑区域高度
+        initialFrameHeight: 160
+        //更多其他参数，请参考ueditor.config.js中的配置项
+      });
     }
   },
   mounted() {
+    this.setEditor();
     //富文本编辑器
-    this.editor = UE.getEditor("ed", {
-      //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-      toolbars: [["fullscreen", "undo", "redo", "|", "bold", "cleardoc"]],
-      //focus时自动清空初始化时的内容
-      autoClearinitialContent: true,
-      //初始化编辑器的内容，
-      initialContent: initial_info,
-      //关闭字数统计
-      wordCount: true,
-      //允许的最大字符数
-      maximumWords: 500,
-      //关闭elementPath
-      elementPathEnabled: false,
-      //默认的编辑区域高度
-      initialFrameHeight: 160
-      //更多其他参数，请参考ueditor.config.js中的配置项
-    });
+    // this.editor = UE.getEditor("ed", {
+    //   //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+    //   toolbars: [["fullscreen", "undo", "redo", "|", "bold", "cleardoc"]],
+    //   //focus时自动清空初始化时的内容
+    //   autoClearinitialContent: true,
+    //   //初始化编辑器的内容，
+    //   initialContent: initial_info,
+    //   //关闭字数统计
+    //   wordCount: true,
+    //   //允许的最大字符数
+    //   maximumWords: 500,
+    //   //关闭elementPath
+    //   elementPathEnabled: false,
+    //   //默认的编辑区域高度
+    //   initialFrameHeight: 160
+    //   //更多其他参数，请参考ueditor.config.js中的配置项
+    // });
   },
   destroyed() {
     this.editor && this.editor.destroy();

@@ -104,7 +104,7 @@
             <div class="plantab promptbox">注意：当您制定，删除或修改了一段学习计划后，该学员看到的学习计划就会发生相应变化。建议您在制定计划前与学员充分沟通！</div>
           </div> -->
           <div class="scroll-content">
-            <div class="planwel" v-for="(val,index) in planlist">
+            <div class="planwel" v-for="(val,index) in planlist" :key="index">
               <span class="icon-plan-rang"></span>
               <div class="plantab">
                 <div class="planmil">
@@ -138,7 +138,7 @@
           <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
           <el-button type="primary" :loading="btnLoading" @click="handleCreateSeason()">确 定</el-button>
         </div>
-        <el-dialog width="60%" center class="innerDialog" top="8%" :title="isAddPlan?'新增一段学习计划':'修改学习计划'" :visible.sync="innerVisible" append-to-body>
+        <el-dialog width="60%" center class="innerDialog" top="8%" :title="isAddPlan?'新增一段学习计划':'修改学习计划'" :visible.sync="innerVisible" append-to-body :before-close="toClose">
           <el-form :model="planForm" ref="planForm" @submit.native.prevent label-width="140px" class="el-ruleForm">
             <el-form-item label="学习内容" prop="content" :rules="[{ required: true, message: '请选择学习内容', trigger: 'change' }]">
               <el-select v-model="planForm.content" multiple style="width:90%;" placeholder="请选择学习内容">
@@ -329,6 +329,7 @@ import { examTimeProgressText } from "../../common/courseConfig.js";
 export default {
   data() {
     return {
+      newPlanlist:[],//添加修改后的数组
       planlist: [],
       dialogVisible: false,
       innerVisible: false,
@@ -356,7 +357,8 @@ export default {
       btnLoading: false, //按钮loading
       palnBtnLoading: false, //保存计划的loading
       currentPlanIndex: "", //当前修改的计划的索引
-      seasonId: "" //当前修改的考季的id
+      seasonId: "", //当前修改的考季的id
+      daration_list:[],//阶段列表
     };
   },
   // watch:{
@@ -367,6 +369,21 @@ export default {
   //   }
   // },
   methods: {
+    // 修改学习计划框关闭之前
+    toClose(){
+      if(!this.isAddPlan){
+        this.daration_list.forEach((o,i)=>{
+          this.newPlanlist.forEach(x=>{
+            if(x.id == o.id){
+              this.daration_list.splice(i,1);
+            }
+          })
+        })
+      }
+      this.newPlanlist = [];
+      this.innerVisible = false;
+    },
+
     //技术排序
     compare(property) {
       return function(a, b) {
@@ -387,9 +404,10 @@ export default {
           const { content, target, date } = this.planForm;
           let gradation = new Array();
           content.forEach(id => {
-            this.daration_list.forEach(ele => {
+            this.daration_list.forEach((ele,i) => {
               if (ele.id == id) {
                 gradation.push(ele);
+                this.daration_list.splice(i,1);
               }
             });
           });
@@ -419,6 +437,11 @@ export default {
     },
     // 删除学习计划
     delplan(v, i) {
+      if(v.gradation != null && v.gradation != undefined){
+        v.gradation.forEach(o=>{
+          this.daration_list.push(o);
+        })
+      }
       this.planlist.splice(i, 1);
     },
     // 关闭考季弹层
@@ -428,6 +451,14 @@ export default {
     },
     // 编辑学习计划
     eidtplan(v, i) {
+      // 编写方法将修改的数据推回去
+      this.newPlanlist = [];
+      if(v.gradation != null && v.gradation != undefined){
+        v.gradation.forEach(o=>{
+          this.daration_list.push(o);
+          this.newPlanlist.push(o);
+        })
+      }
       this.currentPlanIndex = i;
       this.isAddPlan = false;
       const { gradation, plan_id, target, start_time, end_time } = v;
@@ -640,6 +671,11 @@ export default {
     },
     // //新增数据
     addTableData() {
+     this.$http.getNewSeason(this.$route.params.cid).then(res=>{
+        if(res.status == 0){
+          this.daration_list = res.result;
+        }
+      })
       this.firstAddForm = {
         dateFormat: 1, //考季日期格式
         date: "" //考季时间
@@ -655,6 +691,14 @@ export default {
     },
     // //编辑数据按钮
     handleEdit(index, row) {
+      let params = {
+        season_id:row.season_id
+      }
+      this.$http.getNewSeason(this.$route.params.cid,params).then(res=>{
+        if(res.status == 0){
+          this.daration_list = res.result
+        }
+      })
       // debugger;
       let item = row;
       this.active = 0;
@@ -680,6 +724,28 @@ export default {
         };
       }
       this.planlist = item.plan;
+
+      // 天加修改数组的方法
+      let arr = [];
+      if(this.planlist != null && this.planlist != undefined){
+        this.planlist.forEach(o=>{
+          if(o.gradation != null && o.gradation != undefined){
+            o.gradation.forEach(x=>{
+              arr.push(x)
+            })
+          }
+        })
+      }
+      arr.forEach(o=>{
+        if(this.daration_list != null && this.daration_list != undefined){
+          this.daration_list.forEach((x,i)=>{
+            if(x.id == o.id){
+              this.daration_list.splice(i,1);
+            }
+          })
+        }
+      })
+
       this.currentIndex = index;
       this.dialogVisible = true;
     },
@@ -692,9 +758,9 @@ export default {
     course_id() {
       return this.$route.params.cid;
     },
-    daration_list() {
-      return this.$store.state.course.course_daration_list;
-    },
+    // daration_list() {
+    //   return this.$store.state.course.course_daration_list;
+    // },
     isEnabled: {
       get() {
         return this.$store.state.course.course_disable.season_manage_open;
