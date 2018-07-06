@@ -191,6 +191,7 @@ export default {
         }
       }
       if (ret1.status === 0) {
+        console.log("获取到的数据", ret1);
         this.multipleSelection = ret1.result;
       }
     },

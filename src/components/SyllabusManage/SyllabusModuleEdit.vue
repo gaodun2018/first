@@ -538,6 +538,8 @@ export default {
       this.resourceRadio = String(val.id);
     },
     selectclk(discriminator) {
+      this.addResFirFrom.apply_to = [];
+      this.addResFirFrom.start_time = '';
       console.log('查看切换选项',discriminator);
       this.resourceType = discriminator;
     },

@@ -291,6 +291,9 @@ export default {
       } else {
         attribute = this.attribute[0];
         switch (attribute) {
+          case 0:
+            paper_id = 0;
+            season_id = 0;
           case 1:
             // 前导阶段
             paper_id = this.stageForm.paper_id;
@@ -392,6 +395,9 @@ export default {
       } else {
         attribute = this.attribute[0];
         switch (attribute) {
+          case 0:
+            paper_id = 0;
+            season_id = 0;
           case 1:
             // 前导阶段
             paper_id = this.stageForm.paper_id;
@@ -493,9 +499,18 @@ export default {
       this.chooseOutlineRadio = "2";
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
-      if(this.stageForm.paper_id == 0){
-        this.stageForm.paper_id = ""
+      console.log(this.stageForm);
+      if(this.stageForm.paper_id == 0 && this.stageForm.paper_id != ""){
+        this.stageForm.paper_id = "";
       }
+      // else{
+      //   console.log('kkkkk',this.stageForm.paper_id);
+      //   this.$http.getPapers(this.stageForm.paper_id).then(res=>{
+      //     console.log("查找获取的试卷", res);
+      //   }).catch((err)=>{
+      //     // console.log(err);
+      //   })
+      // }
       if (this.attribute.length!==0 && this.attribute[0] === 1) {
         console.log('11111');
         this.stageForm.season_id = "";
