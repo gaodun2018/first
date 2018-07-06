@@ -372,8 +372,8 @@ export default {
     // 修改学习计划框关闭之前
     toClose(){
       if(!this.isAddPlan){
-        this.daration_list.forEach((o,i)=>{
-          this.newPlanlist.forEach(x=>{
+        this.newPlanlist.forEach(o=>{
+          this.daration_list.forEach((x,i)=>{
             if(x.id == o.id){
               this.daration_list.splice(i,1);
             }
