@@ -76,14 +76,14 @@
         </el-form-item>
         <el-row class="attribute-box">
           <el-col :span="5" class="attribute-type-select" v-if="attribute[0] === 1">
-            <el-select v-model="searchType">
+            <el-select v-model="searchType" @change="changePlacehoderText">
               <el-option label="试卷名称搜索" :value="1"></el-option>
               <el-option label="试卷ID搜索" :value="2"></el-option>
             </el-select>
           </el-col>
           <el-col :span="19" class="attribute-paper-select">
             <el-form-item v-if="attribute[0] === 1" label="" prop="paper_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
-              <el-select style="width: 90%;" placeholder="请选择学前测试的试卷ID" v-model="stageForm.paper_id" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+              <el-select style="width: 90%;" :placeholder="placehoderText" v-model="stageForm.paper_id" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
                 <el-option v-for="item in paperList" :key="item.paper_id" :label="item.title" :value="item.paper_id">
                 </el-option>
               </el-select>
@@ -142,6 +142,7 @@ export default {
   components: {},
   data() {
     return {
+      placehoderText:"请选择学前测试的试卷名称",// 动态切换搜索框文字
       ruleForm: {
         bEnabled: "1"
       },
@@ -171,6 +172,14 @@ export default {
     };
   },
   methods: {
+    // 切换搜索方式
+    changePlacehoderText(val){
+      if(val == 1){
+        this.placehoderText = "请选择学前测试的试卷名称";
+      }else{
+        this.placehoderText = "请选择学前测试的试卷ID";
+      }
+    },
     //搜索资源
     searchResource(query) {
       clearTimeout(this.searchResourceTimer);
@@ -484,6 +493,9 @@ export default {
       this.chooseOutlineRadio = "2";
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
+      if(this.stageForm.paper_id == 0){
+        this.stageForm.paper_id = ""
+      }
       if (this.attribute.length!==0 && this.attribute[0] === 1) {
         console.log('11111');
         this.stageForm.season_id = "";

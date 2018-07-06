@@ -57,3 +57,6 @@ export const getResourceKnowledgeList = params => get(`${getBaseUrl()}apigateway
 
 //获取视频资源&知识点&老师
 export const getAllKnowledge = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/video/${id}`, params)
+
+// 获取对应id的试卷数据
+export const getPaper = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/paper/${id}`, params)
