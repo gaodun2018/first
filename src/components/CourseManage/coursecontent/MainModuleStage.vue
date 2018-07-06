@@ -500,7 +500,7 @@ export default {
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
       console.log(this.stageForm);
-      if(this.stageForm.paper_id == 0 && this.stageForm.paper_id != ""){
+      if(this.stageForm.paper_id === 0 || this.stageForm.paper_id === "0"){
         this.stageForm.paper_id = "";
       }
       // else{
