@@ -17,6 +17,10 @@ let resourceTypeList = [{
     {
         "discriminator": "legacy_live",
         "label": "直播"
+    },
+    {
+      "discriminator": "resource_group",
+      "label": "资源组"
     }
 ];
 

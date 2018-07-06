@@ -221,15 +221,18 @@
     color: #2CA4D9;
     float: right;
     cursor: pointer;
+    padding: 0 6px;
 }
-
-.chapterbox .chrgt {
-    width: 60px;
+.chapterbox .chrgt1:hover, .chapterbox .chrgt:hover{
+  opacity: .7;
+}
+/* .chapterbox .chrgt {
+    width: 40px;
 }
 
 .chapterbox .chrgt1 {
-    width: 100px;
-}
+    width: 60px;
+} */
 
 .chapterbox .chrgt1.yellow {
     color: #F09964;
@@ -274,8 +277,15 @@
     border: 0 none;
     margin-left: 0;
     padding: 6px 0 6px 98px;
+    position: relative;
 }
-
+.chapterbox .resourcebox .knowledge .attribute-tag{
+  position: absolute;
+  left: 24px;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+}
 .chapterbox .resourcebox .knowledge:hover {
     background: #E6F7FF;
 }
@@ -1340,7 +1350,7 @@
     color: #00AEFF;
 }
 
-/* .resource .el-table__body-wrapper { 
+/* .resource .el-table__body-wrapper {
     margin-top:10px;border-left:1px solid #dfe6ec;
 } */
 
