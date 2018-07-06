@@ -500,9 +500,9 @@ export default {
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
       console.log(this.stageForm);
-      if(this.stageForm.paper_id === 0 || this.stageForm.paper_id === "0"){
-        this.stageForm.paper_id = "";
-      }
+      this.stageForm.paper_id = this.stageForm.paper_id === '0' ? '' : this.stageForm.paper_id ;
+      this.stageForm.season_id = this.stageForm.season_id === '0' ? '' : this.stageForm.season_id ;
+
       // else{
       //   console.log('kkkkk',this.stageForm.paper_id);
       //   this.$http.getPapers(this.stageForm.paper_id).then(res=>{
