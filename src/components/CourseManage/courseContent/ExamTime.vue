@@ -670,12 +670,17 @@ export default {
       }
     },
     // //新增数据
-    addTableData() {
-     this.$http.getNewSeason(this.$route.params.cid).then(res=>{
-        if(res.status == 0){
-          this.daration_list = res.result;
-        }
-      })
+    async addTableData() {
+     let res = await this.$http.getNewSeason(this.$route.params.cid)
+      if(res.status === 0){
+        this.daration_list = res.result;
+      }else {
+        this.$message({
+          message: '获取考季信息失败',
+          type: 'warning'
+        });
+        return
+      }
       this.firstAddForm = {
         dateFormat: 1, //考季日期格式
         date: "" //考季时间
@@ -690,16 +695,21 @@ export default {
       this.dialogVisible = true;
     },
     // //编辑数据按钮
-    handleEdit(index, row) {
+    async handleEdit(index, row) {
       let params = {
         season_id:row.season_id
       }
-      this.$http.getNewSeason(this.$route.params.cid,params).then(res=>{
-        if(res.status == 0){
-          this.daration_list = res.result
-        }
-      })
-      // debugger;
+      let ret = await this.$http.getNewSeason(this.$route.params.cid,params);
+      if(ret.status === 0){
+        this.daration_list = ret.result;
+      } else {
+          this.$message({
+            message: '获取考季信息失败',
+            type: 'warning'
+          });
+          return ;
+      }
+
       let item = row;
       this.active = 0;
       this.seasonId = row.season_id; //考季id
@@ -745,6 +755,8 @@ export default {
           })
         }
       })
+      console.log(this.planlist);
+      console.log('这时候的考季数据', this.daration_list);
 
       this.currentIndex = index;
       this.dialogVisible = true;
