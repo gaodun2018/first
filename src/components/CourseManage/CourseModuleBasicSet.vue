@@ -490,12 +490,12 @@ export default {
 
         setTimeout(() => {
           console.log('setTimeout',this.editor);
-          if(this.editor === undefined || this.editor === null){
-            this.setEditor();
+          // if(this.editor === undefined || this.editor === null){
+          //   this.setEditor();
+          //   ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
+          // }else{
             ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
-          }else{
-            ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
-          }
+          // }
           //brief_introduction  富文本
         }, 500);
 
@@ -562,9 +562,11 @@ export default {
             type: "success",
             message: res.message ? res.message : "设置成功！"
           });
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
+          this.active = 0;
+          this.getCourseInfo();
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1000);
         } else if (res.status == 2) {
           this.$message.error("设置失败！");
         }
@@ -597,8 +599,11 @@ export default {
     if (ep2){
       this.course_type =  course_type;
     }
-    this.setEditor();
-    console.log('mounted',this.editor);
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.setEditor();
+      },0)
+    })
     //富文本编辑器
     // this.editor = UE.getEditor("ed", {
     //   //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个

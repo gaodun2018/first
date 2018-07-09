@@ -160,6 +160,10 @@
             {{item.label}}
           </span>
         </div>
+        <el-row class="ep-set-box" v-if="resourceType === 'paper'">
+          <p class="ep-line"></p>
+          <span class="ep-tips">以下设置为EP专用：（选填）</span>
+        </el-row>
         <el-form-item label="资源应用" v-if="resourceType === 'paper'">
           <el-checkbox-group v-model="addResFirFrom.apply_to" @change="handleCheckboxChange">
             <el-checkbox label="1">跳级测试</el-checkbox>
