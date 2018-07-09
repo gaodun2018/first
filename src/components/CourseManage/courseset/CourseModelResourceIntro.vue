@@ -34,7 +34,7 @@
                     <el-input v-model="AddResForm.title" class="coursetxt" auto-complete="off"
                               placeholder="示例：15章课程学习"></el-input>
                 </el-form-item>
-                <el-form-item label="详情" prop="content"
+                <el-form-item label="详情" prop="content" style="margin-top:18px;"
                               :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
                     <el-input v-model="AddResForm.content" autosize type="textarea" class="coursetxt"
                               auto-complete="off" placeholder="示例：每天按照计划完成学习，把握好学习节奏"></el-input>
