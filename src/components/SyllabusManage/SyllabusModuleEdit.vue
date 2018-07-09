@@ -160,6 +160,10 @@
             {{item.label}}
           </span>
         </div>
+        <el-row class="ep-set-box" v-if="resourceType === 'paper'">
+          <p class="ep-line"></p>
+          <span class="ep-tips">以下设置为EP专用：（选填）</span>
+        </el-row>
         <el-form-item label="资源应用" v-if="resourceType === 'paper'">
           <el-checkbox-group v-model="addResFirFrom.apply_to" @change="handleCheckboxChange">
             <el-checkbox label="1">跳级测试</el-checkbox>
@@ -1282,6 +1286,39 @@ export default {
   mounted() {
     for (let i = 1; i <= 120; i++) {
       this.study_time_options.push({ value: i });
+    }
+    //线上测试使用属性，可以建ep2课程
+    let ep2 = localStorage.getItem('isInEP2') ? true :false;
+    if (ep2){
+      this.resourceTypeList.push({
+        "discriminator": "resource_group",
+        "label": "资源组"
+      });
+      resourceTableConfig.push(
+        {
+            "discriminator": "resource_group",
+            "table": [{
+                key: 'id',
+                wh: '120',
+                sort: false,
+                label: '资源组ID',
+            }, {
+                key: 'discriminator',
+                wh: '100',
+                sort: false,
+                label: '资源类型',
+            }, {
+                key: 'title',
+                wh: '',
+                sort: false,
+                label: '资源组名称',
+            }],
+            inputPlaceholder: '请输入资源组ID / 名称',
+            input: {}
+        }
+      )
+
+      // this.course_type =  course_type;
     }
   },
   created() {

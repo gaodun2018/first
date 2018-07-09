@@ -213,7 +213,8 @@ import {
   initial_info,
   course_type,
   progressText,
-  resourceTableConfig
+  resourceTableConfig,
+  old_course_type
 } from "../../common/courseConfig.js";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -252,7 +253,7 @@ export default {
       // projectlist: [], //项目列表
       selectedlist: [], //科目列表
       ware_status_list: [], //内容制作状态
-      course_type: course_type, //网课类型
+      course_type: old_course_type, //网课类型
       active: 0,
       progressText: progressText, //进度状态
       ruleForm: {
@@ -306,7 +307,7 @@ export default {
     ...mapActions(["getProjectSubjectList"]),
     //是否启用介绍信
     changeLetterType(value) {
-      console.log(value);
+      // console.log(value);
       if (value == 1) {
         this.ruleForm.welcome_letter = this.templateContent;
       } else if (value == 2) {
@@ -315,7 +316,7 @@ export default {
     },
     // 新学员介绍视频radio切换。
     changeNewMember(value) {
-      console.log(value);
+      // console.log(value);
       if (value == 1) {
         this.isTrue = false;
         this.isBox = false;
@@ -326,7 +327,7 @@ export default {
       }
     },
     handleRow(row) {
-      console.log(row);
+      // console.log(row);
       this.place = row.id;
       this.chName = row.title;
       this.isBox = false;
@@ -334,7 +335,7 @@ export default {
     },
     // 添加分页控件函数
     async handleIconClick() {
-      console.log("search");
+      // console.log("search");
       if (this.pagination.current_page != 1) {
         this.pagination.current_page = 1;
       } else {
@@ -391,7 +392,7 @@ export default {
         }
         let ret = await this.$http.getResource(params);
         if (ret.status == 0) {
-          console.log(ret);
+          // console.log(ret);
           this.resLoading = false;
           this.resourceTable = ret.result.resources;
           this.pagination.total = ret.result.pagination.total;
@@ -409,7 +410,7 @@ export default {
     },
     //下拉框选取项目后切换科目
     changeProject(val) {
-      console.log(val, "下拉框选取项目后切换科目");
+      // console.log(val, "下拉框选取项目后切换科目");
       for (var obj in this.projectlist) {
         if (this.projectlist[obj].project_id == val) {
           let subject_list = [...this.projectlist[obj].subject_list];
@@ -444,7 +445,7 @@ export default {
       this.active--;
     },
     submitForm(formName) {
-      console.log(this.kForm);
+      // console.log(this.kForm);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.SetCourse();
@@ -457,7 +458,7 @@ export default {
       let url = this.course_id;
       let ret = await this.$http.getCourseInfo(url);
       if (ret.status == 0) {
-        console.log("初始获取的值",ret.result);
+        // console.log("初始获取的值",ret.result);
         this.ruleForm.name = ret.result.course_name;
         this.ruleForm.project_id = ret.result.project_id;
         this.ruleForm.subject_id = ret.result.subject_id;
@@ -488,10 +489,13 @@ export default {
         this.kForm.investigate_url = ret.result.investigate_url;
 
         setTimeout(() => {
-          if(this.editor === undefined || this.editor === null){
-            this.setEditor();
-          }
-          ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
+          console.log('setTimeout',this.editor);
+          // if(this.editor === undefined || this.editor === null){
+          //   this.setEditor();
+          //   ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
+          // }else{
+            ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);
+          // }
           //brief_introduction  富文本
         }, 500);
 
@@ -503,14 +507,14 @@ export default {
           this.place = ret.result.video_id;
           this.index = "2";
           this.$http.searchResource(ret.result.video_id).then(res=>{
-              console.log(res);
+              // console.log(res);
               if(res.status == 0){
                 this.chName = res.result.resource.title;
               }else{
-                console.log("自定义视频名称获取失败");
+                // console.log("自定义视频名称获取失败");
               }
             }).catch((err) => {
-              console.log('获取视频名失败',err);
+              // console.log('获取视频名失败',err);
             })
         }
 
@@ -552,15 +556,17 @@ export default {
       this.btnLoading = true;
       this.$http.SetCourse(url, formData).then(res => {
         this.btnLoading = false;
-        console.log("ooo",res);
+        // console.log("ooo",res);
         if (res.status == 0) {
           this.$message({
             type: "success",
             message: res.message ? res.message : "设置成功！"
           });
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
+          this.active = 0;
+          this.getCourseInfo();
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1000);
         } else if (res.status == 2) {
           this.$message.error("设置失败！");
         }
@@ -588,7 +594,16 @@ export default {
     }
   },
   mounted() {
-    this.setEditor();
+    //线上测试使用属性，可以建ep2课程
+    let ep2 = localStorage.getItem('isInEP2') ? true :false;
+    if (ep2){
+      this.course_type =  course_type;
+    }
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.setEditor();
+      },0)
+    })
     //富文本编辑器
     // this.editor = UE.getEditor("ed", {
     //   //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
@@ -623,7 +638,7 @@ export default {
     }
 
     let env = getEnv();
-    console.log("584",env);
+    // console.log("584",env);
     if( env == ''){ // 判断环境给初始视频id
       this.vid_id = '242241';
     }else{

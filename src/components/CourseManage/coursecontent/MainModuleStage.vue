@@ -142,6 +142,7 @@ export default {
   components: {},
   data() {
     return {
+      beforeAttr:'',
       placehoderText:"请选择学前测试的试卷名称",// 动态切换搜索框文字
       ruleForm: {
         bEnabled: "1"
@@ -172,6 +173,21 @@ export default {
     };
   },
   methods: {
+    // 编写判断是否有前导阶段函数
+    judgeStatus(){
+      let num = 0;
+      this.tableData = this.tableData == null||undefined? []:this.tableData;
+      this.tableData.forEach(o=>{
+        if(o.attribute === "1"){
+          num ++;
+        }
+      })
+      if(num > 0){
+        return true;
+      }else{
+        return false;
+      }
+    },
     // 切换搜索方式
     changePlacehoderText(val){
       if(val == 1){
@@ -275,6 +291,8 @@ export default {
       if (d.length > 1) {
         this.attribute = d.splice(-1);
       }
+      // this.stageForm.season_id = "";//当切换选项时将绑定id清空
+      // this.stageForm.paper_id = "";
       console.log(this.attribute);
     },
     // 新增阶段
@@ -290,6 +308,13 @@ export default {
         season_id = 0;
       } else {
         attribute = this.attribute[0];
+        if(attribute === 1 && this.judgeStatus()){
+          this.$message({
+            type:"warning",
+            message:"前导阶段只能存在一个"
+          })
+          return false;
+        }
         switch (attribute) {
           case 0:
             paper_id = 0;
@@ -394,10 +419,15 @@ export default {
         season_id = 0;
       } else {
         attribute = this.attribute[0];
+        if(this.beforeAttr[0] !== 1 && this.judgeStatus() && attribute ===1){//判断前导阶段会不会重复
+          this.$message({type:'warning',message:"前导阶段只能存在一个"});
+          return false;
+        }
         switch (attribute) {
           case 0:
             paper_id = 0;
             season_id = 0;
+            break;
           case 1:
             // 前导阶段
             paper_id = this.stageForm.paper_id;
@@ -493,6 +523,7 @@ export default {
     },
     //弹出编辑弹层
     handleEdit(index, row) {
+      this.beforeAttr = [parseInt(row.attribute)]; // 保存进入编辑时候的编辑状态
       this.uAction = "update";
       this.gradation_id = row.id;
       let sy_id = row.syllabus_id;
@@ -500,6 +531,7 @@ export default {
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
       console.log(this.stageForm);
+      console.log(this.stageForm.paper_id);
       this.stageForm.paper_id = this.stageForm.paper_id === '0' ? '' : this.stageForm.paper_id ;
       this.stageForm.season_id = this.stageForm.season_id === '0' ? '' : this.stageForm.season_id ;
 
