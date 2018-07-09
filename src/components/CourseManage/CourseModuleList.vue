@@ -25,7 +25,8 @@
           <el-row>
             <div class="select-search">
               <el-select v-model="selectvalue" placeholder="请选择" size="small" @change="changesearch" @visible-change="visibleChange">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-option label="全部课程类型" value=""></el-option>
+                <el-option v-for="item in course_type" :key="item.course_type_id" :label="item.name" :value="item.course_type_id">
                 </el-option>
               </el-select>
             </div>
@@ -69,6 +70,7 @@
             <span v-if="scope.row.course_type==10">网课2.0</span>
             <span v-else-if="scope.row.course_type==11">EP2.0</span>
             <span v-else-if="scope.row.course_type==4">私播课-Glive+</span>
+            <span v-else-if="scope.row.course_type==3">自适应学习网课-EP</span>
             <span v-else>{{scope.row.course_type}}</span>
           </template>
         </el-table-column>
@@ -144,9 +146,8 @@
 import { SAAS_TOKEN } from "../../util/keys";
 import { setToken } from "./../../util/setToken";
 import { getCookie, setCookie } from "../../util/cookie.js";
-import { options } from "../../common/courseConfig.js";
 import { getEnv, getBaseUrl, getDocumentUrl } from "../../util/config";
-import { course_type } from "../../common/courseConfig.js";
+import { course_type,old_course_type } from "../../common/courseConfig.js";
 import { mapState } from "vuex";
 let prefix = getEnv();
 export default {
@@ -158,9 +159,9 @@ export default {
       subtablist: [], //按钮组科目列表
       selectedlist: [], //新增课程科目列表
       bSubject: false, //是否可以选择科目
-      course_type: course_type, //网课类型
+      course_type: old_course_type, //网课类型
       selectvalue: "", //下拉搜索所选择的的网课类型
-      options: options, //下拉搜索的网课类型列表
+      // options: options, //下拉搜索的网课类型列表
       //新增课程的表单
       ruleForm: {
         course_name: "",
@@ -324,6 +325,11 @@ export default {
   mounted() {
     this.$store.dispatch("getProjectSubjectList");
     this.searchCourse();
+    //线上测试使用属性，可以建ep2课程
+    let ep2 = localStorage.getItem('isInEP2') ? true :false;
+    if (ep2){
+      this.course_type =  course_type;
+    }
   }
 };
 </script>
