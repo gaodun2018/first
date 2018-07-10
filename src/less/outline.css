@@ -161,6 +161,7 @@
     text-align: center;
     line-height: 90px;
     cursor: pointer;
+    margin: 0 6px;
 }
 
 .permission-outlinemodule .selectmodel span.is-active {
