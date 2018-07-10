@@ -286,13 +286,12 @@ export default {
         window.open("/#/syllabus/manage/list");
       }
     },
-    //
     handleCheckboxChange(d) {
       if (d.length > 1) {
         this.attribute = d.splice(-1);
       }
-      // this.stageForm.season_id = "";//当切换选项时将绑定id清空
-      // this.stageForm.paper_id = "";
+      this.stageForm.season_id = "";//当切换选项时将绑定id清空
+      this.stageForm.paper_id = "";
       console.log(this.attribute);
     },
     // 新增阶段

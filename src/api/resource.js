@@ -60,3 +60,7 @@ export const getAllKnowledge = (id, params) => get(`${getBaseUrl()}apigateway.ga
 
 // 获取对应id的试卷数据
 export const getPapers = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/paper/${id}`, params)
+
+// 新的获取老师的接口
+export const newGetTeacher = params => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/resource/group/find`, params)
+

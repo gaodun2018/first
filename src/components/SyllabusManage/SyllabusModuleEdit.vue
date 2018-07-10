@@ -79,7 +79,7 @@
                     <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
                       <div class="resourcebox fourth-chapter-box" v-for="fourthItem in thirdItem.children" :key="fourthItem.id">
                         <div class="knowledge">
-                          <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to">{{fourthItem.apply_to=='2'?'提分盒子':'跳级测试'}}</el-tag>
+                          <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                           <span class="chlft">
                             {{fourthItem.name}}
                             <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>

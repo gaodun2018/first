@@ -68,7 +68,14 @@ export const resourceTableConfig = [{
     wh: '100',
     sort: false,
     label: '资源类型',
-  }, {
+  },
+  //  {
+  //   key: 'name',
+  //   wh: '100',
+  //   sort: false,
+  //   label: '老师名称',
+  // },
+  {
     key: 'title',
     wh: '',
     sort: false,
