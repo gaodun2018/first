@@ -42,13 +42,13 @@
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                      :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-          <el-input v-model.number="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                      :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'},...ruleNumber]">
+          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
           分
         </el-form-item>
         <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
-                      :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
-          <el-input v-model.number="ruleForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒"
+                      :rules="[...ruleNumber2]">
+          <el-input v-model="ruleForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒"
                     auto-complete="off"></el-input>
           秒
         </el-form-item>
@@ -96,7 +96,28 @@
     },
     props: ["id"],
     data() {
+     var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请填写视频时长的分钟'));
+        }
+        var re = /^\d+$/;
+        if (!re.test(value)) {
+          callback(new Error('请输入正整数'));
+        } else {
+          callback();
+        }
+      };
+      var checkAge2 = (rule, value, callback) => {
+        var re = /^\d+$/;
+        if (!re.test(value)) {
+          callback(new Error('请输入正整数'));
+        } else {
+          callback();
+        }
+      };
       return {
+        ruleNumber:[{validator:checkAge,trigger: 'blur'}],
+        ruleNumber2:[{validator:checkAge2,trigger: 'blur'}],
         getId:'',
         subjectData: [],
         loading: false,
@@ -322,7 +343,6 @@
              message: "视频地址解析失败！"
            });
          }*/
-
         let params = {
           title: this.ruleForm.title,
           description: this.ruleForm.description,
