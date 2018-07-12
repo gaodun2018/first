@@ -221,6 +221,7 @@ export default {
           // this.resLoading = false;
 
           this.paperList = ret.result.resources;
+          console.log(224,this.paperList);
           // this.pagination.total = ret.result.pagination.total;
         } else {
           this.paperList = [];
@@ -228,7 +229,6 @@ export default {
       }, 500);
     },
     remoteMethod(query) {
-      console.log(query, "queryqueryqueryqueryquery");
       if (query !== "") {
         this.loading = true;
         this.searchResource(query);
@@ -290,8 +290,8 @@ export default {
       if (d.length > 1) {
         this.attribute = d.splice(-1);
       }
-      this.stageForm.season_id = "";//当切换选项时将绑定id清空
-      this.stageForm.paper_id = "";
+      // this.stageForm.season_id = "";//当切换选项时将绑定id清空
+      // this.stageForm.paper_id = "";
       console.log(this.attribute);
     },
     // 新增阶段
@@ -521,7 +521,15 @@ export default {
       this.dialogVisible = true;
     },
     //弹出编辑弹层
-    handleEdit(index, row) {
+    async handleEdit(index, row) {
+      // 打开编辑江选中的前导阶段进行显示
+      if(row.attribute === '1'){
+        let ret = await this.$http.getPapers(row.paper_id);
+        if(ret.status === 0){
+          ret.result.paper_id = ret.result.paper_id.toString()
+          this.paperList= [ret.result];
+        }
+      }
       this.beforeAttr = [parseInt(row.attribute)]; // 保存进入编辑时候的编辑状态
       this.uAction = "update";
       this.gradation_id = row.id;
