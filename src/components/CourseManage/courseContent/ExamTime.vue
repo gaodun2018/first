@@ -401,7 +401,8 @@ export default {
         if (valid) {
           // 保存在本地
           const { content, target, date } = this.planForm;
-          let gradation = new Array();
+          let gradation = [];
+
           content.forEach(id => {
             this.daration_list.forEach((ele,i) => {
               if (ele.id == id) {
@@ -708,6 +709,7 @@ export default {
           });
           return ;
       }
+      console.log(716,row);
 
       let item = row;
       this.active = 0;
@@ -732,8 +734,10 @@ export default {
           date2: ""
         };
       }
-      this.planlist = item.plan;
-
+      if(item.plan === null || item.plan === undefined){
+        item.plan = []
+      }
+        this.planlist = item.plan;
       // 天加修改数组的方法
       let arr = [];
       if(this.planlist != null && this.planlist != undefined){
@@ -754,8 +758,6 @@ export default {
           })
         }
       })
-      console.log(this.planlist);
-      console.log('这时候的考季数据', this.daration_list);
 
       this.currentIndex = index;
       this.dialogVisible = true;
