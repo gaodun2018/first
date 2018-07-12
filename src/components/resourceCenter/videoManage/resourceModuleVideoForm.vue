@@ -42,13 +42,12 @@
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                      :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'},...ruleNumber]">
-          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                      :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
+          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" @input="handleInputMinutesChange" auto-complete="off"></el-input>
           分
         </el-form-item>
-        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
-                      :rules="[...ruleNumber2]">
-          <el-input v-model="ruleForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒"
+        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
+          <el-input v-model="ruleForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长的秒"
                     auto-complete="off"></el-input>
           秒
         </el-form-item>
@@ -96,28 +95,7 @@
     },
     props: ["id"],
     data() {
-     var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请填写视频时长的分钟'));
-        }
-        var re = /^\d+$/;
-        if (!re.test(value)) {
-          callback(new Error('请输入正整数'));
-        } else {
-          callback();
-        }
-      };
-      var checkAge2 = (rule, value, callback) => {
-        var re = /^\d+$/;
-        if (!re.test(value)) {
-          callback(new Error('请输入正整数'));
-        } else {
-          callback();
-        }
-      };
       return {
-        ruleNumber:[{validator:checkAge,trigger: 'blur'}],
-        ruleNumber2:[{validator:checkAge2,trigger: 'blur'}],
         getId:'',
         subjectData: [],
         loading: false,
@@ -146,6 +124,18 @@
       };
     },
     methods: {
+      handleInputMinutesChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.ruleForm.duration_minutes = self.ruleForm.duration_minutes.replace(/[^\d]/g,'');
+        })
+      },
+      handleInputSecondChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.ruleForm.duration_second = self.ruleForm.duration_second.replace(/[^\d]/g,'');
+        })
+      },
       // 新增获取初始信息接口
       async init(){
         await this.$http.getAllKnowledge(this.$route.params.id).then(res=>{

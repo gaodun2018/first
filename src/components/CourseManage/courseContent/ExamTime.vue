@@ -93,7 +93,6 @@
             <el-button style="margin-top:12px;" @click="secondSubmit('secondAddForm')">下一步</el-button>
           </el-form-item>
         </el-form>
-        </el-form>
       </el-row>
       <!-- 第三步 -->
       <div class="rulemodule" v-show="active === 2">
