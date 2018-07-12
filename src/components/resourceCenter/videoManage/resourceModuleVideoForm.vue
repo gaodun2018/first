@@ -42,12 +42,12 @@
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                      :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" @input="handleInputMinutesChange" auto-complete="off"></el-input>
+                      :rules="[{required: true, message: '该输入项为必填项!', trigger: 'change,blur'}]">
+          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长" @input="handleInputMinutesChange" auto-complete="off"></el-input>
           分
         </el-form-item>
         <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
-          <el-input v-model="ruleForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长的秒"
+          <el-input v-model="ruleForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长"
                     auto-complete="off"></el-input>
           秒
         </el-form-item>
