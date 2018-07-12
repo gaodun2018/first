@@ -84,7 +84,7 @@
           <el-col :span="19" class="attribute-paper-select">
             <el-form-item v-if="attribute[0] === 1" label="" prop="paper_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
               <el-select style="width: 90%;" :placeholder="placehoderText" v-model="stageForm.paper_id" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
-                <el-option v-for="item in paperList" :key="item.paper_id" :label="item.title" :value="item.paper_id">
+                <el-option v-for="item in paperList" :key="item.id" :label="item.title" :value="item.paper_id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -530,6 +530,7 @@ export default {
           this.paperList= [ret.result];
         }
       }
+      this.searchType = 1;
       this.beforeAttr = [parseInt(row.attribute)]; // 保存进入编辑时候的编辑状态
       this.uAction = "update";
       this.gradation_id = row.id;
