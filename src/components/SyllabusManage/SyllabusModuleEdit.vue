@@ -775,7 +775,8 @@
             : 0,
           video_id: video_id
         };
-        let createResponse = await this.$http.storeResource(params);
+        // let createResponse = await this.$http.storeResource(params);
+        let createResponse = await this.$http.createSyllabusVideoResource(params);
         if (createResponse.status === 0) {
           // 资源id
           try {

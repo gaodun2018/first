@@ -73,3 +73,5 @@ export const getOutlineKnowledgeList = (params) => get(`${getBaseUrl()}apigatewa
 // 提交大纲知识点
 export const saveOutlineKnowledgeList = (item_id,knowledge_id,params) => formPut(`${getBaseUrl()}apigateway.gaodun.com/toc-service/item/${item_id}/knowledge/${knowledge_id}`, params);
 
+//保存视频资源
+export const createSyllabusVideoResource = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/resource-api/resource/video`, params)
