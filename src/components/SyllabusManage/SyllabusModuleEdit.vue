@@ -1291,34 +1291,35 @@
       //线上测试使用属性，可以建ep2课程
       let ep2 = localStorage.getItem('isInEP2') ? true :false;
       if (ep2){
-        this.resourceTypeList.push({
-          "discriminator": "resource_group",
-          "label": "资源组"
-        });
-        resourceTableConfig.push(
-          {
+        if (this.resourceTypeList && this.resourceTypeList.length < 5){
+          this.resourceTypeList.push({
+            "discriminator": "resource_group",
+            "label": "资源组"
+          });
+          resourceTableConfig.push(
+            {
               "discriminator": "resource_group",
               "table": [{
-                  key: 'id',
-                  wh: '120',
-                  sort: false,
-                  label: '资源组ID',
+                key: 'id',
+                wh: '120',
+                sort: false,
+                label: '资源组ID',
               }, {
-                  key: 'discriminator',
-                  wh: '100',
-                  sort: false,
-                  label: '资源类型',
+                key: 'discriminator',
+                wh: '100',
+                sort: false,
+                label: '资源类型',
               }, {
-                  key: 'title',
-                  wh: '',
-                  sort: false,
-                  label: '资源组名称',
+                key: 'title',
+                wh: '',
+                sort: false,
+                label: '资源组名称',
               }],
               inputPlaceholder: '请输入资源组ID / 名称',
               input: {}
-          }
-        )
-
+            }
+          )
+        }
         // this.course_type =  course_type;
       }
     },
