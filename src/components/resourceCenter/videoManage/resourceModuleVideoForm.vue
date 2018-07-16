@@ -42,11 +42,12 @@
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                      :rules="[{required: true, message: '该输入项为必填项!', trigger: 'change,blur'}]">
+                      :rules="[{required: true, message: '该输入项为必填项!', trigger: 'change,blur'},...valiMinites]">
           <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长" @input="handleInputMinutesChange" auto-complete="off"></el-input>
           分
         </el-form-item>
-        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline">
+        <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
+                      :rules="valiSeconds">
           <el-input v-model="ruleForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长"
                     auto-complete="off"></el-input>
           秒
@@ -95,7 +96,26 @@
     },
     props: ["id"],
     data() {
+      var valiMinites = (rule, value, callback) => {
+        value = Number(value);
+        if(value > 120){
+          callback(new Error('时长最大为120分钟'));
+        }else{
+          callback();
+        }
+      };
+      var valiSeconds = (rule, value, callback) => {
+        if(Number(this.ruleForm.duration_minutes) >= 120 && value != ""){
+          callback(new Error('时长最大为120分钟'));
+        }else if(Number(value) > 60){
+          callback(new Error('秒数最大不允许超过60'));
+        }else {
+          callback();
+        }
+      };
       return {
+        valiMinites:[ {validator:valiMinites, trigger:'blur'}],// 验证分钟
+        valiSeconds:[ {validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         subjectData: [],
         loading: false,

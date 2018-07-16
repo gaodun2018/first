@@ -80,6 +80,7 @@
             </router-link>
             <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')" class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
             </router-link>
+            <!-- <el-button type="text" >清除缓存</el-button> -->
             <el-tooltip class="item" effect="dark" placement="top-end" :disabled="isTooldisabled">
               <div slot="content">如果没有打开预览页面<br/>请注意浏览器右上角，允许弹框！</div>
               <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
