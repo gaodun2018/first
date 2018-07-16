@@ -98,24 +98,22 @@
     data() {
       var valiMinites = (rule, value, callback) => {
         value = Number(value);
-        if(value > 120){
-          callback(new Error('时长最大为120分钟'));
+        if(value > 999){
+          callback(new Error('时长不允许超过三位数'));
         }else{
           callback();
         }
       };
       var valiSeconds = (rule, value, callback) => {
-        if(Number(this.ruleForm.duration_minutes) >= 120 && value != ""){
-          callback(new Error('时长最大为120分钟'));
-        }else if(Number(value) > 60){
+        if(Number(value) > 60){
           callback(new Error('秒数最大不允许超过60'));
         }else {
           callback();
         }
       };
       return {
-        valiMinites:[ {validator:valiMinites, trigger:'blur'}],// 验证分钟
-        valiSeconds:[ {validator:valiSeconds, trigger:'blur'}],// 验证秒
+        valiMinites:[{validator:valiMinites, trigger:'blur'}],// 验证分钟
+        valiSeconds:[{validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         subjectData: [],
         loading: false,
@@ -204,7 +202,6 @@
         this.getId = this.ruleForm.knowledge_id[0].id;
       },
       handleCloseKnowledgeDialog(){
-        console.log('取消')
         this.dialogKnowledgeVisible = false;
       },
       changeCurrentSyllabusItemKnowledge(v) {

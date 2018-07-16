@@ -1246,7 +1246,7 @@
         this.$refs[formName].resetFields();
       },
       //  打开关联知识点弹层
-      handleOpenKnowledgeDialog(item){
+      async handleOpenKnowledgeDialog(item){
         console.log("知识点弹层数据",item)
         this.currentId = item.id;
         if(item.kid){//判断知识点是否存在不存在不传值
@@ -1254,7 +1254,14 @@
         }else{
           this.judgeid = '';
         }
-        this.getOutlineKnowledgeList();
+        let params = {
+          project_id:this.project_id,//项目id
+          subject_id:this.subject_id,//课程id
+        }
+        let ret = await this.$http.getOutlineKnowledgeList(params);
+        if (ret.status === 0){
+          this.knowledgeList = ret.result.result.contents;
+        }
         let id = -1;
         if(item.knowledge_id){
           id = item.knowledge_id
