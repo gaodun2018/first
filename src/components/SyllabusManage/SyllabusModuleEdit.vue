@@ -25,8 +25,8 @@
                   <div class="chaptit chapsecd">
                     <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt1 yellow" @click="copyId(secItem.id)">复制条目ID</span>
-                    <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt yellow" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
                     <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
