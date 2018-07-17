@@ -67,3 +67,6 @@ export const newGetTeacher = params => get(`${getBaseUrl()}apigateway.gaodun.com
 //  ：： 清除课程缓存
 export const clearCache = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/syllabus/refresh/course?course_id=${id}`, params)
 
+//  ：：清除资源缓存
+export const clearResource = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/syllabus/refresh/resource?item_id[]=${id}`, params)
+

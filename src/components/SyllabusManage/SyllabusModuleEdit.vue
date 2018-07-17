@@ -34,13 +34,13 @@
                       <div class="knowledge">
                         <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                         <span class="chlft">
-                          {{thirdItem.name}}
+                          条目ID：{{ thirdItem.id }} | {{thirdItem.name}}
                           <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
                           <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
                         </span>
                         <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
                         <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
-                        <span class="chrgt" @click="copyId(thirdItem.resource.id)">复制资源ID</span>
+                        <span class="chrgt" @click="copyId(thirdItem.resource.id,thirdItem.id)">复制条目/资源ID</span>
                       </div>
                     </div>
                   </draggable>
@@ -85,13 +85,13 @@
                           <div class="knowledge">
                             <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                             <span class="chlft">
-                              {{fourthItem.name}}
+                              条目ID：{{fourthItem.id}} | {{fourthItem.name}}
                               <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
                               <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
                               </span>
                             <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
                             <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
-                            <span class="chrgt" @click="copyId(fourthItem.resource.id)">复制资源ID</span>
+                            <span class="chrgt" @click="copyId(fourthItem.resource.id,fourthItem.id)">复制条目/资源ID</span>
                           </div>
                         </div>
                       </draggable>
@@ -116,13 +116,13 @@
                   <div class="knowledge">
                      <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag>
                     <span class="chlft">
-                      {{secItem.name}}
+                      条目ID：{{secItem.id}} | {{secItem.name}}
                       <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                      <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
                     </span>
                     <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                     <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
-                    <span class="chrgt" @click="copyId(secItem.resource.id)">复制资源ID</span>
+                    <span class="chrgt" @click="copyId(secItem.resource.id,secItem.id)">复制条目/资源ID</span>
                   </div>
                 </div>
               </draggable>
@@ -486,9 +486,9 @@
     },
     methods: {
       // 赋值到剪贴板方法
-      copyId(val){
+      copyId(val,id){
         var oInput = document.createElement('input');
-        oInput.value = val;
+        oInput.value = id? id + ',' + val : val;
         document.body.appendChild(oInput);
         oInput.select(); // 选择对象
         document.execCommand("Copy"); // 执行浏览器复制命令

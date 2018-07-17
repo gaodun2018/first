@@ -120,6 +120,7 @@
         selectLoading: false,
         selectFalg: false,
         ruleForm: {
+          id:"",//这条视频的资源id
           title: "",
           project: "",
           subject: "",
@@ -158,8 +159,8 @@
       async init(){
         await this.$http.getAllKnowledge(this.$route.params.id).then(res=>{
               if (res.status == 0) {
-                console.log("132测试初始页面值",res);
                 let data = res.result.video;
+                this.ruleForm.id = data.id;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
                 this.ruleForm.video_id = data.video_id;
@@ -196,7 +197,6 @@
 
       handleSaveKnowledgeDialog( data ){
         this.dialogKnowledgeVisible = false;
-        console.log('170',data);
         this.currentSyllabusItemKnowledge = data
         this.ruleForm.knowledge_id = this.currentSyllabusItemKnowledge;
         this.getId = this.ruleForm.knowledge_id[0].id;
@@ -239,8 +239,6 @@
           tag_id: this.ruleForm.subject,//id
         }
         let ret = await this.$http.getResourceKnowledgeList(params);
-        console.log(this.ruleForm.subject)
-        console.log('获取的知识点',ret);
         if (ret.status === 0) {
           this.knowledgeList = ret.result.result.contents;
         }else{
@@ -259,11 +257,9 @@
             };
             this.$http.searchTeacher(params)
               .then(res => {
-                console.log(res);
                 this.selectLoading = false;
                 if (res.status === 0) {
                   this.teacherOptions = res.result;
-                  console.log('选择老师',this.teacherOptions);
                 }
               })
               .catch(err => {
@@ -362,7 +358,6 @@
           // knowledge_id:this.ruleForm.knowledge_id
           knowledge_id:this.getId
         };
-        console.log('新增数据',params);
         if (this.$route.params.id) {
           params.id = this.$route.params.id;
         }
@@ -374,6 +369,10 @@
             message: "保存成功",
             type: "success"
           });
+          let res = await this.$http.clearResource(this.ruleForm.id);
+          if(res.status === 0){
+            console.log('清除缓存成功');
+          }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/video/list"
