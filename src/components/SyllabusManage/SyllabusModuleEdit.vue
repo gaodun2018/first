@@ -15,7 +15,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -23,8 +23,9 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">ID：{{secItem.id}} | {{secItem.name}}</span>
+                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
+                    <span class="chrgt1 yellow" @click="copyId(secItem.id)">复制条目ID</span>
                     <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                     <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
                   </div>
@@ -33,12 +34,13 @@
                       <div class="knowledge">
                         <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                         <span class="chlft">
-                         ID：{{thirdItem.id}} | {{thirdItem.name}}
+                          {{thirdItem.name}}
                           <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
                           <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
                         </span>
                         <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
                         <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
+                        <span class="chrgt" @click="copyId(thirdItem.resource.id)">复制资源ID</span>
                       </div>
                     </div>
                   </draggable>
@@ -51,7 +53,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -59,20 +61,22 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">ID：{{secItem.id}} | {{secItem.name}}</span>
+                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                     <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                     <span class="chrgt1" @click="openChildDialog(secItem.id,true)">增加子目录</span>
+                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
                       <div class="knowledge">
                         <span class="chlft">
                           <i></i>
-                          <span>ID：{{thirdItem.id}} | {{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
+                          <span>条目ID：{{thirdItem.id}} | {{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
                         </span>
                         <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
                         <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
+                        <span class="chrgt1" @click="copyId(thirdItem.id)">复制条目ID</span>
                         <span class="chrgt1 yellow" v-if="subject_id != 0" @click="handleOpenKnowledgeDialog(thirdItem)">关联知识点</span>
                         <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                       </div>
@@ -81,12 +85,13 @@
                           <div class="knowledge">
                             <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                             <span class="chlft">
-                              ID：{{fourthItem.id}} | {{fourthItem.name}}
+                              {{fourthItem.name}}
                               <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
                               <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
                               </span>
                             <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
                             <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
+                            <span class="chrgt" @click="copyId(fourthItem.resource.id)">复制资源ID</span>
                           </div>
                         </div>
                       </draggable>
@@ -101,7 +106,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1 yellow" @click="openAddResDialog(firstItem.id)">新增资源</span>
@@ -111,12 +116,13 @@
                   <div class="knowledge">
                      <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag>
                     <span class="chlft">
-                      ID：{{secItem.id}} | {{secItem.name}}
+                      {{secItem.name}}
                       <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                      <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
                     </span>
                     <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                     <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
+                    <span class="chrgt" @click="copyId(secItem.resource.id)">复制资源ID</span>
                   </div>
                 </div>
               </draggable>
@@ -479,6 +485,20 @@
       };
     },
     methods: {
+      // 赋值到剪贴板方法
+      copyId(val){
+        var oInput = document.createElement('input');
+        oInput.value = val;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.className = 'oInput';
+        oInput.style.display='none';
+        this.$message({
+          message:'已将ID复制到剪贴板',
+          type:'success'
+        });
+      },
       // 知识点的保存
       async handleSaveKnowledgeDialog( data ){
         this.currentSyllabusItemKnowledge = data;
