@@ -65,8 +65,6 @@
       },
       //增加老师
       async addTeacher() {
-        console.log('选中的老师',this.teacherList);
-        console.log(this.selectValue);
         if(this.teacherList != null){ // 初始回调会将数组指向空对象
           if(this.teacherList.length == 4){//判断老师数量
                 this.$message({
@@ -135,7 +133,6 @@
         if (query !== '') {
           clearTimeout(this.seachTimeOut);
           this.seachTimeOut = setTimeout(() => {
-            console.log(query);
             this.loading = true;
             let params = {
               name: query
@@ -143,7 +140,6 @@
             this.$http
               .searchTeacher(params)
               .then(res => {
-                console.log(res);
                 this.loading = false;
                 if (res.status === 0) {
                   this.options = res.result;
@@ -151,7 +147,6 @@
               })
               .catch(err => {
                 this.loading = false;
-                console.log(err);
               });
           }, 500);
         } else {

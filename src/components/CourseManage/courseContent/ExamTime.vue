@@ -390,7 +390,7 @@ export default {
           var value1 = new Date(a[property]).getTime();
           var value2 = new Date(b[property]).getTime();
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
         return value1 - value2;
       };
@@ -709,7 +709,6 @@ export default {
           });
           return ;
       }
-      console.log(716,row);
 
       let item = row;
       this.active = 0;

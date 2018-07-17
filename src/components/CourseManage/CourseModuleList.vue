@@ -196,12 +196,9 @@ export default {
   methods: {
     // 清除函数
     clearCache(val){
-      console.log(val);
       this.index = val.course_id;
       this.$http.clearCache(Number(val.course_id)).then(res=>{
-        console.log(res);
         if(res.status === 0){
-          console.log(res)
           setTimeout(() => {
             this.index = -1;
             this.$message({
@@ -306,7 +303,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     },
     //新增课程确定按钮表单验证
@@ -315,7 +312,7 @@ export default {
         if (valid) {
           this.addCourse(this.ruleForm);
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -326,7 +323,7 @@ export default {
       this.searchCourse();
     },
     handleCurrentChange(page) {
-      console.log(page);
+      // console.log(page);
       this.currentPage = page;
       this.searchCourse();
     },

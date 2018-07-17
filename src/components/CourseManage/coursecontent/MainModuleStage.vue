@@ -221,7 +221,6 @@ export default {
           // this.resLoading = false;
 
           this.paperList = ret.result.resources;
-          console.log(224,this.paperList);
           // this.pagination.total = ret.result.pagination.total;
         } else {
           this.paperList = [];
@@ -242,7 +241,7 @@ export default {
         if (valid) {
           this.AddCourseStage();
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -290,9 +289,6 @@ export default {
       if (d.length > 1) {
         this.attribute = d.splice(-1);
       }
-      // this.stageForm.season_id = "";//当切换选项时将绑定id清空
-      // this.stageForm.paper_id = "";
-      console.log(this.attribute);
     },
     // 新增阶段
     async AddCourseStage() {
@@ -538,8 +534,6 @@ export default {
       this.chooseOutlineRadio = "2";
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
-      console.log(this.stageForm);
-      console.log(this.stageForm.paper_id);
       this.stageForm.paper_id = this.stageForm.paper_id === '0' ? '' : this.stageForm.paper_id ;
       this.stageForm.season_id = this.stageForm.season_id === '0' ? '' : this.stageForm.season_id ;
 
@@ -552,14 +546,12 @@ export default {
       //   })
       // }
       if (this.attribute.length!==0 && this.attribute[0] === 1) {
-        console.log('11111');
         this.stageForm.season_id = "";
       } else if (
         this.attribute.length!==0 &&
        ( this.attribute[0] === 2 ||
         this.attribute[0] === 3)
       ) {
-        console.log('22222');
         this.stageForm.paper_id = "";
       }
       this.dialogVisible = true;
@@ -573,7 +565,6 @@ export default {
       let course_id = this.course_id;
       let ret = await this.$http.getStageAndOutline(course_id);
       if (ret.status == 0) {
-        console.log('查找初始值',ret)
         this.tableData = ret.result.gradation_list;
         this.$store.dispatch("getDradationList", ret.result.gradation_list);
       }
@@ -582,7 +573,6 @@ export default {
     async getCourseSeasonList() {
       let course_id = this.course_id;
       let ret = await this.$http.getSeasonList(course_id);
-      console.log('考季列表数据',ret)
       if (ret.status === 0) {
         // this.seasonList = ret.result.list;
         this.$store.dispatch("getSeasonList", ret.result.list);
@@ -612,10 +602,6 @@ export default {
     course_type(){
       return this.$store.state.course.course_info.course_type;
     }
-  },
-  mounted() {
-    console.log('科目id',this.subject_id,this.project_id);
-    console.log('科目类型',this.course_type)
   },
   created() {
     this.getStageAndOutline();

@@ -169,7 +169,6 @@ export default {
     },
     checkproject(value) {
       if (this.selectcur) {
-        console.log("checkproject   checkproject   checkproject");
         for (let reg of this.projectlist) {
           if (reg.project_id == value) {
             this.issubject = true;
@@ -348,7 +347,6 @@ export default {
     },
     //拉去大纲列表
     async getCourseSyllabuses() {
-      console.log(this.currentPage);
       this.tableLoading = true;
       let ret = await this.$http.CourseSyllabuses({
         page: this.currentPage,
@@ -365,13 +363,11 @@ export default {
       }
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.page_size = val;
       this.currentPage = 1;
       this.getCourseSyllabuses();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.currentPage = val;
       this.getCourseSyllabuses();
     },
@@ -403,7 +399,6 @@ export default {
         this.btnLoading = false;
         this.isCopy = false;
         this.dialogTitle = "编辑课程大纲";
-        console.log(row);
         if (this.ruleForm.hasOwnProperty("id")) {
           delete this.ruleForm.id;
         }

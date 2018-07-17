@@ -328,7 +328,6 @@ export default {
         ...this.NewTableForm,
         course_id: this.course_id
       };
-      console.log(params);
       let ret = await this.$http.updateCourseHandout(params.id, params);
       if (ret.status == 0) {
         this.$message({
@@ -375,9 +374,7 @@ export default {
     },
     //排序
     async dragEnd(data) {
-      console.log(data);
       let { cids } = this.getSortData(data);
-      console.log(cids);
       let params = {
         course_id: this.course_id,
         handout_sort: cids.join(",")

@@ -13,8 +13,6 @@ export default {
     VideoForm
   },
   created() {
-    console.log("edit video created");
-    console.log(this.$route.params);
   }
 };
 </script>

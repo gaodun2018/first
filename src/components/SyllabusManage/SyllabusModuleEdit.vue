@@ -513,9 +513,7 @@
           params.kid = this.judgeid;
         }
         let knowledage_id = knowledageData[0].id;
-        console.log(params);
         let ret = await this.$http.saveOutlineKnowledgeList(item_id,knowledage_id,params);
-        console.log(492,ret);
         if(ret.status === 0){
           this.dialogKnowledgeVisible = false;
           this.getSyllabusItems();
@@ -531,7 +529,6 @@
       },
       //启用知识点
       async handleChangeIsKnowledgeOpen(bool){
-        console.log(bool);
         let ret = await this.$http.UpdateCourseSyllabus(this.syllabus_id, {
           is_knowledge_open: bool ? 1 : 0,
           project_id: this.project_id,
@@ -556,7 +553,6 @@
         if (d.length > 1) {
           this.addResFirFrom.apply_to = d.splice(-1);
         }
-        console.log(this.addResFirFrom.apply_to);
       },
       handleTableChange(val) {
         this.resourceRadio = String(val.id);
@@ -564,7 +560,6 @@
       selectclk(discriminator) {
         this.addResFirFrom.apply_to = [];
         this.addResFirFrom.start_time = '';
-        console.log('查看切换选项',discriminator);
         this.resourceType = discriminator;
       },
       //弹出新增资源的弹层
@@ -670,8 +665,6 @@
               break;
           }
           let ret = await this.$http.getResource(params);
-          console.log("保存的数据",params);
-          console.log("对应资源组",ret);
           if (ret.status == 0) {
             this.resLoading = false;
             this.resourceTable = ret.result.resources;
@@ -747,7 +740,7 @@
             if (valid) {
               this.videoSourceCreateIntoSyllabus();
             } else {
-              console.log("error submit!!");
+              // console.log("error submit!!");
             }
           });
         }
@@ -860,12 +853,12 @@
         };
         let saveHandoutRet = await this.$http.saveLecturenote(params);
         if (saveHandoutRet.status === 0) {
-          console.log(saveHandoutRet);
+          // console.log(saveHandoutRet);
           // 资源id
           try {
             this.resourceRadio = saveHandoutRet.result.id;
           } catch (error) {
-            console.log(error);
+            // console.log(error);
             this.btnLoading = false;
             loading.close();
             return this.$message({
@@ -907,7 +900,6 @@
       },
       // 检查大纲是否挂载在大纲上
       async checkResIsInOutline() {
-        console.log("检查大纲是否挂载在大纲上");
         if (
           this.resourceAction === "update" &&
           this.nativeResourceRadio == this.resourceRadio
@@ -938,7 +930,6 @@
       },
       // 新增大纲资源条目名称
       async CourseSyllabusItem() {
-        console.log("新增大纲资源条目名称");
         let params = {
           name: this.addResFirFrom.name, //大纲条目名称
           pid: this.currentId,
@@ -969,7 +960,6 @@
       },
       // 修改大纲资源条目名称
       async ChangeSyllabusItem() {
-        console.log("修改大纲资源条目名称");
         let id = this.currentId;
         let params = {
           name: this.addResFirFrom.name,
@@ -1000,7 +990,6 @@
       },
       // 大纲资源条目挂载资源
       async mountSyllabusResource(id) {
-        console.log("大纲资源条目挂载资源");
         let params = {
           resource_id: this.resourceRadio, //资源id
           tag_id: this.tag_id,
@@ -1106,9 +1095,9 @@
             } else {
               this.addbigCourse();
             }
-            console.log("submit!");
+            // console.log("submit!");
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
             return false;
           }
         });
@@ -1164,7 +1153,6 @@
       },
       // 弹出修改课程大纲名称的弹层
       editproject(currentId, name) {
-        console.log(currentId, name);
         this.currentId = currentId;
         this.ruleProject.name = name;
         this.adddialogVisible = true;
@@ -1182,7 +1170,6 @@
           course_syllabus_id: this.syllabus_id
         };
         let ret = await this.$http.getSyllabusItems(course_syllabus_id);
-        console.log("拉取大纲条目",ret)
         loading.close();
         if (ret.status == 0) {
           // ret.result[0].children[0].children[0].knowledgeId =  '112';
@@ -1197,7 +1184,6 @@
       //查看大纲的详情
       async checkSyllabus() {
         let ret = await this.$http.checkSyllabus(this.syllabus_id);
-        console.log("查看大纲详情",ret);
         if (ret.status == 0) {
           this.title = ret.result.title;
           this.tag_id = ret.result.tag_id;
@@ -1267,7 +1253,6 @@
       },
       //  打开关联知识点弹层
       async handleOpenKnowledgeDialog(item){
-        console.log("知识点弹层数据",item)
         this.currentId = item.id;
         if(item.kid){//判断知识点是否存在不存在不传值
           this.judgeid = item.kid;

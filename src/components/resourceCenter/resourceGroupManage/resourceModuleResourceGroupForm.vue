@@ -211,9 +211,9 @@
       // 项目框获得焦点时
       handleSelectFocus() {
         // 记录下当前选中的项目科目
-        (this.lastSelect.project = this.ruleForm.project),
-          (this.lastSelect.subject = this.ruleForm.subject),
-          console.log("handleSelectFocushandleSelectFocus");
+        // (this.lastSelect.project = this.ruleForm.project),
+          // (this.lastSelect.subject = this.ruleForm.subject),
+          // console.log("handleSelectFocushandleSelectFocus");
       },
       selectResource() {
         this.dialogFormVisible = false;
@@ -316,7 +316,7 @@
             }
             this.createResourceForm();
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
           }
         });
       },
@@ -344,11 +344,11 @@
             type: "success"
           });
           let res = await this.$http.clearResource(this.$route.params.id)
-          if(res.status === 0){
-            console.log('清除缓存成功');
-          }else{
-            console.log('清除缓存失败');
-          }
+          // if(res.status === 0){
+          //   console.log('清除缓存成功');
+          // }else{
+          //   console.log('清除缓存失败');
+          // }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/resource-group/list"

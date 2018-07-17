@@ -250,7 +250,7 @@
         if (query !== '') {
           clearTimeout(this.seachTimeOut);
           this.seachTimeOut = setTimeout(() => {
-            console.log(query);
+            // console.log(query);
             this.selectLoading = true;
             let params = {
               name: query
@@ -264,7 +264,7 @@
               })
               .catch(err => {
                 this.selectLoading = false;
-                console.log(err);
+                // console.log(err);
               });
           }, 500);
         } else {
@@ -370,9 +370,9 @@
             type: "success"
           });
           let res = await this.$http.clearResource(this.ruleForm.id);
-          if(res.status === 0){
-            console.log('清除缓存成功');
-          }
+          // if(res.status === 0){
+          //   console.log('清除缓存成功');
+          // }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/video/list"
@@ -455,7 +455,7 @@
             this.createResourceForm();
             // }
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
           }
         });
       },

@@ -120,7 +120,6 @@
         },
         methods: {
             checkproject(value){
-                console.log(this.selectcur)
                 if(this.selectcur){
                     for(let reg of this.projectlist){
                         if(reg.project_id == value){
@@ -178,7 +177,6 @@
             },
             //拉去大纲列表
             async getExamSyllabuses(){
-                console.log(this.currentPage);
                 let ret = await this.$http.ExamSyllabuses({
                     currentPage:this.currentPage,
                     limit:this.page_size,
@@ -193,19 +191,16 @@
                 }
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
                 this.page_size = val;
                 this.currentPage = 1;
 //        this.getExamSyllabuses();
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
                 this.currentPage = val;
                 this.getExamSyllabuses();
             },
             //查看大纲按钮
             checkSyllabus(index,row){
-                console.log(row);
                 if(row.template == null){
                     this.$router.replace({
                         path:'/CourseOutlineManage/CourseOutline/'+row.id,
