@@ -178,6 +178,7 @@
           list.forEach(o=>{
             o.id = o.video.id;
             o.title = o.video.title;
+            o.teacher_id = o.video.teacher_id;//用来判别老师是否重复
           })
         }
       },
@@ -388,6 +389,36 @@
         }
       }
     },
+    watch:{
+      multipleSelectionAll(val){
+        let num = 0
+        val.forEach(o=>{
+          if(val[val.length - 1].teacher_id != 0){
+            if(val[val.length - 1].teacher_id == o.teacher_id){
+              num ++ ;
+            }
+          }
+        })
+        if(num >= 2){
+          this.$message({
+            message:'同一个老师只允许有一个资源',
+            type:'warning'
+          })
+          this.multipleSelectionAll.splice(this.multipleSelectionAll.length-1,1)
+          this.showSelect();
+          return;
+        }
+        if(this.multipleSelectionAll.length > 10){
+           this.$message({
+            message:'最多只允许选择10个资源组',
+            type:'warning'
+          })
+          this.multipleSelectionAll.splice(this.multipleSelectionAll.length-1,1)
+          this.showSelect();
+          return;
+        }
+      }
+    },
     computed: {
       ...mapState({
         tagsList: state => {
@@ -407,7 +438,7 @@
     }
   };
   </script>
-  <style lang="less">
+<style lang="less">
   // 添加了预览样式编写
   .tag-watch{
     cursor: pointer;

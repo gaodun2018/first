@@ -40,7 +40,7 @@
                         </span>
                         <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
                         <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
-                        <span class="chrgt" @click="copyId(thirdItem.resource.id,thirdItem.id)">复制条目/资源ID</span>
+                        <span class="chrgt" @click="copyId(thirdItem.id,thirdItem)">复制条目/资源ID</span>
                       </div>
                     </div>
                   </draggable>
@@ -91,7 +91,7 @@
                               </span>
                             <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
                             <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
-                            <span class="chrgt" @click="copyId(fourthItem.resource.id,fourthItem.id)">复制条目/资源ID</span>
+                            <span class="chrgt" @click="copyId(fourthItem.id,fourthItem)">复制条目/资源ID</span>
                           </div>
                         </div>
                       </draggable>
@@ -122,7 +122,7 @@
                     </span>
                     <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                     <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
-                    <span class="chrgt" @click="copyId(secItem.resource.id,secItem.id)">复制条目/资源ID</span>
+                    <span class="chrgt" @click="copyId(secItem.id , secItem)">复制条目/资源ID</span>
                   </div>
                 </div>
               </draggable>
@@ -486,9 +486,21 @@
     },
     methods: {
       // 赋值到剪贴板方法
-      copyId(val,id){
+      copyId(val,obj){
         var oInput = document.createElement('input');
-        oInput.value = id? id + ',' + val : val;
+        if(obj){
+          if(obj.resource){
+            oInput.value = val + ',' + obj.resources.id;
+          }else{
+            this.$message({
+              message:'您还没有挂资源',
+              type:'warning'
+            });
+            return;
+          }
+        } else{
+          oInput.value = val;
+        }
         document.body.appendChild(oInput);
         oInput.select(); // 选择对象
         document.execCommand("Copy"); // 执行浏览器复制命令
@@ -1302,34 +1314,35 @@
       //线上测试使用属性，可以建ep2课程
       let ep2 = localStorage.getItem('isInEP2') ? true :false;
       if (ep2){
-        this.resourceTypeList.push({
-          "discriminator": "resource_group",
-          "label": "资源组"
-        });
-        resourceTableConfig.push(
-          {
-              "discriminator": "resource_group",
-              "table": [{
-                  key: 'id',
-                  wh: '120',
-                  sort: false,
-                  label: '资源组ID',
-              }, {
-                  key: 'discriminator',
-                  wh: '100',
-                  sort: false,
-                  label: '资源类型',
-              }, {
-                  key: 'title',
-                  wh: '',
-                  sort: false,
-                  label: '资源组名称',
-              }],
-              inputPlaceholder: '请输入资源组ID / 名称',
-              input: {}
-          }
-        )
-
+        if(this.resourceTypeList && this.resourceTypeList.length < 5){
+          this.resourceTypeList.push({
+            "discriminator": "resource_group",
+            "label": "资源组"
+          });
+          resourceTableConfig.push(
+            {
+                "discriminator": "resource_group",
+                "table": [{
+                    key: 'id',
+                    wh: '120',
+                    sort: false,
+                    label: '资源组ID',
+                }, {
+                    key: 'discriminator',
+                    wh: '100',
+                    sort: false,
+                    label: '资源类型',
+                }, {
+                    key: 'title',
+                    wh: '',
+                    sort: false,
+                    label: '资源组名称',
+                }],
+                inputPlaceholder: '请输入资源组ID / 名称',
+                input: {}
+            }
+          )
+        }
         // this.course_type =  course_type;
       }
     },
