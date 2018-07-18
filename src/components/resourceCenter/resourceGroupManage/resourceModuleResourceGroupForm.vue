@@ -122,7 +122,7 @@
     methods: {
       // 编辑搜索方法将数据回显在表格上
       showSelect(){
-        if(!this.multipleSelectionAll || this.multipleSelectionAll.length <= 0){
+        if(!this.multipleSelectionAll || this.multipleSelectionAll.length < 0){
           return;
         }
         let selectAll = [];//存放所有的选中id
