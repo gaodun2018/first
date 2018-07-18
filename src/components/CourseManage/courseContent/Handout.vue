@@ -176,6 +176,7 @@ export default {
     },
     //设置讲义模块的启用
     async SetCourseDisable() {
+      let msg = this.isEnabled === 1? '启用批量讲义成功' : '已关闭批量讲义'
       let cource_id = this.$route.params.cid;
       let params = {
         setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
@@ -184,7 +185,7 @@ export default {
       let ret = await this.$http.SetCourseDisable(cource_id, params);
       if (ret.status === 0) {
         this.$message({
-          message: "启用批量讲义成功！",
+          message: msg,
           type: "success"
         });
       } else {

@@ -53,7 +53,7 @@
           秒
         </el-form-item>
         <el-form-item label="讲课老师" class="w_50">
-          <el-select v-model="ruleForm.teacher_id" filterable remote reserve-keyword placeholder="请选择一个老师（可输入老师姓名搜索）"
+          <el-select v-model="ruleForm.teacher_id" clearable filterable remote reserve-keyword placeholder="请选择一个老师（可输入老师姓名搜索）"
                      :remote-method="remoteMethod" :loading="selectLoading">
             <el-option v-for="item in teacherOptions" :key="item.user_id" :label="item.name+'-ID:'+item.user_id"
                        :value="item.user_id">

@@ -490,7 +490,7 @@
         var oInput = document.createElement('input');
         if(obj){
           if(obj.resource){
-            oInput.value = val + ',' + obj.resources.id;
+            oInput.value = val + ',' + obj.resource.id;
           }else{
             this.$message({
               message:'您还没有挂资源',
@@ -541,6 +541,7 @@
       },
       //启用知识点
       async handleChangeIsKnowledgeOpen(bool){
+        console.log(bool);
         let ret = await this.$http.UpdateCourseSyllabus(this.syllabus_id, {
           is_knowledge_open: bool ? 1 : 0,
           project_id: this.project_id,
@@ -549,8 +550,9 @@
           title: this.title,
         });
         if (ret.status === 0) {
+          let msg = bool? '启用知识点关联成功' : '已关闭知识点关联'
           this.$message({
-            message: "修改大纲成功！",
+            message: msg,
             type: "success"
           });
         }else{
