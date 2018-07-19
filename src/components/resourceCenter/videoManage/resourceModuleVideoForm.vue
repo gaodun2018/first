@@ -327,25 +327,25 @@
       },
       //新增视频
       async createResourceForm() {
-        /* let pathRet = await this.getVideoPath();
-         let video_id = "";
-         if (pathRet.status == 0) {
-           if (!pathRet.result.video_id) {
-             return this.$message({
-               type: "warning",
-               message: "视频地址解析失败！"
-             });
-           }
-           video_id = pathRet.result.video_id;
+        let pathRet = await this.getVideoPath();
+        let video_id = "";
+        if (pathRet.status == 0) {
+          if (!pathRet.result.video_id) {
+            return this.$message({
+              type: "warning",
+              message: "视频地址解析失败！"
+            });
+          }
+          video_id = pathRet.result.video_id;
          } else if (pathRet.status == 1) {
            //为1时使用用户输入的地址
-           video_id = this.ruleForm.video_id;
+            video_id = this.ruleForm.video_id;
          } else {
-           return this.$message({
-             type: "warning",
-             message: "视频地址解析失败！"
-           });
-         }*/
+          return this.$message({
+            type: "warning",
+            message: "视频地址解析失败！"
+          });
+        }
         let params = {
           title: this.ruleForm.title,
           description: this.ruleForm.description,
