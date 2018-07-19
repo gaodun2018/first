@@ -193,6 +193,9 @@
       // 打开选择资源的弹层
       handleOpenDialog() {
         // 搜索资源...
+        if (this.pagination.current_page != 1) {
+          this.pagination.current_page = 1;
+        }
         this.searchResource();
         this.dialogFormVisible = true;
       },
@@ -206,7 +209,7 @@
         if (this.pagination.current_page != 1) {
           this.pagination.current_page = 1;
         } else {
-          this.searchResource();
+          this.searchResource(1,this.resourceinput);
         }
       },
       // 项目框获得焦点时
@@ -220,7 +223,7 @@
         this.dialogFormVisible = false;
       },
       //搜索资源
-      searchResource(val) {
+      searchResource(val,keywords) {
         clearTimeout(this.searchResourceTimer);
         this.resLoading = true;
         this.searchResourceTimer = setTimeout(async () => {
@@ -229,6 +232,7 @@
             discriminator: "video",
             page_size: 50,
             page: val ? val : 1,
+            keywords:keywords?keywords:'',
             "order_by[]": "desc", //顺序   倒序
             "order_by_field[]": "id", //排序字段
             tag_id: this.ruleForm.project,

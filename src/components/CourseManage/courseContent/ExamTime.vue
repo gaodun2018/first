@@ -381,6 +381,7 @@ export default {
       }
       this.newPlanlist = [];
       this.innerVisible = false;
+      this.$refs.planForm.clearValidate();//关闭的时候清除表单的验证
     },
 
     //技术排序
@@ -763,7 +764,10 @@ export default {
     },
     // 重置表单
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.planForm.content = [];
+      this.planForm.date = [];
+      this.planForm.target = "";
+      this.$refs[formName].clearValidate();
     }
   },
   computed: {
