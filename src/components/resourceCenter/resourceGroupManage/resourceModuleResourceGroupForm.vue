@@ -368,6 +368,7 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.multipleSelectionAll = []; //重置表单时将
       },
       // 多选资源
       handleSelectionChange(val) {
@@ -414,7 +415,7 @@
         }
         if(this.multipleSelectionAll.length > 10){
            this.$message({
-            message:'最多只允许选择10个资源组',
+            message:'最多只允许选择10个资源',
             type:'warning'
           })
           this.multipleSelectionAll.splice(this.multipleSelectionAll.length-1,1)
