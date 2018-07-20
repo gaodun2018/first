@@ -176,7 +176,7 @@ export default {
         });
     },
     didClickEdit(scope) {
-      console.log("navigate to edit video " + scope.row.id);
+      // console.log("navigate to edit video " + scope.row.id);
       this.$router.push({
         name: "editVideo",
         params: { id: scope.row.id }
@@ -212,7 +212,7 @@ export default {
           resource.project_name = resource.tag == null ? "" : resource.tag.name;
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       this.resource = resources;
       let total = this.resource.pagination.total;

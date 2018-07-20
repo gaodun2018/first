@@ -176,6 +176,7 @@ export default {
     },
     //设置讲义模块的启用
     async SetCourseDisable() {
+      let msg = this.isEnabled === 1? '启用批量讲义成功' : '已关闭批量讲义'
       let cource_id = this.$route.params.cid;
       let params = {
         setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
@@ -184,7 +185,7 @@ export default {
       let ret = await this.$http.SetCourseDisable(cource_id, params);
       if (ret.status === 0) {
         this.$message({
-          message: "启用批量讲义成功！",
+          message: msg,
           type: "success"
         });
       } else {
@@ -328,7 +329,6 @@ export default {
         ...this.NewTableForm,
         course_id: this.course_id
       };
-      console.log(params);
       let ret = await this.$http.updateCourseHandout(params.id, params);
       if (ret.status == 0) {
         this.$message({
@@ -375,9 +375,7 @@ export default {
     },
     //排序
     async dragEnd(data) {
-      console.log(data);
       let { cids } = this.getSortData(data);
-      console.log(cids);
       let params = {
         course_id: this.course_id,
         handout_sort: cids.join(",")

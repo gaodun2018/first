@@ -93,7 +93,6 @@
             <el-button style="margin-top:12px;" @click="secondSubmit('secondAddForm')">下一步</el-button>
           </el-form-item>
         </el-form>
-        </el-form>
       </el-row>
       <!-- 第三步 -->
       <div class="rulemodule" v-show="active === 2">
@@ -382,6 +381,7 @@ export default {
       }
       this.newPlanlist = [];
       this.innerVisible = false;
+      this.$refs.planForm.clearValidate();//关闭的时候清除表单的验证
     },
 
     //技术排序
@@ -391,7 +391,7 @@ export default {
           var value1 = new Date(a[property]).getTime();
           var value2 = new Date(b[property]).getTime();
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
         return value1 - value2;
       };
@@ -402,7 +402,8 @@ export default {
         if (valid) {
           // 保存在本地
           const { content, target, date } = this.planForm;
-          let gradation = new Array();
+          let gradation = [];
+
           content.forEach(id => {
             this.daration_list.forEach((ele,i) => {
               if (ele.id == id) {
@@ -733,8 +734,10 @@ export default {
           date2: ""
         };
       }
-      this.planlist = item.plan;
-
+      if(item.plan === null || item.plan === undefined){
+        item.plan = []
+      }
+        this.planlist = item.plan;
       // 天加修改数组的方法
       let arr = [];
       if(this.planlist != null && this.planlist != undefined){
@@ -755,15 +758,16 @@ export default {
           })
         }
       })
-      console.log(this.planlist);
-      console.log('这时候的考季数据', this.daration_list);
 
       this.currentIndex = index;
       this.dialogVisible = true;
     },
     // 重置表单
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.planForm.content = [];
+      this.planForm.date = [];
+      this.planForm.target = "";
+      this.$refs[formName].clearValidate();
     }
   },
   computed: {

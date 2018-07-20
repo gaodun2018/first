@@ -175,7 +175,7 @@ export default {
             this.httpUpdateInsteractive();
           }
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -359,7 +359,7 @@ export default {
           }
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
     palyVideo(video_id) {

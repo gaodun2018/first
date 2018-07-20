@@ -42,18 +42,18 @@
           <!-- <el-button type="text" @click="" style="margin-left: 20px;">本地上传</el-button> -->
         </el-form-item>
         <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline"
-                      :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: 'change,blur'}]">
-          <el-input v-model.number="ruleForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+                      :rules="[{required: true, message: '该输入项为必填项!', trigger: 'change,blur'},...valiMinites]">
+          <el-input v-model="ruleForm.duration_minutes" placeholder="请填写视频时长" @input="handleInputMinutesChange" auto-complete="off"></el-input>
           分
         </el-form-item>
         <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline"
-                      :rules="[{message: '请填写视频时长的秒',type:'number', trigger: 'change,blur'}]">
-          <el-input v-model.number="ruleForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒"
+                      :rules="valiSeconds">
+          <el-input v-model="ruleForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长"
                     auto-complete="off"></el-input>
           秒
         </el-form-item>
         <el-form-item label="讲课老师" class="w_50">
-          <el-select v-model="ruleForm.teacher_id" filterable remote reserve-keyword placeholder="请选择一个老师（可输入老师姓名搜索）"
+          <el-select v-model="ruleForm.teacher_id" clearable filterable remote reserve-keyword placeholder="请选择一个老师（可输入老师姓名搜索）"
                      :remote-method="remoteMethod" :loading="selectLoading">
             <el-option v-for="item in teacherOptions" :key="item.user_id" :label="item.name+'-ID:'+item.user_id"
                        :value="item.user_id">
@@ -96,13 +96,31 @@
     },
     props: ["id"],
     data() {
+      var valiMinites = (rule, value, callback) => {
+        value = Number(value);
+        if(value > 999){
+          callback(new Error('时长不允许超过三位数'));
+        }else{
+          callback();
+        }
+      };
+      var valiSeconds = (rule, value, callback) => {
+        if(Number(value) > 60){
+          callback(new Error('秒数最大不允许超过60'));
+        }else {
+          callback();
+        }
+      };
       return {
+        valiMinites:[{validator:valiMinites, trigger:'blur'}],// 验证分钟
+        valiSeconds:[{validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         subjectData: [],
         loading: false,
         selectLoading: false,
         selectFalg: false,
         ruleForm: {
+          id:"",//这条视频的资源id
           title: "",
           project: "",
           subject: "",
@@ -125,12 +143,24 @@
       };
     },
     methods: {
+      handleInputMinutesChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.ruleForm.duration_minutes = self.ruleForm.duration_minutes.replace(/[^\d]/g,'');
+        })
+      },
+      handleInputSecondChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.ruleForm.duration_second = self.ruleForm.duration_second.replace(/[^\d]/g,'');
+        })
+      },
       // 新增获取初始信息接口
       async init(){
         await this.$http.getAllKnowledge(this.$route.params.id).then(res=>{
               if (res.status == 0) {
-                console.log("132测试初始页面值",res);
                 let data = res.result.video;
+                this.ruleForm.id = data.id;
                 this.ruleForm.title = data.title;
                 this.ruleForm.description = data.description;
                 this.ruleForm.video_id = data.video_id;
@@ -167,13 +197,11 @@
 
       handleSaveKnowledgeDialog( data ){
         this.dialogKnowledgeVisible = false;
-        console.log('170',data);
         this.currentSyllabusItemKnowledge = data
         this.ruleForm.knowledge_id = this.currentSyllabusItemKnowledge;
         this.getId = this.ruleForm.knowledge_id[0].id;
       },
       handleCloseKnowledgeDialog(){
-        console.log('取消')
         this.dialogKnowledgeVisible = false;
       },
       changeCurrentSyllabusItemKnowledge(v) {
@@ -211,8 +239,6 @@
           tag_id: this.ruleForm.subject,//id
         }
         let ret = await this.$http.getResourceKnowledgeList(params);
-        console.log(this.ruleForm.subject)
-        console.log('获取的知识点',ret);
         if (ret.status === 0) {
           this.knowledgeList = ret.result.result.contents;
         }else{
@@ -224,23 +250,21 @@
         if (query !== '') {
           clearTimeout(this.seachTimeOut);
           this.seachTimeOut = setTimeout(() => {
-            console.log(query);
+            // console.log(query);
             this.selectLoading = true;
             let params = {
               name: query
             };
             this.$http.searchTeacher(params)
               .then(res => {
-                console.log(res);
                 this.selectLoading = false;
                 if (res.status === 0) {
                   this.teacherOptions = res.result;
-                  console.log('选择老师',this.teacherOptions);
                 }
               })
               .catch(err => {
                 this.selectLoading = false;
-                console.log(err);
+                // console.log(err);
               });
           }, 500);
         } else {
@@ -303,26 +327,26 @@
       },
       //新增视频
       async createResourceForm() {
-        /* let pathRet = await this.getVideoPath();
-         let video_id = "";
-         if (pathRet.status == 0) {
-           if (!pathRet.result.video_id) {
-             return this.$message({
-               type: "warning",
-               message: "视频地址解析失败！"
-             });
-           }
-           video_id = pathRet.result.video_id;
+        let pathRet = await this.getVideoPath();
+        let video_id = "";
+        if (pathRet.status == 0) {
+          if (!pathRet.result.video_id) {
+            return this.$message({
+              type: "warning",
+              message: "视频地址解析失败！"
+            });
+          }
+          video_id = pathRet.result.video_id;
+          this.ruleForm.video_id = video_id;
          } else if (pathRet.status == 1) {
            //为1时使用用户输入的地址
-           video_id = this.ruleForm.video_id;
+            video_id = this.ruleForm.video_id;
          } else {
-           return this.$message({
-             type: "warning",
-             message: "视频地址解析失败！"
-           });
-         }*/
-
+          return this.$message({
+            type: "warning",
+            message: "视频地址解析失败！"
+          });
+        }
         let params = {
           title: this.ruleForm.title,
           description: this.ruleForm.description,
@@ -335,7 +359,6 @@
           // knowledge_id:this.ruleForm.knowledge_id
           knowledge_id:this.getId
         };
-        console.log('新增数据',params);
         if (this.$route.params.id) {
           params.id = this.$route.params.id;
         }
@@ -347,6 +370,10 @@
             message: "保存成功",
             type: "success"
           });
+          let res = await this.$http.clearResource(this.ruleForm.id);
+          // if(res.status === 0){
+          //   console.log('清除缓存成功');
+          // }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/video/list"
@@ -429,7 +456,7 @@
             this.createResourceForm();
             // }
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
           }
         });
       },

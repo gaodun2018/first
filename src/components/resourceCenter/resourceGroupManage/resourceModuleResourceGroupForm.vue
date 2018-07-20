@@ -25,7 +25,7 @@
           <el-form-item label="选择资源">
             <el-button :disabled="ruleForm.project==''||ruleForm.project==undefined||ruleForm.project==null" type="primary" @click="handleOpenDialog">选择资源</el-button>
             <el-row>
-              <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              <el-tag size="small" :key="tag.id" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 <span class="tag-title" :title="tag.title">{{tag.title}}</span>
                 <span class="tag-id">（ID：{{tag.id}}）</span>
               </el-tag>
@@ -39,7 +39,7 @@
       </div>
       <el-dialog title="选择资源" center width="60%" class="tabplane addResourceDialog" top="2%" :visible.sync="dialogFormVisible">
         <el-row class="scroll-content" style="margin-bottom:10px;">
-          <el-tag size="small" :key="tag.id" v-for="tag in multipleSelection" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+          <el-tag size="small" :key="tag.id" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
             <span class="tag-title" :title="tag.title">{{tag.title}}</span>
             <span class="tag-id">（ID：{{tag.id}}）</span>
             <router-link  :to="{name:'previewVideo',params: { id: tag.id }}" tag="a" target="_blank"> <span class="tag-watch">预览</span></router-link>
@@ -90,6 +90,7 @@
           description: ""
         },
         resourceinput: "", //搜索资源输入框
+        multipleSelectionAll:"",
         multipleSelection: [], //所有选择段资源
         pagination: {
           current_page: 1, //资源列表当前页数
@@ -119,14 +120,82 @@
       }
     },
     methods: {
+      // 编辑搜索方法将数据回显在表格上
+      showSelect(){
+        if(!this.multipleSelectionAll || this.multipleSelectionAll.length < 0){
+          return;
+        }
+        let selectAll = [];//存放所有的选中id
+        this.multipleSelectionAll.forEach(o => {
+          selectAll.push(o.id);
+        })
+        // 将所有选中的清空
+        this.$refs.multipleTable.clearSelection();
+        if(this.resourceTable && this.resourceTable.length > 0){
+          this.resourceTable.forEach(o=>{
+            if(selectAll.indexOf(o.id) >= 0){
+              this.$refs.multipleTable.toggleRowSelection(o);
+            }
+          })
+        }
+      },
+      // 编写记忆选择核心方法
+      changePageData(){
+        if(this.multipleSelectionAll.length <= 0){ //总数组没有数据的时候
+          this.multipleSelectionAll = this.multipleSelection;
+          return;
+        }
+        let selectAll = [];// 当前选中所有的id
+        this.multipleSelectionAll.forEach(o=>{
+          selectAll.push(o.id);
+        })
+        let selectId = [];//当前table表格选中的id
+        this.multipleSelection.forEach(o=>{
+          selectId.push(o.id);
+          if(selectAll.indexOf(o.id) <0 ) {
+            this.multipleSelectionAll.push(o);
+          }
+        })
+        let noSelectId = [];//当前table表格没选中的id
+        this.resourceTable.forEach(o=>{
+          if(selectId.indexOf(o.id) < 0){
+            noSelectId.push(o.id);
+          }
+        })
+        noSelectId.forEach(id => {
+          if(selectAll.indexOf(id) >= 0){
+            this.multipleSelectionAll.forEach((o,i)=>{
+              if(o.id == id){
+                this.multipleSelectionAll.splice(i,1);
+              }
+            })
+          }
+        })
+      },
+      //编写过滤函数
+      filterData(list){
+        if(list && list.length > 0){
+          list.forEach(o=>{
+            o.id = o.video.id;
+            o.title = o.video.title;
+            o.teacher_id = o.video.teacher_id;//用来判别老师是否重复
+          })
+        }
+      },
       // 删除选择的资源
       handleCloseTag(tag) {
-        this.multipleSelection.splice(this.multipleSelection.indexOf(tag), 1);
-        this.toggleSelection([tag]);
+        this.multipleSelectionAll.splice(this.multipleSelectionAll.indexOf(tag), 1);
+        // this.toggleSelection([tag]);
+        if(this.dialogFormVisible){
+          this.showSelect();
+        }
       },
       // 打开选择资源的弹层
       handleOpenDialog() {
         // 搜索资源...
+        if (this.pagination.current_page != 1) {
+          this.pagination.current_page = 1;
+        }
         this.searchResource();
         this.dialogFormVisible = true;
       },
@@ -140,45 +209,21 @@
         if (this.pagination.current_page != 1) {
           this.pagination.current_page = 1;
         } else {
-          this.searchResource();
+          this.searchResource(1,this.resourceinput);
         }
       },
       // 项目框获得焦点时
       handleSelectFocus() {
         // 记录下当前选中的项目科目
-        (this.lastSelect.project = this.ruleForm.project),
-          (this.lastSelect.subject = this.ruleForm.subject),
-          console.log("handleSelectFocushandleSelectFocus");
+        // (this.lastSelect.project = this.ruleForm.project),
+          // (this.lastSelect.subject = this.ruleForm.subject),
+          // console.log("handleSelectFocushandleSelectFocus");
       },
       selectResource() {
         this.dialogFormVisible = false;
       },
-      // 编写方法将返回的数据显示在table表格中
-      showSelect(){
-         this.multipleSelection.forEach(o=>{
-           this.resourceTable.forEach(x=>{
-              if(o.id == x.video.id){
-                this.$refs.multipleTable.toggleRowSelection(x);
-              }
-           })
-         })
-      },
-      // 编写去重函数
-      onlyOne(arr){
-        let j;
-        let result = []
-        for (let i = 0; i < arr.length; i++) {
-            for (j = i + 1; j < arr.length; j++) {
-                if (arr[i].id == arr[j].id) {
-                    j = ++i
-                }
-            }
-            result.push(arr[i])
-        }
-        return result
-      },
       //搜索资源
-      searchResource(val) {
+      searchResource(val,keywords) {
         clearTimeout(this.searchResourceTimer);
         this.resLoading = true;
         this.searchResourceTimer = setTimeout(async () => {
@@ -187,6 +232,7 @@
             discriminator: "video",
             page_size: 50,
             page: val ? val : 1,
+            keywords:keywords?keywords:'',
             "order_by[]": "desc", //顺序   倒序
             "order_by_field[]": "id", //排序字段
             tag_id: this.ruleForm.project,
@@ -194,12 +240,12 @@
           };
           // let ret = await this.$http.getResource(params);
           let ret = await this.$http.newGetTeacher(params);
-          console.log('新获取的数据',ret)
           if (ret.status == 0) {
             this.resLoading = false;
             this.resourceTable = ret.result.resources;
             this.pagination.total = ret.result.pagination.total;
-            // this.showSelect();
+            this.filterData(this.resourceTable);
+            this.showSelect();
           }
         }, 500);
       },
@@ -229,8 +275,10 @@
           }
         }
         if (ret1.status === 0) {
-          console.log("获取到的数据", ret1);
-          this.multipleSelection = ret1.result;
+          this.multipleSelectionAll = ret1.result;//总信息推进去
+          if(this.multipleSelectionAll === null || this.multipleSelectionAll === undefined){
+            this.multipleSelectionAll = [];
+          }
         }
       },
       //秒数输入框change事件
@@ -262,9 +310,9 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             if (
-              this.multipleSelection == undefined ||
-              this.multipleSelection == null ||
-              this.multipleSelection.length === 0
+              this.multipleSelectionAll == undefined ||
+              this.multipleSelectionAll == null ||
+              this.multipleSelectionAll.length === 0
             ) {
               return this.$message({
                 message: "请选择资源！",
@@ -273,14 +321,14 @@
             }
             this.createResourceForm();
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
           }
         });
       },
       //新增/修改资源组
       async createResourceForm() {
         let resource_id = [];
-        this.multipleSelection.forEach(ele => {
+        this.multipleSelectionAll.forEach(ele => {
           resource_id.push(ele.id);
         });
         let params = {
@@ -289,7 +337,6 @@
           tag_id: this.ruleForm.subject == "0" ? this.ruleForm.project : this.ruleForm.subject,
           "resource_id[]": resource_id
         };
-        console.log(268,params)
         if (this.$route.params.id) {
           params.id = this.$route.params.id;
         }
@@ -301,6 +348,12 @@
             message: "保存成功",
             type: "success"
           });
+          let res = await this.$http.clearResource(this.$route.params.id)
+          // if(res.status === 0){
+          //   console.log('清除缓存成功');
+          // }else{
+          //   console.log('清除缓存失败');
+          // }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/resource-group/list"
@@ -315,21 +368,10 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.multipleSelectionAll = []; //重置表单时将
       },
       // 多选资源
       handleSelectionChange(val) {
-        val.forEach(o=>{//改变数据结构
-          if(o.video){
-            o.id=o.video.id,
-            o.title=o.video.title
-            }
-          if(o.teacher_info){
-              o.teacher_id = o.teacher_info.user_id;
-            }else{
-              o.teacher_id = 0;
-          }
-        })
-        // val = this.onlyOne(val);// 数组去重
         if (val.length > 10) {//判断选择个数
           this.$message({
             message: "最多选择10个资源！",
@@ -338,8 +380,8 @@
           this.toggleSelection([val[val.length - 1]]);
           return;
         }
-        console.log(val);
         this.multipleSelection = val;
+        this.changePageData();
       },
       // 表格回显
       toggleSelection(rows) {
@@ -349,6 +391,36 @@
           });
         } else {
           this.$refs.multipleTable.clearSelection();
+        }
+      }
+    },
+    watch:{
+      multipleSelectionAll(val){
+        let num = 0
+        val.forEach(o=>{
+          if(val[val.length - 1].teacher_id != 0){
+            if(val[val.length - 1].teacher_id == o.teacher_id){
+              num ++ ;
+            }
+          }
+        })
+        if(num >= 2){
+          this.$message({
+            message:'同一个老师只允许有一个资源',
+            type:'warning'
+          })
+          this.multipleSelectionAll.splice(this.multipleSelectionAll.length-1,1)
+          this.showSelect();
+          return;
+        }
+        if(this.multipleSelectionAll.length > 10){
+           this.$message({
+            message:'最多只允许选择10个资源',
+            type:'warning'
+          })
+          this.multipleSelectionAll.splice(this.multipleSelectionAll.length-1,1)
+          this.showSelect();
+          return;
         }
       }
     },
@@ -371,7 +443,7 @@
     }
   };
   </script>
-  <style lang="less">
+<style lang="less">
   // 添加了预览样式编写
   .tag-watch{
     cursor: pointer;

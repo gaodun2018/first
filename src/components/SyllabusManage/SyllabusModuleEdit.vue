@@ -15,7 +15,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -23,9 +23,10 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">{{secItem.name}}</span>
+                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt yellow" @click="openDelOutlineDialog(secItem.id)">删除</span>
+                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
                     <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
@@ -33,12 +34,13 @@
                       <div class="knowledge">
                         <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                         <span class="chlft">
-                          {{thirdItem.name}}
+                          条目ID：{{ thirdItem.id }} | {{thirdItem.name}}
                           <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
                           <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
                         </span>
                         <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
                         <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
+                        <span class="chrgt" @click="copyId(thirdItem.id,thirdItem)">复制条目/资源ID</span>
                       </div>
                     </div>
                   </draggable>
@@ -51,7 +53,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
@@ -59,20 +61,22 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">{{secItem.name}}</span>
+                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
                     <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
                     <span class="chrgt1" @click="openChildDialog(secItem.id,true)">增加子目录</span>
+                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
                       <div class="knowledge">
                         <span class="chlft">
                           <i></i>
-                          <span>{{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
+                          <span>条目ID：{{thirdItem.id}} | {{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
                         </span>
                         <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
                         <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
+                        <span class="chrgt1" @click="copyId(thirdItem.id)">复制条目ID</span>
                         <span class="chrgt1 yellow" v-if="subject_id != 0" @click="handleOpenKnowledgeDialog(thirdItem)">关联知识点</span>
                         <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
                       </div>
@@ -81,12 +85,13 @@
                           <div class="knowledge">
                             <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
                             <span class="chlft">
-                              {{fourthItem.name}}
+                              条目ID：{{fourthItem.id}} | {{fourthItem.name}}
                               <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
                               <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
                               </span>
                             <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
                             <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
+                            <span class="chrgt" @click="copyId(fourthItem.id,fourthItem)">复制条目/资源ID</span>
                           </div>
                         </div>
                       </draggable>
@@ -101,7 +106,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}}</span>
+                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
                 <span class="chrgt1 yellow" @click="openAddResDialog(firstItem.id)">新增资源</span>
@@ -111,12 +116,13 @@
                   <div class="knowledge">
                      <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag>
                     <span class="chlft">
-                      {{secItem.name}}
+                      条目ID：{{secItem.id}} | {{secItem.name}}
                       <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                      <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
                     </span>
                     <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
                     <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
+                    <span class="chrgt" @click="copyId(secItem.id , secItem)">复制条目/资源ID</span>
                   </div>
                 </div>
               </draggable>
@@ -479,6 +485,32 @@
       };
     },
     methods: {
+      // 赋值到剪贴板方法
+      copyId(val,obj){
+        var oInput = document.createElement('input');
+        if(obj){
+          if(obj.resource){
+            oInput.value = val + ',' + obj.resource.id;
+          }else{
+            this.$message({
+              message:'您还没有挂资源',
+              type:'warning'
+            });
+            return;
+          }
+        } else{
+          oInput.value = val;
+        }
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.className = 'oInput';
+        oInput.style.display='none';
+        this.$message({
+          message:'已将ID复制到剪贴板',
+          type:'success'
+        });
+      },
       // 知识点的保存
       async handleSaveKnowledgeDialog( data ){
         this.currentSyllabusItemKnowledge = data;
@@ -493,9 +525,7 @@
           params.kid = this.judgeid;
         }
         let knowledage_id = knowledageData[0].id;
-        console.log(params);
         let ret = await this.$http.saveOutlineKnowledgeList(item_id,knowledage_id,params);
-        console.log(492,ret);
         if(ret.status === 0){
           this.dialogKnowledgeVisible = false;
           this.getSyllabusItems();
@@ -520,8 +550,9 @@
           title: this.title,
         });
         if (ret.status === 0) {
+          let msg = bool? '启用知识点关联成功' : '已关闭知识点关联'
           this.$message({
-            message: "修改大纲成功！",
+            message: msg,
             type: "success"
           });
         }else{
@@ -536,7 +567,6 @@
         if (d.length > 1) {
           this.addResFirFrom.apply_to = d.splice(-1);
         }
-        console.log(this.addResFirFrom.apply_to);
       },
       handleTableChange(val) {
         this.resourceRadio = String(val.id);
@@ -544,7 +574,6 @@
       selectclk(discriminator) {
         this.addResFirFrom.apply_to = [];
         this.addResFirFrom.start_time = '';
-        console.log('查看切换选项',discriminator);
         this.resourceType = discriminator;
       },
       //弹出新增资源的弹层
@@ -650,8 +679,6 @@
               break;
           }
           let ret = await this.$http.getResource(params);
-          console.log("保存的数据",params);
-          console.log("对应资源组",ret);
           if (ret.status == 0) {
             this.resLoading = false;
             this.resourceTable = ret.result.resources;
@@ -727,7 +754,7 @@
             if (valid) {
               this.videoSourceCreateIntoSyllabus();
             } else {
-              console.log("error submit!!");
+              // console.log("error submit!!");
             }
           });
         }
@@ -841,12 +868,12 @@
         };
         let saveHandoutRet = await this.$http.saveLecturenote(params);
         if (saveHandoutRet.status === 0) {
-          console.log(saveHandoutRet);
+          // console.log(saveHandoutRet);
           // 资源id
           try {
             this.resourceRadio = saveHandoutRet.result.id;
           } catch (error) {
-            console.log(error);
+            // console.log(error);
             this.btnLoading = false;
             loading.close();
             return this.$message({
@@ -888,7 +915,6 @@
       },
       // 检查大纲是否挂载在大纲上
       async checkResIsInOutline() {
-        console.log("检查大纲是否挂载在大纲上");
         if (
           this.resourceAction === "update" &&
           this.nativeResourceRadio == this.resourceRadio
@@ -919,7 +945,6 @@
       },
       // 新增大纲资源条目名称
       async CourseSyllabusItem() {
-        console.log("新增大纲资源条目名称");
         let params = {
           name: this.addResFirFrom.name, //大纲条目名称
           pid: this.currentId,
@@ -950,7 +975,6 @@
       },
       // 修改大纲资源条目名称
       async ChangeSyllabusItem() {
-        console.log("修改大纲资源条目名称");
         let id = this.currentId;
         let params = {
           name: this.addResFirFrom.name,
@@ -981,7 +1005,6 @@
       },
       // 大纲资源条目挂载资源
       async mountSyllabusResource(id) {
-        console.log("大纲资源条目挂载资源");
         let params = {
           resource_id: this.resourceRadio, //资源id
           tag_id: this.tag_id,
@@ -1087,9 +1110,9 @@
             } else {
               this.addbigCourse();
             }
-            console.log("submit!");
+            // console.log("submit!");
           } else {
-            console.log("error submit!!");
+            // console.log("error submit!!");
             return false;
           }
         });
@@ -1145,7 +1168,6 @@
       },
       // 弹出修改课程大纲名称的弹层
       editproject(currentId, name) {
-        console.log(currentId, name);
         this.currentId = currentId;
         this.ruleProject.name = name;
         this.adddialogVisible = true;
@@ -1163,7 +1185,6 @@
           course_syllabus_id: this.syllabus_id
         };
         let ret = await this.$http.getSyllabusItems(course_syllabus_id);
-        console.log("拉取大纲条目",ret)
         loading.close();
         if (ret.status == 0) {
           // ret.result[0].children[0].children[0].knowledgeId =  '112';
@@ -1178,7 +1199,6 @@
       //查看大纲的详情
       async checkSyllabus() {
         let ret = await this.$http.checkSyllabus(this.syllabus_id);
-        console.log("查看大纲详情",ret);
         if (ret.status == 0) {
           this.title = ret.result.title;
           this.tag_id = ret.result.tag_id;
@@ -1247,15 +1267,21 @@
         this.$refs[formName].resetFields();
       },
       //  打开关联知识点弹层
-      handleOpenKnowledgeDialog(item){
-        console.log("知识点弹层数据",item)
+      async handleOpenKnowledgeDialog(item){
         this.currentId = item.id;
         if(item.kid){//判断知识点是否存在不存在不传值
           this.judgeid = item.kid;
         }else{
           this.judgeid = '';
         }
-        this.getOutlineKnowledgeList();
+        let params = {
+          project_id:this.project_id,//项目id
+          subject_id:this.subject_id,//课程id
+        }
+        let ret = await this.$http.getOutlineKnowledgeList(params);
+        if (ret.status === 0){
+          this.knowledgeList = ret.result.result.contents;
+        }
         let id = -1;
         if(item.knowledge_id){
           id = item.knowledge_id
@@ -1291,13 +1317,18 @@
       //线上测试使用属性，可以建ep2课程
       let ep2 = localStorage.getItem('isInEP2') ? true :false;
       if (ep2){
+<<<<<<< HEAD
         if (this.resourceTypeList && this.resourceTypeList.length < 5){
+=======
+        if(this.resourceTypeList && this.resourceTypeList.length < 5){
+>>>>>>> liuxiaodong
           this.resourceTypeList.push({
             "discriminator": "resource_group",
             "label": "资源组"
           });
           resourceTableConfig.push(
             {
+<<<<<<< HEAD
               "discriminator": "resource_group",
               "table": [{
                 key: 'id',
@@ -1317,6 +1348,27 @@
               }],
               inputPlaceholder: '请输入资源组ID / 名称',
               input: {}
+=======
+                "discriminator": "resource_group",
+                "table": [{
+                    key: 'id',
+                    wh: '120',
+                    sort: false,
+                    label: '资源组ID',
+                }, {
+                    key: 'discriminator',
+                    wh: '100',
+                    sort: false,
+                    label: '资源类型',
+                }, {
+                    key: 'title',
+                    wh: '',
+                    sort: false,
+                    label: '资源组名称',
+                }],
+                inputPlaceholder: '请输入资源组ID / 名称',
+                input: {}
+>>>>>>> liuxiaodong
             }
           )
         }

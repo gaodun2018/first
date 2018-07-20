@@ -105,12 +105,10 @@
       },
       //展示已经选中到知识点
       showSelectSyllabusKnowledge(id) {
-        console.log(107,this.multipleSelection);
         this.selectId = id;
         this.loopKnowledgeList(this.knowledgeList);
         let {parentTitle} = this.getData;
         if(id && id != -1 && parentTitle != undefined){//parentTile 为undefined 是没有查到有对应id的数据
-          console.log(110,this.getData);
           this.firstVal = parentTitle[0].pid;
           this.handleFirstChange(this.firstVal);
           this.secondVal = parentTitle[1].pid;
@@ -137,7 +135,6 @@
             o.parentTitle = [...Item, ...o.parentTitle]
           }
           if(o.id == id){
-            console.log("递归数组",o)
             this.curIndex = i;
             this.getData = o
           }
@@ -166,7 +163,6 @@
       },
       toggleSelection(rows) {
         if (rows) {
-          console.log(166,rows)
           rows.forEach(row => {
             this.infoData = row;
             this.$refs.multipleTable.toggleRowSelection(row);
@@ -176,7 +172,6 @@
         }
       },
       handleSelectionChange(val) {
-        console.log('查询选中的值',val);
         if(val.length == 0){
           this.isForbid = true;
         }else{
@@ -187,8 +182,6 @@
           return;
         }
         this.multipleSelection = val;
-        console.log(val)
-        console.log(182,this.multipleSelection);
       },
       closeDialog() {
         this.$emit('handleCloseKnowledgeDialog')
