@@ -74,12 +74,13 @@
             <span v-else>{{scope.row.course_type}}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="250" align="center">
+        <el-table-column fixed="right" label="操作" width="320" align="center">
           <template slot-scope="scope">
             <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')" class="routerBtn" :to="'/course/manage/basic/set/'+scope.row.course_id">基本设置
             </router-link>
             <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_CONTENT')" class="routerBtn" :to="'/course/manage/content/set/'+scope.row.course_id">课程内容
             </router-link>
+            <el-button type="text" @click="clearCache(scope.row)" :disabled="index == scope.row.course_id">{{index == scope.row.course_id? '正在清除':'清除缓存'}}</el-button>
             <el-tooltip class="item" effect="dark" placement="top-end" :disabled="isTooldisabled">
               <div slot="content">如果没有打开预览页面<br/>请注意浏览器右上角，允许弹框！</div>
               <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
@@ -153,6 +154,7 @@ let prefix = getEnv();
 export default {
   data() {
     return {
+      index:-1,
       btnLoading: false, //按钮loading
       loading: false,
       selectfalg: false, //选择器搜索开关
@@ -192,6 +194,21 @@ export default {
     }
   },
   methods: {
+    // 清除函数
+    clearCache(val){
+      this.index = val.course_id;
+      this.$http.clearCache(Number(val.course_id)).then(res=>{
+        if(res.status === 0){
+          setTimeout(() => {
+            this.index = -1;
+            this.$message({
+              message:'此课程缓存清除成功',
+              type:'success'
+            })
+          }, 600);
+        }
+      })
+    },
     async searchCourse() {
       this.loading = true;
       let ret = await this.$http.searchCourse({
@@ -286,7 +303,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     },
     //新增课程确定按钮表单验证
@@ -295,7 +312,7 @@ export default {
         if (valid) {
           this.addCourse(this.ruleForm);
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -306,7 +323,7 @@ export default {
       this.searchCourse();
     },
     handleCurrentChange(page) {
-      console.log(page);
+      // console.log(page);
       this.currentPage = page;
       this.searchCourse();
     },

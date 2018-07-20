@@ -154,7 +154,7 @@
             this.tableData.push(this.NewTableForm);
             this.dialogVisible = false;
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });
@@ -170,7 +170,7 @@
             this.tableData[this.currentIndex].people = this.NewTableForm.people;
             this.dialogVisible = false;
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });

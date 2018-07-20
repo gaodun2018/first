@@ -60,7 +60,7 @@
         </el-form-item>
         <el-form-item v-if="chooseOutlineRadio == 2" label="" prop="syllabus_id" :rules="[{required: true, message: '选择该阶段的课程大纲', trigger: 'change'}]">
           <el-select @change="handleChange" v-model="stageForm.syllabus_id" placeholder="选择该阶段的课程大纲" style="width: 90%;">
-            <el-option :label="item.id+' - '+item.title" :value="String(item.id)" v-for="item in outlineList" :key="item.id"></el-option>
+            <el-option style="max-width:450px;" :label="item.id+' - '+item.title" :value="String(item.id)" v-for="item in outlineList" :key="item.id"></el-option>
           </el-select>
           <el-button type="primary" class="checkOutlineBtn" @click="openSyllabusPage">查看大纲</el-button>
         </el-form-item>
@@ -83,8 +83,8 @@
           </el-col>
           <el-col :span="19" class="attribute-paper-select">
             <el-form-item v-if="attribute[0] === 1" label="" prop="paper_id" :rules="[{required: true, message: '该选项为必填项！', trigger: 'change'}]">
-              <el-select style="width: 90%;" :placeholder="placehoderText" v-model="stageForm.paper_id" filterable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
-                <el-option v-for="item in paperList" :key="item.paper_id" :label="item.title" :value="item.paper_id">
+              <el-select style="width: 90%;" :placeholder="placehoderText" v-model="stageForm.paper_id" filterable clearable remote reserve-keyword :remote-method="remoteMethod" :loading="loading">
+                <el-option v-for="item in paperList" :key="item.id" :label="item.title" :value="item.paper_id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -228,7 +228,6 @@ export default {
       }, 500);
     },
     remoteMethod(query) {
-      console.log(query, "queryqueryqueryqueryquery");
       if (query !== "") {
         this.loading = true;
         this.searchResource(query);
@@ -242,7 +241,7 @@ export default {
         if (valid) {
           this.AddCourseStage();
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -290,9 +289,6 @@ export default {
       if (d.length > 1) {
         this.attribute = d.splice(-1);
       }
-      this.stageForm.season_id = "";//当切换选项时将绑定id清空
-      this.stageForm.paper_id = "";
-      console.log(this.attribute);
     },
     // 新增阶段
     async AddCourseStage() {
@@ -521,7 +517,16 @@ export default {
       this.dialogVisible = true;
     },
     //弹出编辑弹层
-    handleEdit(index, row) {
+    async handleEdit(index, row) {
+      // 打开编辑江选中的前导阶段进行显示
+      if(row.attribute === '1'){
+        let ret = await this.$http.getPapers(row.paper_id);
+        if(ret.status === 0){
+          ret.result.paper_id = ret.result.paper_id.toString()
+          this.paperList= [ret.result];
+        }
+      }
+      this.searchType = 1;
       this.beforeAttr = [parseInt(row.attribute)]; // 保存进入编辑时候的编辑状态
       this.uAction = "update";
       this.gradation_id = row.id;
@@ -529,8 +534,6 @@ export default {
       this.chooseOutlineRadio = "2";
       this.attribute = [parseInt(row.attribute)];
       this.stageForm = { ...this.tableData[index] };
-      console.log(this.stageForm);
-      console.log(this.stageForm.paper_id);
       this.stageForm.paper_id = this.stageForm.paper_id === '0' ? '' : this.stageForm.paper_id ;
       this.stageForm.season_id = this.stageForm.season_id === '0' ? '' : this.stageForm.season_id ;
 
@@ -543,14 +546,12 @@ export default {
       //   })
       // }
       if (this.attribute.length!==0 && this.attribute[0] === 1) {
-        console.log('11111');
         this.stageForm.season_id = "";
       } else if (
         this.attribute.length!==0 &&
        ( this.attribute[0] === 2 ||
         this.attribute[0] === 3)
       ) {
-        console.log('22222');
         this.stageForm.paper_id = "";
       }
       this.dialogVisible = true;
@@ -564,7 +565,6 @@ export default {
       let course_id = this.course_id;
       let ret = await this.$http.getStageAndOutline(course_id);
       if (ret.status == 0) {
-        console.log('查找初始值',ret)
         this.tableData = ret.result.gradation_list;
         this.$store.dispatch("getDradationList", ret.result.gradation_list);
       }
@@ -573,7 +573,6 @@ export default {
     async getCourseSeasonList() {
       let course_id = this.course_id;
       let ret = await this.$http.getSeasonList(course_id);
-      console.log('考季列表数据',ret)
       if (ret.status === 0) {
         // this.seasonList = ret.result.list;
         this.$store.dispatch("getSeasonList", ret.result.list);
@@ -603,10 +602,6 @@ export default {
     course_type(){
       return this.$store.state.course.course_info.course_type;
     }
-  },
-  mounted() {
-    console.log('科目id',this.subject_id,this.project_id);
-    console.log('科目类型',this.course_type)
   },
   created() {
     this.getStageAndOutline();

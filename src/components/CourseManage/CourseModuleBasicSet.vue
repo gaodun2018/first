@@ -489,7 +489,7 @@ export default {
         this.kForm.investigate_url = ret.result.investigate_url;
 
         setTimeout(() => {
-          console.log('setTimeout',this.editor);
+          // console.log('setTimeout',this.editor);
           // if(this.editor === undefined || this.editor === null){
           //   this.setEditor();
           //   ret.result.brief_introduction && this.editor && this.editor.setContent(ret.result.brief_introduction);

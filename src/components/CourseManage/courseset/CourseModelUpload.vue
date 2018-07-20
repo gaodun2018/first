@@ -68,7 +68,6 @@
         }) //封面图片
       },
       handleAvatarSuccess(res, file) {
-        console.log(res);
         if(res.status == 0){
           this.$store.dispatch('changeCover',{
 //          cover:URL.createObjectURL(file.raw),

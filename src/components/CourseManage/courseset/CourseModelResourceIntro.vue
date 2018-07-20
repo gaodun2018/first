@@ -146,7 +146,6 @@
             saveResForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.reviseIndex);
                         let resourceData = {
                             ...this.AddResForm,
                             index: this.reviseIndex,
