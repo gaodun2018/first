@@ -21,7 +21,7 @@
       <el-row>
         <el-col :span="20">
           <el-select style="width:90%;" v-model="selectValue" filterable remote reserve-keyword
-                     placeholder="请选择一个老师（可输入老师姓名搜索）" :remote-method="remoteMethod" :loading="loading">
+                     placeholder="请选择一个老师（可输入老师姓名搜索）" clearable :remote-method="remoteMethod" :loading="loading">
             <el-option v-for="item in options" :key="item.user_id" :label="item.name+'-ID:'+item.user_id"
                        :value="item.user_id">
             </el-option>
