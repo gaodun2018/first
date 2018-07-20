@@ -337,6 +337,7 @@
             });
           }
           video_id = pathRet.result.video_id;
+          this.ruleForm.video_id = video_id;
          } else if (pathRet.status == 1) {
            //为1时使用用户输入的地址
             video_id = this.ruleForm.video_id;
