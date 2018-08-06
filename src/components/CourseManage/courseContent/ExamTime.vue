@@ -611,25 +611,39 @@ export default {
       this.SetCourseDisable();
     },
     // 设置讲义模块的启用
-    async SetCourseDisable() {
+    SetCourseDisable() {
       let cource_id = this.course_id;
       let params = {
         setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
         setting_key: "season_manage_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；season_manage_open ：考季开关
       };
-      let ret = await this.$http.SetCourseDisable(cource_id, params);
-      if (ret.status === 0) {
-        this.$message({
-          message: this.isEnabled === 0 ? "关闭考季成功" : "启用考季成功！",
-          type: "success"
+      let confirmMsg = this.isEnabled === 0? '您确定要关闭该功能吗？如果已开放给学员学习，则会影响学员的使用。 请谨慎使用':'您确定要开启该功能吗？'
+      this.$confirm( confirmMsg , '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.SetCourseDisable(cource_id, params).then(ret=>{
+              if (ret.status === 0) {
+                this.$message({
+                  message: this.isEnabled === 0 ? "关闭考季成功" : "启用考季成功！",
+                  type: "success"
+                });
+              } else {
+                this.$message({
+                  message: this.isEnabled === 0 ? "关闭考季失败" : "启用考季失败！",
+                  type: "error"
+                });
+                this.isEnabled = this.isEnabled === 1 ? 0 : 1;
+              }
+            })
+        }).catch(() => {
+          this.isEnabled = this.isEnabled === 0? 1:0;
+          this.$message({
+            type: 'info',
+            message: '已取消该操作'
+          });
         });
-      } else {
-        this.$message({
-          message: this.isEnabled === 0 ? "关闭考季失败" : "启用考季失败！",
-          type: "error"
-        });
-        this.isEnabled = this.isEnabled === 1 ? 0 : 1;
-      }
     },
     // //获取考季列表
     async getCourseSeasonList() {
