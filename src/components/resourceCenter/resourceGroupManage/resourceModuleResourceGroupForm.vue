@@ -80,6 +80,7 @@
     props: ["id"],
     data() {
       return {
+        isInit:false,//判断是否是初始情况
         subjectData: [],
         loading: false,
         selectFalg: false,
@@ -192,6 +193,7 @@
       },
       // 打开选择资源的弹层
       handleOpenDialog() {
+        this.isInit = true;//打开弹出层再启用禁用选老师
         // 搜索资源...
         if (this.pagination.current_page != 1) {
           this.pagination.current_page = 1;
@@ -242,7 +244,7 @@
           let ret = await this.$http.newGetTeacher(params);
           if (ret.status == 0) {
             this.resLoading = false;
-            this.resourceTable = ret.result.resources;
+            this.resourceTable = ret.result.resources?ret.result.resources:[];
             this.pagination.total = ret.result.pagination.total;
             this.filterData(this.resourceTable);
             this.showSelect();
@@ -328,9 +330,20 @@
       //新增/修改资源组
       async createResourceForm() {
         let resource_id = [];
+        let teacherArr = [];
         this.multipleSelectionAll.forEach(ele => {
           resource_id.push(ele.id);
+          if(ele.teacher_id !== 0){
+            teacherArr.push(ele.teacher_id);
+          }
         });
+        if(new Set(teacherArr).size != teacherArr.length){
+          this.$message({
+            message:'请将相同老师的资源进行修改',
+            type:'warning'
+          })
+          return;
+        }
         let params = {
           title: this.ruleForm.title,
           description: this.ruleForm.description,
@@ -349,11 +362,6 @@
             type: "success"
           });
           let res = await this.$http.clearResource(this.$route.params.id)
-          // if(res.status === 0){
-          //   console.log('清除缓存成功');
-          // }else{
-          //   console.log('清除缓存失败');
-          // }
           setTimeout(() => {
             this.$router.push({
               path: "/resource/resource-group/list"
@@ -405,6 +413,12 @@
           }
         })
         if(num >= 2){
+          if(!this.isInit){
+            this.$alert('此资源组，存在两条资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
+              confirmButtonText: '确定',
+            })
+            return;
+           }
           this.$message({
             message:'同一个老师只允许有一个资源',
             type:'warning'
