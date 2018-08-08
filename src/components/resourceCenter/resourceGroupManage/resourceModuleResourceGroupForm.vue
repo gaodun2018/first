@@ -25,7 +25,7 @@
           <el-form-item label="选择资源">
             <el-button :disabled="ruleForm.project==''||ruleForm.project==undefined||ruleForm.project==null" type="primary" @click="handleOpenDialog">选择资源</el-button>
             <el-row>
-              <el-tag size="small" :key="tag.id" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              <el-tag size="small" :key="tag.id" :class="{red:judgIdNum(tag.teacher_id)>=2&& tag.teacher_id != 0}" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 <span class="tag-title" :title="tag.title">{{tag.title}}</span>
                 <span class="tag-id">（ID：{{tag.id}}）</span>
               </el-tag>
@@ -80,6 +80,7 @@
     props: ["id"],
     data() {
       return {
+        isConfict:false,//判断是否有冲突情况
         isInit:false,//判断是否是初始情况
         subjectData: [],
         loading: false,
@@ -193,6 +194,20 @@
       },
       // 打开选择资源的弹层
       handleOpenDialog() {
+        let arr = [];
+        this.multipleSelectionAll.forEach(o=>{
+          if(o.teacher_id !=0 ){
+            arr.push(o.teacher_id);
+          }
+        })
+        if(new Set(arr).size != arr.length){
+          this.$message({
+            message:'请将红色部分相同老师的资源选择性删除',
+            type:'warning'
+          })
+          return;
+        }
+        this.isConfict = true;// 将冲突解决了
         this.isInit = true;//打开弹出层再启用禁用选老师
         // 搜索资源...
         if (this.pagination.current_page != 1) {
@@ -361,7 +376,8 @@
             message: "保存成功",
             type: "success"
           });
-          let res = await this.$http.clearResource(this.$route.params.id)
+          // 清除缓存
+          // let res = await this.$http.clearResource(this.$route.params.id)
           setTimeout(() => {
             this.$router.push({
               path: "/resource/resource-group/list"
@@ -400,6 +416,16 @@
         } else {
           this.$refs.multipleTable.clearSelection();
         }
+      },
+      // 编写判断同一个老师包含的个数情况
+      judgIdNum(val){
+        let num = 0;
+        this.multipleSelectionAll.forEach(o=>{
+          if(o.teacher_id === val){
+            num++
+          }
+        })
+        return num;
       }
     },
     watch:{
@@ -412,9 +438,9 @@
             }
           }
         })
-        if(num >= 2){
+        if(num >= 2 && !this.isConfict){
           if(!this.isInit){
-            this.$alert('此资源组，存在两条资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
+            this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
               confirmButtonText: '确定',
             })
             return;
@@ -457,6 +483,11 @@
     }
   };
   </script>
+<style>
+.red .el-icon-close{
+  color: white!important;
+}
+</style>
 <style lang="less">
   // 添加了预览样式编写
   .tag-watch{
@@ -464,6 +495,11 @@
     color: #0677ea;
     font-weight: 900;
   }
+  .red{
+    background-color: #de4a3a;
+    color: white;
+  }
+
   .resource-group-form-wrapper {
     .frombox {
       .el-tag {

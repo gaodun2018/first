@@ -162,8 +162,9 @@
         <!-- 第二步 -->
         <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm">
           <div class="selectmodel">
-            <span :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
+            <span style="position: relative;" :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
               {{item.label}}
+              <div style="width:100%;font-size:10px;position: absolute;top:25px;" v-if="item.discriminator=='resource_group'">注：仅用于多老师</div>
             </span>
           </div>
           <el-row class="ep-set-box" v-if="resourceType === 'paper'">
