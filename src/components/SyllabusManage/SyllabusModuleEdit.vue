@@ -212,12 +212,12 @@
                   <i class="el-icon-info"></i>
                 </el-tooltip>
               </el-form-item>
-              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: ['change','blur']}]">
-                <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'blur'},...valiMinites]">
+                <el-input v-model="videoForm.duration_minutes" @input="handleInputMinutesChange" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                 分
               </el-form-item>
-              <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒', trigger: ['change','blur']}]">
-                <el-input v-model="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+              <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="valiSeconds">
+                <el-input v-model="videoForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                 秒
               </el-form-item>
             </el-form>
@@ -413,7 +413,24 @@
       SelectKnowledge
     },
     data() {
+      var valiMinites = (rule, value, callback) => {
+        value = Number(value);
+        if(value > 999){
+          callback(new Error('时长不允许超过三位数'));
+        }else{
+          callback();
+        }
+      };
+      var valiSeconds = (rule, value, callback) => {
+        if(Number(value) > 60){
+          callback(new Error('秒数最大不允许超过60'));
+        }else {
+          callback();
+        }
+      };
       return {
+        valiMinites:[{validator:valiMinites, trigger:'blur'}],// 验证分钟
+        valiSeconds:[{validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         judgeid:'',
         knowledgeInfo:"",//添加关联知识点名字字段
@@ -486,6 +503,18 @@
       };
     },
     methods: {
+      handleInputMinutesChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.videoForm.duration_minutes = self.videoForm.duration_minutes.replace(/[^\d]/g,'');
+        })
+      },
+      handleInputSecondChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.videoForm.duration_second = self.videoForm.duration_second.replace(/[^\d]/g,'');
+        })
+      },
       // 赋值到剪贴板方法
       copyId(val,obj){
         var oInput = document.createElement('input');

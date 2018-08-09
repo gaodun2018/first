@@ -92,7 +92,7 @@
           description: ""
         },
         resourceinput: "", //搜索资源输入框
-        multipleSelectionAll:"",
+        multipleSelectionAll:[],
         multipleSelection: [], //所有选择段资源
         pagination: {
           current_page: 1, //资源列表当前页数
@@ -195,6 +195,7 @@
       // 打开选择资源的弹层
       handleOpenDialog() {
         let arr = [];
+        console.log(this.multipleSelectionAll)
         this.multipleSelectionAll.forEach(o=>{
           if(o.teacher_id !=0 ){
             arr.push(o.teacher_id);
