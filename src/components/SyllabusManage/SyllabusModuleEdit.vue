@@ -300,6 +300,12 @@
     font-size: 11px;
     line-height: 23px;
     padding: 0 5px;
+    max-width: 420px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    top: 7px;
   }
   .tabplane .el-dialog {
     min-width: 680px;
@@ -1310,7 +1316,7 @@
         }
         let ret = await this.$http.getOutlineKnowledgeList(params);
         if (ret.status === 0){
-          this.knowledgeList = ret.result.result.contents;
+          this.knowledgeList = ret.result.result.contents?ret.result.result.contents:[];
         }
         let id = -1;
         if(item.knowledge_id){

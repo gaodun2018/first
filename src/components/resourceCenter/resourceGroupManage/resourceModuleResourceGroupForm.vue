@@ -28,6 +28,7 @@
               <el-tag size="small" :key="tag.id" :class="{red:judgIdNum(tag.teacher_id)>=2&& tag.teacher_id != 0}" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 <span class="tag-title" :title="tag.title">{{tag.title}}</span>
                 <span class="tag-id">（ID：{{tag.id}}）</span>
+                <span class="tag-id" v-if="judgIdNum(tag.teacher_id)>=2&& tag.teacher_id != 0">（老师ID：{{tag.teacher_id}}）</span>
               </el-tag>
             </el-row>
           </el-form-item>
@@ -186,6 +187,7 @@
       },
       // 删除选择的资源
       handleCloseTag(tag) {
+        this.isConfict = true;// 当你执行删除的时候二次删除就不再起作用
         this.multipleSelectionAll.splice(this.multipleSelectionAll.indexOf(tag), 1);
         // this.toggleSelection([tag]);
         if(this.dialogFormVisible){
@@ -203,12 +205,11 @@
         })
         if(new Set(arr).size != arr.length){
           this.$message({
-            message:'请将红色部分相同老师的资源选择性删除',
+            message:'请将红色部分相同老师ID的资源选择性删除',
             type:'warning'
           })
           return;
         }
-        this.isConfict = true;// 将冲突解决了
         this.isInit = true;//打开弹出层再启用禁用选老师
         // 搜索资源...
         if (this.pagination.current_page != 1) {
@@ -355,7 +356,7 @@
         });
         if(new Set(teacherArr).size != teacherArr.length){
           this.$message({
-            message:'请将相同老师的资源进行修改',
+            message:'请将相同老师ID的资源进行修改',
             type:'warning'
           })
           return;
@@ -439,11 +440,13 @@
             }
           }
         })
-        if(num >= 2 && !this.isConfict){
+        if(num >= 2){
           if(!this.isInit){
-            this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
-              confirmButtonText: '确定',
-            })
+            if(!this.isConfict){
+              this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
+                confirmButtonText: '确定',
+              })
+            }
             return;
            }
           this.$message({
