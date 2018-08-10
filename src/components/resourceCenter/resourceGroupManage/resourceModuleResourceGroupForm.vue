@@ -197,7 +197,6 @@
       // 打开选择资源的弹层
       handleOpenDialog() {
         let arr = [];
-        console.log(this.multipleSelectionAll)
         this.multipleSelectionAll.forEach(o=>{
           if(o.teacher_id !=0 ){
             arr.push(o.teacher_id);
@@ -432,23 +431,28 @@
     },
     watch:{
       multipleSelectionAll(val){
-        let num = 0
+        let num = 0;
+        let arr = [];
         val.forEach(o=>{
+          if(o.teacher_id != 0){
+            arr.push(o.teacher_id);
+          }
           if(val[val.length - 1].teacher_id != 0){
             if(val[val.length - 1].teacher_id == o.teacher_id){
               num ++ ;
             }
           }
         })
+        if(!this.isInit && new Set(arr).size != arr.length){
+          if(!this.isConfict){
+            this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
+              confirmButtonText: '确定',
+            })
+          }
+          return;
+        }
+        // 打开弹出层不让他最后一个是和别的资源是重复的
         if(num >= 2){
-          if(!this.isInit){
-            if(!this.isConfict){
-              this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
-                confirmButtonText: '确定',
-              })
-            }
-            return;
-           }
           this.$message({
             message:'同一个老师只允许有一个资源',
             type:'warning'
