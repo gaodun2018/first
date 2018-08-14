@@ -70,3 +70,6 @@ export const clearCache = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.
 //  ：：清除资源缓存
 export const clearResource = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/caen/v1/backend/syllabus/refresh/resource?item_id[]=${id}`, params)
 
+// 修改直播资源预约接口（晓冬接，页面无直接反馈）
+export const changeLive = (liveid, resourceid, syllabusid, params) => post(`${getBaseUrl()}apigateway.gaodun.com/plan-api/syllabus/live/resource?live_id=${liveid}&resource_id=${resourceid}&syllabus_id=${syllabusid}`, params)
+

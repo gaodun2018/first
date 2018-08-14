@@ -54,7 +54,7 @@
                       </el-col>
                     </el-row>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt" @click="openAddResDialog(secItem.id)" style="color:#FF9C1C;">新增资源</span>
+                    <span class="chrgt" @click="openAddResDialog(secItem)" style="color:#FF9C1C;">新增资源</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div class="resourcebox third-chapter-box" v-for="thirdItem in secItem.children" :key="thirdItem.id">
@@ -80,8 +80,8 @@
                                   <span class="dropdown-child">设置试听
                                     <el-switch
                                       v-model="value2"
-                                      active-color="#13ce66"
-                                      inactive-color="#ff4949">
+                                      active-color="#2884E0"
+                                      inactive-color="#BFBFBF">
                                     </el-switch>
                                   </span>
                                 </el-dropdown-item>
@@ -176,7 +176,7 @@
                           </el-col>
                         </el-row>
                         <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
-                        <span class="chrgt" @click="openAddResDialog(thirdItem.id)" style="color:#FF9C1C;">新增资源</span>
+                        <span class="chrgt" @click="openAddResDialog(thirdItem)" style="color:#FF9C1C;">新增资源</span>
                       </div>
                       <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
                         <div class="resourcebox fourth-chapter-box" v-for="fourthItem in thirdItem.children" :key="fourthItem.id">
@@ -203,8 +203,8 @@
                                         设置试听
                                         <el-switch
                                           v-model="value2"
-                                          active-color="#13ce66"
-                                          inactive-color="#ff4949">
+                                          active-color="#2884E0"
+                                          inactive-color="#BFBFBF">
                                         </el-switch>
                                       </span>
                                     </el-dropdown-item>
@@ -234,7 +234,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}}<span class="gray">(条目ID：{{firstItem.id}}) </span></span>
+                <span class="chlft">{{firstItem.name}} <span class="gray">(条目ID：{{firstItem.id}}) </span></span>
 
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
@@ -253,7 +253,7 @@
                 </el-row>
 
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openAddResDialog(firstItem.id)" style="color:#FF9C1C;">新增资源</span>
+                <span class="chrgt" @click="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
               </div>
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
@@ -281,8 +281,8 @@
                                 设置试听
                                 <el-switch
                                   v-model="value2"
-                                  active-color="#13ce66"
-                                  inactive-color="#ff4949">
+                                  active-color="#2884E0"
+                                  inactive-color="#BFBFBF">
                                 </el-switch>
                               </span>
                             </el-dropdown-item>
@@ -623,13 +623,17 @@
         }
       };
       return {
-        value2:'',
+        startType:'',//开始的资源类型
+        endType:'',// 结束时的资源类型
+        liveid:0,//直播id
+        resourceid:'',//修改直播时需要的id
+        syllabusid:'', // 添加修改直播时需要的大纲id
+        value2:'',// 设置试听的绑定值
         valiMinites:[{validator:valiMinites, trigger:'blur'}],// 验证分钟
         valiSeconds:[{validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         judgeid:'',
         knowledgeInfo:"",//添加关联知识点名字字段
-
         is_knowledge_open: false,
         project_id: "", //项目id
         subject_id: "", //科目id
@@ -700,18 +704,19 @@
     methods: {
       // 预览跳转
       goPreview(val){
-        console.log(val);
         if(val.resource){
           if(val.resource.discriminator === 'video'){
-            this.$router.push({
+            let goVideo = this.$router.resolve({
               name:'previewVideo',
               params:{id:val.resource.id}
             })
+            window.open(goVideo.href,'_blank');
           }else if(val.resource.discriminator === 'resource_group'){
-            this.$router.push({
+            let goGroup = this.$router.resolve({
               name:'editResourceGroup',
               params:{id:val.resource.id}
             })
+            window.open(goGroup.href,'blank');
           }else{
             this.$message({
               message:'该类型资源暂时不支持预览',
@@ -793,7 +798,6 @@
       },
       //启用知识点
       async handleChangeIsKnowledgeOpen(bool){
-        console.log(bool);
         let ret = await this.$http.UpdateCourseSyllabus(this.syllabus_id, {
           is_knowledge_open: bool ? 1 : 0,
           project_id: this.project_id,
@@ -821,6 +825,8 @@
         }
       },
       handleTableChange(val) {
+        this.resourceid = val.id;
+        this.endType = val.discriminator;
         this.resourceRadio = String(val.id);
       },
       selectclk(discriminator) {
@@ -829,8 +835,9 @@
         this.resourceType = discriminator;
       },
       //弹出新增资源的弹层
-      openAddResDialog(id) {
-        this.currentId = id;
+      openAddResDialog(val) {
+        this.currentId = val.id;
+        this.syllabusid = val.course_syllabus_id;
         this.active = 0;
         this.addResFirFrom.name = "";
         this.addResFirFrom.start_time = "";//开启时间
@@ -970,7 +977,7 @@
           spinner: "el-icon-loading",
           background: "rgba(0, 0, 0, 0.2)"
         });
-        //查询时候挂载了该资源
+        //查询是否挂载了该资源
         let boolRet = await this.checkResIsInOutline();
         if (!boolRet) {
           this.btnLoading = false;
@@ -989,6 +996,28 @@
           sy_item_id = nameRet.result.id;
           // 大纲资源条目挂载资源
           await this.mountSyllabusResource(sy_item_id);
+          if(this.resourceid && this.resourceAction === 'add'){
+            if(this.endType === 'legacy_live'){
+              let liveRet = await this.$http.changeLive(0,this.resourceid,this.syllabusid)
+              if(liveRet.status != 0){
+                this.message({
+                  message:'预约直播失败,请联系管理员',
+                  type:'warning'
+                })
+              }
+            }
+          }
+          if(this.resourceid && this.resourceAction === 'update'){
+            if(this.endType === 'legacy_live' || this.startType === 'legacy_live'){
+              let liveRet = await this.$http.changeLive(this.liveid,this.resourceid,this.syllabusid);
+              if(liveRet.status != 0){
+                this.message({
+                  message:'预约直播失败，请联系管理员',
+                  type:'warning'
+                })
+              }
+            }
+          }
           this.btnLoading = false;
           loading.close();
         } else {
@@ -1292,6 +1321,11 @@
       },
       //弹出修改资源的弹层
       openeEditResource(item) {
+        this.syllabusid = item.course_syllabus_id;
+        this.startType = item.resource? item.resource.discriminator : '';
+        if(item.resource && item.resource.discriminator === 'legacy_live'){
+          this.liveid = item.resource.id;//如果是直播资源将老id 储存
+        }
         this.active = 0;
         this.addResFirFrom.name = item.name;  //名称
         this.addResFirFrom.apply_to = item.apply_to?[item.apply_to]:[];  //1表示跳级测试，2表示提分盒子
