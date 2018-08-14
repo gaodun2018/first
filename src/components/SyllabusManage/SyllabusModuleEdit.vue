@@ -37,7 +37,7 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">{{secItem.name}}<span class="gray"> (条目ID：{{secItem.id}})</span></span>
+                    <span class="chlft">{{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span></span>
                     <el-row class="chrgt" style="width:60px;">
                       <el-col :span="12">
                         <el-dropdown trigger="click">
@@ -59,9 +59,10 @@
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div class="resourcebox third-chapter-box" v-for="thirdItem in secItem.children" :key="thirdItem.id">
                       <div class="knowledge">
-                        <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag>
+                        <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag> -->
                         <span class="chlft">
-                          <span v-if="thirdItem.resource" class="dif-type">{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                          <span class='dif-type' v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</span>
+                          <span v-if="thirdItem.resource && thirdItem.apply_to!='1' && thirdItem.apply_to!='2'" class="dif-type">{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                           {{thirdItem.name}}
                           <span class="gray">(条目ID：{{ thirdItem.id }}<template v-if="thirdItem.resource ">
                             资源ID：{{thirdItem.resource && thirdItem.resource.id}}</template>)
@@ -109,7 +110,6 @@
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
                 <span class="chlft">{{firstItem.name}}<span class="gray">（条目ID：{{firstItem.id}}）</span></span>
-
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
                     <el-dropdown trigger="click">
@@ -181,9 +181,10 @@
                       <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
                         <div class="resourcebox fourth-chapter-box" v-for="fourthItem in thirdItem.children" :key="fourthItem.id">
                           <div class="knowledge">
-                            <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
+                            <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag> -->
                             <span class="chlft">
-                              <span v-if="fourthItem.resource" class="dif-type">{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                              <span class="dif-type" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</span>
+                              <span v-if="fourthItem.resource && fourthItem.apply_to!='2'&&fourthItem.apply_to!= '1'" class="dif-type">{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                               {{fourthItem.name}}
                               <span class="gray">
                                 （条目ID：{{fourthItem.id}}<template v-if="fourthItem.resource">&nbsp;&nbsp;资源ID：{{fourthItem.resource && fourthItem.resource.id}}</template>）
@@ -234,7 +235,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}} <span class="gray">(条目ID：{{firstItem.id}}) </span></span>
+                <span class="chlft">{{firstItem.name}} <span class="gray">（条目ID：{{firstItem.id}}） </span></span>
 
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
@@ -258,9 +259,10 @@
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
                   <div class="knowledge">
-                     <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag>
+                     <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
                     <span class="chlft">
-                     <span v-if="secItem.resource" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                     <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
+                     <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                       {{secItem.name}}
                       <span class="gray">
                        （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource.id}}</template>）
@@ -483,17 +485,21 @@
     color:#bdb4b4;
   }
   .connect-knowledage{
+    display: inline-block;
     border-radius: 15px;
     border: 1px solid rgba(255, 102, 0, 1);
     background-color: rgba(255, 227, 185, 1);
     color:#FF0000;
     font-size: 10px;
-    padding: 2px 5px;
+    padding: 0px 8px;
     max-width: 420px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     font-weight: normal;
+    line-height: 20px;
+    position: relative;
+    top: 4px;
   }
   .tabplane .el-dialog {
     min-width: 680px;
@@ -825,9 +831,11 @@
         }
       },
       handleTableChange(val) {
-        this.resourceid = val.id;
-        this.endType = val.discriminator;
-        this.resourceRadio = String(val.id);
+        if(val){
+          this.resourceid = val.id;
+          this.endType = val.discriminator;
+          this.resourceRadio = String(val.id);
+        }
       },
       selectclk(discriminator) {
         this.addResFirFrom.apply_to = [];
@@ -1325,6 +1333,8 @@
         this.startType = item.resource? item.resource.discriminator : '';
         if(item.resource && item.resource.discriminator === 'legacy_live'){
           this.liveid = item.resource.id;//如果是直播资源将老id 储存
+        }else{
+          this.liveid === 0;
         }
         this.active = 0;
         this.addResFirFrom.name = item.name;  //名称
