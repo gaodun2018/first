@@ -1334,7 +1334,7 @@
         if(item.resource && item.resource.discriminator === 'legacy_live'){
           this.liveid = item.resource.id;//如果是直播资源将老id 储存
         }else{
-          this.liveid === 0;
+          this.liveid = 0;
         }
         this.active = 0;
         this.addResFirFrom.name = item.name;  //名称
