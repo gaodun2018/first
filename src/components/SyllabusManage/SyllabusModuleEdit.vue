@@ -15,32 +15,88 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">{{firstItem.name}} <span class="gray"> （条目ID：{{firstItem.id}}）</span></span>
+                <el-row class="chrgt" style="width:60px;">
+                  <el-col :span="12">
+                    <el-dropdown trigger="click">
+                      <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                      <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                        <el-dropdown-item @click.native="copyId(firstItem.id)">
+                          <span class="dropdown-child" >复制条目ID</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="openDelOutlineDialog(firstItem.id)">
+                          <span class="dropdown-child">删除</span>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-col>
+                </el-row>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
-                <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
+                <span class="chrgt" @click="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
+                    <span class="chlft">{{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span></span>
+                    <el-row class="chrgt" style="width:60px;">
+                      <el-col :span="12">
+                        <el-dropdown trigger="click">
+                          <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                          <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                            <el-dropdown-item  @click.native="copyId(secItem.id)">
+                              <span class="dropdown-child">复制条目ID</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item @click.native="openDelOutlineDialog(secItem.id)">
+                              <span class="dropdown-child">删除</span>
+                            </el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                      </el-col>
+                    </el-row>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt yellow" @click="openDelOutlineDialog(secItem.id)">删除</span>
-                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
-                    <span class="chrgt1 yellow" @click="openAddResDialog(secItem.id)">新增资源</span>
+                    <span class="chrgt" @click="openAddResDialog(secItem)" style="color:#FF9C1C;">新增资源</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div class="resourcebox third-chapter-box" v-for="thirdItem in secItem.children" :key="thirdItem.id">
                       <div class="knowledge">
-                        <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag>
+                        <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</el-tag> -->
                         <span class="chlft">
-                          条目ID：{{ thirdItem.id }} | {{thirdItem.name}}
-                          <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
-                          <template v-if="thirdItem.resource "><span class="chline">|</span>资源ID：{{thirdItem.resource && thirdItem.resource.id}} 【{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}】，{{thirdItem.resource && thirdItem.resource.title}}</template>
+                          <span class='dif-type' v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</span>
+                          <span v-if="thirdItem.resource && thirdItem.apply_to!='1' && thirdItem.apply_to!='2'" class="dif-type">{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                          {{thirdItem.name}}
+                          <span class="gray">（条目ID：{{ thirdItem.id }}<template v-if="thirdItem.resource ">
+                            资源ID：{{thirdItem.resource && thirdItem.resource.id}}</template>）
+                            <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
+                          </span>
                         </span>
+                        <el-row class="chrgt" style="width:60px;">
+                          <el-col :span="12">
+                            <el-dropdown trigger="click">
+                              <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                              <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                                 <el-dropdown-item  @click.native="copyId(thirdItem.id,thirdItem)">
+                                  <span class="dropdown-child">复制条目/资源ID</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                  <span class="dropdown-child">设置试听
+                                    <el-switch
+                                      v-model="value2"
+                                      active-color="#2884E0"
+                                      inactive-color="#BFBFBF">
+                                    </el-switch>
+                                  </span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click.native="goPreview(thirdItem)">
+                                  <span class="dropdown-child">预览</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click.native="openDelResDialog(thirdItem.id)">
+                                  <span class="dropdown-child">删除</span>
+                                </el-dropdown-item>
+                              </el-dropdown-menu>
+                            </el-dropdown>
+                          </el-col>
+                        </el-row>
                         <span class="chrgt" @click="openeEditResource(thirdItem)">修改</span>
-                        <span class="chrgt" @click="openDelResDialog(thirdItem.id)">删除</span>
-                        <span class="chrgt" @click="copyId(thirdItem.id,thirdItem)">复制条目/资源ID</span>
                       </div>
                     </div>
                   </draggable>
@@ -53,45 +109,118 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">{{firstItem.name}}<span class="gray">（条目ID：{{firstItem.id}}）</span></span>
+                <el-row class="chrgt" style="width:60px;">
+                  <el-col :span="12">
+                    <el-dropdown trigger="click">
+                      <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                      <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                        <el-dropdown-item  @click.native="copyId(firstItem.id)">
+                          <span class="dropdown-child">复制条目ID</span>
+                        </el-dropdown-item>
+                         <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem.id)">
+                          <span class="dropdown-child">删除</span>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-col>
+                </el-row>
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
-                <span class="chrgt1" @click="openChildDialog(firstItem.id)">增加子目录</span>
+                <span class="chrgt" @click="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                   <div class="chaptit chapsecd">
-                    <span class="chlft">条目ID：{{secItem.id}} | {{secItem.name}}</span>
+                    <span class="chlft">{{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span></span>
+
+                    <el-row class="chrgt" style="width:60px;">
+                      <el-col :span="12">
+                        <el-dropdown trigger="click">
+                          <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                          <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                            <el-dropdown-item @click.native="copyId(secItem.id)">
+                               <span class="dropdown-child">复制条目ID</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item  @click.native="openDelOutlineDialog(secItem.id)">
+                              <span class="dropdown-child">删除</span>
+                            </el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                      </el-col>
+                    </el-row>
                     <span class="chrgt" @click="editproject(secItem.id,secItem.name)">修改</span>
-                    <span class="chrgt" @click="openDelOutlineDialog(secItem.id)">删除</span>
-                    <span class="chrgt1" @click="openChildDialog(secItem.id,true)">增加子目录</span>
-                    <span class="chrgt1" @click="copyId(secItem.id)">复制条目ID</span>
+                    <span class="chrgt" @click="openChildDialog(secItem.id,true)">增加子目录</span>
                   </div>
                   <draggable v-model="secItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.third-chapter-box'}">
                     <div v-for="thirdItem in secItem.children" :key="thirdItem.id" class="third-chapter-box">
                       <div class="knowledge">
                         <span class="chlft">
-                          <i></i>
-                          <span>条目ID：{{thirdItem.id}} | {{thirdItem.name}}</span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
+                          <span> {{thirdItem.name}} <span class="gray">（条目ID：{{thirdItem.id}}）</span></span> &nbsp;&nbsp;<span v-if="thirdItem.knowledge_id" class="connect-knowledage">关联：{{thirdItem.knowledge_id}}  {{thirdItem.knowledge_name}}</span>
                         </span>
+                        <el-row class="chrgt" style="width:60px;">
+                          <el-col :span="12">
+                            <el-dropdown trigger="click">
+                              <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                              <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                                <el-dropdown-item @click.native="copyId(thirdItem.id)">
+                                  <span class="dropdown-child">复制条目ID</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click.native="handleOpenKnowledgeDialog(thirdItem)">
+                                  <span class="dropdown-child" v-if="subject_id != 0">关联知识点</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item  @click.native="openDelOutlineDialog(thirdItem.id)">
+                                  <span class="dropdown-child">删除</span>
+                                </el-dropdown-item>
+                              </el-dropdown-menu>
+                            </el-dropdown>
+                          </el-col>
+                        </el-row>
                         <span class="chrgt" @click="editproject(thirdItem.id,thirdItem.name)">修改</span>
-                        <span class="chrgt" @click="openDelOutlineDialog(thirdItem.id)">删除</span>
-                        <span class="chrgt1" @click="copyId(thirdItem.id)">复制条目ID</span>
-                        <span class="chrgt1 yellow" v-if="subject_id != 0" @click="handleOpenKnowledgeDialog(thirdItem)">关联知识点</span>
-                        <span class="chrgt1 yellow" @click="openAddResDialog(thirdItem.id)">新增资源</span>
+                        <span class="chrgt" @click="openAddResDialog(thirdItem)" style="color:#FF9C1C;">新增资源</span>
                       </div>
                       <draggable v-model="thirdItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.fourth-chapter-box'}">
                         <div class="resourcebox fourth-chapter-box" v-for="fourthItem in thirdItem.children" :key="fourthItem.id">
                           <div class="knowledge">
-                            <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag>
+                            <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</el-tag> -->
                             <span class="chlft">
-                              条目ID：{{fourthItem.id}} | {{fourthItem.name}}
-                              <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
-                              <template v-if="fourthItem.resource"><span class="chline">|</span>资源ID：{{fourthItem.resource && fourthItem.resource.id}} 【{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}】 {{fourthItem.resource && fourthItem.resource.title}} </template>
+                              <span class="dif-type" v-if="fourthItem.apply_to=='2' || fourthItem.apply_to== '1'">{{fourthItem.apply_to=='2'?'提分盒子':fourthItem.apply_to=='1'?'跳级测试':''}}</span>
+                              <span v-if="fourthItem.resource && fourthItem.apply_to!='2'&&fourthItem.apply_to!= '1'" class="dif-type">{{fourthItem.resource && fourthItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                              {{fourthItem.name}}
+                              <span class="gray">
+                                （条目ID：{{fourthItem.id}}<template v-if="fourthItem.resource">&nbsp;&nbsp;资源ID：{{fourthItem.resource && fourthItem.resource.id}}</template>）
+                                <template v-if="fourthItem.study_time&&fourthItem.study_time!='0'"><span class="chline">|</span>建议学习：{{fourthItem.study_time}}分钟</template>
                               </span>
+                            </span>
+                            <el-row class="chrgt" style="width:60px;">
+                              <el-col :span="12">
+                                <el-dropdown trigger="click">
+                                  <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                                  <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                                    <el-dropdown-item @click.native="copyId(fourthItem.id,fourthItem)">
+                                      <span class="dropdown-child">复制条目/资源ID</span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                      <span class="dropdown-child">
+                                        设置试听
+                                        <el-switch
+                                          v-model="value2"
+                                          active-color="#2884E0"
+                                          inactive-color="#BFBFBF">
+                                        </el-switch>
+                                      </span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item @click.native="goPreview(fourthItem)">
+                                      <span class="dropdown-child">预览</span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item @click.native="openDelResDialog(fourthItem.id)">
+                                      <span class="dropdown-child">删除</span>
+                                    </el-dropdown-item>
+                                  </el-dropdown-menu>
+                                </el-dropdown>
+                              </el-col>
+                            </el-row>
                             <span class="chrgt" @click="openeEditResource(fourthItem)">修改</span>
-                            <span class="chrgt" @click="openDelResDialog(fourthItem.id)">删除</span>
-                            <span class="chrgt" @click="copyId(fourthItem.id,fourthItem)">复制条目/资源ID</span>
+
                           </div>
                         </div>
                       </draggable>
@@ -106,23 +235,70 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">条目ID：{{firstItem.id}} | {{firstItem.name}}</span>
+                <span class="chlft">{{firstItem.name}} <span class="gray">（条目ID：{{firstItem.id}}） </span></span>
+
+                <el-row class="chrgt" style="width:60px;">
+                  <el-col :span="12">
+                    <el-dropdown trigger="click">
+                      <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                      <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                        <el-dropdown-item @click.native="copyId(firstItem.id)">
+                          <span class="dropdown-child">复制条目ID</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem.id)">
+                          <span class="dropdown-child">删除</span>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-col>
+                </el-row>
+
                 <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openDelOutlineDialog(firstItem.id)">删除</span>
-                <span class="chrgt1 yellow" @click="openAddResDialog(firstItem.id)">新增资源</span>
+                <span class="chrgt" @click="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
               </div>
               <draggable v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                 <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
                   <div class="knowledge">
-                     <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag>
+                     <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
                     <span class="chlft">
-                      条目ID：{{secItem.id}} | {{secItem.name}}
-                      <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
-                     <template v-if="secItem.resource"> <span class="chline">|</span>资源ID：{{secItem.resource && secItem.resource.id}} 【{{secItem.resource && secItem.resource.discriminator | Resource2chn}}】，{{secItem.resource && secItem.resource.title}} </template>
+                     <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
+                     <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                      {{secItem.name}}
+                      <span class="gray">
+                       （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource.id}}</template>）
+                        <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                      </span>
                     </span>
+
+                    <el-row class="chrgt" style="width:60px;">
+                      <el-col :span="12">
+                        <el-dropdown trigger="click">
+                          <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                          <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                            <el-dropdown-item @click.native="copyId(secItem.id , secItem)">
+                              <span class="dropdown-child" >复制条目/资源ID</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                              <span class="dropdown-child" >
+                                设置试听
+                                <el-switch
+                                  v-model="value2"
+                                  active-color="#2884E0"
+                                  inactive-color="#BFBFBF">
+                                </el-switch>
+                              </span>
+                            </el-dropdown-item>
+                            <el-dropdown-item @click.native="goPreview(secItem)">
+                              <span class="dropdown-child" >预览</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item  @click.native="openDelResDialog(secItem.id)">
+                              <span class="dropdown-child">删除</span>
+                            </el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                      </el-col>
+                    </el-row>
                     <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
-                    <span class="chrgt" @click="openDelResDialog(secItem.id)">删除</span>
-                    <span class="chrgt" @click="copyId(secItem.id , secItem)">复制条目/资源ID</span>
                   </div>
                 </div>
               </draggable>
@@ -162,8 +338,9 @@
         <!-- 第二步 -->
         <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm">
           <div class="selectmodel">
-            <span :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
+            <span style="position: relative;" :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
               {{item.label}}
+              <div style="width:100%;font-size:10px;position: absolute;top:25px;" v-if="item.discriminator=='resource_group'">注：仅用于多老师</div>
             </span>
           </div>
           <el-row class="ep-set-box" v-if="resourceType === 'paper'">
@@ -211,12 +388,12 @@
                   <i class="el-icon-info"></i>
                 </el-tooltip>
               </el-form-item>
-              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true,type:'number', message: '请填写视频时长的分钟', trigger: ['change','blur']}]">
-                <el-input v-model.number="videoForm.duration_minutes" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
+              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'blur'},...valiMinites]">
+                <el-input v-model="videoForm.duration_minutes" @input="handleInputMinutesChange" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                 分
               </el-form-item>
-              <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="[{message: '请填写视频时长的秒', trigger: ['change','blur']}]">
-                <el-input v-model="videoForm.duration_second" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
+              <el-form-item label="视频时长（秒）" prop="duration_second" class="displayinline" :rules="valiSeconds">
+                <el-input v-model="videoForm.duration_second" @input="handleInputSecondChange" @change="handleInputChange" placeholder="请填写视频时长的秒" auto-complete="off"></el-input>
                 秒
               </el-form-item>
             </el-form>
@@ -289,16 +466,40 @@
     </div>
   </template>
   <style lang="less">
+  .dif-type{
+    border: 1px solid #FCDADA;
+    background-color: #FEF0F0;
+    color: #FC5C12;
+    padding: 2px 10px;
+    font-size: 8px;
+    border-radius: 5px;
+  }
+  .dropdown-child{
+    color: #2CA4D9;
+    font-size: 10px;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  .gray{
+    color:#bdb4b4;
+  }
   .connect-knowledage{
     display: inline-block;
-    height: 23px;
     border-radius: 15px;
     border: 1px solid rgba(255, 102, 0, 1);
     background-color: rgba(255, 227, 185, 1);
     color:#FF0000;
-    font-size: 11px;
-    line-height: 23px;
-    padding: 0 5px;
+    font-size: 10px;
+    padding: 0px 8px;
+    max-width: 420px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: normal;
+    line-height: 20px;
+    position: relative;
+    top: 4px;
   }
   .tabplane .el-dialog {
     min-width: 680px;
@@ -412,11 +613,33 @@
       SelectKnowledge
     },
     data() {
+      var valiMinites = (rule, value, callback) => {
+        value = Number(value);
+        if(value > 999){
+          callback(new Error('时长不允许超过三位数'));
+        }else{
+          callback();
+        }
+      };
+      var valiSeconds = (rule, value, callback) => {
+        if(Number(value) > 60){
+          callback(new Error('秒数最大不允许超过60'));
+        }else {
+          callback();
+        }
+      };
       return {
+        startType:'',//开始的资源类型
+        endType:'',// 结束时的资源类型
+        liveid:0,//直播id
+        resourceid:'',//修改直播时需要的id
+        syllabusid:'', // 添加修改直播时需要的大纲id
+        value2:'',// 设置试听的绑定值
+        valiMinites:[{validator:valiMinites, trigger:'blur'}],// 验证分钟
+        valiSeconds:[{validator:valiSeconds, trigger:'blur'}],// 验证秒
         getId:'',
         judgeid:'',
         knowledgeInfo:"",//添加关联知识点名字字段
-
         is_knowledge_open: false,
         project_id: "", //项目id
         subject_id: "", //科目id
@@ -485,6 +708,46 @@
       };
     },
     methods: {
+      // 预览跳转
+      goPreview(val){
+        if(val.resource){
+          if(val.resource.discriminator === 'video'){
+            let goVideo = this.$router.resolve({
+              name:'previewVideo',
+              params:{id:val.resource.id}
+            })
+            window.open(goVideo.href,'_blank');
+          }else if(val.resource.discriminator === 'resource_group'){
+            let goGroup = this.$router.resolve({
+              name:'editResourceGroup',
+              params:{id:val.resource.id}
+            })
+            window.open(goGroup.href,'blank');
+          }else{
+            this.$message({
+              message:'该类型资源暂时不支持预览',
+              type:'warning'
+            })
+          }
+        }else{
+          this.$message({
+            message:'此条目未挂资源',
+            type:'warning'
+          })
+        }
+      },
+      handleInputMinutesChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.videoForm.duration_minutes = self.videoForm.duration_minutes.replace(/[^\d]/g,'');
+        })
+      },
+      handleInputSecondChange(v){
+        let self = this;
+        this.$nextTick(()=>{
+          self.videoForm.duration_second = self.videoForm.duration_second.replace(/[^\d]/g,'');
+        })
+      },
       // 赋值到剪贴板方法
       copyId(val,obj){
         var oInput = document.createElement('input');
@@ -541,7 +804,6 @@
       },
       //启用知识点
       async handleChangeIsKnowledgeOpen(bool){
-        console.log(bool);
         let ret = await this.$http.UpdateCourseSyllabus(this.syllabus_id, {
           is_knowledge_open: bool ? 1 : 0,
           project_id: this.project_id,
@@ -569,7 +831,11 @@
         }
       },
       handleTableChange(val) {
-        this.resourceRadio = String(val.id);
+        if(val){
+          this.resourceid = val.id;
+          this.endType = val.discriminator;
+          this.resourceRadio = String(val.id);
+        }
       },
       selectclk(discriminator) {
         this.addResFirFrom.apply_to = [];
@@ -577,8 +843,9 @@
         this.resourceType = discriminator;
       },
       //弹出新增资源的弹层
-      openAddResDialog(id) {
-        this.currentId = id;
+      openAddResDialog(val) {
+        this.currentId = val.id;
+        this.syllabusid = val.course_syllabus_id;
         this.active = 0;
         this.addResFirFrom.name = "";
         this.addResFirFrom.start_time = "";//开启时间
@@ -718,7 +985,7 @@
           spinner: "el-icon-loading",
           background: "rgba(0, 0, 0, 0.2)"
         });
-        //查询时候挂载了该资源
+        //查询是否挂载了该资源
         let boolRet = await this.checkResIsInOutline();
         if (!boolRet) {
           this.btnLoading = false;
@@ -737,6 +1004,28 @@
           sy_item_id = nameRet.result.id;
           // 大纲资源条目挂载资源
           await this.mountSyllabusResource(sy_item_id);
+          if(this.resourceid && this.resourceAction === 'add'){
+            if(this.endType === 'legacy_live'){
+              let liveRet = await this.$http.changeLive(0,this.resourceid,this.syllabusid)
+              if(liveRet.status != 0){
+                this.message({
+                  message:'预约直播失败,请联系管理员',
+                  type:'warning'
+                })
+              }
+            }
+          }
+          if(this.resourceid && this.resourceAction === 'update'){
+            if(this.endType === 'legacy_live' || this.startType === 'legacy_live'){
+              let liveRet = await this.$http.changeLive(this.liveid,this.resourceid,this.syllabusid);
+              if(liveRet.status != 0){
+                this.message({
+                  message:'预约直播失败，请联系管理员',
+                  type:'warning'
+                })
+              }
+            }
+          }
           this.btnLoading = false;
           loading.close();
         } else {
@@ -1040,6 +1329,13 @@
       },
       //弹出修改资源的弹层
       openeEditResource(item) {
+        this.syllabusid = item.course_syllabus_id;
+        this.startType = item.resource? item.resource.discriminator : '';
+        if(item.resource && item.resource.discriminator === 'legacy_live'){
+          this.liveid = item.resource.id;//如果是直播资源将老id 储存
+        }else{
+          this.liveid = 0;
+        }
         this.active = 0;
         this.addResFirFrom.name = item.name;  //名称
         this.addResFirFrom.apply_to = item.apply_to?[item.apply_to]:[];  //1表示跳级测试，2表示提分盒子
@@ -1280,7 +1576,7 @@
         }
         let ret = await this.$http.getOutlineKnowledgeList(params);
         if (ret.status === 0){
-          this.knowledgeList = ret.result.result.contents;
+          this.knowledgeList = ret.result.result.contents?ret.result.result.contents:[];
         }
         let id = -1;
         if(item.knowledge_id){

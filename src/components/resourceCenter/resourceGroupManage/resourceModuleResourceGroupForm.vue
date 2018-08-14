@@ -25,9 +25,10 @@
           <el-form-item label="选择资源">
             <el-button :disabled="ruleForm.project==''||ruleForm.project==undefined||ruleForm.project==null" type="primary" @click="handleOpenDialog">选择资源</el-button>
             <el-row>
-              <el-tag size="small" :key="tag.id" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              <el-tag size="small" :key="tag.id" :class="{red:judgIdNum(tag.teacher_id)>=2&& tag.teacher_id != 0}" v-for="tag in multipleSelectionAll" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 <span class="tag-title" :title="tag.title">{{tag.title}}</span>
                 <span class="tag-id">（ID：{{tag.id}}）</span>
+                <span class="tag-id" v-if="judgIdNum(tag.teacher_id)>=2&& tag.teacher_id != 0">（老师ID：{{tag.teacher_id}}）</span>
               </el-tag>
             </el-row>
           </el-form-item>
@@ -80,6 +81,8 @@
     props: ["id"],
     data() {
       return {
+        isConfict:false,//判断是否有冲突情况
+        isInit:false,//判断是否是初始情况
         subjectData: [],
         loading: false,
         selectFalg: false,
@@ -90,7 +93,7 @@
           description: ""
         },
         resourceinput: "", //搜索资源输入框
-        multipleSelectionAll:"",
+        multipleSelectionAll:[],
         multipleSelection: [], //所有选择段资源
         pagination: {
           current_page: 1, //资源列表当前页数
@@ -184,6 +187,7 @@
       },
       // 删除选择的资源
       handleCloseTag(tag) {
+        this.isConfict = true;// 当你执行删除的时候二次删除就不再起作用
         this.multipleSelectionAll.splice(this.multipleSelectionAll.indexOf(tag), 1);
         // this.toggleSelection([tag]);
         if(this.dialogFormVisible){
@@ -192,6 +196,20 @@
       },
       // 打开选择资源的弹层
       handleOpenDialog() {
+        let arr = [];
+        this.multipleSelectionAll.forEach(o=>{
+          if(o.teacher_id !=0 ){
+            arr.push(o.teacher_id);
+          }
+        })
+        if(new Set(arr).size != arr.length){
+          this.$message({
+            message:'请将红色部分相同老师ID的资源选择性删除',
+            type:'warning'
+          })
+          return;
+        }
+        this.isInit = true;//打开弹出层再启用禁用选老师
         // 搜索资源...
         if (this.pagination.current_page != 1) {
           this.pagination.current_page = 1;
@@ -242,7 +260,7 @@
           let ret = await this.$http.newGetTeacher(params);
           if (ret.status == 0) {
             this.resLoading = false;
-            this.resourceTable = ret.result.resources;
+            this.resourceTable = ret.result.resources?ret.result.resources:[];
             this.pagination.total = ret.result.pagination.total;
             this.filterData(this.resourceTable);
             this.showSelect();
@@ -328,9 +346,20 @@
       //新增/修改资源组
       async createResourceForm() {
         let resource_id = [];
+        let teacherArr = [];
         this.multipleSelectionAll.forEach(ele => {
           resource_id.push(ele.id);
+          if(ele.teacher_id !== 0){
+            teacherArr.push(ele.teacher_id);
+          }
         });
+        if(new Set(teacherArr).size != teacherArr.length){
+          this.$message({
+            message:'请将相同老师ID的资源进行修改',
+            type:'warning'
+          })
+          return;
+        }
         let params = {
           title: this.ruleForm.title,
           description: this.ruleForm.description,
@@ -348,12 +377,8 @@
             message: "保存成功",
             type: "success"
           });
-          let res = await this.$http.clearResource(this.$route.params.id)
-          // if(res.status === 0){
-          //   console.log('清除缓存成功');
-          // }else{
-          //   console.log('清除缓存失败');
-          // }
+          // 清除缓存
+          // let res = await this.$http.clearResource(this.$route.params.id)
           setTimeout(() => {
             this.$router.push({
               path: "/resource/resource-group/list"
@@ -392,18 +417,41 @@
         } else {
           this.$refs.multipleTable.clearSelection();
         }
+      },
+      // 编写判断同一个老师包含的个数情况
+      judgIdNum(val){
+        let num = 0;
+        this.multipleSelectionAll.forEach(o=>{
+          if(o.teacher_id === val){
+            num++
+          }
+        })
+        return num;
       }
     },
     watch:{
       multipleSelectionAll(val){
-        let num = 0
+        let num = 0;
+        let arr = [];
         val.forEach(o=>{
+          if(o.teacher_id != 0){
+            arr.push(o.teacher_id);
+          }
           if(val[val.length - 1].teacher_id != 0){
             if(val[val.length - 1].teacher_id == o.teacher_id){
               num ++ ;
             }
           }
         })
+        if(!this.isInit && new Set(arr).size != arr.length){
+          if(!this.isConfict){
+            this.$alert('此资源组，存在多个资源属于同一个老师，这样是不允许的，请修改已选定的资源','温馨提示',{
+              confirmButtonText: '确定',
+            })
+          }
+          return;
+        }
+        // 打开弹出层不让他最后一个是和别的资源是重复的
         if(num >= 2){
           this.$message({
             message:'同一个老师只允许有一个资源',
@@ -443,6 +491,11 @@
     }
   };
   </script>
+<style>
+.red .el-icon-close{
+  color: white!important;
+}
+</style>
 <style lang="less">
   // 添加了预览样式编写
   .tag-watch{
@@ -450,6 +503,11 @@
     color: #0677ea;
     font-weight: 900;
   }
+  .red{
+    background-color: #de4a3a;
+    color: white;
+  }
+
   .resource-group-form-wrapper {
     .frombox {
       .el-tag {

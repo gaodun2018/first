@@ -109,7 +109,7 @@
 }
 
 .el-dropdown-menu {
-    top: 40px !important;
+    top: 40px;
     padding: 0 !important;
     min-width: 70px !important;
 }

@@ -62,7 +62,7 @@
         </el-form-item>
         <el-form-item label="知识点关联" prop="name">
           <el-row>
-            <el-tag class="teacher-tag" v-for="tag in ruleForm.knowledge_id" :key="tag.id" >
+            <el-tag class="teacher-tag" v-for="tag in ruleForm.knowledge_id" closable :disable-transitions="false" @close="handleClose(tag)" :key="tag.id" >
               {{tag.title}} -{{tag.id}}
             </el-tag>
           </el-row>
@@ -143,6 +143,13 @@
       };
     },
     methods: {
+      // 关闭tag标签
+      handleClose(val){
+        console.log(this.multipleSelection);
+        console.log(this.getId);
+        this.getId = '';
+        this.ruleForm.knowledge_id = [];
+      },
       handleInputMinutesChange(v){
         let self = this;
         this.$nextTick(()=>{
@@ -370,7 +377,7 @@
             message: "保存成功",
             type: "success"
           });
-          let res = await this.$http.clearResource(this.ruleForm.id);
+          // let res = await this.$http.clearResource(this.ruleForm.id);
           // if(res.status === 0){
           //   console.log('清除缓存成功');
           // }
@@ -462,6 +469,8 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.ruleForm.knowledge_id = [];
+        this.ruleForm.teacher_id = "";
       },
       //关闭弹层
       closeDialog(formName) {
