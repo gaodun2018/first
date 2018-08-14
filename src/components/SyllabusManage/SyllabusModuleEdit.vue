@@ -15,7 +15,7 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit">
-                <span class="chlft">{{firstItem.name}} <span class="gray"> (条目ID：{{firstItem.id}})</span></span>
+                <span class="chlft">{{firstItem.name}} <span class="gray"> （条目ID：{{firstItem.id}}）</span></span>
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
                     <el-dropdown trigger="click">
@@ -64,8 +64,8 @@
                           <span class='dif-type' v-if="thirdItem.apply_to=='1' || thirdItem.apply_to=='2'">{{thirdItem.apply_to=='2'?'提分盒子':thirdItem.apply_to=='1'?'跳级测试':''}}</span>
                           <span v-if="thirdItem.resource && thirdItem.apply_to!='1' && thirdItem.apply_to!='2'" class="dif-type">{{thirdItem.resource && thirdItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                           {{thirdItem.name}}
-                          <span class="gray">(条目ID：{{ thirdItem.id }}<template v-if="thirdItem.resource ">
-                            资源ID：{{thirdItem.resource && thirdItem.resource.id}}</template>)
+                          <span class="gray">（条目ID：{{ thirdItem.id }}<template v-if="thirdItem.resource ">
+                            资源ID：{{thirdItem.resource && thirdItem.resource.id}}</template>）
                             <template v-if="thirdItem.study_time&&thirdItem.study_time!='0'"><span class="chline">|</span>建议学习：{{thirdItem.study_time}}分钟</template>
                           </span>
                         </span>
