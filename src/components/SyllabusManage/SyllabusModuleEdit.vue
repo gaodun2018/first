@@ -1383,8 +1383,8 @@
           });
           this.getSyllabusItems();
           if(this.startType&&this.startType === 'legacy_live'){
-            let ret = this.$http.changeLive(this.liveid,0,this.syllabusid);
-            if(ret.status != 0){
+            let clearRet = await this.$http.changeLive(this.liveid,0,this.syllabusid);
+            if(clearRet.status != 0){
               this.$message({
                 message:'直播预约清除失败，请联系管理员',
                 type:'warning'
