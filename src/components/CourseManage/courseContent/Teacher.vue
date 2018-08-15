@@ -168,25 +168,25 @@
           setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
           setting_key: "course_teacher_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；course_teacher_open:选老师的开关
         };
-
-      this.$confirm(confirmMsg, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.SetCourseDisable(cource_id, params).then(ret=>{
-            if(ret.status === 0){
-            this.$message({
-                  message:msg,
-                  type:'success'
-                })
-              }else{
-                this.$message({
-                  message:'启用选择老师失败',
-                  type:'warning'
-                })
-              }
-          })
+        this.$confirm(confirmMsg, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http.SetCourseDisable(cource_id, params).then(ret=>{
+              if(ret.status === 0){
+              this.$message({
+                    message:msg,
+                    type:'success'
+                  })
+                  this.getTeacherList();
+                }else{
+                  this.$message({
+                    message:'启用选择老师失败',
+                    type:'warning'
+                  })
+                }
+            })
         }).catch(() => {
           this.isEnabled = this.isEnabled === 0? 1:0;
           this.$message({

@@ -24,7 +24,7 @@
                         <el-dropdown-item @click.native="copyId(firstItem.id)">
                           <span class="dropdown-child" >复制条目ID</span>
                         </el-dropdown-item>
-                        <el-dropdown-item @click.native="openDelOutlineDialog(firstItem.id)">
+                        <el-dropdown-item @click.native="openDelOutlineDialog(firstItem)">
                           <span class="dropdown-child">删除</span>
                         </el-dropdown-item>
                       </el-dropdown-menu>
@@ -46,7 +46,7 @@
                             <el-dropdown-item  @click.native="copyId(secItem.id)">
                               <span class="dropdown-child">复制条目ID</span>
                             </el-dropdown-item>
-                            <el-dropdown-item @click.native="openDelOutlineDialog(secItem.id)">
+                            <el-dropdown-item @click.native="openDelOutlineDialog(secItem)">
                               <span class="dropdown-child">删除</span>
                             </el-dropdown-item>
                           </el-dropdown-menu>
@@ -89,7 +89,7 @@
                                 <el-dropdown-item @click.native="goPreview(thirdItem)">
                                   <span class="dropdown-child">预览</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item @click.native="openDelResDialog(thirdItem.id)">
+                                <el-dropdown-item @click.native="openDelResDialog(thirdItem)">
                                   <span class="dropdown-child">删除</span>
                                 </el-dropdown-item>
                               </el-dropdown-menu>
@@ -118,7 +118,7 @@
                         <el-dropdown-item  @click.native="copyId(firstItem.id)">
                           <span class="dropdown-child">复制条目ID</span>
                         </el-dropdown-item>
-                         <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem.id)">
+                         <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem)">
                           <span class="dropdown-child">删除</span>
                         </el-dropdown-item>
                       </el-dropdown-menu>
@@ -141,7 +141,7 @@
                             <el-dropdown-item @click.native="copyId(secItem.id)">
                                <span class="dropdown-child">复制条目ID</span>
                             </el-dropdown-item>
-                            <el-dropdown-item  @click.native="openDelOutlineDialog(secItem.id)">
+                            <el-dropdown-item  @click.native="openDelOutlineDialog(secItem)">
                               <span class="dropdown-child">删除</span>
                             </el-dropdown-item>
                           </el-dropdown-menu>
@@ -168,7 +168,7 @@
                                 <el-dropdown-item @click.native="handleOpenKnowledgeDialog(thirdItem)">
                                   <span class="dropdown-child" v-if="subject_id != 0">关联知识点</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item  @click.native="openDelOutlineDialog(thirdItem.id)">
+                                <el-dropdown-item  @click.native="openDelOutlineDialog(thirdItem)">
                                   <span class="dropdown-child">删除</span>
                                 </el-dropdown-item>
                               </el-dropdown-menu>
@@ -212,7 +212,7 @@
                                     <el-dropdown-item @click.native="goPreview(fourthItem)">
                                       <span class="dropdown-child">预览</span>
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click.native="openDelResDialog(fourthItem.id)">
+                                    <el-dropdown-item @click.native="openDelResDialog(fourthItem)">
                                       <span class="dropdown-child">删除</span>
                                     </el-dropdown-item>
                                   </el-dropdown-menu>
@@ -245,7 +245,7 @@
                         <el-dropdown-item @click.native="copyId(firstItem.id)">
                           <span class="dropdown-child">复制条目ID</span>
                         </el-dropdown-item>
-                        <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem.id)">
+                        <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem)">
                           <span class="dropdown-child">删除</span>
                         </el-dropdown-item>
                       </el-dropdown-menu>
@@ -291,7 +291,7 @@
                             <el-dropdown-item @click.native="goPreview(secItem)">
                               <span class="dropdown-child" >预览</span>
                             </el-dropdown-item>
-                            <el-dropdown-item  @click.native="openDelResDialog(secItem.id)">
+                            <el-dropdown-item  @click.native="openDelResDialog(secItem)">
                               <span class="dropdown-child">删除</span>
                             </el-dropdown-item>
                           </el-dropdown-menu>
@@ -831,6 +831,7 @@
         }
       },
       handleTableChange(val) {
+        console.log(val);
         if(val){
           this.resourceid = val.id;
           this.endType = val.discriminator;
@@ -1329,10 +1330,11 @@
       },
       //弹出修改资源的弹层
       openeEditResource(item) {
+        console.log(item)
         this.syllabusid = item.course_syllabus_id;
         this.startType = item.resource? item.resource.discriminator : '';
         if(item.resource && item.resource.discriminator === 'legacy_live'){
-          this.liveid = item.resource.id;//如果是直播资源将老id 储存
+          this.liveid = item.resource.live_id;//如果是直播资源将老id 储存
         }else{
           this.liveid = 0;
         }
@@ -1349,8 +1351,15 @@
         this.resourceAction = "update";
       },
       // 弹出资源删除框
-      openDelResDialog(id) {
-        this.currentId = id;
+      openDelResDialog(item) {
+        this.syllabusid = item.course_syllabus_id;
+        this.startType = item.resource? item.resource.discriminator : '';
+        if(item.resource && item.resource.discriminator === 'legacy_live'){
+          this.liveid = item.resource.live_id;//如果是直播资源将老id 储存
+        }else{
+          this.liveid = 0;
+        }
+        this.currentId = item.id;
         this.dialogVisible = true;
         this.deleteModule = false;
       },
@@ -1373,6 +1382,15 @@
             type: "success"
           });
           this.getSyllabusItems();
+          if(this.startType&&this.startType === 'legacy_live'){
+            let ret = this.$http.changeLive(this.liveid,0,this.syllabusid);
+            if(ret.status != 0){
+              this.$message({
+                message:'直播预约清除失败，请联系管理员',
+                type:'warning'
+              })
+            }
+          }
         } else {
         }
         this.dialogVisible = false;
