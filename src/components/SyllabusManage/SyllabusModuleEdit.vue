@@ -1364,8 +1364,8 @@
         this.deleteModule = false;
       },
       // 弹出大纲删除框
-      openDelOutlineDialog(id) {
-        this.currentId = id;
+      openDelOutlineDialog(val) {
+        this.currentId = val.id;
         this.dialogVisible = true;
         this.deleteModule = true;
       },
