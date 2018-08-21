@@ -640,9 +640,9 @@ export default {
     let env = getEnv();
     // console.log("584",env);
     if( env == ''){ // 判断环境给初始视频id
-      this.vid_id = '242241';
+      this.vid_id = '746454';
     }else{
-      this.vid_id = '600616';
+      this.vid_id = '746454';
     }
   },
   filters:{
