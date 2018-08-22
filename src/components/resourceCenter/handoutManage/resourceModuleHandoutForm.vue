@@ -74,6 +74,7 @@ export default {
   },
   data() {
     return {
+      size:0,
       subjectData: [],
       fileList: [],
       apiHeader: {},
@@ -169,6 +170,7 @@ export default {
     // 上传结束
     uploadSuccess(response, file) {
       if (response.status === 0) {
+        this.size = response.result.size;
         this.isUpload = true;
         this.$message({
           message: "文件上传成功",
@@ -211,7 +213,8 @@ export default {
         title,
         description,
         file,
-        path
+        path,
+        size:this.size
       };
       this.loading = true;
       let ret = await this.$http.saveLecturenote(params);
@@ -245,7 +248,8 @@ export default {
         _method: "PUT",
         title,
         description,
-        path
+        path,
+        size:this.size
       };
       this.loading = true;
       let ret = await this.$http.saveMidfyLecturenote(
