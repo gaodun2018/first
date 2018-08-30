@@ -80,7 +80,8 @@
                                 <el-dropdown-item>
                                   <span class="dropdown-child">设置试听
                                     <el-switch
-                                      v-model="value2"
+                                      @change="changePreWatch(thirdItem)"
+                                      v-bind="{value:thirdItem.audition == 0?false:true}"
                                       active-color="#2884E0"
                                       inactive-color="#BFBFBF">
                                     </el-switch>
@@ -203,7 +204,8 @@
                                       <span class="dropdown-child">
                                         设置试听
                                         <el-switch
-                                          v-model="value2"
+                                          @change="changePreWatch(fourthItem)"
+                                          v-bind="{value:fourthItem.audition == 0?false:true}"
                                           active-color="#2884E0"
                                           inactive-color="#BFBFBF">
                                         </el-switch>
@@ -279,10 +281,11 @@
                               <span class="dropdown-child" >复制条目/资源ID</span>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                              <span class="dropdown-child" >
+                              <span class="dropdown-child">
                                 设置试听
                                 <el-switch
-                                  v-model="value2"
+                                  @change="changePreWatch(secItem)"
+                                  v-bind="{value:secItem.audition == 0?false:true}"
                                   active-color="#2884E0"
                                   inactive-color="#BFBFBF">
                                 </el-switch>
@@ -708,6 +711,31 @@
       };
     },
     methods: {
+      // 设置试听
+      async changePreWatch(val){
+        let audition = val.audition == 1? 0:1;
+        let params = {
+          audition:audition,
+          name: val.name,
+          course_syllabus_id: this.syllabus_id
+        }
+        let ret = await this.$http.ChangeSyllabusItem(val.id, params);
+        if(ret.status === 0){
+          let tipStr = audition == 0?'已关闭试听':'已设置试听';
+          this.$message({
+            message:tipStr,
+            type:'success'
+          })
+          setTimeout(()=>{
+            this.getSyllabusItems();
+          },800)
+        }else{
+          this.$message({
+            message:'设置试听失败，请联系管理员',
+            type:'warning'
+          })
+        }
+      },
       // 预览跳转
       goPreview(val){
         if(val.resource){
@@ -831,7 +859,6 @@
         }
       },
       handleTableChange(val) {
-        console.log(val);
         if(val){
           this.resourceid = val.id;
           this.endType = val.discriminator;
@@ -1330,7 +1357,6 @@
       },
       //弹出修改资源的弹层
       openeEditResource(item) {
-        console.log(item)
         this.syllabusid = item.course_syllabus_id;
         this.startType = item.resource? item.resource.discriminator : '';
         if(item.resource && item.resource.discriminator === 'legacy_live'){
