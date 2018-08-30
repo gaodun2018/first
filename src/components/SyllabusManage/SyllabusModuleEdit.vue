@@ -77,7 +77,7 @@
                                  <el-dropdown-item  @click.native="copyId(thirdItem.id,thirdItem)">
                                   <span class="dropdown-child">复制条目/资源ID</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item>
+                                <el-dropdown-item v-if="thirdItem.resource && thirdItem.resource.discriminator === 'video'">
                                   <span class="dropdown-child">设置试听
                                     <el-switch
                                       @change="changePreWatch(thirdItem)"
@@ -200,7 +200,7 @@
                                     <el-dropdown-item @click.native="copyId(fourthItem.id,fourthItem)">
                                       <span class="dropdown-child">复制条目/资源ID</span>
                                     </el-dropdown-item>
-                                    <el-dropdown-item>
+                                    <el-dropdown-item v-if="fourthItem.resource && fourthItem.resource.discriminator === 'video'">
                                       <span class="dropdown-child">
                                         设置试听
                                         <el-switch
@@ -280,7 +280,7 @@
                             <el-dropdown-item @click.native="copyId(secItem.id , secItem)">
                               <span class="dropdown-child" >复制条目/资源ID</span>
                             </el-dropdown-item>
-                            <el-dropdown-item>
+                            <el-dropdown-item v-if="secItem.resource && secItem.resource.discriminator === 'video'">
                               <span class="dropdown-child">
                                 设置试听
                                 <el-switch
@@ -738,6 +738,8 @@
       },
       // 预览跳转
       goPreview(val){
+        // 添加预览提示正在维护
+        return this.$message('此功能正在维护中，敬请期待');
         if(val.resource){
           if(val.resource.discriminator === 'video'){
             let goVideo = this.$router.resolve({
