@@ -15,10 +15,14 @@
             <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit" @click="spread(firstItem)">
-                <span class="chlft">{{firstItem.name}} <span class="gray"> （条目ID：{{firstItem.id}}）</span></span>
+                <span class="chlft">
+                  <span v-if="openArr.includes(firstItem.id)" style="font-weight: bold;" class="el-icon-arrow-down"></span>
+                  <span v-else style="font-weight: bold;" class="el-icon-arrow-right"></span>
+                  {{firstItem.name}} <span class="gray"> （条目ID：{{firstItem.id}}）</span>
+                </span>
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
-                    <el-dropdown trigger="click">
+                    <el-dropdown trigger="click" @click.native="handleSpread">
                       <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
                       <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
                         <el-dropdown-item @click.native="copyId(firstItem.id)">
@@ -31,18 +35,16 @@
                     </el-dropdown>
                   </el-col>
                 </el-row>
-                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openChildDialog(firstItem.id)">增加子目录</span>
+                <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
 
               <div>
                 <el-collapse-transition>
-                  <draggable v-show="openArr.includes(firstItem)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
+                  <draggable v-if="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                     <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                       <div class="chaptit chapsecd">
                         <span class="chlft">
-                          <span v-if="openArr.includes(firstItem.id)" style="font-weight: bold;" class="el-icon-arrow-down"></span>
-                          <span v-else style="font-weight: bold;" class="el-icon-arrow-right"></span>
                           {{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span>
                         </span>
                         <el-row class="chrgt" style="width:60px;">
@@ -128,7 +130,7 @@
                 </span>
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
-                    <el-dropdown trigger="click">
+                    <el-dropdown trigger="click" @click.native="handleSpread">
                       <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
                       <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
                         <el-dropdown-item  @click.native="copyId(firstItem.id)">
@@ -141,13 +143,13 @@
                     </el-dropdown>
                   </el-col>
                 </el-row>
-                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openChildDialog(firstItem.id)">增加子目录</span>
+                <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
               </div>
 
               <div>
                 <el-collapse-transition>
-                  <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
+                  <draggable v-if="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                     <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                       <div class="chaptit chapsecd">
                         <span class="chlft">{{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span></span>
@@ -266,7 +268,7 @@
                 </span>
                 <el-row class="chrgt" style="width:60px;">
                   <el-col :span="12">
-                    <el-dropdown trigger="click">
+                    <el-dropdown trigger="click" @click.native="handleSpread">
                       <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
                       <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
                         <el-dropdown-item @click.native="copyId(firstItem.id)">
@@ -280,8 +282,8 @@
                   </el-col>
                 </el-row>
 
-                <span class="chrgt" @click="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
+                <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
+                <span class="chrgt" @click.stop="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
               </div>
 
               <div>
@@ -366,6 +368,7 @@
             分钟
           </el-form-item>
           <el-form-item class="coursebtn">
+            <!-- <el-button style="margin-top:12px;" type="primary" @click="firstNextSubmit('addResFirFrom')">创建条目</el-button> -->
             <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
           </el-form-item>
         </el-form>
@@ -500,6 +503,9 @@
     </div>
   </template>
   <style lang="less">
+  .chapterbox .chaptit{
+    cursor: pointer;
+  }
   .knowledge .audition{
     border: 1px solid #7fadd0;
     background-color: #64c5ee;
@@ -756,8 +762,13 @@
       };
     },
     methods: {
-      // 点击控制展开
+      handleSpread(e){
+        // 阻止事件冒泡
+        e.cancelBubble=true
+      },
+      // 点击控制折叠与展开
       spread(val){
+        console.log(this.openArr);
         if(this.openArr.includes(val.id)){
           this.openArr.forEach((o,i)=>{
             if(val.id == o){
@@ -1059,12 +1070,12 @@
       },
       // 数据库检索流程 sourceRadio-2
       async sourceRadio2Syllabus() {
-        // if (!this.resourceRadio) {
-        //   return this.$message({
-        //     message: "请选择资源",
-        //     type: "warning"
-        //   });
-        // }
+        if (!this.resourceRadio) {
+          return this.$message({
+            message: "请选择资源",
+            type: "warning"
+          });
+        }
         this.btnLoading = true;
         const loading = this.$loading({
           lock: true,
@@ -1072,7 +1083,6 @@
           spinner: "el-icon-loading",
           background: "rgba(0, 0, 0, 0.2)"
         });
-        console.log(loading)
         //查询是否挂载了该资源
         let boolRet = await this.checkResIsInOutline();
         if (!boolRet) {
