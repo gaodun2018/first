@@ -161,7 +161,7 @@ export default {
       subtablist: [], //按钮组科目列表
       selectedlist: [], //新增课程科目列表
       bSubject: false, //是否可以选择科目
-      course_type: old_course_type, //网课类型
+      course_type: course_type, //网课类型
       selectvalue: "", //下拉搜索所选择的的网课类型
       // options: options, //下拉搜索的网课类型列表
       //新增课程的表单
@@ -343,10 +343,10 @@ export default {
     this.$store.dispatch("getProjectSubjectList");
     this.searchCourse();
     //线上测试使用属性，可以建ep2课程
-    let ep2 = localStorage.getItem('isInEP2') ? true :false;
-    if (ep2){
-      this.course_type =  course_type;
-    }
+    // let ep2 = localStorage.getItem('isInEP2') ? true :false;
+    // if (ep2){
+    //   this.course_type =  course_type;
+    // }
   }
 };
 </script>
