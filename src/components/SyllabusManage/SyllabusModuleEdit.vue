@@ -368,8 +368,9 @@
             分钟
           </el-form-item>
           <el-form-item class="coursebtn">
-            <!-- <el-button style="margin-top:12px;" type="primary" @click="firstNextSubmit('addResFirFrom')">创建条目</el-button> -->
-            <el-button style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">下一步</el-button>
+            <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button>
+            <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button>
+            <el-button type="primary" style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">继续加资源</el-button>
           </el-form-item>
         </el-form>
         <!-- 第二步 -->
@@ -682,6 +683,7 @@
         }
       };
       return {
+        audition:0,//是否为试听字段
         startType:'',//开始的资源类型
         endType:'',// 结束时的资源类型
         liveid:0,//直播id
@@ -762,6 +764,52 @@
       };
     },
     methods: {
+      // 直接创建条目
+      directSyllabus(formName){
+        this.$refs[formName].validate(async valid => {
+          if (valid) {
+            let nameRet = await this.CourseSyllabusItem();
+            if(nameRet.status == 0){
+              this.dialogFormVisible = false;
+              this.getSyllabusItems();
+              this.$message({
+                message:'创建条目成功',
+                type:'success'
+              })
+            }else{
+              this.$message({
+                message:'直接创建条目失败请联系管理员',
+                type:'success'
+              })
+            }
+          } else {
+            return false;
+          }
+        });
+      },
+      // 直接修改条目名称
+      directChangeSyllabus(formName){
+        this.$refs[formName].validate(async valid => {
+          if (valid) {
+            let nameRet = await this.ChangeSyllabusItem();
+              if(nameRet.status == 0){
+                this.dialogFormVisible = false;
+                this.getSyllabusItems();
+                this.$message({
+                  message:'修改条目成功',
+                  type:'success'
+                })
+              }else{
+                this.$message({
+                  message:'直接修改条目失败请联系管理员',
+                  type:'success'
+                })
+              }
+            } else {
+              return false;
+            }
+        });
+      },
       handleSpread(e){
         // 阻止事件冒泡
         e.cancelBubble=true
@@ -1365,7 +1413,8 @@
         let id = this.currentId;
         let params = {
           name: this.addResFirFrom.name,
-          course_syllabus_id: this.syllabus_id
+          course_syllabus_id: this.syllabus_id,
+          audition:this.audition
         };
         if (this.addResFirFrom.study_time) {
           //学习时长， 单位分钟
@@ -1434,6 +1483,7 @@
         }else{
           this.liveid = 0;
         }
+        this.audition = item.audition;//是否试听
         this.active = 0;
         this.addResFirFrom.name = item.name;  //名称
         this.addResFirFrom.apply_to = item.apply_to?[item.apply_to]:[];  //1表示跳级测试，2表示提分盒子
