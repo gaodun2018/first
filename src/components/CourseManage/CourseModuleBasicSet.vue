@@ -253,7 +253,7 @@ export default {
       // projectlist: [], //项目列表
       selectedlist: [], //科目列表
       ware_status_list: [], //内容制作状态
-      course_type: old_course_type, //网课类型
+      course_type: course_type, //网课类型
       active: 0,
       progressText: progressText, //进度状态
       ruleForm: {
@@ -595,10 +595,10 @@ export default {
   },
   mounted() {
     //线上测试使用属性，可以建ep2课程
-    let ep2 = localStorage.getItem('isInEP2') ? true :false;
-    if (ep2){
-      this.course_type =  course_type;
-    }
+    // let ep2 = localStorage.getItem('isInEP2') ? true :false;
+    // if (ep2){
+    //   this.course_type =  course_type;
+    // }
     this.$nextTick(() => {
       setTimeout(() => {
         this.setEditor();
