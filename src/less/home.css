@@ -223,7 +223,7 @@
     background: url("./../assets/images/financeHome/icon_product.png") no-repeat center;
 }
 
-#icon_quanxian {
+#icon-quanxian {
     background: url("./../assets/images/financeHome/icon_quanxian.png") no-repeat center;
 }
 
@@ -231,12 +231,12 @@
     background: url("./../assets/images/financeHome/icon_business.png") no-repeat center;
 }
 
-#icon_course {
+#icon-course {
     background: url("./../assets/images/financeHome/icon_course.png") no-repeat center;
 }
 
-#icon_agent {
-    background: url("./../assets/images/financeHome/icon_agent.png") no-repeat center;
+#icon-fuwu {
+    background: url("./../assets/images/financeHome/icon_fuwu.png") no-repeat center;
 }
 
 #icon_dayi {
@@ -246,9 +246,19 @@
 #icon_business {
     background: url("./../assets/images/financeHome/icon_business.png") no-repeat center;
 }
+
 #icon_tiku {
     background: url("./../assets/images/financeHome/icon_tiku.png") no-repeat center;
 }
+
+#icon-goods {
+    background: url("./../assets/images/financeHome/icon_goods.png") no-repeat center;
+}
+
+#icon-yunying {
+    background: url("./../assets/images/financeHome/icon_yunying.png") no-repeat center;
+}
+
 .console-menu-items .item-title {
     width: 100%;
     height: 22px;
