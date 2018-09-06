@@ -694,7 +694,8 @@
         sortOptions: "", //排序参数
         sourceRadio: 1, //资源选择的来源
         handoutForm: {
-          path: ""
+          path: "",
+          size: ""
         },
         videoForm: {
           title: "",
@@ -1154,7 +1155,8 @@
             this.subject_id == "0" ? this.project_id : this.subject_id,
           tag_payload_type: this.subject_id == "0" ? "project" : "subject",
           title: this.addResFirFrom.name, //讲义资源名称使用大纲条目名称
-          path: this.handoutForm.path
+          path: this.handoutForm.path,
+          size: this.handoutForm.size
         };
         let saveHandoutRet = await this.$http.saveLecturenote(params);
         if (saveHandoutRet.status === 0) {
@@ -1200,8 +1202,9 @@
         }
       },
       // 获取讲义上传的地址
-      getHandoutPath(path) {
-        this.handoutForm.path = path;
+      getHandoutPath(val) {
+        this.handoutForm.path = val.path;
+        this.handoutForm.size = val.size;
       },
       // 检查大纲是否挂载在大纲上
       async checkResIsInOutline() {
