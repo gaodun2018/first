@@ -1411,6 +1411,9 @@
       // 修改大纲资源条目名称
       async ChangeSyllabusItem() {
         let id = this.currentId;
+        if(this.resourceType&&this.resourceType != 'video'){
+          this.audition = 0;
+        }
         let params = {
           name: this.addResFirFrom.name,
           course_syllabus_id: this.syllabus_id,
