@@ -105,7 +105,7 @@ export default {
                     message: "文件上传成功",
                     type: "success"
                 });
-                this.$emit('getHandoutPath',response.result.path);
+                this.$emit('getHandoutPath',response.result);
             } else {
                 this.isUpload = false;
                 setTimeout(() => {
