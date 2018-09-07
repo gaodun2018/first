@@ -62,6 +62,17 @@ instance.interceptors.response.use(function(response) {
         return Promise.resolve(response.data);
     }
 
+    if (response.data.status === '403') {
+      //无项目权限
+      Message({
+        message: '需要配置项目权限才能使用。请联系技术客服主管老师配置相应的项目权限。',
+        type: 'warning',
+        duration: 0,
+        showClose: true
+      })
+      return Promise.resolve(response.data);
+    }
+
     return Promise.resolve(response.data);
 }, function(error) {
     return Promise.reject(error);
