@@ -1,38 +1,32 @@
 <template>
-<<<<<<< Updated upstream
-    $END$
-</template>
-
-<script>
-    export default {
-        name: "SyllabusModuleGlive"
-    }
-=======
   <div>
-    <createChildrenItem
-      :item="{id:111,name:'123123'}"
-    ></createChildrenItem>
-    <createResourceItem
-      :item="{id:11,name:'123123'}"
-    ></createResourceItem>
+    <createHeaderItem
+      :title="'大纲测试'"
+      :coursesylllevel="4"
+      :subject_id="3"
+      :is_knowledge_open="false"
+    >
+    </createHeaderItem>
+    <createResourceItem :item="{id:1,name:'see'}"></createResourceItem>
+    <createChildrenItem :item="{id:1,name:'see'}"></createChildrenItem>
   </div>
 </template>
 
 <script>
   import createResourceItem from './createResourceItem.vue'
   import createChildrenItem from './createChildrenItem.vue'
+  import createHeaderItem from './createHeaderItem.vue'
 
   export default {
-    name: "SyllabusModuleGlive",
     data() {
       return {}
     },
     components: {
       createResourceItem,
-      createChildrenItem
+      createChildrenItem,
+      createHeaderItem
     }
   }
->>>>>>> Stashed changes
 </script>
 
 <style scoped>

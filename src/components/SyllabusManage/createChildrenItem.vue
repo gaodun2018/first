@@ -1,11 +1,6 @@
 <template>
   <div class="chaptit">
-<<<<<<< Updated upstream
-    <span class="chlft">{{item.name}} <span class="gray">（条目ID：{{item.id}}） </span></span>
-
-=======
-    <span class="chlft">{{item.name}}<span class="gray">（条目ID：{{item.id}}）</span></span>
->>>>>>> Stashed changes
+    <span class="chlft">{{item.name}} <span class="gray">（条目ID：{{item.id}}）</span></span>
     <el-row class="chrgt" style="width:60px;">
       <el-col :span="12">
         <el-dropdown trigger="click">
@@ -21,24 +16,13 @@
         </el-dropdown>
       </el-col>
     </el-row>
-<<<<<<< Updated upstream
-
-    <span class="chrgt" @click="editproject(item.id,item.name)">修改</span>
-    <span class="chrgt" @click="openAddResDialog(item)" style="color:#FF9C1C;">新增资源</span>
-=======
     <span class="chrgt" @click="editproject(item.id,item.name)">修改</span>
     <span class="chrgt" @click="openChildDialog(item.id,true)">增加子目录</span>
->>>>>>> Stashed changes
   </div>
 </template>
 
 <script>
   export default {
-<<<<<<< Updated upstream
-    name: "createdResourceBtnGroup",
-=======
-    name: "createChildrenItem",
->>>>>>> Stashed changes
     props: {
       //当前条目
       item: {
@@ -82,6 +66,7 @@
     overflow: hidden;
     margin-top: 10px;
     cursor: move;
+    line-height: 30px;
     &.additem {
       text-align: center;
       span {

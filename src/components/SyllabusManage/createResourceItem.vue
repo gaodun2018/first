@@ -25,11 +25,6 @@
 
 <script>
   export default {
-<<<<<<< Updated upstream
-    name: "createdResourceBtnGroup",
-=======
-    name: "createResourceItem",
->>>>>>> Stashed changes
     props: {
       //当前条目
       item: {
@@ -73,6 +68,7 @@
     overflow: hidden;
     margin-top: 10px;
     cursor: move;
+    line-height: 30px;
     &.additem {
       text-align: center;
       span {
