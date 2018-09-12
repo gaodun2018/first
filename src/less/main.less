@@ -946,7 +946,12 @@ img {
         border: solid 1px #26a1ff;
         vertical-align: bottom;
         margin-left: 6px;
-        padding: 8px 15px
+        padding: 8px 15px;
+        &.is-disabled{
+            color: #fff;
+            background-color: #a0cfff;
+            border-color: #a0cfff;
+        }
     }
     .select-search {
         .el-input__inner {
@@ -967,12 +972,22 @@ img {
         border: solid 1px #26a1ff;
         vertical-align: bottom;
         margin-left: 6px;
-        padding: 7px 15px
-    }
-    .routerBtn:hover{
-        background: #66b1ff;
-        border-color: #66b1ff;
-        color: #fff;
+        padding: 7px 15px;
+        &.is-disabled{
+            color: #fff;
+            background-color: #a0cfff;
+            border-color: #a0cfff;
+        }
+        &:hover{
+          background: #66b1ff;
+          border-color: #66b1ff;
+          color: #fff;
+        }
+        &.is-disabled:hover{
+            color: #fff;
+            background-color: #a0cfff;
+            border-color: #a0cfff;
+        }
     }
 }
 

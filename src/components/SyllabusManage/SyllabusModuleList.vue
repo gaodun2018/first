@@ -33,7 +33,15 @@
               <el-input placeholder="请输入课程大纲ID、名称" size="small" v-model="searchinput" @keyup.native.enter="handleIconClick">
                 <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
               </el-input>
-              <el-button type="primary" size="small" @click="addCourseOutline" v-if="unlocking('SY_CREATE')">+&nbsp;新建一个课程大纲</el-button>
+              <el-button
+                type="primary"
+                size="small"
+                @click="addCourseOutline"
+                :disabled="isBtnDisabled"
+                v-if="unlocking('SY_CREATE')"
+              >
+                +&nbsp;新建一个课程大纲
+              </el-button>
               <a class='docBtn' :href="`${docUrl}#/outlineCourse`" target="_blank">
                 <i class="el-icon-question"></i>
                 使用帮助
@@ -159,7 +167,8 @@ export default {
       dialogCourse: true,
       selectcur: false, //项目选择器开关
       isCopy: false, //复制大纲状态
-      dialogTitle: "新建课程大纲"
+      dialogTitle: "新建课程大纲",
+      isBtnDisabled: true,
     };
   },
   methods: {
@@ -356,10 +365,13 @@ export default {
         status: this.selectvalue,
         keyword: this.searchinput
       });
+      this.tableLoading = false;
       if (ret.status == 0) {
-        this.tableLoading = false;
+        this.isBtnDisabled = false;
         this.CourseLineList = ret.result.list;
         this.courselinenum = parseInt(ret.result.total);
+      }else {
+        this.isBtnDisabled = true;
       }
     },
     handleSizeChange(val) {
