@@ -32,9 +32,15 @@
               <el-input placeholder="视频ID／视频名称" size="small" v-model="keywords" @keydown.native.enter="handleIconClick">
                 <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
               </el-input>
-              <router-link class="routerBtn" v-if="unlocking('VIDEO_CREATE')" to="/resource/video/create">+&nbsp;新增视频
+              <router-link
+                class="routerBtn"
+                :class="{'is-disabled': isBtnDisabled}"
+                v-if="unlocking('VIDEO_CREATE')"
+                :to="isBtnDisabled ? '#' : '/resource/video/create'"
+              >
+                +&nbsp;新增视频
               </router-link>
-              <el-button type="primary" size="small" @click="uploaddialogVisible = true">+&nbsp;批量导入视频资源
+              <el-button type="primary" size="small" :disabled="isBtnDisabled" @click="uploaddialogVisible = true">+&nbsp;批量导入视频资源
               </el-button>
               <a class='docBtn' :href="`${docUrl}#/resourceCourse`" target="_blank">
                 <i class="el-icon-question"></i>
@@ -117,7 +123,8 @@ export default {
       paginationTotal: 0,
       pageSize: 50,
       loading: false,
-      uploaddialogVisible: false //批量上传的显示隐藏
+      uploaddialogVisible: false ,//批量上传的显示隐藏
+      isBtnDisabled: false,
     };
   },
   computed: {
@@ -202,24 +209,29 @@ export default {
     async loadResources() {
       this.loading = true;
       let resourceResponse = await this.fetchResources();
-      let resources = resourceResponse.result;
-      try {
-        for (var resource of resources.resources) {
-          resource.created_at = new Date(resource.created_at * 1000);
-          resource.updated_at = number2DateTime(
-            new Date(resource.updated_at * 1000)
-          );
-          resource.project_name = resource.tag == null ? "" : resource.tag.name;
-        }
-      } catch (error) {
-        // console.log(error);
-      }
-      this.resource = resources;
-      let total = this.resource.pagination.total;
-      // if (this.paginationTotal == 0)
-      //     this.paginationTotal = total
-      this.paginationTotal = total;
       this.loading = false;
+      if (resourceResponse.status === 0){
+        this.isBtnDisabled = false;
+        let resources = resourceResponse.result;
+        try {
+          for (var resource of resources.resources) {
+            resource.created_at = new Date(resource.created_at * 1000);
+            resource.updated_at = number2DateTime(
+              new Date(resource.updated_at * 1000)
+            );
+            resource.project_name = resource.tag == null ? "" : resource.tag.name;
+          }
+        } catch (error) {
+          // console.log(error);
+        }
+        this.resource = resources;
+        let total = this.resource.pagination.total;
+        // if (this.paginationTotal == 0)
+        //     this.paginationTotal = total
+        this.paginationTotal = total;
+      }else {
+        this.isBtnDisabled = true;
+      }
     },
     async didChangePage(page) {
       this.currentPage = page;

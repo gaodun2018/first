@@ -5,6 +5,7 @@ import { SAAS_TOKEN, SAAS_USER_INFO } from './keys';
 import { getCookie, setCookie } from './cookie.js';
 import { Message } from 'element-ui';
 
+window.message = null;
 let prefix = getEnv();
 let userInfo = localStorage.getItem(SAAS_USER_INFO);
 if (userInfo) {
@@ -55,6 +56,16 @@ axios.interceptors.response.use(function(response) {
         return Promise.resolve(response.data);
     }
 
+    if (response.data.status === '403') {
+      //无项目权限
+      window.message = !window.message && Message({
+        message: '需要配置项目权限才能使用。请联系技术客服主管老师配置相应的项目权限。',
+        type: 'warning',
+        duration: 0,
+        showClose: true
+      })
+      return Promise.resolve(response.data);
+    }
     return Promise.resolve(response.data);
 }, function(error) {
     return Promise.reject(error);

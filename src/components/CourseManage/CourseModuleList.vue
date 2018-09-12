@@ -38,7 +38,14 @@
               <el-input placeholder="课程ID／课程名称" size="small" v-model="searchinput" @keydown.native.enter="handleIconClick">
                 <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
               </el-input>
-              <el-button type="primary" size="small" @click="dialogCourseVisible = true" v-if="unlocking('COURSE_CREATE')">+&nbsp;新增一个课程
+              <el-button
+                type="primary"
+                size="small"
+                @click="dialogCourseVisible = true"
+                :disabled="isBtnDisabled"
+                v-if="unlocking('COURSE_CREATE')"
+              >
+                +&nbsp;新增一个课程
               </el-button>
               <a class='docBtn' :href="`${docUrl}#/createCourse`" target="_blank">
                 <i class="el-icon-question"></i>
@@ -180,7 +187,8 @@ export default {
       currentPage: 1, //默认当前页
       pageSize: 15, //默认分页数量
       docUrl: getDocumentUrl,
-      authCodeKey: "iTSe2NQd9PG6lzojysC48BHuXgvIcAqw"
+      authCodeKey: "iTSe2NQd9PG6lzojysC48BHuXgvIcAqw",
+      isBtnDisabled: true
     };
   },
   computed: {
@@ -219,10 +227,13 @@ export default {
         course_type: this.selectvalue,
         course_id_name: this.searchinput
       });
+      this.loading = false;
       if (ret.status == 0) {
-        this.loading = false;
+        this.isBtnDisabled = false;
         this.videoList = ret.result.item_list;
         this.eduTotal = ret.result.all_item_count;
+      }else {
+        this.isBtnDisabled = true;
       }
     },
     visibleChange(bool) {
