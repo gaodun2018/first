@@ -29,7 +29,6 @@ export default {
         }
         Vue.prototype.tableHeight = (that, top) => {
             that.$nextTick(() => {
-                debugger;
                 let scroll = top || 0;
                 let tableOffsetTop = 0;
                 let thisTable = document.getElementsByClassName('el-table')

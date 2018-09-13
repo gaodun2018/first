@@ -1,0 +1,149 @@
+<template>
+  <el-upload
+    class="upload-demo"
+    drag
+    :action="materialUpload"
+    :on-change="handleChange"
+    :on-remove="handleRemove"
+    :on-success="handleAvatarSuccess"
+    :on-error="handleAvatarError"
+    :on-progress="handleProgress"
+    :headers="apiHeader"
+    :before-upload="beforeAvatarUpload"
+    :file-list="fileList"
+    :data="uploadData"
+    :name="name"
+    v-loading="loading"
+    element-loading-text="正在上传中..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(255, 255, 255, 0.8)"
+  >
+    <i class="el-icon-upload"></i>
+    <div class="el-upload__text">将文件拖到此处，或
+      <em>点击上传</em>
+    </div>
+    <div class="el-upload__tip" slot="tip" v-if="fileTypes.length!=0">只能上传{{fileTypes.join(' / ')}}文件</div>
+  </el-upload>
+</template>
+<style lang="less">
+
+</style>
+
+<script>
+  import {getBaseUrl} from "../../util/config.js";
+  import {SAAS_TOKEN} from "../../util/keys.js";
+  import {getCookie} from "../../util/cookie.js";
+
+  export default {
+    components: {},
+    props: {
+      uploadUrl: {
+        // 上传的地址
+        required: true,
+        default: ""
+      },
+      fileTypes: {
+        // 上传文件的类型
+        // required:true,
+        type: Array,
+        default: () => []
+      },
+      uploadData: {
+        // 上传时附带的额外参数
+        default: undefined
+      },
+      name: {
+        // 上传文件的字段名
+        default: "name"
+      }
+    },
+    data() {
+      return {
+        apiHeader: {},
+        centerDialogVisible: true,
+        fileList: [],
+        loading: false
+      };
+    },
+    computed: {
+      materialUpload() {
+        return `${getBaseUrl()}apigateway.gaodun.com/${this.uploadUrl}`;
+      },
+    },
+    methods: {
+      beforeAvatarUpload(file) {
+        if (this.fileTypes.length === 0) {
+          return true;
+        }
+        var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+        const extension =
+          this.fileTypes.indexOf(testmsg) > -1 ? true : false;
+        // const isLt2M = file.size / 1024 / 1024 < 10;
+        if (!extension) {
+          this.$message({
+            message: `上传文件只能是${this.fileTypes.join("、")}格式!`,
+            type: "warning"
+          });
+        }
+        // if (!isLt2M) {
+        //     this.$message({
+        //         message: "上传文件大小不能超过 10MB!",
+        //         type: "warning"
+        //     });
+        // }
+        return extension;
+      },
+      handleChange(file, fileList) {
+        this.fileList = fileList.slice(-1);
+      },
+      handleRemove(file, fileList) {
+        this.fileList = fileList;
+        // vue.$emit("uploadFile", {}, this.fileList);
+      },
+      handleProgress() {
+        this.loading = true;
+      },
+      handleAvatarSuccess(res, file) {
+        // console.log(res);
+        this.loading = false;
+        if (res.status == 0) {
+          this.$message({
+            type: "success",
+            message: "上传成功！"
+          });
+          this.$emit("uploadSuccessCallback");
+        } else {
+          this.$message({
+            type: "error",
+            message: `上传失败：${res.message}`,
+            showClose: true,
+            duration: 5000
+          });
+          setTimeout(() => {
+            this.fileList = [];
+          }, 0);
+        }
+      },
+      handleAvatarError(err, file, fileList) {
+        this.$message({
+          type: "error",
+          message: `上传失败：${err}`,
+          showClose: true,
+          duration: 5000
+        });
+        this.loading = false;
+        setTimeout(() => {
+          this.fileList = [];
+        }, 0);
+      }
+    },
+    mounted() {
+    },
+    destroyed() {
+    },
+    created() {
+      let token = "Basic " + getCookie(SAAS_TOKEN);
+      this.apiHeader = {Authentication: token};
+    }
+  };
+</script>
