@@ -368,8 +368,8 @@
             分钟
           </el-form-item>
           <el-form-item class="coursebtn">
-            <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button>
-            <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button>
+            <!-- <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button> -->
+            <!-- <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button> -->
             <el-button type="primary" style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">继续加资源</el-button>
           </el-form-item>
         </el-form>
