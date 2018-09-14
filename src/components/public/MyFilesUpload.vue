@@ -1,7 +1,8 @@
 <template>
   <el-upload
-    class="upload-demo"
-    drag
+    class="avatar-uploader"
+    :drag="drag"
+    :show-file-list="showFileLit"
     :action="materialUpload"
     :on-change="handleChange"
     :on-remove="handleRemove"
@@ -18,15 +19,49 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(255, 255, 255, 0.8)"
   >
-    <i class="el-icon-upload"></i>
-    <div class="el-upload__text">将文件拖到此处，或
-      <em>点击上传</em>
+    <template v-if="showUploadImage && !drag">
+      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </template>
+    <template v-if="drag && !showUploadImage">
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或
+        <em>点击上传</em>
+      </div>
+    </template>
+    <div class="el-upload__tip" slot="tip">
+      <span v-if="fileTypes.length!=0">只能上传{{fileTypes.join(' / ')}}文件</span>
+      <span v-if="maxFileSize">，且不超过{{maxFileSize}}MB</span>
     </div>
-    <div class="el-upload__tip" slot="tip" v-if="fileTypes.length!=0">只能上传{{fileTypes.join(' / ')}}文件</div>
   </el-upload>
 </template>
 <style lang="less">
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
 
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
 
 <script>
@@ -55,6 +90,29 @@
       name: {
         // 上传文件的字段名
         default: "name"
+      },
+      maxFileSize: {
+        //上传限制文件大小  按MB计算-
+        type: Number,
+        default: 0
+      },
+      drag: {
+        //是否拖拽
+        type: Boolean,
+        default: false
+      },
+      showFileLit: {
+        //是否显示文件列表
+        type: Boolean,
+        default: false
+      },
+      showUploadImage: {
+        //是否展示上传的图片
+        type: Boolean,
+        default: false
+      },
+      uploadedImageUrl: {
+        type: String
       }
     },
     data() {
@@ -62,7 +120,8 @@
         apiHeader: {},
         centerDialogVisible: true,
         fileList: [],
-        loading: false
+        loading: false,
+        imageUrl: '',//上传为图片是可以展示
       };
     },
     computed: {
@@ -72,26 +131,26 @@
     },
     methods: {
       beforeAvatarUpload(file) {
-        if (this.fileTypes.length === 0) {
+        const maxFileSize = this.maxFileSize
+        if (this.fileTypes.length === 0 && this.maxFileSize === 0) {
           return true;
         }
         var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-        const extension =
-          this.fileTypes.indexOf(testmsg) > -1 ? true : false;
-        // const isLt2M = file.size / 1024 / 1024 < 10;
+        const extension = this.fileTypes.length !== 0 ? (this.fileTypes.indexOf(testmsg) > -1 ? true : false) : true;
+        const isMaxSize = maxFileSize ? (file.size / 1024 / 1024 < maxFileSize) : true;
         if (!extension) {
           this.$message({
             message: `上传文件只能是${this.fileTypes.join("、")}格式!`,
             type: "warning"
           });
         }
-        // if (!isLt2M) {
-        //     this.$message({
-        //         message: "上传文件大小不能超过 10MB!",
-        //         type: "warning"
-        //     });
-        // }
-        return extension;
+        if (!isMaxSize) {
+          this.$message({
+            message: `上传文件大小不能超过 ${maxFileSize}MB!`,
+            type: "warning"
+          });
+        }
+        return extension && isMaxSize;
       },
       handleChange(file, fileList) {
         this.fileList = fileList.slice(-1);
@@ -111,7 +170,8 @@
             type: "success",
             message: "上传成功！"
           });
-          this.$emit("uploadSuccessCallback");
+          this.imageUrl = URL.createObjectURL(file.raw);
+          this.$emit("uploadSuccessCallback", file);
         } else {
           this.$message({
             type: "error",
@@ -144,6 +204,14 @@
     created() {
       let token = "Basic " + getCookie(SAAS_TOKEN);
       this.apiHeader = {Authentication: token};
+    },
+    watch: {
+      uploadedImageUrl: {
+        handler(newVal, oldVal) {
+          this.imageUrl = newVal
+        },
+        immediate: true
+      }
     }
   };
 </script>
