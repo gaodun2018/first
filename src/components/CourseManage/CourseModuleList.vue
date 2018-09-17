@@ -344,14 +344,21 @@ export default {
       let previewUrl = "";
       switch(course_type) {
         case "10":
-          // previewUrl = `//${prefix}cloud.gaodun.com/preview/course/${row.course_id}`
-          previewUrl = `http://dev-cloud.gaodun.com:8060/preview/course/${row.course_id}`
+          previewUrl = `//${prefix}cloud.gaodun.com/preview/course/${row.course_id}`
+          // previewUrl = `http://dev-cloud.gaodun.com:8060/preview/course/${row.course_id}`
           break;
         default:
           previewUrl = "#"
 
       }
-      window.open(previewUrl);
+      if (previewUrl && previewUrl !== '#'){
+        window.open(previewUrl);
+      }else {
+        this.$message({
+          type: 'warning',
+          message : '该课程类型暂不支持课程预览'
+        })
+      }
       // let GDSID = getCookie(`${getEnv()}GDSID`);
       // this.$http
       //   .previewCourse({ session_id: GDSID, course_id: row.course_id })
