@@ -37,9 +37,9 @@
                 </el-row>
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
-                <el-select v-model="firstItem.selectValue" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26)
-                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.selectValue, firstItem.id, firstItem.name)'>
+                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
                     :key="item.id"
@@ -157,9 +157,9 @@
                 </el-row>
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
-                <el-select v-model="firstItem.selectValue" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26)
-                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.selectValue, firstItem.id, firstItem.name)'>
+                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
                     :key="item.id"
@@ -308,9 +308,9 @@
 
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
-                <el-select v-model="firstItem.selectValue" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26)
-                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.selectValue, firstItem.id, firstItem.name)'>
+                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
                     :key="item.id"
@@ -805,7 +805,8 @@ export default {
       urltip2: `-3" type="text/javascript">${"</"}script>]`,
       currentSyllabusItemKnowledge: "", //当前大纲条目说关联的知识点
       openArr: [], //备份记录那些大纲是已打开的
-      erjiCourseOptions: []
+      erjiCourseOptions: [],
+      erjicourseId: null, // 默认二级科目的id‘其他’
     };
   },
   methods: {
@@ -1724,11 +1725,12 @@ export default {
       if (ret.status == 0) {
         // ret.result[0].children[0].children[0].knowledgeId =  '112';
         // ret.result[0].children[0].children[0].knowledgeName = 'shiian';
-        this.tabledata = ret.result;
-        this.tabledata.forEach(item => {
-          item.selectValue = "36";
+        ret.result.forEach(item => {
+          if (!item.two_level_subject || item.two_level_subject == 0) {
+            item.two_level_subject = this.erjicourseId;
+          }
         });
-        selectValue;
+        this.tabledata = ret.result;
       } else {
         this.$message({
           message: "获取课程大纲条目失败！"
@@ -1752,13 +1754,16 @@ export default {
           subject_id: this.subject_id
         };
         this.$http.getSubjectTwoList(params).then(res => {
-          console.log(res);
           if (res.status == 0) {
-            console.log(res.result);
             this.erjiCourseOptions = res.result;
-            console.log(this.erjiCourseOptions);
+            res.result.forEach(it => {
+              if (it.name == '其他') {
+                this.erjicourseId = it.id
+              }
+            });
           }
         });
+        this.getSyllabusItems();
       }
     },
     //排序
@@ -1866,9 +1871,8 @@ export default {
         course_syllabus_id: this.syllabus_id,
         two_level_subject: val
       };
-      console.log(val);
       this.$http.ChangeSyllabusItem(id, parm).then(res => {
-        if (ret.status == 0) {
+        if (res.status == 0) {
           this.$message({
             message: "切换二级科目成功！",
             type: "success"
@@ -1924,8 +1928,8 @@ export default {
     // }
   },
   created() {
-    this.getSyllabusItems();
     this.checkSyllabus();
+    // this.getSyllabusItems();
   }
 };
 </script>
