@@ -1727,6 +1727,7 @@ export default {
         // ret.result[0].children[0].children[0].knowledgeName = 'shiian';
         ret.result.forEach(item => {
           if (!item.two_level_subject || item.two_level_subject == 0) {
+            console.log(this.erjicourseId)
             item.two_level_subject = this.erjicourseId;
           }
         });
@@ -1761,9 +1762,9 @@ export default {
                 this.erjicourseId = it.id
               }
             });
+            this.getSyllabusItems();
           }
         });
-        this.getSyllabusItems();
       }
     },
     //排序
