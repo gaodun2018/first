@@ -339,15 +339,35 @@ export default {
       this.searchCourse();
     },
     previewCourse(row) {
-      let GDSID = getCookie(`${getEnv()}GDSID`);
-      this.$http
-        .previewCourse({ session_id: GDSID, course_id: row.course_id })
-        .then(res => {
-          setToken("Identification", res.headers.identification, ".gaodun.com");
-          setToken("Accesstoken", res.headers.accesstoken, ".gaodun.com");
-          setToken("Refreshtoken", res.headers.refreshtoken, ".gaodun.com");
-          window.open(res.data.result.call_back);
-        });
+      console.log(row);
+      const {course_type, course_id} = row;
+      let previewUrl = "";
+      switch(course_type) {
+        case "10":
+          previewUrl = `//${prefix}cloud.gaodun.com/preview/course/${row.course_id}`
+          // previewUrl = `http://dev-cloud.gaodun.com:8060/preview/course/${row.course_id}`
+          break;
+        default:
+          previewUrl = "#"
+
+      }
+      if (previewUrl && previewUrl !== '#'){
+        window.open(previewUrl);
+      }else {
+        this.$message({
+          type: 'warning',
+          message : '该课程类型暂不支持课程预览'
+        })
+      }
+      // let GDSID = getCookie(`${getEnv()}GDSID`);
+      // this.$http
+      //   .previewCourse({ session_id: GDSID, course_id: row.course_id })
+      //   .then(res => {
+      //     setToken("Identification", res.headers.identification, ".gaodun.com");
+      //     setToken("Accesstoken", res.headers.accesstoken, ".gaodun.com");
+      //     setToken("Refreshtoken", res.headers.refreshtoken, ".gaodun.com");
+      //     window.open(res.data.result.call_back);
+      //   });
     }
   },
   mounted() {
