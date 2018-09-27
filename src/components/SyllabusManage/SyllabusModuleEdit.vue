@@ -42,9 +42,9 @@
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
-                    :key="item.id"
+                    :key="item.two_level_subiect_id"
                     :label="'二级科目：'+item.name"
-                    :value="item.id">
+                    :value="item.two_level_subiect_id">
                     <span style='display:none'>二级科目：</span>
                     <span>{{item.name}}</span>
                   </el-option>
@@ -162,9 +162,9 @@
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
-                    :key="item.id"
+                    :key="item.two_level_subiect_id"
                     :label="'二级科目：'+item.name"
-                    :value="item.id">
+                    :value="item.two_level_subiect_id">
                     <span style='display:none'>二级科目：</span>
                     <span>{{item.name}}</span>
                   </el-option>
@@ -313,9 +313,9 @@
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
                     v-for="item in erjiCourseOptions"
-                    :key="item.id"
+                    :key="item.two_level_subiect_id"
                     :label="'二级科目：'+item.name"
-                    :value="item.id">
+                    :value="item.two_level_subiect_id">
                     <span style='display:none'>二级科目：</span>
                     <span>{{item.name}}</span>
                   </el-option>
