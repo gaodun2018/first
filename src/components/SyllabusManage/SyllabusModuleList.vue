@@ -153,7 +153,7 @@ export default {
           label: "禁用"
         }
       ],
-      selectvalue: "",
+      selectvalue: "0",
       clver: null, //项目id
       clversm: null, //科目id
       subjectlist: [],
