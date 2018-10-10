@@ -12,7 +12,7 @@
       <div class="outlinebox">
         <div class="chapterbox">
           <template v-if="coursesylllevel === 3">
-            <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
+            <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit" @click="spread(firstItem)">
                 <span class="chlft">
@@ -129,10 +129,10 @@
               </div>
 
             </div>
-            <!-- </draggable> -->
+            </draggable>
           </template>
           <template v-if="coursesylllevel === 4">
-            <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
+            <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit" @click="spread(firstItem)">
                 <span class="chlft">
@@ -279,10 +279,10 @@
               </div>
 
             </div>
-            <!-- </draggable> -->
+            </draggable>
           </template>
           <template v-if="coursesylllevel === 2">
-            <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
+            <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
             <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
               <div class="chaptit" @click="spread(firstItem)">
                 <span class="chlft">
@@ -375,7 +375,7 @@
                 </el-collapse-transition>
               </div>
             </div>
-            <!-- </draggable> -->
+            </draggable>
           </template>
           <div class="chaptit additem">
             <span @click="openFirLvDialog">新增一级大纲目录</span>
@@ -506,7 +506,7 @@
         <span>{{deleteModule ? '确定要删除该课程大纲目录吗？删除后，该目录下的子目录及资源关系均将被删除！' : '确定要删除已选择的资源吗？'}}</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirmDelete">确 定</el-button>
+          <el-button type="primary" :loading="delLoading" @click="confirmDelete">{{ delLoading? "删除中" : '确 定'}}</el-button>
         </span>
       </el-dialog>
 
@@ -807,6 +807,7 @@ export default {
       openArr: [], //备份记录那些大纲是已打开的
       erjiCourseOptions: [],
       erjicourseId: null, // 默认二级科目的id‘其他’
+      delLoading:false,
     };
   },
   methods: {
@@ -901,7 +902,7 @@ export default {
     // 预览跳转
     goPreview(val) {
       // 添加预览提示正在维护
-      return this.$message("此功能正在维护中，敬请期待");
+      // return this.$message("此功能正在维护中，敬请期待");
       if (val.resource) {
         if (val.resource.discriminator === "video") {
           let goVideo = this.$router.resolve({
@@ -1590,6 +1591,7 @@ export default {
     // 删除确定
     async confirmDelete() {
       let id = this.currentId;
+      this.delLoading = true;
       let params = {
         course_syllabus_id: this.syllabus_id
       };
@@ -1599,6 +1601,7 @@ export default {
           message: "删除成功",
           type: "success"
         });
+        this.delLoading = false;
         this.getSyllabusItems();
         if (this.startType && this.startType === "legacy_live") {
           let clearRet = await this.$http.changeLive(
@@ -1640,9 +1643,9 @@ export default {
     addruleProject(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.adddialogVisible = false;
           if (this.Moduledialog != true) {
             this.$refs[this.refname][0].innerText = this.ruleProject.name;
+            this.adddialogVisible = false;
           } else {
             this.addbigCourse();
           }
@@ -1665,6 +1668,7 @@ export default {
       this.btnLoading = false;
       if (ret.status == 0) {
         ret.message = "添加成功！";
+        this.adddialogVisible = false;
         this.currentId = "0";
         this.getSyllabusItems();
       } else {
