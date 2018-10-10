@@ -902,7 +902,7 @@ export default {
     // 预览跳转
     goPreview(val) {
       // 添加预览提示正在维护
-      return this.$message("此功能正在维护中，敬请期待");
+      // return this.$message("此功能正在维护中，敬请期待");
       if (val.resource) {
         if (val.resource.discriminator === "video") {
           let goVideo = this.$router.resolve({
