@@ -37,7 +37,7 @@
                 </el-row>
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
-                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
@@ -157,7 +157,7 @@
                 </el-row>
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openChildDialog(firstItem.id)">增加子目录</span>
-                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
@@ -308,7 +308,7 @@
 
                 <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
                 <span class="chrgt" @click.stop="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
-                <el-select v-model="firstItem.two_level_subject" placeholder="请选择" class="chrgt erji-course"
+                <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
                 v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
                 || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
                   <el-option
