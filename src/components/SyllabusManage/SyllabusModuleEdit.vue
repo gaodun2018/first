@@ -53,7 +53,7 @@
 
               <div>
                 <el-collapse-transition>
-                  <draggable v-if="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
+                  <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                     <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                       <div class="chaptit chapsecd">
                         <span class="chlft">
@@ -173,7 +173,7 @@
 
               <div>
                 <el-collapse-transition>
-                  <draggable v-if="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
+                  <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                     <div v-for="secItem in firstItem.children" :key="secItem.id" class="second-chapter-box">
                       <div class="chaptit chapsecd">
                         <span class="chlft">{{secItem.name}}<span class="gray">（条目ID：{{secItem.id}}）</span></span>
@@ -324,7 +324,7 @@
 
               <div>
                 <el-collapse-transition>
-                  <draggable v-if="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
+                  <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
                     <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
                       <div class="knowledge">
                         <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
