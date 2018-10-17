@@ -577,6 +577,23 @@ export default {
         // this.seasonList = ret.result.list;
         this.$store.dispatch("getSeasonList", ret.result.list);
       }
+    },
+    handleVisibleChange(bool) {
+      // if (bool){
+      //   $('.v-scroll-select').find('.el-select-dropdown__wrap').scroll(function(){
+      //     var scrollTop = $(this).scrollTop();
+      //     // console.log($(this));
+      //     var scrollHeight = $(this).prop('scrollHeight');
+      //     // console.log(scrollTop,scrollHeight);
+      //     var oHeight = $(this).height();
+      //     console.log(scrollTop + oHeight, scrollHeight);
+      //     if(scrollTop + oHeight >= scrollHeight){
+      //       // alert("已经到最底部了！");
+      //       console.log('11111111111111111');
+      //     }
+      //   });
+      //   // console.log( $('.v-scroll-select').find('.el-select-dropdown__wrap'));
+      // }
     }
   },
   computed: {

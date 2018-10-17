@@ -5,7 +5,7 @@
         <el-col :sm="24">
           <el-row type="flex" justify="end">
             <div class="input-search">
-              <el-button type="primary" size="small" @click="dialogVisible = true">新增一张日签图
+              <el-button type="primary" size="small" @click="handleOpenDialog('add')">新增一张日签图
               </el-button>
             </div>
           </el-row>
@@ -14,7 +14,7 @@
     </div>
     <div class="edu_table">
       <el-table ref="table" border :data="data" :max-height="setMaxHeight()" style="width: 100%">
-        <el-table-column prop="id" label="id" width="80" fixed>
+        <el-table-column prop="id" label="ID" width="80" fixed>
         </el-table-column>
         <el-table-column prop="title" label="名称" min-width="260">
         </el-table-column>
@@ -29,7 +29,7 @@
             </el-button>
             <el-button
               type="text"
-              @click="handleEditCurrentItem(scope.row)"
+              @click="handleEditCurrentItem(scope.row, 'edit')"
             >
               修改
             </el-button>
@@ -54,7 +54,7 @@
         </el-pagination>
       </div>
     </div>
-    <el-dialog title="编辑日签图" center :visible.sync="dialogVisible">
+    <el-dialog :title="action === 'add' ? '新增日签图' : '编辑日签图'" center :visible.sync="dialogVisible">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px">
         <el-form-item label="名称" prop="title" :rules="filter_rules({required:true,type:'isAllSpace',max:50})">
           <el-input v-model="ruleForm.title" placeholder="请输入名称"></el-input>
@@ -106,7 +106,8 @@
         btnLoading: false,
         uploadUrl: 'caen/v1/backend/image/upload',
         currentPage: 1,
-        eduTotal: 1
+        eduTotal: 1,
+        action: 'add',
       };
     },
     computed: {},
@@ -184,6 +185,20 @@
         }
       },
       async handleClickDelete(row) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deletePicture(row);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      async deletePicture(row) {
         const self = this;
         const {id} = row;
         if (!id) {
@@ -210,13 +225,23 @@
       handleCurrentChange(page) {
         this.loadPictureList();
       },
-      handleEditCurrentItem(row) {
+      handleEditCurrentItem(row, action) {
+        this.action = action || 'edit';
         const {id, path, title} = row;
         for (let ele in row) {
           this.ruleForm[ele] = row[ele];
         }
         this.dialogVisible = true;
 
+      },
+      handleOpenDialog(action) {
+        this.action = action || 'add';
+        this.ruleForm = {
+          id: '',
+          path: '',
+          title: ''
+        };
+        this.dialogVisible = true;
       }
     },
     watch: {
