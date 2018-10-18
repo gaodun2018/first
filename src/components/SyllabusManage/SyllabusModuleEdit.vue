@@ -404,8 +404,8 @@
             分钟
           </el-form-item>
           <el-form-item class="coursebtn">
-            <!-- <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button> -->
-            <!-- <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button> -->
+            <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button>
+            <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button>
             <el-button type="primary" style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">继续加资源</el-button>
           </el-form-item>
         </el-form>
@@ -1556,7 +1556,7 @@ export default {
       } else {
         this.liveid = 0;
       }
-      this.audition = item.audition; //是否试听
+      this.audition = item.audition? item.audition : 0; //是否试听
       this.active = 0;
       this.addResFirFrom.name = item.name; //名称
       this.addResFirFrom.apply_to = item.apply_to ? [item.apply_to] : []; //1表示跳级测试，2表示提分盒子
