@@ -290,7 +290,7 @@ export default {
           message:'设置排序成功',
           type:"success"
         })
-        this.getStageAndOutline()
+        // this.getStageAndOutline()
       }else{
         this.$message({
           message:"阶段排序设置失败",
