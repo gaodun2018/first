@@ -35,6 +35,46 @@ export const handoutTable = [{
   }
 }
 ];
+
+//课程阶段表格配置
+export const stageTable = [{
+  text: '序号',
+  key: 'index',
+  flex: {
+    flex: 0.5
+  }
+},
+{
+  text: '阶段名称',
+  key: 'name',
+  flex: {
+    flex: 2,
+    textAlign:"left"
+  }
+},
+{
+  text: '阶段描述',
+  key: 'description',
+  flex: {
+    flex: 2
+  }
+},
+{
+  text: '阶段课程大纲',
+  key: 'syllabus_name',
+  flex: {
+    flex: 5,
+    textAlign:"left"
+  }
+},
+{
+  text: '操作',
+  key: 'done',
+  flex: {
+    flex: 1.5
+  }
+}
+];
 //考季管理进度配置
 export const examTimeProgressText = [{
 text: '设置考季时间',

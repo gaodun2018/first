@@ -91,3 +91,6 @@ export const removeTeacher = (params) => zDelete(`${getBaseUrl()}apigateway.gaod
 
 // 考季的新接口(后台)
 export const getNewSeason = (id,params) => get(`${getBaseUrl()}apigateway.gaodun.com/plan-api/course/${id}/admin/gradation`, params);
+
+// :: 课程阶段排序
+export const courseStageSort = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/gragation/sort`,params);
