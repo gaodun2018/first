@@ -404,8 +404,8 @@
             分钟
           </el-form-item>
           <el-form-item class="coursebtn">
-            <!-- <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" style="margin-top:12px;">只创建条目</el-button> -->
-            <!-- <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" style="margin-top:12px;">只修改条目</el-button> -->
+            <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" :loading="onlySetLoading" style="margin-top:12px;">{{onlySetLoading?"正在创建中":"只创建条目"}}</el-button>
+            <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" :loading="onlySetLoading" style="margin-top:12px;">{{onlySetLoading?"正在修改中":"只修改条目"}}</el-button>
             <el-button type="primary" style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">继续加资源</el-button>
           </el-form-item>
         </el-form>
@@ -808,6 +808,7 @@ export default {
       erjiCourseOptions: [],
       erjicourseId: null, // 默认二级科目的id‘其他’
       delLoading:false,
+      onlySetLoading:false,
     };
   },
   methods: {
@@ -815,8 +816,10 @@ export default {
     directSyllabus(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
+          this.onlySetLoading = true;
           let nameRet = await this.CourseSyllabusItem();
           if (nameRet.status == 0) {
+            this.onlySetLoading = false;
             this.dialogFormVisible = false;
             this.getSyllabusItems();
             this.$message({
@@ -838,8 +841,10 @@ export default {
     directChangeSyllabus(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
+          this.onlySetLoading = true;
           let nameRet = await this.ChangeSyllabusItem();
           if (nameRet.status == 0) {
+            this.onlySetLoading = false;
             this.dialogFormVisible = false;
             this.getSyllabusItems();
             this.$message({
@@ -1556,7 +1561,7 @@ export default {
       } else {
         this.liveid = 0;
       }
-      this.audition = item.audition; //是否试听
+      this.audition = item.audition? item.audition : 0; //是否试听
       this.active = 0;
       this.addResFirFrom.name = item.name; //名称
       this.addResFirFrom.apply_to = item.apply_to ? [item.apply_to] : []; //1表示跳级测试，2表示提分盒子
