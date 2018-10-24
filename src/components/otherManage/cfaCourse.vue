@@ -4,7 +4,7 @@
       <el-button
         type="primary"
         size="small"
-        @click="showCfaDialog"
+        @click="showCfaDialog('add')"
         v-if="unlocking('COURSE_CREATE')"
       >
         +&nbsp;新增一次续派课
@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" @click="clearCache(scope.row)">修改</el-button>
+            <el-button type="text" @click="showCfaDialog('update')">修改</el-button>
             <el-button type="text" @click="clearCache(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -49,16 +49,33 @@
       </div>
     </div>
 
-    <creatCFA></creatCFA>
+     <!-- 新建/修改派课 -->
+    <creatCFA
+     :dialog="dialogVisable"
+     :type="type"
+     :data="ruleForm"
+     @showCfaDialog="showCfaDialog"
+     @closeDialog="closeDialog"
+     @save="dialogSave"
+     @change="dialogChangeForm"
+    ></creatCFA>
   </div>
 </template>
 
 <script>
 import creatCFA from './updateCFADialog'
-import Vue from '../../common/vue.js'
+// import Vue from '../../common/vue.js'
 export default {
   data () {
     return {
+      dialogVisable:false,//控制子组件显示隐藏
+      type:"add",//控制子组件是新增还是修改
+      ruleform:{
+        course_name:"",
+        project_id:"",
+        subject_id:"",
+        course_type_id:"",
+      },
       cfaList: [
         {course_id: '123'}
       ],
@@ -75,8 +92,24 @@ export default {
     handleSizeChange(){},
     handleSizeChange(){},
     handleCurrentChange(){},
-    showCfaDialog (){
-      Vue.$emit('showCfaDialog')
+
+    // 显示dialog弹框 改为父子组件传参方式，去除了事件总线
+    showCfaDialog (val){
+      this.type = val;
+      this.dialogVisable = true;
+    },
+    closeDialog(){//关闭弹框
+      this.dialogVisable = false;
+    },
+    // 点击保存事件
+    dialogSave(data){
+      console.log(data)
+      console.log("点击保存事件");
+    },
+    // 修改事件
+    dialogChangeForm(data){
+      console.log(data)
+      console.log("修改保存")
     }
   }
 }

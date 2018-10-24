@@ -1,6 +1,6 @@
 <template>
-  <el-dialog class="addCourse cfa-course-dialog" title="新建一次续派课" :visible.sync="cfaVisible" @close="closeDialog('ruleForm')">
-      <el-form :model="ruleForm" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+  <el-dialog class="addCourse cfa-course-dialog" title="新建一次续派课" :visible.sync="dialog" @close="closeDialog('ruleForm')">
+      <el-form :model="data" ref="ruleForm" label-width="130px" class="demo-ruleForm">
         <el-form-item label="任务名称" prop="course_name">
           <el-input v-model="ruleForm.course_name"></el-input>
         </el-form-item>
@@ -62,16 +62,33 @@
 </template>
 
 <script>
-import Vue from '../../common/vue.js'
+// import Vue from '../../common/vue.js'
 export default {
+  props: {
+    dialog: {
+      default:false,
+      type:Boolean
+    },
+    type: {
+      type:String
+    },
+    data: {
+      type:JSON
+    }
+  },
   data () {
     return {
-      cfaVisible: false,
       ruleForm: {
         course_name: "",
         project_id: "",
         subject_id: "",
         course_type_id: ""
+      },
+      rules:{
+        course_name:[{required:true,message:'请输入课程名称',trigger:'blur'}],
+        project_id:[{required:true,message:'请输入课程名称',trigger:'blur'}],
+        subject_id:[{required:true,message:'请输入科目名称',trigger:'blur'}],
+        course_type_id:[{required:true,message:'请输入课程类型',trigger:'blur'}],
       },
       projectlist: []
     }
@@ -79,15 +96,21 @@ export default {
   methods: {
     //关闭弹层
     closeDialog(formName) {
-      this.cfaVisible = false;
-      this.$refs[formName].resetFields();
+     this.$emit('closeDialog');
     },
+    submitForm(ruleForm){
+      this.$refs[ruleForm].validate((valid)=>{
+        if(valid){
+          if(this.type === "add"){//新增还是修改
+            this.$emit('dialogSave');
+          }else{
+            this.$emit("dialogChageForm");
+          }
+        }
+      })
+    }
   },
   mounted () {
-    Vue.$on('showCfaDialog', ()=>{
-      console.log('test')
-      this.cfaVisible = true
-    })
   }
 }
 </script>
