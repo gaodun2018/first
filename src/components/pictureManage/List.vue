@@ -114,7 +114,7 @@
     methods: {
       setMaxHeight() {
         const bdh = document.body.offsetHeight || document.documentElement.offsetHeight;
-        return (bdh - 200) + 'px'
+        return bdh - 200
       },
       uploadSuccessCallback(file) {
         console.log('12312312313123213132', file);
