@@ -70,11 +70,13 @@ export default {
     return {
       dialogVisable:false,//控制子组件显示隐藏
       type:"add",//控制子组件是新增还是修改
-      ruleform:{
+      ruleForm:{
         course_name:"",
         project_id:"",
         subject_id:"",
         course_type_id:"",
+        value1:"",
+        value2: "",
       },
       cfaList: [
         {course_id: '123'}
