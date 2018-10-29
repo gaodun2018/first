@@ -1,9 +1,11 @@
 import axios from 'axios';
-import { getEnv, getBaseUrl } from './config';
-import { loginPage } from '../common/config.js';
-import { SAAS_TOKEN, SAAS_USER_INFO } from './keys';
-import { getCookie, setCookie } from './cookie.js';
-import { Message } from 'element-ui';
+import {getEnv, getBaseUrl} from './config';
+import {loginPage} from '../common/config.js';
+import {SAAS_TOKEN, SAAS_USER_INFO} from './keys';
+import {getCookie, setCookie} from './cookie.js';
+import {Message} from 'element-ui';
+import {logs} from './logs'
+
 
 window.message = null;
 let prefix = getEnv();
@@ -12,10 +14,17 @@ if (userInfo) {
     userInfo = JSON.parse(userInfo);
 }
 
-axios.defaults.baseURL = '//';
-axios.defaults.headers.post['Content-Type'] = "application/json";
-axios.defaults.headers.put['Content-Type'] = "application/json";
-axios.interceptors.request.use(function(config) {
+const zeusAxios = axios.create({
+    baseURL: `${getBaseUrl()}apigateway.gaodun.com`,
+    header: {
+        'Content-Type': "application/json"
+    }
+})
+
+// axios.defaults.baseURL = '//';
+// axios.defaults.headers.post['Content-Type'] = "application/json";
+// axios.defaults.headers.put['Content-Type'] = "application/json";
+zeusAxios.interceptors.request.use(function (config) {
     let token = getCookie(SAAS_TOKEN);
 
     // 登录接口直接返回
@@ -34,10 +43,15 @@ axios.interceptors.request.use(function(config) {
     }
 
     return Promise.resolve(config);
-}, function(error) {
+}, function (error) {
     return Promise.reject(error);
 });
-axios.interceptors.response.use(function(response) {
+zeusAxios.interceptors.response.use(function (response) {
+    try {
+        logs(response);
+    }catch (e) {
+        console.log(e);
+    }
 
     //登陆接口直接返回response (需要headers头信息)
     if (response.config.url.indexOf('login') !== -1) {
@@ -57,17 +71,17 @@ axios.interceptors.response.use(function(response) {
     }
 
     if (response.data.status === '403') {
-      //无项目权限
-      window.message = !window.message && Message({
-        message: '需要配置项目权限才能使用。请联系技术客服主管老师配置相应的项目权限。',
-        type: 'warning',
-        duration: 0,
-        showClose: true
-      })
-      return Promise.resolve(response.data);
+        //无项目权限
+        window.message = !window.message && Message({
+            message: '需要配置项目权限才能使用。请联系技术客服主管老师配置相应的项目权限。',
+            type: 'warning',
+            duration: 0,
+            showClose: true
+        })
+        return Promise.resolve(response.data);
     }
     return Promise.resolve(response.data);
-}, function(error) {
+}, function (error) {
     return Promise.reject(error);
 });
 export default class ZEUSAxios {
@@ -76,7 +90,7 @@ export default class ZEUSAxios {
     }
 
     request(options) {
-        return axios.request(options);
+        return zeusAxios.request(options);
     }
 
     get(url, options = {}) {

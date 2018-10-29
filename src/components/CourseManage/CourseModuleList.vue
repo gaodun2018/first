@@ -205,7 +205,8 @@ export default {
     // 清除函数
     clearCache(val){
       this.index = val.course_id;
-      this.$http.clearCache(Number(val.course_id)).then(res=>{
+      let param = {course_id : val.course_id}
+      this.$http.clearCache(param).then(res=>{
         if(res.status === 0){
           setTimeout(() => {
             this.index = -1;

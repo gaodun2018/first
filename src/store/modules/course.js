@@ -141,7 +141,7 @@ const mutations = {
     }
     state.resource_intro = data;
     state.resource_intro_id = resource_intro_id;
-    console.log(state.resource_intro_id);
+    // console.log(state.resource_intro_id);
   },
   [RESOURCE_UPDATE](state, data) {
     let ids = state.course_update_ids;
