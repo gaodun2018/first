@@ -6,7 +6,7 @@
         <i class="titicon"></i>
         <span class="tittxt">阶段</span>
       </div>
-      <el-table :data="tableData" border style="width: 90%;margin-top: 16px;">
+      <!-- <el-table :data="tableData" border style="width: 90%;margin-top: 16px;">
         <el-table-column label="序号" align="center" width="60">
           <template slot-scope="scope">
             <span>{{scope.$index + 1}}</span>
@@ -38,7 +38,42 @@
             <el-button size="small" type="text" @click="handleCheck(scope.row)">查看大纲</el-button>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
+
+      <!-- 修改表格样式 -->
+
+      <div class="scroll-table">
+        <div class="table">
+          <div class="table-line-title">
+            <span class="table-item center" :style="item.flex" v-for="(item,index) in tableConfig" :key="index">{{item.text}}</span>
+          </div>
+          <draggable v-model="tableData" :options="{group:'people',animation:200,draggable:'.table-move'}" element="div" @end="dragEnd(tableData)">
+            <div class="table-line table-line-bg table-move" v-for="(ele,index) in tableData" :key="index">
+              <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i">
+                <span class='table-item-text beyond-hidden-2' v-if="item.key === 'index'">{{index + 1}}</span>
+                <template v-else-if="item.key === 'done'">
+                    <el-button size="small" type="text" @click="handleDelete(index, ele)">删除</el-button>
+                    <el-button size="small" type="text" @click="handleEdit(index, ele)">编辑</el-button>
+                    <el-button size="small" type="text" @click="handleCheck(ele)">查看大纲</el-button>
+                </template>
+                <span class="table-item-text beyond-hidden-2" v-else-if="item.key === 'name'" style="text-align: left;">
+                  {{ele[item.key]}}
+                  <el-tag type="danger" size="small" v-if="ele.attribute == '1' && course_type == '11'">前导阶段</el-tag>
+                  <el-tag type="danger" size="small" v-if="ele.attribute == '2' && course_type == '11' ">翻转阶段</el-tag>
+                  <el-tag type="danger" size="small" v-if="ele.attribute == '3' && course_type == '11' ">复习阶段</el-tag>
+                </span>
+                <span class="table-item-text beyond-hidden-2" v-else-if="item.key === 'syllabus'" style="text-align: left;">
+                  {{ele.syllabus_id}} - {{ele.syllabus_name}}
+                </span>
+                <span class="table-item-text beyond-hidden-2" v-else>{{ele[item.key]}}</span>
+              </span>
+            </div>
+          </draggable>
+        </div>
+      </div>
+
+
+
       <div class="addBox">
         <div @click="addTableData" style="cursor: pointer;display: inline-block;padding: 0 30px;">
           <i class="additem"></i>
@@ -135,13 +170,82 @@
     }
   }
 }
+// 表格样式
+.scroll-table {
+  width: 90%;
+  overflow-x: auto;
+}
+.table {
+  // width: 100%;
+  min-width: 820px;
+  border: 1px solid #ebeef5;
+  border-bottom: none;
+  .center {
+    text-align: center;
+  }
+  .table-move {
+    cursor: move;
+  }
+  .table-item {
+    border-right: 1px solid #ebeef5;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 8px;
+    color: #253342;
+    &:last-child {
+      border-right: none;
+      min-width: 114px;
+    }
+  }
+  .table-line-title {
+    min-height: 50px;
+    border-bottom: 1px solid #ebeef5;
+    display: flex;
+    justify-content: space-around;
+    line-height: 50px;
+    .table-item {
+      background-color: #f5f7fa;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+  .table-line {
+    // height: 56px;
+    border-bottom: 1px solid #ebeef5;
+    display: flex;
+    justify-content: space-around;
+    .table-item {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      box-sizing: border-box;
+      font-size: 12px;
+      line-height: 16px;
+      .table-item-text {
+        padding-top: 9px;
+        padding-bottom: 9px;
+      }
+    }
+    .border-r-n {
+      border-right: none;
+    }
+  }
+  .table-line-bg:hover {
+    background: #f5f7fa;
+  }
+}
 </style>
 
 <script>
+import draggable from "vuedraggable";
+import { stageTable } from "../../common/courseConfig.js";
 export default {
-  components: {},
+  components: {
+    draggable
+  },
   data() {
     return {
+      tableConfig: stageTable,//表头信息
       beforeAttr:'',
       placehoderText:"请选择学前测试的试卷名称",// 动态切换搜索框文字
       ruleForm: {
@@ -173,6 +277,34 @@ export default {
     };
   },
   methods: {
+    // 排序
+    async dragEnd(data) {
+      let { cids } = this.getSortData(data);
+      let params = {
+        course_id: this.course_id,
+        sort: cids.join(",")
+      };
+      let ret = await this.$http.courseStageSort(params);
+      if(ret.status == 0) {
+        this.$message({
+          message:'设置排序成功',
+          type:"success"
+        })
+        // this.getStageAndOutline()
+      }else{
+        this.$message({
+          message:"阶段排序设置失败",
+          type:"warning"
+        })
+      }
+    },
+    getSortData(data) {
+      let cids = [];
+      for (let value of data) {
+        cids.push(value.id);
+      }
+      return { cids };
+    },
     // 编写判断是否有前导阶段函数
     judgeStatus(){
       let num = 0;
