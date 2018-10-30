@@ -22,8 +22,8 @@ const zeusAxios = axios.create({
 })
 
 // axios.defaults.baseURL = '//';
-// axios.defaults.headers.post['Content-Type'] = "application/json";
-// axios.defaults.headers.put['Content-Type'] = "application/json";
+zeusAxios.defaults.headers.post['Content-Type'] = "application/json";
+zeusAxios.defaults.headers.put['Content-Type'] = "application/json";
 zeusAxios.interceptors.request.use(function (config) {
     let token = getCookie(SAAS_TOKEN);
 

@@ -59,17 +59,19 @@ const syncHttpLog = (res, item) => {
         console.log('source_id:', source_id);
     }
 
-    // action: '',
-    // params: '',
-    // log_type: '',
-    // source_id: '',
+    // action: ''行为,
+    // params: ''api,
+    // log_type: ''日志类型,
+    // source_id: ''对应id,
+    // status:''状态码
     // return
     let params = {};
     params.action = item.action instanceof Array ? (source_id !== 0 ? item.action[1] : item.action[0]) : item.action;
     params.params = res.config.data ? JSON.stringify(formatQueryData(res.config.data)) : JSON.stringify(res.config.params);
-    if (source_id !== 0){
-        params.source_id = source_id;
-    }
+    // if (source_id !== 0){
+    //     params.source_id = source_id;
+    // }
+    params.source_id = source_id;
     //日志类型(课程1，大纲2，资源3)
     switch (item.type) {
         case 'course':
@@ -82,7 +84,10 @@ const syncHttpLog = (res, item) => {
             params.log_type = 3
             break;
         default:
-            params.log_type = undefined
+            params.log_type = 0
+    }
+    if(res.data){// 判断状态码
+        params.status = res.data.status==0? 0:1;
     }
 
     console.log(params);
@@ -102,7 +107,7 @@ export function logs(response) {
             targetItem = item;
         }
     })
-    // console.log('找到：', targetItem);
+    console.log('找到：', targetItem);
     if (!targetItem) return;
     // if (targetItem.callbackFn) {
     //     targetItem.callbackFn(response, targetItem);
