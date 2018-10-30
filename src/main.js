@@ -37,18 +37,18 @@ import { SAAS_MENU, SAAS_CURRENT_MENU } from './util/keys';
 import Validate from './util/filter_rules'
 import VueJsonp from 'vue-jsonp'
 import { Message } from 'element-ui';
-import Raven from 'raven-js';
-import RavenVue from 'raven-js/plugins/vue';
+// import Raven from 'raven-js';
+// import RavenVue from 'raven-js/plugins/vue';
 import Service from './api/index'
 Vue.prototype.$http = Service
 Vue.prototype.message = Message
 
-if (process.env.NODE_ENV !== "development") {
-  Raven
-    .config('//e4bd12ab2d1a43efb7fd822b5a89fd30@sentry.gaodunwangxiao.com/22')
-    .addPlugin(RavenVue, Vue)
-    .install();
-}
+// if (process.env.NODE_ENV !== "development") {
+//   Raven
+//     .config('//e4bd12ab2d1a43efb7fd822b5a89fd30@sentry.gaodunwangxiao.com/22')
+//     .addPlugin(RavenVue, Vue)
+//     .install();
+// }
 
 Vue.use(VueJsonp)
 Vue.use(Validate);
