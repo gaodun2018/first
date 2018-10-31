@@ -15,14 +15,9 @@
                     ></el-date-picker>
                 </div>
                 <div class="search_item">
-                    <span>操作人</span>
+                    <span>操作人手机号</span>
                     <div style="display: inline-block;">
-                        <el-input placeholder="请输入内容" v-model="userSearch" size="small" clearable>
-                            <el-select v-model="userSelect" slot="prepend" placeholder="请选择">
-                                <el-option label="用户手机" value="1"></el-option>
-                                <el-option label="用户邮箱" value="2"></el-option>
-                            </el-select>
-                        </el-input>
+                        <el-input v-model="phone" placeholder="请输入用户手机号" size="small"></el-input>
                     </div>
                 </div>
                 <div class="search_item">
@@ -37,32 +32,39 @@
                     </div>
                 </div>
                 <div>
-                    <el-button type="primary" size="small" style="margin-bottom:2px;" @click="handleSearch">查询
+                    <el-button type="primary" size="small" style="margin-bottom:2px;" @click="getList">查询
                     </el-button>
                 </div>
             </el-row>
         </div>
-        <!--<div class="edu_table">-->
         <div>
-            <el-table ref="table" border :data="data" :max-height="setMaxHeight()" style="width: 100%">
+            <el-table ref="table" :data="tableData" :max-height="setMaxHeight()" style="width: 100%">
                 <el-table-column prop="id" label="日志ID" width="80" fixed>
                 </el-table-column>
-                <el-table-column prop="title" label="操作人" min-width="260">
+                <el-table-column prop="user_name" label="操作人" min-width="140">
                 </el-table-column>
-                <el-table-column prop="title" label="事件类型" min-width="260">
+                <el-table-column prop="log_type" label="事件类型" min-width="160">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.log_type == 1">课程操作</span>
+                        <span v-else-if="scope.row.log_type == 2">大纲操作</span>
+                        <span v-else-if="scope.row.log_type == 3">资源操作</span>
+                        <span v-else>公共服务操作</span>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="title" label="操作内容">
+                <el-table-column prop="action" min-width="160" label="操作内容">
                 </el-table-column>
-                <el-table-column prop="title" label="操作事件" min-width="260">
+                <el-table-column prop="created_at" label="操作时间" min-width="260">
+                    <template slot-scope="scope">
+                        {{scope.row.created_at | formatTime}}
+                    </template>
                 </el-table-column>
 
             </el-table>
             <div class="edu-pagination">
                 <el-pagination
-                    background
                     @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="20"
+                    :current-page.sync="page"
+                    :page-size="pageSize"
                     layout="total, prev, pager, next, jumper"
                     :total="eduTotal"
                 >
@@ -81,39 +83,46 @@
         },
         data() {
             return {
-                data: [],
-                currentPage: 1,
+                tableData: [],
+                page: 1,
+                pageSize: 50,
+                keyword:'',
                 eduTotal: 1,
                 daterange: '',
-                userSelect: 1,
+                phone:'',
                 keyword: '',
                 userSearch:''
             };
         },
         computed: {},
         methods: {
+            // 获取日志列表
+            async getList(){
+                let params = {
+                    page_num:this.page,
+                    page_size:this.pageSize,
+                    mobile: this.phone,
+                    begin:this.daterange? Date.parse(this.daterange[0]):'',
+                    end:this.daterange? Date.parse(this.daterange[1]):'',
+                    keyword:this.keyword? this.keyword:'',
+                    status:0
+                }
+                console.log(params);
+                let ret = await this.$http.getLogsList(params);
+                console.log(ret)
+                this.tableData = ret.result.data;
+                this.eduTotal = ret.result.total;
+            },
             setMaxHeight() {
                 const bdh = document.body.offsetHeight || document.documentElement.offsetHeight;
                 return bdh - 200
             },
-            async loadLogsList() {
-                let params = {
-                    page: this.currentPage,
-                    page_size: 20,
-                }
-                // let listRet = await this.$http.getWXImageList(params);
-                // if (listRet.status === 0) {
-                //     this.data = listRet.result.item_list;
-                //     this.eduTotal = listRet.result.all_item_count;
-                // }
-            },
-            handleCurrentChange(page) {
-                this.loadLogsList();
+            // 分页
+            handleCurrentChange(val){
+                this.page = val;
+                this.getList();
             },
             setDaterange() {
-
-            },
-            handleSearch(){
 
             }
         },
@@ -124,7 +133,19 @@
         },
         created() {
             this.tableHeight(this);
-            // this.loadLogsList();
+            this.getList();
+        },
+        filters:{
+            formatTime(val){
+            let t = new Date(val);
+            let Y = t.getFullYear();
+            let M = t.getMonth() + 1 >9? t.getMonth() + 1 : '0' + t.getMonth() + 1;
+            let D = t.getDate() >9? t.getDate() : '0' + t.getDate();
+            let H = t.getHours()>9? t.getHours() : '0' + t.getHours();
+            let S = t.getSeconds()>9? t.getSeconds() : '0' + t.getSeconds();
+
+            return `${Y}-${M}-${D} ${H}:${S}`
+          }
         }
     };
 </script>

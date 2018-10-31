@@ -91,3 +91,7 @@ export const removeTeacher = (params) => zDelete(`/caen/v1/backend/course/teache
 
 // 考季的新接口(后台)
 export const getNewSeason = (id,params) => get(`/plan-api/course/${id}/admin/gradation`, params);
+
+/***日志****/
+// 获取日志列表
+export const getLogsList = (params) => get(`/calais/v1/backend/logs`,params);
