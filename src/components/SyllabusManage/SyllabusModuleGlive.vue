@@ -435,12 +435,12 @@ export default {
         });
         if (ret.status == 0 && ret.result == true) {
             this.$router.push({
-                path: "/syllabus/manage/edit/" + row.id + '?glive=' + 1
+                path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
             });
         }
       } else {
         this.$router.push({
-          path: "/syllabus/manage/edit/" + row.id + '?glive=' + 1
+          path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
         });
       }
     }

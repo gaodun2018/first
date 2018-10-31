@@ -149,7 +149,12 @@ const resourceModuleKnowledgeEdit = resolve => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeEdit.vue'))
     },'resourceModuleKnowledgeEdit')
 }
-
+// Glive编辑课程大纲
+const SyllabusGliveEdit = resolve => {
+  require.ensure(['../components/SyllabusManage/SyllabusGliveEdit.vue'], (require) => {
+      resolve(require('../components/SyllabusManage/SyllabusGliveEdit.vue'))
+  },'SyllabusGliveEdit')
+}
 
 export const routes = [
 	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
@@ -173,7 +178,8 @@ export const routes = [
 		{ path: '/resource/resource-group/create',meta:{ title:'新增资源组' }, name:'createResourceGroup',component: resourceModuleResourceGroupCreate }, // 新增资源组
 		{ path: '/resource/resource-group/edit/:id',meta:{ title:'编辑资源组' }, name:'editResourceGroup',component: resourceModuleResourceGroupEdit }, // 编辑资源组
 		{ path: '/resource/knowledge/create',meta:{ title:'新增知识点' }, name:'10010',component: resourceModuleKnowledgeCreate }, // 新增知识点
-		{ path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
+    { path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
+    { path: '/syllabus/glive/edit/:sid',meta:{ title:'编辑课程大纲' }, name:'10005',component: SyllabusGliveEdit }, // Glive编辑课程大纲
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10001',component: Page404 }, // 404
