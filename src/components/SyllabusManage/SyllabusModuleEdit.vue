@@ -1756,6 +1756,7 @@
       this.getSyllabusItems();
       this.checkSyllabus();
       this.glive = this.$route.query.glive || 0
+      console.log(this.resourceTypeList)
     }
   };
   </script>

@@ -5,6 +5,7 @@ import * as outline from './outline'
 import * as plan from './plan'
 import * as planop from './plantop'
 import * as resource from './resource'
+import * as picture from './picture'
 
 function Service() {
     Object.keys(course).map(item => {
@@ -28,5 +29,9 @@ function Service() {
     Object.keys(planop).map(item => {
         this[item] = planop[item]
     })
+    Object.keys(picture).map(item => {
+        this[item] = picture[item]
+    })
+
 }
 export default new Service()
