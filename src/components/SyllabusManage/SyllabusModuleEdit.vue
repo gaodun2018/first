@@ -320,11 +320,26 @@
           <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
             <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
           </el-form-item>
-          <el-row class="ep-set-box">
+          <el-form-item label="学习环节" prop="status" :rules="[ { required: true, trigger: 'change' }]">
+            <el-radio-group v-model="addResFirFrom.status">
+              <el-radio :label="1">课前</el-radio>
+              <el-radio :label="2">课中</el-radio>
+              <el-radio :label="3">课后</el-radio>
+            </el-radio-group>
+            <!-- <el-input class="coursetxt" v-model="addResFirFrom.status" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input> -->
+          </el-form-item>
+          <el-form-item label="课程类型" prop="type" :rules="[ { required: true, trigger: 'change' }]">
+            <el-radio-group v-model="addResFirFrom.type">
+              <el-radio :label="1">必修</el-radio>
+              <el-radio :label="2">选修</el-radio>
+            </el-radio-group>
+            <!-- <el-input class="coursetxt" v-model="addResFirFrom.type" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input> -->
+          </el-form-item>
+          <el-row class="ep-set-box" v-if='!glive'>
             <p class="ep-line"></p>
             <span class="ep-tips">以下设置为EP专用：（选填）</span>
           </el-row>
-          <el-form-item label="建议学习时长" prop="study_time">
+          <el-form-item label="建议学习时长" prop="study_time" v-if='!glive'>
             <el-select style="" v-model="addResFirFrom.study_time" popper-class='study-time-select' clearable placeholder="请选择">
               <el-option v-for="item in study_time_options" :key="item.value" :label="item.value" :value="item.value">
               </el-option>
@@ -343,23 +358,32 @@
               <div style="width:100%;font-size:10px;position: absolute;top:25px;" v-if="item.discriminator=='resource_group'">注：仅用于多老师</div>
             </span>
           </div>
-          <el-row class="ep-set-box" v-if="resourceType === 'paper'">
+          <el-row class="ep-set-box" v-if="resourceType === 'paper' && !glive">
             <p class="ep-line"></p>
             <span class="ep-tips">以下设置为EP专用：（选填）</span>
           </el-row>
-          <el-form-item label="资源应用" v-if="resourceType === 'paper'">
+          <el-form-item label="资源应用" v-if="resourceType === 'paper' && !glive">
             <el-checkbox-group v-model="addResFirFrom.apply_to" @change="handleCheckboxChange">
               <el-checkbox label="1">跳级测试</el-checkbox>
               <el-checkbox label="2">提分盒子</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="开启时间" prop="start_time" v-if="resourceType === 'paper'">
+          <el-form-item label="开启时间" prop="start_time" v-if="resourceType === 'paper' && !glive">
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间">
             </el-date-picker>
           </el-form-item>
+          <el-form-item label="开启时间" v-if='glive && addResFirFrom.status==2' prop="start_time" :rules="[ { required: true, trigger: 'change' }]" style='margin-top: 80px;'>
+            <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm'>
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="直播时长" v-if='glive && resourceType === "legacy_live"'  style='margin-top: 20px;'>
+            <el-input v-model="addResFirFrom.timeLong" style="width: 220px;"></el-input>
+          </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-            <el-button style="margin-top:12px;" @click="secondSubmit">下一步</el-button>
+            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem" v-if='glive && resourceType === "legacy_live"'>{{btnLoading?'新增中':'确 定'}}
+            </el-button>
+            <el-button style="margin-top:12px;" @click="secondSubmit" v-else>下一步</el-button>
           </el-form-item>
         </el-form>
         <!-- 第三步 -->
@@ -681,7 +705,7 @@
         coursesylllevel: "",
         currentId: "0", //0是最外层父级大纲   pid也表示当前需要操作的id
         title: "", //课程大纲标题
-        resourceTypeList: resourceTypeList,
+        // resourceTypeList: resourceTypeList,
         tag_id: "", //标签id
         resourceAction: "add", //资源弹层的操作
         pagination: {
@@ -706,6 +730,7 @@
         urltip: '[<script src="https://s.gaodun.com/web/static-player/loader.js?',
         urltip2: `-3" type="text/javascript">${"</"}script>]`,
         currentSyllabusItemKnowledge:'',//当前大纲条目说关联的知识点
+        glive: 0, //是否为gLive的大纲列表
       };
     },
     methods: {
@@ -1625,6 +1650,67 @@
     computed: {
       syllabus_id(){
         return this.$route.params.sid;
+      },
+      resourceTypeList() {
+        if (this.glive) {
+          if (this.addResFirFrom.status == 1||this.addResFirFrom.status == 3) {
+            return [{
+                "discriminator": "video",
+                "label": "视频"
+            },
+            {
+                "discriminator": "lecture_note",
+                "label": "讲义"
+            },
+            {
+                "discriminator": "paper",
+                "label": "试卷"
+            }]
+          } else if(this.addResFirFrom.status == 2){
+            return [{
+                "discriminator": "video",
+                "label": "视频"
+            },
+            {
+                "discriminator": "paper",
+                "label": "试卷"
+            },{
+                "discriminator": "legacy_live",
+                "label": "直播"
+            },
+            // {
+            //     "discriminator": "legacy_live",
+            //     "label": "面授"
+            // }
+            ]
+          }
+        } else {
+          return [{
+              "discriminator": "video",
+              "label": "视频"
+            },
+            {
+                "discriminator": "lecture_note",
+                "label": "讲义"
+            },
+            {
+                "discriminator": "paper",
+                "label": "试卷"
+            },
+            /* {
+                "discriminator": "question",
+                "label": "题目"
+            },*/
+            {
+                "discriminator": "legacy_live",
+                "label": "直播"
+            },
+            {
+              "discriminator": "resource_group",
+              "label": "资源组"
+            }
+          ]
+        }
       }
     },
     mounted() {
@@ -1669,6 +1755,7 @@
     created() {
       this.getSyllabusItems();
       this.checkSyllabus();
+      this.glive = this.$route.query.glive || 0
     }
   };
   </script>
