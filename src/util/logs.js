@@ -66,7 +66,7 @@ const syncHttpLog = (res, item) => {
     // status:''状态码
     // return
     let params = {};
-    params.action = item.action instanceof Array ? (source_id !== 0 ? item.action[1] : item.action[0]) : item.action;
+    params.action = item.action instanceof Array ? (source_id != 0 ? item.action[1] : item.action[0]) : item.action;
     params.params = res.config.data ? JSON.stringify(formatQueryData(res.config.data)) : JSON.stringify(res.config.params);
     // if (source_id !== 0){
     //     params.source_id = source_id;

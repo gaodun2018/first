@@ -43,6 +43,11 @@
                 </el-table-column>
                 <el-table-column prop="user_name" label="操作人" min-width="140">
                 </el-table-column>
+                 <el-table-column prop="source_id" label="操作对象ID" min-width="140">
+                     <template slot-scope="scope">
+                         {{scope.row.source_id == 0? "无" : scope.row.source_id }}
+                     </template>
+                </el-table-column>
                 <el-table-column prop="log_type" label="事件类型" min-width="160">
                     <template slot-scope="scope">
                         <span v-if="scope.row.log_type == 1">课程操作</span>
@@ -142,7 +147,7 @@
             let M = t.getMonth() + 1 >9? t.getMonth() + 1 : '0' + t.getMonth() + 1;
             let D = t.getDate() >9? t.getDate() : '0' + t.getDate();
             let H = t.getHours()>9? t.getHours() : '0' + t.getHours();
-            let S = t.getSeconds()>9? t.getSeconds() : '0' + t.getSeconds();
+            let S = t.getMinutes()>9? t.getMinutes() : '0' + t.getMinutes();
 
             return `${Y}-${M}-${D} ${H}:${S}`
           }

@@ -33,17 +33,18 @@ const callbackFn = {
 
     },
     getParamsInfo: function (res, item) {
-        console.log(res);
         let data = formatQueryData(res.config.data)
         // let data = {};
         // let arr = res.config.data.split('&');
         // arr.forEach((i) => {
         //     data[i.split('=')[0]] = i.split('=')[1]
         // })
-        let source_id = 0;
+        console.log('parms 中参数', data)
+        let source_id;
         if (item.matchedValue) {
             source_id = data[item.matchedValue]
         }
+        source_id = source_id? source_id:0;
         return source_id
         // console.log(data);
         // console.log(data[item.matchedValue]);
@@ -543,32 +544,38 @@ export const requestConfig = [
     {
         url: '/caen/insteractive/add',
         method: 'POST',
-        action: '添加视频节点(后台)',
+        action: '课中交互添加视频节点(后台)',
         type: 'resource',
+        matchedValue:"resource_id",
         regex: false,
+        callbackFn: callbackFn.getParamsInfo
     },
     {
         url: '/caen/insteractive/list',
         method: 'GET',
-        action: '获取节点列表（后台）',
+        action: '课中交互获取节点列表（后台）',
         type: 'resource',
         regex: false,
+        matchedValue:"resource_id",
+        callbackFn: callbackFn.getParamsInfo
     },
     {
         url: '/caen/insteractive/update',
         method: 'PUT',
-        action: '修改视频节点(后台)',
+        action: '课中交互修改视频节点(后台)',
         type: 'resource',
         regex: false,
-        matchedValue: "video_id",
+        matchedValue: "resource_id",
         callbackFn: callbackFn.getParamsInfo,
     },
     {
         url: '/caen/insteractive/delete',
         method: 'DELETE',
-        action: '删除视频节点',
+        action: '课中交互删除视频节点',
         type: 'resource',
         regex: false,
+        matchedValue: "resource_id",
+        callbackFn: callbackFn.getParamsInfo,
     },
     {
         url: '/caen/v1/backend/resource/group',
