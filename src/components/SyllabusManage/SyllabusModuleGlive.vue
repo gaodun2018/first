@@ -49,7 +49,10 @@
         </el-table-column>
         <el-table-column prop="title" label="课程大纲名称" min-width="200">
         </el-table-column>
-        <el-table-column prop="title" label="大纲类型" min-width="100">
+        <el-table-column label="大纲类型" min-width="100">
+          <template slot-scope="scope">
+            <span>Glive2.0</span>
+          </template>
         </el-table-column>
         <el-table-column prop="project.name" label="所属项目" min-width="100">
         </el-table-column>
@@ -100,8 +103,8 @@
         </el-form-item>
         <el-form-item label="大纲类型" prop="type" :rules="[ { required: true, message: '请选择大纲类型', trigger: 'change' }]">
           <el-select v-model="ruleForm.type" placeholder="大纲类型" :disabled="isCopy">
-            <el-option label="Glive2.0" value="0"></el-option>
-            <el-option label="Smartschool" value="1"></el-option>
+            <el-option label="Glive2.0" value="1"></el-option>
+            <el-option label="Smartschool" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="coursebtn">
@@ -136,7 +139,8 @@ export default {
         title: "",
         project_id: "",
         subject_id: "",
-        status: ""
+        status: "",
+        type: ""
       },
       dialogFormVisible: false,
       options: [
@@ -356,7 +360,8 @@ export default {
         project_id: this.clver,
         subject_id: this.clversm,
         status: this.selectvalue,
-        keyword: this.searchinput
+        keyword: this.searchinput,
+        type: 1
       });
       if (ret.status == 0) {
         this.tableLoading = false;
@@ -379,7 +384,8 @@ export default {
         project_id: String(row.project.id),
         subject_id: String(row.subject.id),
         status: String(row.status),
-        is_knowledge_open:row.is_knowledge_open
+        is_knowledge_open:row.is_knowledge_open,
+        type: String(row.type)
       };
       //判断是编辑还是复制
       if (copy) {
@@ -437,16 +443,6 @@ export default {
           path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
         });
       }
-    },
-    getBase64Image (img) {
-      var canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, img.width, img.height);
-      var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
-      var dataURL = canvas.toDataURL("image/"+ext);
-      return dataURL;
     }
   },
   computed: {
@@ -460,14 +456,6 @@ export default {
     // this.getProjectSubject();
     this.$store.dispatch("getProjectSubjectList");
     this.getCourseSyllabuses();
-
-    let image = new Image()
-    console.log('image:', image)
-    image.src = 'https://simg01.gaodunwangxiao.com/uploadfiles/saas/wx/upload/201810/08/dc840_20181008130614.png';
-    image.onload = ()=>{
-      var base64 = this.getBase64Image(image);
-      console.log('base64:  ',base64);
-    }
   },
   created() {}
 };
