@@ -57,7 +57,7 @@ export default {
     },
     //获取课程下的大纲 根据项目科目id
     async CourseSyllabuses() {
-      let ret = await this.$http.CourseSyllabuses({
+      let params = {
         page: "1",
         page_size: "100",
         project_id:
@@ -68,7 +68,11 @@ export default {
           this.$store.state.course.course_info.subject_id,
         status: "0", //获取启用的大纲
         keyword: ""
-      });
+      }
+      if (this.course_type == 4) {
+        params.type = 1 //区分GLIVE&SS（默认0，GLIVE&SS 1）
+      }
+      let ret = await this.$http.CourseSyllabuses(params);
       if (ret.status == 0) {
         this.$store.dispatch("saveCourseSyllabuses", ret.result.list);
       }

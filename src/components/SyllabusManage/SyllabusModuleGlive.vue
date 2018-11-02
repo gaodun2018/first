@@ -333,12 +333,6 @@ export default {
       this.searchinput = "";
       this.getCourseSyllabuses();
     },
-    // async getProjectSubject(projectid) {
-    //     let ret = await this.$http.getProjectSubject();
-    //     if (ret.status == 0) {
-    //         this.projectlist = ret.result;
-    //     }
-    // },
     selectval(value) {
       // 状态搜索
       this.selectvalue = value;
@@ -443,6 +437,16 @@ export default {
           path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
         });
       }
+    },
+    getBase64Image (img) {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+      var dataURL = canvas.toDataURL("image/"+ext);
+      return dataURL;
     }
   },
   computed: {
@@ -456,6 +460,14 @@ export default {
     // this.getProjectSubject();
     this.$store.dispatch("getProjectSubjectList");
     this.getCourseSyllabuses();
+
+    let image = new Image()
+    console.log('image:', image)
+    image.src = 'https://simg01.gaodunwangxiao.com/uploadfiles/saas/wx/upload/201810/08/dc840_20181008130614.png';
+    image.onload = ()=>{
+      var base64 = this.getBase64Image(image);
+      console.log('base64:  ',base64);
+    }
   },
   created() {}
 };
