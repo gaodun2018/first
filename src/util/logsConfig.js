@@ -394,8 +394,9 @@ export const requestConfig = [
         method: 'PUT',
         action: '大纲条目上挂资源',
         type: 'syllabus' ,
+        matchedValue: 'course_syllabus_id',
         regex: /^\/\/(t-|dev-|pre-|)apigateway.gaodun.com\/saas-service\/course\/syllabus\/item\/(\d+)\/resource$/,
-        callbackFn:callbackFn.matchPathId,
+        callbackFn:callbackFn.getParamsInfo,
     },
     {
         url: '/saas-service/class/lists',
