@@ -11,35 +11,28 @@
       </el-button>
     </div>
     <div class="edu_table">
-      <el-table ref="multipleTable" border v-loading="loading" :data="cfaList" style="width: 100%">
-        <el-table-column prop="course_id" label="任务ID" width="80" fixed>
+      <el-table ref="multipleTable" border :data="cfaList" style="width: 100%">
+        <el-table-column prop="id" label="任务ID" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="course_name" label="任务名称" min-width="180">
+        <el-table-column prop="name" label="任务名称" min-width="180">
         </el-table-column>
-        <el-table-column prop="" label="项目" min-width="80">
+
+        <el-table-column prop="courses" label="课程ID" min-width="80">
           <template slot-scope="scope">
-            <span>{{scope.row.project&&scope.row.project.project_name}}</span>
+            {{scope.row.courses.join(",")}}
           </template>
         </el-table-column>
-        <el-table-column prop="" label="课程ID" min-width="80">
-          <template slot-scope="scope">
-            <span>{{scope.row.subject&&scope.row.subject.subject_name?scope.row.subject.subject_name:'不限科目'}}</span>
-          </template>
+
+        <el-table-column prop="first_time" label="首次开启时间" min-width="160" fixed="right">
         </el-table-column>
-        <el-table-column prop="course_type" label="首次开启时间" min-width="160" fixed="right">
-          <template slot-scope="scope">
-            <span>{{scope.row.course_type}}</span>
-          </template>
+
+        <el-table-column prop="again_time" label="二次开启时间" min-width="160" fixed="right">
         </el-table-column>
-        <el-table-column prop="course_type" label="二次开启时间" min-width="160" fixed="right">
-          <template slot-scope="scope">
-            <span>{{scope.row.course_type}}</span>
-          </template>
-        </el-table-column>
+
         <el-table-column label="操作" width="200" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" @click="showCfaDialog('update')">修改</el-button>
-            <el-button type="text" @click="clearCache(scope.row)">删除</el-button>
+            <el-button type="text" @click="showCfaDialog('update',scope.row)">修改</el-button>
+            <el-button type="text" @click="deleteLesson(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,37 +47,48 @@
      :dialog="dialogVisable"
      :type="type"
      :data="ruleForm"
+     :updateCourse="updateCourse"
+     :remoteList="remoteList"
+     :selectedList="selectedList"
      @showCfaDialog="showCfaDialog"
      @closeDialog="closeDialog"
      @save="dialogSave"
-     @change="dialogChangeForm"
+     @dialogChangeForm="dialogChangeForm"
+     @remoteMethod="remoteMethod"
     ></creatCFA>
   </div>
 </template>
 
 <script>
 import creatCFA from './updateCFADialog'
-// import Vue from '../../common/vue.js'
 export default {
   data () {
     return {
+      changeId:'',
+      selectedList:[],//已被选择课程
+      updateCourse:[],
+      remoteList:[],
       dialogVisable:false,//控制子组件显示隐藏
       type:"add",//控制子组件是新增还是修改
+      page:1,
       ruleForm:{
-        course_name:"",
-        project_id:"",
-        subject_id:"",
-        course_type_id:"",
-        value1:"",
-        value2: "",
+        name:"",
+        exam:"",// 选择level
+        tag:"",// 学员标签
+        repeat:"",// 复读课程id
+        upgrade:"",// 升级课程id
+        auditions: "",// 试听课程id
+        first_time: "",// 首次开启时间
+        again_time: "" ,// 二次开启时间
+        courses: [],//已学课程id
+        expire: "", // 已学课程到期时间
+        end_time: "", // 结束时间
       },
-      cfaList: [
-        {course_id: '123'}
-      ],
+      cfaList: [],//续课列表
       loading: false,
       currentPage: 1,
-      pageSize: 10,
-      eduTotal: 30,
+      pageSize: 15,
+      eduTotal: 0,
     }
   },
   components: {
@@ -96,23 +100,162 @@ export default {
     handleCurrentChange(){},
 
     // 显示dialog弹框 改为父子组件传参方式，去除了事件总线
-    showCfaDialog (val){
+    showCfaDialog (val,val2){
+      this.updateCourse=[];
       this.type = val;
+      if(val === "update"){
+        this.ruleForm.courses = [];
+        this.changeId = val2.id;
+        this.ruleForm.name = val2.name;
+        // this.ruleForm.tag = val2.tag;
+        this.ruleForm.exam = val2.exam;
+        this.ruleForm.expire = new Date(val2.expire);
+        this.ruleForm.end_time = new Date(val2.end_time);
+        this.ruleForm.auditions = Number(val2.auditions);
+        this.ruleForm.first_time = new Date(val2.first_time);
+        this.ruleForm.upgrade = Number(val2.upgrade);
+        this.ruleForm.repeat = Number(val2.repeat);
+        this.ruleForm.again_time = new Date(val2.again_time);
+        val2.courses.forEach(o => {
+          this.updateCourse.push(Number(o));
+          this.ruleForm.courses.push(Number(o))
+          this.search(o);
+        });
+
+        this.search(this.ruleForm.repeat);
+        if(this.ruleForm.upgrade != 0){
+          this.search(this.ruleForm.upgrade);
+        }
+        if(this.ruleForm.auditions != 0){
+          this.search(this.ruleForm.auditions);
+        }
+        // this.ruleForm = val2;
+        console.log(val2);
+      }
       this.dialogVisable = true;
     },
     closeDialog(){//关闭弹框
       this.dialogVisable = false;
+      this.remoteList = [];
     },
     // 点击保存事件
     dialogSave(data){
       console.log(data)
+      this.ruleForm = data;
       console.log("点击保存事件");
+      this.addLesson();
     },
     // 修改事件
     dialogChangeForm(data){
       console.log(data)
       console.log("修改保存")
+      this.ruleForm = data;
+      this.addLesson();
+    },
+    // 获取派课列表
+    async getLesson(){
+      let params = {
+        page:this.page,
+        page_size:this.pageSize,
+      }
+      let ret = await this.$http.sendLessonList(params)
+      if(ret.status == 0){
+        this.cfaList = ret.result.list;
+        this.eduTotal = ret.result.page_count;
+        this.selectedList = ret.result.courses;
+      }else{
+        this.$message({
+          message:'获取任务列表失败',
+          type:'warning'
+        })
+      }
+    },
+    // 新增派课
+    async addLesson(data){
+      console.log('新增派课列表');
+      this.ruleForm.expire = Date.parse(this.ruleForm.expire)/1000;
+      this.ruleForm.end_time = Date.parse(this.ruleForm.end_time)/1000;
+      this.ruleForm.first_time = Date.parse(this.ruleForm.first_time)/1000;
+      this.ruleForm.again_time = Date.parse(this.ruleForm.again_time)/1000;
+      this.ruleForm.courses = this.ruleForm.courses.join(",");
+      this.ruleForm.upgrade = this.ruleForm.upgrade?this.ruleForm.upgrade : 0;
+      this.ruleForm.auditions = this.ruleForm.auditions?this.ruleForm.auditions:0;
+      let ret;
+      if(this.type == "add"){
+        ret = await this.$http.addSendLesson(this.ruleForm);
+      }else{
+        ret = await this.$http.changeCfaLesson(this.changeId,this.ruleForm);
+      }
+      console.log(ret);
+      if(ret.status === 0){
+        this.$message({
+          message:this.type == 'add'?'新建续课成功':'修改续课成功',
+          type:'success'
+        })
+        this.dialogVisable = false;
+        this.getLesson();
+      }else{
+        this.$message({
+          message:this.type == 'add'?'新建续课失败':'修改续课失败',
+          type:'warning'
+        })
+      }
+    },
+    // 删除续派课
+    deleteLesson(id){
+      this.$confirm('确定要删除续派课任务吗','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type:'warning'
+      }).then(()=>{
+        this.$http.deleteCfaLesson(id).then((ret)=>{
+          if(ret.status == 0){
+            this.$message({
+              message:'删除成功',
+              type:'warning'
+            })
+            this.getLesson();
+          }else{
+            this.$message({
+              message:'删除课程失败',
+              type:'warining'
+            })
+          }
+        })
+      })
+    },
+    // 远程搜索将回显绑定课程
+    async search(id){
+      let params = {
+        search_info:id,
+        include_big:false,
+      }
+      let ret = await this.$http.getRemoteCourse(4,0,params);
+      if(ret.status == 0){
+          this.remoteList.push(ret.result[0]);
+      }
+    },
+    // 远程搜索方法
+    async remoteMethod(query) {
+      if(query != ""){
+        let params = {
+          search_info:query,
+          include_big:false,
+        }
+        this.loading = true;
+        let ret = await this.$http.getRemoteCourse(4,0,params);
+        this.loading = false;
+        if(ret.status == 0){
+          console.log(ret);
+          this.remoteList = ret.result;
+        }else{
+          this.remoteList = [];
+        }
+      }
     }
+  },
+  created(){
+    this.getLesson();
   }
 }
 </script>

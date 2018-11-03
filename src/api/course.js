@@ -91,3 +91,18 @@ export const removeTeacher = (params) => zDelete(`${getBaseUrl()}apigateway.gaod
 
 // 考季的新接口(后台)
 export const getNewSeason = (id,params) => get(`${getBaseUrl()}apigateway.gaodun.com/plan-api/course/${id}/admin/gradation`, params);
+
+// 获取续派课任务列表
+export const sendLessonList = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/task`,params);
+
+// 新建续课任务
+export const addSendLesson = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/task`,params);
+
+//远程搜索续派课课程项目
+export const getRemoteCourse =(classid, courseid, params) => get(`${getBaseUrl()}apigateway.gaodun.com/school-service/plan/class/get/${classid}/course/${courseid}`,params);
+
+// 删除续派课
+export const deleteCfaLesson = (task_id,params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/task/${task_id}`,params);
+
+// 修改续课课程
+export const changeCfaLesson = (task_id,params) => put(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/task/${task_id}`,params);
