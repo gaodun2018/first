@@ -51,7 +51,8 @@
         </el-table-column>
         <el-table-column label="大纲类型" min-width="100">
           <template slot-scope="scope">
-            <span>Glive2.0</span>
+            <span v-if="scope.row.type == 1">Glive2.0</span>
+            <span v-else>SmartSchool</span>
           </template>
         </el-table-column>
         <el-table-column prop="project.name" label="所属项目" min-width="100">

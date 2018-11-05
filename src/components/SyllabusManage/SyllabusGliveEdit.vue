@@ -60,8 +60,8 @@
                         <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
                         <span class="chlft">
                         <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
-                        <span class="dif-type">课中</span>&nbsp;
-                        <span class="dif-type">选修</span>&nbsp;
+                        <span class="dif-type">{{secItem.type|typeFormat}}</span>&nbsp;
+                        <span class="dif-type">{{secItem.required|requiredFormat}}</span>&nbsp;
                         <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                         <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
                           {{secItem.name}}
@@ -101,7 +101,7 @@
                           </el-col>
                         </el-row>
                         <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
-                        <span class="chrgt" @click="addGliveAddr1">添加回放地址</span>
+                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)">添加回放地址</span>
                       </div>
                     </div>
                   </draggable>
@@ -125,17 +125,17 @@
           <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
             <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
           </el-form-item>
-          <el-form-item v-if='glive' label="学习环节" prop="status" :rules="[ { required: true, trigger: 'change' }]">
-            <el-radio-group v-model="addResFirFrom.status">
+          <el-form-item label="学习环节" prop="type" :rules="[ { required: true, trigger: 'change' }]">
+            <el-radio-group v-model="addResFirFrom.type">
               <el-radio :label="1">课前</el-radio>
               <el-radio :label="2">课中</el-radio>
               <el-radio :label="3">课后</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-if='glive' label="课程类型" prop="type" :rules="[ { required: true, trigger: 'change' }]">
-            <el-radio-group v-model="addResFirFrom.type">
+          <el-form-item label="课程类型" prop="required" :rules="[ { required: true, trigger: 'change' }]">
+            <el-radio-group v-model="addResFirFrom.required">
               <el-radio :label="1">必修</el-radio>
-              <el-radio :label="2">选修</el-radio>
+              <el-radio :label="0">选修</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item class="coursebtn">
@@ -151,12 +151,12 @@
               {{item.label}}
             </span>
           </div>
-          <el-form-item label="开启时间" v-if='glive && addResFirFrom.status==2' prop="start_time" :rules="[ { required: true, trigger: 'change' }]" style='margin-top: 80px;'>
-            <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm'>
+          <el-form-item label="开启时间" v-if='addResFirFrom.type==2' prop="start_time" :rules="[ { required: true, trigger: 'change' }]" style='margin-top: 80px;'>
+            <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="直播时长" v-if='glive && resourceType === "legacy_live"'  style='margin-top: 20px;'>
-            <el-input v-model="addResFirFrom.timeLong" style="width: 220px;"></el-input>
+          <el-form-item label="直播时长" v-if='resourceType === "legacy_live"'  style='margin-top: 20px;'>
+            <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input>
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
@@ -259,17 +259,17 @@
         <el-input v-model="gliveAddr" placeholder="请输入CC平台直播地址"></el-input>
         <span slot='footer'>
           <el-button @click="showAddGliveDialog = false">取 消</el-button>
-          <el-button type="primary" @click="">确 定</el-button>
+          <el-button type="primary" @click="updateLiveAddr">确 定</el-button>
         </span>
       </el-dialog>
       <el-dialog title="编辑回放地址" class="tabplane address-dialog" :visible.sync="showAddGliveDialog1" size="tiny">
         <span class="address-t">实时回放地址</span>
-        <el-input v-model="gliveAddr" placeholder=""></el-input>
+        <el-input v-model="gliveAddr1" placeholder=""></el-input>
         <span class="address-t">回放视频地址</span>
-        <el-input v-model="gliveAddr" placeholder=""></el-input>
+        <el-input v-model="gliveAddr2" placeholder=""></el-input>
         <span slot='footer'>
           <el-button @click="showAddGliveDialog1 = false">取 消</el-button>
-          <el-button type="primary" @click="">确 定</el-button>
+          <el-button type="primary" @click="updatePlaybackAddr">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -523,7 +523,39 @@ export default {
       showAddGliveDialog: false, //增加直播地址弹窗
       showAddGliveDialog1: false, //增加回放直播地址弹窗
       gliveAddr: '', //直播地址
+      gliveAddr1: '', //实时回放地址
+      gliveAddr2: '', //实时回放地址
     };
+  },
+  filters: {
+    typeFormat(val){
+      switch (+val) {
+        case 1:
+          return '课前'
+          break;
+        case 2:
+          return '课中'
+          break;
+        case 3:
+          return '课后'
+          break;
+        default:
+          break;
+      }
+    },
+    requiredFormat(val){
+      switch (+val) {
+        case 1:
+          return '必修'
+          break;
+        case 2:
+          return '选修'
+          break;
+        default:
+          return '选修'
+          break;
+      }
+    }
   },
   methods: {
     // 直接创建条目
@@ -1112,7 +1144,9 @@ export default {
       let params = {
         name: this.addResFirFrom.name, //大纲条目名称
         pid: this.currentId,
-        course_syllabus_id: this.syllabus_id
+        course_syllabus_id: this.syllabus_id,
+        type: this.addResFirFrom.type,
+        required: this.addResFirFrom.required
       };
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
@@ -1146,7 +1180,9 @@ export default {
       let params = {
         name: this.addResFirFrom.name,
         course_syllabus_id: this.syllabus_id,
-        audition: this.audition
+        audition: this.audition,
+        type: this.addResFirFrom.type,
+        required: this.addResFirFrom.required
       };
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
@@ -1507,12 +1543,43 @@ export default {
       // let ret = await this.$http.ChangeSyllabusItem(id, parm);
     },
     // 增加直播地址
-    addGliveAddr (type){
+    async addGliveAddr (type){
+      this.gliveAddr = ''
+      let ret = await this.$http.getLiveAddr(this.syllabus_id)
       this.showAddGliveDialog = true
+      this.gliveAddr = ret.result.live_link
     },
-    addGliveAddr1 (){
+    async addGliveAddr1 (itemId){
+      this.gliveAddr1 = ''
+      this.gliveAddr2 = ''
+      let ret = await this.$http.getPlaybackAddr(itemId)
       this.showAddGliveDialog1 = true
-    }
+      this.playBackItem = itemId
+      this.gliveAddr1 = ret.result.inst_replay
+      this.gliveAddr2 = ret.result.edit_replay
+    },
+    // 检查资源时间
+    checkTime(val){
+      console.log(val)
+    },
+    async updateLiveAddr() {
+      let params = {
+        syllabus_id: this.syllabus_id,
+        live_link: this.gliveAddr
+      }
+      let ret = await this.$http.updateLiveAddr(params)
+      this.showAddGliveDialog = false
+    },
+    async updatePlaybackAddr() {
+      let params = {
+        syllabus_id: this.syllabus_id,
+        item_id: this.playBackItem,
+        inst_replay: this.gliveAddr1,
+        edit_replay: this.gliveAddr2
+      }
+      let ret = await this.$http.updatePlaybackAddr(params)
+      this.showAddGliveDialog1 = false
+    },
   },
   computed: {
     syllabus_id() {
@@ -1520,7 +1587,7 @@ export default {
     },
     resourceTypeList() {
       if (this.glive) {
-        if (this.addResFirFrom.status == 1||this.addResFirFrom.status == 3) {
+        if (this.addResFirFrom.type == 1||this.addResFirFrom.type == 3) {
           return [{
               "discriminator": "video",
               "label": "视频"
@@ -1533,7 +1600,7 @@ export default {
               "discriminator": "paper",
               "label": "试卷"
           }]
-        } else if(this.addResFirFrom.status == 2){
+        } else if(this.addResFirFrom.type == 2){
           return [{
               "discriminator": "video",
               "label": "视频"

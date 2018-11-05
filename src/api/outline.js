@@ -78,3 +78,15 @@ export const createSyllabusVideoResource = params => formPost(`${getBaseUrl()}ap
 
 //大纲获取二级科目
 export const getSubjectTwoList = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/subject/two/list`, params);
+
+// 获取直播地址
+export const getLiveAddr = (syllabus_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/live-addresses/${syllabus_id}`, params);
+
+// 获取直播回放地址
+export const getPlaybackAddr = (item_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses/${item_id}`, params);
+
+// 添加和更新直播地址
+export const updateLiveAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/live-addresses`, params)
+
+// 获取直播回放地址
+export const updatePlaybackAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params)
