@@ -37,7 +37,7 @@
         </el-table-column>
       </el-table>
       <div class="edu-pagination">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[15, 30, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="eduTotal">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :page-sizes="[15, 30, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="eduTotal">
         </el-pagination>
       </div>
     </div>
@@ -86,7 +86,6 @@ export default {
       },
       cfaList: [],//续课列表
       loading: false,
-      currentPage: 1,
       pageSize: 15,
       eduTotal: 0,
     }
@@ -95,11 +94,17 @@ export default {
     creatCFA
   },
   methods: {
-    handleSizeChange(){},
-    handleSizeChange(){},
-    handleCurrentChange(){},
-
-    // 显示dialog弹框 改为父子组件传参方式，去除了事件总线
+    // 修改每页数量
+    handleSizeChange(val){
+      this.pageSize = val;
+      this.getLesson()
+    },
+    // 分页
+    handleCurrentChange(val){
+      this.page = val;
+      this.getLesson();
+    },
+    // 显示dialog弹框 改为父子组件传参方式，去除了事件总线 val是类型 新建还是修改 val2传递的修改对象
     showCfaDialog (val,val2){
       this.updateCourse=[];
       this.type = val;
@@ -161,7 +166,7 @@ export default {
       let ret = await this.$http.sendLessonList(params)
       if(ret.status == 0){
         this.cfaList = ret.result.list;
-        this.eduTotal = ret.result.page_count;
+        this.eduTotal = Number(ret.result.count);
         this.selectedList = ret.result.courses;
       }else{
         this.$message({
@@ -170,9 +175,8 @@ export default {
         })
       }
     },
-    // 新增派课
+    // 新增派课 或修改派课
     async addLesson(data){
-      console.log('新增派课列表');
       this.ruleForm.expire = Date.parse(this.ruleForm.expire)/1000;
       this.ruleForm.end_time = Date.parse(this.ruleForm.end_time)/1000;
       this.ruleForm.first_time = Date.parse(this.ruleForm.first_time)/1000;
