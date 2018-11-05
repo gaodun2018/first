@@ -52,11 +52,9 @@ const formatQueryData = (data) => {
 }
 
 const syncHttpLog = (res, item) => {
-    console.log('sync', res, item);
     let source_id = 0;
     if (item.callbackFn) {
         source_id = item.callbackFn(res, item);
-        console.log('source_id:', source_id);
     }
 
     // action: ''行为,
@@ -89,13 +87,10 @@ const syncHttpLog = (res, item) => {
     if(res.data){// 判断状态码
         params.status = res.data.status==0? 0:1;
     }
-
-    console.log(params);
     backendLog(params);
 }
 
 export function logs(response) {
-    console.log(response);
     const {config: {baseURL, method, url}} = response;
     let formatMethod = method.toUpperCase();
     // console.log(url);
@@ -107,7 +102,6 @@ export function logs(response) {
             targetItem = item;
         }
     })
-    console.log('找到：', targetItem);
     if (!targetItem) return;
     // if (targetItem.callbackFn) {
     //     targetItem.callbackFn(response, targetItem);

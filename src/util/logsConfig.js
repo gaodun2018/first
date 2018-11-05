@@ -23,7 +23,6 @@ const callbackFn = {
         const matchResult = res.config.url.match(item.regex)
         // let param = {};
         let source_id = 0;
-        console.log(matchResult)
         if (matchResult.length > 2) {
             // param[item.type + '_id'] = matchResult[2];
             source_id = matchResult[2];
@@ -39,7 +38,6 @@ const callbackFn = {
         // arr.forEach((i) => {
         //     data[i.split('=')[0]] = i.split('=')[1]
         // })
-        console.log('parms 中参数', data)
         let source_id;
         if (item.matchedValue) {
             source_id = data[item.matchedValue]

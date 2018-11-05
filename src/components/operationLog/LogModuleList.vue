@@ -112,9 +112,7 @@
                     keyword:this.keyword? this.keyword:'',
                     status:0
                 }
-                console.log(params);
                 let ret = await this.$http.getLogsList(params);
-                console.log(ret)
                 this.tableData = ret.result.data;
                 this.eduTotal = ret.result.total;
             },
