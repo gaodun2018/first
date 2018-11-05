@@ -95,7 +95,7 @@ const syncHttpLog = (res, item) => {
 }
 
 export function logs(response) {
-    // console.log(response);
+    console.log(response);
     const {config: {baseURL, method, url}} = response;
     let formatMethod = method.toUpperCase();
     // console.log(url);

@@ -331,12 +331,10 @@ export const requestConfig = [
         action: '拉取大纲条目',
         type: 'syllabus' ,
         regex: false,
-        matchedValue: "course_syllabus_id",
-        callbackFn:callbackFn.getParamsInfo,
     },
     {
         url: '/saas-service/course/syllabus/item/${id}',
-        method: 'GET',
+        method: 'DELETE',
         action: '删除大纲条目',
         type: 'syllabus',
         regex: /^\/\/(t-|dev-|pre-|)apigateway.gaodun.com\/saas-service\/course\/syllabus\/item\/(\d+)$/,

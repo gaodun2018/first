@@ -147,9 +147,10 @@
             let M = t.getMonth() + 1 >9? t.getMonth() + 1 : '0' + t.getMonth() + 1;
             let D = t.getDate() >9? t.getDate() : '0' + t.getDate();
             let H = t.getHours()>9? t.getHours() : '0' + t.getHours();
-            let S = t.getMinutes()>9? t.getMinutes() : '0' + t.getMinutes();
+            let m = t.getMinutes()>9? t.getMinutes() : '0' + t.getMinutes();
+            let S = t.getSeconds()>9? t.getSeconds() : '0' + t.getSeconds();
 
-            return `${Y}-${M}-${D} ${H}:${S}`
+            return `${Y}-${M}-${D} ${H}:${m}:${S}`
           }
         }
     };
