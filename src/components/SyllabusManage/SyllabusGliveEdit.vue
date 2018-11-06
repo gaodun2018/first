@@ -60,8 +60,8 @@
                         <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
                         <span class="chlft">
                         <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
-                        <span class="dif-type dif-type1">{{secItem.type|typeFormat}}</span>&nbsp;
-                        <span class="dif-type dif-type2">{{secItem.required|requiredFormat}}</span>&nbsp;
+                        <span class="dif-type dif-type1" :class="{'dif-type3': secItem.type==1||secItem.type==3}">{{secItem.type|typeFormat}}</span>&nbsp;
+                        <span class="dif-type dif-type2" :class="{'dif-type3': secItem.required==0}">{{secItem.required|requiredFormat}}</span>&nbsp;
                         <span v-if="!secItem.resource" class="dif-type">直播</span>
                         <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                         <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
@@ -152,7 +152,7 @@
               {{item.label}}
             </span>
           </div>
-          <el-form-item label="开启时间" v-if='addResFirFrom.type==2' prop="start_time" :rules="[ { required: true,message: '请设置开启时间', trigger: 'blur' }]" style='margin-top: 80px;'>
+          <el-form-item label="开启时间" v-if='addResFirFrom.type==2' :rules="[ { required: true,message: '请设置开启时间', trigger: 'blur' }]" style='margin-top: 80px;'>
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
@@ -301,14 +301,19 @@
     border-radius: 5px;
   }
   .dif-type1 {
-    border: 1px solid #ffa6ff;
-    background-color: #ffbfff;
-    color: #e800e8;
+    border: 1px solid #2ccb46;
+    background-color: #ccffff;
+    color: #2ccb46;
   }
   .dif-type2 {
-    border: 1px solid #adfedc;
-    background-color: #c1ffe4;
-    color: #02df82;
+    border: 1px solid #50b7e5;
+    background-color: #d7f2ff;
+    color: #50b7e5;
+  }
+  .dif-type3 {
+    border: 1px solid #666;
+    background-color: #e4e4e4;
+    color: #666;
   }
   .dropdown-child {
     color: #2ca4d9;
@@ -781,7 +786,7 @@ export default {
     },
     //第二步往下一步
     async secondSubmit(formName) {
-      if (!this.addResFirFrom.start_time) {
+      if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
         return this.$message.warning("请设置开启时间！");
       }
       if (!this.resourceType) {
