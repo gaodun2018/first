@@ -81,7 +81,7 @@
             <span v-else>{{scope.row.course_type}}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="320" align="center">
+        <el-table-column fixed="right" label="操作" width="400" align="center">
           <template slot-scope="scope">
             <router-link style="margin: 0 10px;" v-if="unlocking('COURSE_BASIC_SET')" class="routerBtn" :to="'/course/manage/basic/set/'+scope.row.course_id">基本设置
             </router-link>
@@ -92,6 +92,7 @@
               <div slot="content">如果没有打开预览页面<br/>请注意浏览器右上角，允许弹框！</div>
               <el-button type="text" @click="previewCourse(scope.row)">课程预览</el-button>
             </el-tooltip>
+            <el-button type="text" @click="showLogs(scope.row.course_id)">操作日志</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -129,6 +130,14 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <logs-dialog
+    :dialog="logVisiable"
+    :list="logList"
+    :total="logTotal"
+    @handleChangePage="handleChangePage"
+    @toClose="toClose"
+    ></logs-dialog>
   </div>
 </template>
 <style>
@@ -157,11 +166,20 @@ import { getCookie, setCookie } from "../../util/cookie.js";
 import { getEnv, getBaseUrl, getDocumentUrl } from "../../util/config";
 import { course_type,old_course_type } from "../../common/courseConfig.js";
 import { mapState } from "vuex";
+import logsDialog from "../public/showLogsDialog"
 let prefix = getEnv();
 export default {
+  components:{
+      logsDialog,
+  },
   data() {
     return {
       index:-1,
+      logVisiable: false,
+      logList: [], // log日志列表
+      page: 1,
+      logTotal: 0,
+      sourceId: 0,
       btnLoading: false, //按钮loading
       loading: false,
       selectfalg: false, //选择器搜索开关
@@ -202,10 +220,40 @@ export default {
     }
   },
   methods: {
+    //   显示操作日志弹框
+    showLogs(val){
+        this.sourceId = val;
+        this.logVisiable = true;
+        this.getlogs();
+    },
+    //   关闭弹框
+    toClose(){
+        this.logVisiable = false;
+    },
+    // 获取弹层数据列表
+    async getlogs(){
+        let params = {
+            log_type:1,
+            page_num: this.page,
+            page_size: 50,
+            source_id: this.sourceId?this.sourceId: '',
+        }
+        let ret = await this.$http.getLogsList(params);
+        console.log(ret);
+        this.logList = ret.result.data;
+        this.logTotal = ret.result.total;
+        console.log(this.logList,this.logTotal);
+    },
+    // 改变分页
+    handleChangePage(val){
+        this.page = val;
+        this.getlogs();
+    },
     // 清除函数
     clearCache(val){
       this.index = val.course_id;
-      this.$http.clearCache(Number(val.course_id)).then(res=>{
+      let param = {course_id : val.course_id}
+      this.$http.clearCache(param).then(res=>{
         if(res.status === 0){
           setTimeout(() => {
             this.index = -1;

@@ -35,6 +35,12 @@ const List = resolve => {
         resolve(require('../components/pictureManage/List.vue'))
     },'List')
 }
+// 操作日志
+const LogModuleList = resolve => {
+    require.ensure(['../components/operationLog/LogModuleList.vue'], (require) => {
+        resolve(require('../components/operationLog/LogModuleList.vue'))
+    },'LogModuleList')
+}
 // 登陆
 const Login = resolve => {
     require.ensure(['../pages/Login.vue'], (require) => {
@@ -153,6 +159,7 @@ export const routes = [
 		{ path: '/resource/handout/list',meta:{ title:'讲义列表' }, name:'934',component: resourceModuleHandoutList }, // 讲义列表
 		{ path: '/resource/resource-group/list',meta:{ title:'资源组列表' }, name:'959',component: resourceModuleResourceGroupList }, // 资源组列表
 		{ path: '/picture/manage/list',meta:{ title:'日签图列表' }, name:'1066',component: List }, // 日签图列表
+		{ path: '/log/list',meta:{ title:'操作日志' }, name:'1114',component: LogModuleList }, // 操作日志
 		{ path: '/syllabus/manage/template/:sid',meta:{ title:'选择课程大纲模板' }, name:'10004',component: SyllabusModuleOptTemplate }, // 选择课程大纲模板
 		{ path: '/syllabus/manage/edit/:sid',meta:{ title:'编辑课程大纲' }, name:'10005',component: SyllabusModuleEdit }, // 编辑课程大纲
 		{ path: '/course/manage/basic/set/:cid',meta:{ title:'课程基本设置' }, name:'10006',component: CourseModuleBasicSet }, // 课程基本设置

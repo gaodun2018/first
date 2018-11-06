@@ -74,6 +74,7 @@
             </router-link>
             <el-button type="text" v-if="unlocking('HANDOUT_DELETE')" @click="onRemove(scope.row)">删除
             </el-button>
+             <el-button type="text" @click="toShow(scope.row.id)">操作日志</el-button>
             <!-- <el-button type="text" v-if="unlocking('HANDOUT_STATISTICS')">使用统计</el-button> -->
           </template>
         </el-table-column>
@@ -87,6 +88,13 @@
       </el-row>
     </div>
 
+    <log-dialog
+    :dialog="logVisiable"
+    :list="logList"
+    :total="logTotal"
+    @handleChangePage="handleChangePage"
+    @toClose="toClose"
+    ></log-dialog>
   </div>
 </template>
 <style>
@@ -97,13 +105,19 @@ import { number2DateTime } from "../../../util/util.js";
 import vUpload from "../../public/BatchFilesUpload.vue";
 import { getDocumentUrl } from "../../../util/config.js";
 import { mapState } from "vuex";
+import logDialog from "../../public/showLogsDialog";
 export default {
   components: {
-    vUpload
+    vUpload,logDialog
   },
   data() {
     return {
       docUrl: getDocumentUrl,
+      logList:[],//日志数据列表
+      logVisiable:false,
+      logTotal: 0,
+      page:1,
+      sourceId:0,
       radio: "全部",
       radio2: "全部",
       keywords: "",
@@ -136,6 +150,38 @@ export default {
     }
   },
   methods: {
+    //   打开弹层
+    toShow(val){
+        this.sourceId = val;
+        this.logVisiable = true;
+        this.getLogList();
+    },
+    //分页
+    handleChangePage(val) {
+        this.page = val;
+        this.getlogList();
+    },
+    toClose(){
+        this.logVisiable=false;
+    },
+    async getLogList() {
+        let params = {
+            log_type: 3,
+            page_num: this.page,
+            page_size: 50,
+            source_id:this.sourceId?this.sourceId : '',
+        }
+        let ret = await this.$http.getLogsList(params);
+        if(ret.code == 0){
+            this.logTotal = ret.result.total;
+            this.logList = ret.result.data;
+        }else{
+            this.$message({
+                message:'获取日志失败',
+                type: 'warning'
+            })
+        }
+    },
     // 批量导入视频资源回调
     uploadSuccessCallback() {
       this.loadResources();

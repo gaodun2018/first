@@ -73,6 +73,7 @@
             </el-button>
             <el-button type="text" @click="onRemove(scope.row)">删除
             </el-button>
+            <el-button type="text" @click="toShow(scope.row.id)">操作日志</el-button>
             <!--<el-button type="text" v-if="unlocking('VIDEO_STATISTICS')">使用统计</el-button>-->
           </template>
         </el-table-column>
@@ -87,6 +88,14 @@
     <el-row>
       <v-upload :b-visible="uploaddialogVisible" :title="'批量导入视频资源'" :url-title="'批量视频资源Excel模板下载'" :download-url="'//s.gaodun.com/web/static-saas/file/%E6%89%B9%E9%87%8F%E8%A7%86%E9%A2%91%E5%AF%BC%E5%85%A5%E6%A8%A1%E7%89%88.xlsx'" :upload-url="uploadUrl" :name="'file'" @uploadSuccessCallback="uploadSuccessCallback" @handleCloesDialog="uploaddialogVisible = false" :fileTypes="['xlsx']"></v-upload>
     </el-row>
+
+    <log-dialog
+    :dialog="logVisiable"
+    :list="logList"
+    :total="logTotal"
+    @handleChangePage="handleChangePage"
+    @toClose="toClose"
+    ></log-dialog>
   </div>
 </template>
 <style>
@@ -96,13 +105,19 @@ import { number2DateTime } from "../../../util/util.js";
 import vUpload from "../../public/BatchFilesUpload.vue";
 import { getDocumentUrl } from "../../../util/config.js";
 import { mapState } from "vuex";
+import logDialog from "../../public/showLogsDialog";
 export default {
   components: {
-    vUpload
+    vUpload,logDialog
   },
   data() {
     return {
       docUrl: getDocumentUrl,
+      page:1,
+      logList:[],//日志列表
+      logVisiable:false,
+      logTotal:0,
+      page:1,
       radio: "全部",
       radio2: "全部",
       input2: "",
@@ -135,6 +150,39 @@ export default {
     }
   },
   methods: {
+    //   打开操作日志
+    toShow(val){
+        this.sourceId = val;
+        this.logVisiable = true;
+        this.getLogList();
+    },
+    // 分页
+    handleChangePage(val){
+        this.page = val;
+        this.getLogList();
+    },
+    //  关闭日志操作
+    toClose(){
+        this.logVisiable = false;
+    },
+    async getLogList(){
+        let params = {
+            log_type: 3,
+            page_num: this.page,
+            page_size: 50,
+            source_id:this.sourceId?this.sourceId : '',
+        }
+        let ret = await this.$http.getLogsList(params);
+        if(ret.code == 0) {
+            this.logTotal = ret.result.total;
+            this.logList = ret.result.data;
+        }else {
+            this.$message({
+                message:'获取日志错误',
+                type: 'warning'
+            })
+        }
+    },
     // 批量导入视频资源回调
     uploadSuccessCallback() {
       this.loadResources();
