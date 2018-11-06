@@ -60,8 +60,9 @@
                         <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
                         <span class="chlft">
                         <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
-                        <span class="dif-type">{{secItem.type|typeFormat}}</span>&nbsp;
-                        <span class="dif-type">{{secItem.required|requiredFormat}}</span>&nbsp;
+                        <span class="dif-type dif-type1">{{secItem.type|typeFormat}}</span>&nbsp;
+                        <span class="dif-type dif-type2">{{secItem.required|requiredFormat}}</span>&nbsp;
+                        <span v-if="!secItem.resource" class="dif-type">直播</span>
                         <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                         <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
                           {{secItem.name}}
@@ -101,7 +102,7 @@
                           </el-col>
                         </el-row>
                         <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
-                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)">添加回放地址</span>
+                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)" v-if='!secItem.resource || secItem.resource && secItem.resource.discriminator == "legacy_live" '>添加回放地址</span>
                       </div>
                     </div>
                   </draggable>
@@ -160,7 +161,7 @@
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem" v-if='resourceType === "legacy_live"'>{{btnLoading?'新增中':'确 定'}}
+            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('legacy_live')" v-if='resourceType === "legacy_live"'>{{btnLoading?'新增中':'确 定'}}
             </el-button>
             <el-button v-else style="margin-top:12px;" @click="secondSubmit">下一步</el-button>
           </el-form-item>
@@ -298,6 +299,16 @@
     padding: 2px 10px;
     font-size: 8px;
     border-radius: 5px;
+  }
+  .dif-type1 {
+    border: 1px solid #ffa6ff;
+    background-color: #ffbfff;
+    color: #e800e8;
+  }
+  .dif-type2 {
+    border: 1px solid #adfedc;
+    background-color: #c1ffe4;
+    color: #02df82;
   }
   .dropdown-child {
     color: #2ca4d9;
@@ -855,13 +866,29 @@ export default {
       this.multipleSelection = val;
     },
     //新增大纲资源条目
-    async addSyllabusResourceItem() {
-      if (this.sourceRadio === 2) {
-        // 资源库检索流程
-        this.sourceRadio2Syllabus();
-      } else if (this.sourceRadio === 1) {
-        // 走上传创建流程
-        this.sourceRadio1Syllabus();
+    async addSyllabusResourceItem(val) {
+      if (val && val == 'legacy_live') { //gLive直播不在弹窗内挂资源
+        if (this.resourceAction === "add") {
+          let ret = await this.CourseSyllabusItem();
+          if (ret.status == 0) {
+            this.dialogFormVisible = false;
+            this.getSyllabusItems();
+          }
+        } else if (this.resourceAction === "update") {
+          let ret = await this.ChangeSyllabusItem();
+          if (ret.status == 0) {
+            this.dialogFormVisible = false;
+            this.getSyllabusItems();
+          }
+        }
+      } else {
+        if (this.sourceRadio === 2) {
+          // 资源库检索流程
+          this.sourceRadio2Syllabus();
+        } else if (this.sourceRadio === 1) {
+          // 走上传创建流程
+          this.sourceRadio1Syllabus();
+        }
       }
     },
     // 数据库检索流程 sourceRadio-2
