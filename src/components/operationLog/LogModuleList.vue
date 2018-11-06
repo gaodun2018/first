@@ -11,7 +11,6 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
                         v-model="daterange"
-                        @change="setDaterange"
                     ></el-date-picker>
                 </div>
                 <div class="search_item">
@@ -32,7 +31,7 @@
                     </div>
                 </div>
                 <div>
-                    <el-button type="primary" size="small" style="margin-bottom:2px;" @click="getList">查询
+                    <el-button type="primary" size="small" style="margin-bottom:2px;" @click="searchList">查询
                     </el-button>
                 </div>
             </el-row>
@@ -125,8 +124,10 @@
                 this.page = val;
                 this.getList();
             },
-            setDaterange() {
-
+            // 查询列表
+            searchList() {
+                this.page = 1;
+                this.getList();
             }
         },
         watch: {

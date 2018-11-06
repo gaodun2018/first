@@ -27,7 +27,6 @@ const callbackFn = {
             // param[item.type + '_id'] = matchResult[2];
             source_id = matchResult[2];
         }
-        // console.log('id：', param);
         return source_id
 
     },
@@ -39,8 +38,10 @@ const callbackFn = {
         //     data[i.split('=')[0]] = i.split('=')[1]
         // })
         let source_id;
-        if (item.matchedValue) {
+        if (item.matchedValue && data) {
             source_id = data[item.matchedValue]
+        }else if(res.config.params){
+            source_id = res.config.params[item.matchedValue]
         }
         source_id = source_id? source_id:0;
         return source_id
@@ -571,7 +572,7 @@ export const requestConfig = [
         action: '课中交互删除视频节点',
         type: 'resource',
         regex: false,
-        matchedValue: "resource_id",
+        matchedValue: "id",
         callbackFn: callbackFn.getParamsInfo,
     },
     {
