@@ -90,3 +90,6 @@ export const updateLiveAddr = params => formPost(`${getBaseUrl()}apigateway.gaod
 
 // 获取直播回放地址
 export const updatePlaybackAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params)
+
+// 校验课中\时间...
+export const getValidation = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/items/validation`, params)

@@ -101,7 +101,7 @@
                             </el-dropdown>
                           </el-col>
                         </el-row>
-                        <span class="chrgt" @click="openeEditResource(secItem)">修改</span>
+                        <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
                         <span class="chrgt" @click="addGliveAddr1(secItem.item_id)" v-if='!secItem.resource || secItem.resource && secItem.resource.discriminator == "legacy_live" '>添加回放地址</span>
                       </div>
                     </div>
@@ -129,7 +129,7 @@
           <el-form-item label="学习环节" prop="type" :rules="[ { required: true, trigger: 'change' }]">
             <el-radio-group v-model="addResFirFrom.type">
               <el-radio :label="1">课前</el-radio>
-              <el-radio :label="2">课中</el-radio>
+              <el-radio :label="2" v-if='hasType2'>课中</el-radio>
               <el-radio :label="3">课后</el-radio>
             </el-radio-group>
           </el-form-item>
@@ -146,13 +146,13 @@
           </el-form-item>
         </el-form>
         <!-- 第二步 -->
-        <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm">
+        <el-form label-width="100px" v-show="active == 1" class="demo-ruleForm" ref="addResFirFrom1">
           <div class="selectmodel">
             <span style="position: relative;" :class="[resourceType == item.discriminator ? 'is-active' : '']" @click="selectclk(item.discriminator)" v-for="(item,index) in resourceTypeList" :key="index">
               {{item.label}}
             </span>
           </div>
-          <el-form-item label="开启时间" v-if='addResFirFrom.type==2' prop="start_time" :rules="[ { required: true, trigger: 'change' }]" style='margin-top: 80px;'>
+          <el-form-item label="开启时间" v-if='addResFirFrom.type==2' prop="start_time" :rules="[ { required: true,message: '请设置开启时间', trigger: 'blur' }]" style='margin-top: 80px;'>
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
@@ -163,7 +163,7 @@
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
             <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('legacy_live')" v-if='resourceType === "legacy_live"'>{{btnLoading?'新增中':'确 定'}}
             </el-button>
-            <el-button v-else style="margin-top:12px;" @click="secondSubmit">下一步</el-button>
+            <el-button v-else style="margin-top:12px;" @click="secondSubmit('addResFirFrom1')">下一步</el-button>
           </el-form-item>
         </el-form>
         <!-- 第三步 -->
@@ -536,6 +536,8 @@ export default {
       gliveAddr: '', //直播地址
       gliveAddr1: '', //实时回放地址
       gliveAddr2: '', //实时回放地址
+      hasType2: true, //是否展示课中
+      timeVali: true, //课中时间是否合理
     };
   },
   filters: {
@@ -748,7 +750,11 @@ export default {
       this.resourceType = discriminator;
     },
     //弹出新增资源的弹层
-    openAddResDialog(val) {
+    async openAddResDialog(val) {
+      let ret = await this.$http.getValidation({parent_id: val.id})
+      if (ret.result.Has) {
+        this.hasType2 = false
+      }
       this.currentId = val.id;
       this.syllabusid = val.course_syllabus_id;
       this.active = 0;
@@ -774,7 +780,10 @@ export default {
       });
     },
     //第二步往下一步
-    async secondSubmit() {
+    async secondSubmit(formName) {
+      if (!this.addResFirFrom.start_time) {
+        return this.$message.warning("请设置开启时间！");
+      }
       if (!this.resourceType) {
         this.$message.warning("请选择资源类型！");
         return;
@@ -1270,7 +1279,12 @@ export default {
       }
     },
     //弹出修改资源的弹层
-    openeEditResource(item) {
+    async openeEditResource(partId, item) {
+      let ret = await this.$http.getValidation({parent_id: partId})
+      if (ret.result.Has && item.type != 2) {
+        this.hasType2 = false
+      }
+      this.currentId = partId
       this.syllabusid = item.course_syllabus_id;
       this.startType = item.resource ? item.resource.discriminator : "";
       if (item.resource && item.resource.discriminator === "legacy_live") {
@@ -1586,8 +1600,18 @@ export default {
       this.gliveAddr2 = ret.result.edit_replay
     },
     // 检查资源时间
-    checkTime(val){
-      console.log(val)
+    async checkTime(val){
+      let params = {
+        syllabus_id: this.syllabusid,
+        start_time: val
+      }
+      let ret = await this.$http.getValidation(params)
+      if (ret.result.Has) {
+        this.$message({
+          type: 'warning',
+          message: '您选择时间的时间段已有其他资源，请您确认！'
+        })
+      }
     },
     async updateLiveAddr() {
       let params = {
@@ -1645,6 +1669,13 @@ export default {
           // }
           ]
         }
+      }
+    }
+  },
+  watch: {
+    dialogFormVisible(val){
+      if (!val) {
+        this.hasType2 = true
       }
     }
   },
