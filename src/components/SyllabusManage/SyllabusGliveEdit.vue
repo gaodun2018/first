@@ -484,6 +484,8 @@ export default {
       progressText: progressText,
       addResFirFrom: {
         name: "",
+        type: '',
+        required: '',
         start_time: "", //开启时间
         study_time: "", //建议学习时长， 单位分钟
         apply_to: [] //1表示跳级测试，2表示提分盒子
@@ -764,6 +766,8 @@ export default {
       this.syllabusid = val.course_syllabus_id;
       this.active = 0;
       this.addResFirFrom.name = "";
+      this.addResFirFrom.type = "";
+      this.addResFirFrom.required = "";
       this.addResFirFrom.start_time = ""; //开启时间
       this.addResFirFrom.study_time = ""; //建议学习时长， 单位分钟
       this.addResFirFrom.apply_to = []; //1表示跳级测试，2表示提分盒子
@@ -1300,6 +1304,8 @@ export default {
       this.audition = item.audition? item.audition : 0; //是否试听
       this.active = 0;
       this.addResFirFrom.name = item.name; //名称
+      this.addResFirFrom.type = +item.type;
+      this.addResFirFrom.required = +item.required;
       this.addResFirFrom.apply_to = item.apply_to ? [item.apply_to] : []; //1表示跳级测试，2表示提分盒子
       this.addResFirFrom.start_time = item.start_time; //开启时间
       this.addResFirFrom.study_time = item.study_time; //学习时长
