@@ -99,7 +99,7 @@ export default {
     },
     methods: {
         handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+            //console.log(key, keyPath);
             if (key !== "tiku") {
                 this.$router.push({ path: key });
             } else {
