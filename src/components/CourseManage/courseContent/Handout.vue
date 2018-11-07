@@ -11,17 +11,49 @@
           <el-radio :label="0">不启用</el-radio>
         </el-radio-group>
       </el-row>
+
+      <el-row class="tab-title" v-if="isEnabled === 1">
+        本课程的讲义是否需要分类展示
+      </el-row>
+      <el-row class="tab-radio" v-if="isEnabled === 1">
+        <el-radio-group v-model="isClassify" @change="handleChangeClassify">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">不启用</el-radio>
+        </el-radio-group>
+      </el-row>
+
+      <el-row v-if="isClassify === 1 && isEnabled === 1">
+        <div class="classify" v-for="(item,index) in classifyList" :key="index">
+          <span class="classify-item">
+            <el-input size="mini" style="width:150px;" v-model="item.cate_name"></el-input>
+            <span @click="updateType(item.id,item.cate_name)">修改</span>
+            <span @click="deleteType(item.id)">删除</span>
+          </span>
+        </div>
+        <div class="classify" v-if="classifyList.length<5">
+          <span class="classify-item">
+            <el-input size="mini" style="width:150px;" v-model="addinput" placeholder="请输入新增讲义名称"></el-input>
+            <span @click="addType">新增一个讲义分类（最多5个哦）</span>
+          </span>
+        </div>
+      </el-row>
     </el-row>
+
     <template v-if="isEnabled==1?true:false">
       <div class="scroll-table">
         <div class="table">
           <div class="table-line-title">
-            <span class="table-item center" :style="item.flex" v-for="(item,index) in tableConfig" :key="index">{{item.text}}</span>
+            <span class="table-item center" :style="item.flex" v-for="(item,index) in tableConfig" v-if="item.key !='type' || isClassify != 0" :key="index">{{item.text}}</span>
           </div>
           <draggable v-model="handout" :options="{group:'people',animation:200,draggable:'.table-move'}" element="div" @end="dragEnd(handout)">
             <div class="table-line table-line-bg table-move" v-for="(ele,index) in handout" :key="index">
-              <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i">
+              <span class="table-item center" :style="item.flex" v-for="(item,i) in tableConfig" :key="i" v-if="item.key !='type' || isClassify != 0">
                 <span class='table-item-text beyond-hidden-2' v-if="item.key === 'index'">{{index + 1}}</span>
+                <template v-else-if="item.key==='type'">
+                    <el-select v-model="ele.cate_id"  placeholder="请选择分类" size="mini" @change="changeType(ele,index)">
+                      <el-option v-for="p in classifyList" :key="p.id" :label="p.cate_name" :value="p.id"></el-option>
+                    </el-select>
+                </template>
                 <template v-else-if="item.key === 'done'">
                   <el-button size="small" type="text" @click="handleDelete(index, ele)" style="margin: 0 10px">删除
                   </el-button>
@@ -48,6 +80,11 @@
         </el-form-item>
         <el-form-item label="备注" prop="content" :rules="filter_rules({type:'isAllSpace',max:50})">
           <el-input v-model="NewTableForm.content" type="textarea" auto-complete="off" placeholder="请输入备注" class="coursetxt"></el-input>
+        </el-form-item>
+        <el-form-item label="选择展示分类" v-if="isClassify === 1" prop="category_id" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:60})">
+          <el-select v-model="NewTableForm.category_id">
+            <el-option v-for="p in classifyList" :key="p.id" :value="p.id" :label="p.cate_name"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="上传文件" prop="file_name">
           <FilesUpload :file="file" @updateFlies="updateFlies"></FilesUpload>
@@ -76,6 +113,21 @@
 }
 </style>
 <style lang="less" scoped>
+.classify {
+  display:inline-block;
+  margin-left:10px;
+  margin-top: 10px;
+  .classify-item {
+    display: flex;
+    span{
+      font-size:12px;
+      color:#409EFF;
+      cursor:pointer;
+      line-height:28px;
+      margin-left:5px;
+    }
+  }
+}
 .scroll-table {
   width: 90%;
   overflow-x: auto;
@@ -147,6 +199,7 @@ import FilesUpload from "./HandoutModelUpload.vue";
 import Vue from "../../../common/vue.js";
 import draggable from "vuedraggable";
 import { handoutTable } from "../../common/courseConfig.js";
+import { course_type } from '../../../common/courseConfig';
 export default {
   components: { FilesUpload, draggable },
   props: [],
@@ -159,10 +212,96 @@ export default {
       currentIndex: "",
       Doing: "addDate",
       handout: [], //讲义列表
-      tableConfig: handoutTable
+      tableConfig: handoutTable,
+      isClassify:0,//是否启用讲义分类
+      classifyList:[],//分类列表
+      addinput: '',
     };
   },
   methods: {
+    // 获取分类列表
+    async getTypeList() {
+      let ret = await this.$http.getHandoutTypeList(this.course_id)
+      console.log(ret);
+      if(ret.status === 0){
+        this.classifyList = ret.result.list;
+      }else{
+        this.$message.error('获取课程讲义列表失败');
+      }
+    },
+    // 新增课程讲义分类
+    async addType(){
+      let params = {
+        course_id: this.course_id,
+        name:this.addinput
+      }
+      let ret = await this.$http.addHandoutType(params);
+      if(ret.status === 0){
+        this.$message({
+          message:'新增课程讲义分类成功',
+          type:'success'
+        })
+        this.addinput = '';
+        this.getTypeList();
+      }else{
+        this.$message({
+          message:'新增课程讲义分类失败',
+          type:'warning'
+        })
+      }
+    },
+    // 删除课程讲义分类
+    async deleteType (id) {
+      let params={
+        course_id:this.course_id,
+      }
+      let ret = await this.$http.deleteHandoutType(id,params);
+      if(ret.status === 0){
+        this.$message.success('删除课程分类成功');
+        this.getTypeList();
+      }else{
+        this.$message.error(ret.message);
+      }
+    },
+    // 修改课程讲义分类
+    async updateType (id,name) {
+      for(let i = 0;i<this.classifyList.length;i++){
+        if(this.classifyList[i].id != id){
+          if(this.classifyList[i].cate_name == name){
+            this.$message.warning('当前课程下已存在相同名称，请重新命名');
+            return;
+          }
+        }
+      }
+      let ret = await this.$http.updateHandoutType(id,{name:name});
+      if(ret.status === 0){
+        this.$message({
+          message:'修改讲义分类成功',
+          type:'success'
+        })
+      }else{
+        this.$message.error('修改讲义分类错误');
+      }
+    },
+    // 单个讲义分类切换保存
+    async changeType(obj){
+      let params = {
+        content: obj.content,
+        course_id: this.course_id,
+        file_name: obj.file_name,
+        name: obj.name,
+        path: obj.path,
+        size: obj.size,
+        upload_size:'',
+        category_id:obj.cate_id,
+      }
+      let ret = await this.$http.updateCourseHandout(obj.id, params);
+      if(ret.status === 0){
+        this.$message.success('修改分类成功');
+      }else{
+        this.$message.warning('修改分类失败');
+      }
+    },
     //获取讲义列表
     async getCourseHandout() {
       let url = this.course_id;
@@ -195,6 +334,11 @@ export default {
         });
         this.isEnabled = this.isEnabled === 1 ? 0 : 1;
       }
+    },
+    // 是否启用讲义分类
+    handleChangeClassify(val){
+      console.log(val);
+      console.log(this.isClassify);
     },
     //获取讲义列表
     async getCourseHandout() {
@@ -241,7 +385,8 @@ export default {
         content: "",
         file_name: "",
         size: "",
-        path: ""
+        path: "",
+        category_id: "",
       };
       this.Doing = "addDate";
       this.file = [];
@@ -292,8 +437,11 @@ export default {
     },
     //编辑数据按钮
     handleEdit(index, row) {
+      console.log(this.handout);
       this.Doing = "update";
       this.NewTableForm = { ...this.handout[index] };
+      this.NewTableForm.category_id = this.NewTableForm.cate_id;
+      console.log(this.NewTableForm);
       this.currentIndex = index;
       this.file = [
         {
@@ -418,11 +566,10 @@ export default {
     }
   },
   mounted() {
-    // Vue.$on('uploadFile', (res, fileList) => {
-    // })
+
   },
   created() {
-    // this.GetCourseDisable();
+    this.getTypeList();
     this.getCourseHandout();
   }
 };

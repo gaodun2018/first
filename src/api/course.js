@@ -3,6 +3,7 @@ import { formPost, formPut } from '../util/zeusFormAxios.js';
 
 import { Message } from 'element-ui';
 import { getBaseUrl } from '../util/config'
+import { constants } from 'zlib';
 
 //拉取项目科目
 export const getProjectSubject = params => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/manage/get/project/subject/list`, params)
@@ -94,3 +95,15 @@ export const getNewSeason = (id,params) => get(`${getBaseUrl()}apigateway.gaodun
 
 // :: 课程阶段排序
 export const courseStageSort = (params) => formPost(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/gragation/sort`,params);
+
+// 获取课程讲义分类列表
+export const getHandoutTypeList = (id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/${id}/handout/cate`,params);
+
+// 新增课程讲义分类
+export const addHandoutType = (params) => post(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/handout/cate/add`,params);
+
+// 删除课程讲义分类
+export const deleteHandoutType = (id,params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/handout/cate/${id}`,params);
+
+// 更新课程讲义分类
+export const updateHandoutType = (id,params) => put(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/handout/cate/${id}`,params);
