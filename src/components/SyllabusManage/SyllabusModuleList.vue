@@ -363,7 +363,8 @@ export default {
         project_id: this.clver,
         subject_id: this.clversm,
         status: this.selectvalue,
-        keyword: this.searchinput
+        keyword: this.searchinput,
+        type: 0
       });
       this.tableLoading = false;
       if (ret.status == 0) {
