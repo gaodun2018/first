@@ -69,8 +69,10 @@ export default {
         status: "0", //获取启用的大纲
         keyword: ""
       }
-      if (this.course_type == 4) {
+      if (this.course_type == 12) {
         params.type = 1 //区分GLIVE&SS（默认0，GLIVE&SS 1）
+      } else {
+        params.type = 0
       }
       let ret = await this.$http.CourseSyllabuses(params);
       if (ret.status == 0) {

@@ -409,13 +409,13 @@ export default {
       });
       if (sy_id) {
         if (currentTemplate) {
-          if (this.course_type == 4) {
+          if (this.course_type == 12) {
             window.open(`/#/syllabus/glive/edit/${sy_id}?glive=1`);
           } else {
             window.open(`/#/syllabus/manage/edit/${sy_id}`);
           }
         } else {
-          if (this.course_type == 4) {
+          if (this.course_type == 12) {
             let ret = await this.$http.selectSyllabus(sy_id, {
                 template_id: 6
             });
@@ -513,6 +513,7 @@ export default {
     },
     //新建课程大纲
     async createSyllabus() {
+      console.log(this.course_type)
       let stageParams = {};
       //新建大纲流程
       let syllabusParams = {
@@ -521,8 +522,10 @@ export default {
         subject_id: this.subject_id, //科目id
         status: "0" //是否启用 0-启用 1-禁用
       };
-      if (this.course_type == 4) {
+      if (this.course_type == 12) {
         syllabusParams.type = 1 //大纲类型（0默认，1GLIVE&SS）
+      } else {
+        syllabusParams.type = 0
       }
       let syllabusRet = await this.$http.CourseSyllabus(syllabusParams);
       if (syllabusRet.status == 0) {
