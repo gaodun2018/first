@@ -126,14 +126,14 @@
           <el-form-item label="显示名称" prop="name" :rules="filter_rules({required:true,type:'isAllSpace',maxLength:100})">
             <el-input class="coursetxt" v-model="addResFirFrom.name" @keydown.native.enter="firstNextSubmit('addResFirFrom')"></el-input>
           </el-form-item>
-          <el-form-item label="学习环节" prop="type" :rules="[ { required: true, trigger: 'change' }]">
+          <el-form-item label="学习环节" prop="type" :rules="[ { required: true, trigger: 'change', message: '请选择学习环节！' }]">
             <el-radio-group v-model="addResFirFrom.type">
               <el-radio :label="1">课前</el-radio>
               <el-radio :label="2" v-if='hasType2'>课中</el-radio>
               <el-radio :label="3">课后</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="课程类型" prop="required" :rules="[ { required: true, trigger: 'change' }]">
+          <el-form-item label="课程类型" prop="required" :rules="[ { required: true, trigger: 'change', message: '请选择课程类型！' }]">
             <el-radio-group v-model="addResFirFrom.required">
               <el-radio :label="1">必修</el-radio>
               <el-radio :label="0">选修</el-radio>
