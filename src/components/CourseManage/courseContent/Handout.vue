@@ -6,7 +6,7 @@
         本课程是否启用批量下载讲义模块
       </el-row>
       <el-row class="tab-radio">
-        <el-radio-group v-model="isEnabled" @change="handleChange">
+        <el-radio-group v-model="isEnabled" @change="handleChange('handout_download_open')">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">不启用</el-radio>
         </el-radio-group>
@@ -16,7 +16,7 @@
         本课程的讲义是否需要分类展示
       </el-row>
       <el-row class="tab-radio" v-if="isEnabled === 1">
-        <el-radio-group v-model="isClassify" @change="handleChangeClassify">
+        <el-radio-group v-model="isClassify" @change="handleChangeClassify('handout_category_open')">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">不启用</el-radio>
         </el-radio-group>
@@ -213,7 +213,6 @@ export default {
       Doing: "addDate",
       handout: [], //讲义列表
       tableConfig: handoutTable,
-      isClassify:0,//是否启用讲义分类
       classifyList:[],//分类列表
       addinput: '',
     };
@@ -310,16 +309,25 @@ export default {
         this.handout = ret.result.list;
       }
     },
-    handleChange(value) {
-      this.SetCourseDisable();
+    handleChange(val) {
+      this.SetCourseDisable(val);
     },
     //设置讲义模块的启用
-    async SetCourseDisable() {
-      let msg = this.isEnabled === 1? '启用批量讲义成功' : '已关闭批量讲义'
+    async SetCourseDisable(val) {
+      let msg;
+      let value;
+      if(val === "handout_download_open"){
+        msg = this.isEnabled === 1? '已启用批量下载讲义' : '已关闭批量下载讲义';
+        value = this.isEnabled;
+      }else{
+        msg = this.isClassify === 1? '已启用课程讲义分类展示' : '已关闭课程讲义分类展示';
+        value = this.isClassify;
+      }
+
       let cource_id = this.$route.params.cid;
       let params = {
-        setting_value: this.isEnabled, //是否启用，0:不启用，1:启用
-        setting_key: "handout_download_open" //启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；
+        setting_value: value, //是否启用，0:不启用，1:启用
+        setting_key: val,//启用键值，prefix:前导阶段；mock:模考阶段；classroom:翻转课堂；review:特殊复习阶段;knowledge_recommend:知识点判断推荐；knowledge_syllabus:知识骨牌;gaodun_course_id:高顿关联课程id;classroom_pk_open:班级pk；handout_download_open：讲义下载；study_record_open：学习记录；course_syllabus_open：课程大纲；glive_open：glive开关；
       };
       let ret = await this.$http.SetCourseDisable(cource_id, params);
       if (ret.status === 0) {
@@ -329,16 +337,19 @@ export default {
         });
       } else {
         this.$message({
-          message: "启用批量讲义失败！",
+          message: "启用批量讲义或讲义分类失败！",
           type: "error"
         });
-        this.isEnabled = this.isEnabled === 1 ? 0 : 1;
+        if(val == "handout_download_open"){
+          this.isEnabled = this.isEnabled === 1 ? 0 : 1;
+        }else{
+          this.isClassify = this.isClassify ===1? 0 : 1;
+        }
       }
     },
     // 是否启用讲义分类
     handleChangeClassify(val){
-      console.log(val);
-      console.log(this.isClassify);
+      this.SetCourseDisable(val);
     },
     //获取讲义列表
     async getCourseHandout() {
@@ -563,12 +574,23 @@ export default {
         data.handout_download_open = v;
         this.$store.dispatch("courseDisable", data);
       }
+    },
+    isClassify:{
+      get() {
+        return this.$store.state.course.course_disable.handout_category_open;
+      },
+      set(v) {
+        let data = {};
+        data.handout_category_open = v;
+        this.$store.dispatch("courseDisable", data);
+      }
     }
   },
   mounted() {
 
   },
   created() {
+    console.log(this.$store.state)
     this.getTypeList();
     this.getCourseHandout();
   }
