@@ -76,7 +76,7 @@
           <template slot-scope="scope">
             <span v-if="scope.row.course_type==10">网课2.0</span>
             <span v-else-if="scope.row.course_type==11">EP2.0</span>
-            <span v-else-if="scope.row.course_type==4">Glive2.0</span>
+            <span v-else-if="scope.row.course_type==12">Glive2.0</span>
             <span v-else-if="scope.row.course_type==3">自适应学习网课-EP</span>
             <span v-else>{{scope.row.course_type}}</span>
           </template>
