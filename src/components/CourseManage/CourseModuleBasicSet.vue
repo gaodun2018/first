@@ -31,7 +31,7 @@
                     <el-form-item label="网课类型" prop="course_type" :rules="[{required: true, message: '请选择网课类型', trigger: 'change'}]">
                         <el-select v-model="ruleForm.course_type" placeholder="请选择网课类型">
                             <el-option :label="item.name" :value="item.course_type_id" v-for="item in course_type" :key="item.course_type_id"
-                            :disabled="ruleForm.course_type==12&&item.course_type_id !=12 || ruleForm.course_type!=12&&item.course_type_id ==12"></el-option>
+                            v-if="ruleForm.course_type==12&&item.course_type_id ==12 || ruleForm.course_type!=12&&item.course_type_id !=12"></el-option>
                         </el-select>
                     </el-form-item>
 
