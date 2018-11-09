@@ -886,6 +886,9 @@ export default {
     //新增大纲资源条目
     async addSyllabusResourceItem(val) {
       if (val && val == 'legacy_live') { //gLive直播不在弹窗内挂资源
+        if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
+          return this.$message.warning("请设置开启时间！");
+        }
         if (this.resourceAction === "add") {
           let ret = await this.CourseSyllabusItem();
           if (ret.status == 0) {
