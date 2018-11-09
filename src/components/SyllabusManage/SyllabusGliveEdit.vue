@@ -157,7 +157,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="直播时长" v-if='resourceType === "legacy_live"'  style='margin-top: 20px;'>
-            <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input>
+            <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input> 分钟
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
