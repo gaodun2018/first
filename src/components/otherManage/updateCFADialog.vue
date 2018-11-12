@@ -297,6 +297,8 @@ export default {
     //关闭弹层
     closeDialog(formName) {
     //  this.$refs.ruleForm.resetFields();
+     this.isTag = false;
+     this.$refs.tree.setCheckedKeys([]);
      this.$emit('closeDialog');
     },
     submitForm(ruleForm){
