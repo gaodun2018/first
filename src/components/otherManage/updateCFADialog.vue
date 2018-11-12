@@ -41,10 +41,41 @@
         </el-form-item>
 
         <el-form-item label="全科学员标签" prop="tag">
-          <!-- <el-select v-model="data.tag" placeholder="请选择网课类型"  style="width:50%;">
-            <el-option :label="item.name" :value="item.course_type_id" v-for="item in projectlist" :key="item.course_type_id"></el-option>
+          <!-- <el-select
+            style="width:50%;"
+            v-model="data.tag"
+            filterable
+            remote
+            clearable
+            reserve-keyword
+            placeholder="请选择全科学员标签"
+            value-key="id"
+            :loading="loading">
+            <el-option
+              v-for="item in remoteTag"
+              :key="item.id"
+              :label="`${item.tag_name}-(标签id：${item.id})`"
+              :value="item.id">
+            </el-option>
           </el-select> -->
-          <el-input v-model="data.tag"  style="width:50%;"></el-input>
+
+          <div class="tree-box">
+            <div class="input" @click="isTag = !isTag">
+              <div class="plac" v-if="list.length === 0">请选择全科学员标签</div>
+              <div class="item" v-for="p in list" :key="p.id">{{p.name}}</div>
+            </div>
+            <div class="child" v-show="isTag">
+              <el-tree
+                ref="tree"
+                @check-change="chooseTag"
+                :data="remoteTag"
+                show-checkbox
+                node-key="id"
+                highlight-current
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="下一考季复读课程" :prop="'repeat'">
           <el-select
@@ -52,6 +83,7 @@
             v-model="data.repeat"
             filterable
             remote
+            clearable
             reserve-keyword
             placeholder="请选择复读课程"
             value-key="course_id"
@@ -71,6 +103,7 @@
             v-model="data.upgrade"
             filterable
             remote
+            clearable
             placeholder="请选择升级课程"
             :remote-method="remoteMethod"
             :disabled="this.data.exam == 3"
@@ -89,6 +122,7 @@
             v-model="data.auditions"
             filterable
             remote
+            clearable
             placeholder="请选择试听课程"
             :remote-method="remoteMethod"
             :disabled="this.data.exam == 3"
@@ -129,6 +163,7 @@
           <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
         </el-form-item>
       </el-form>
+      <!-- <div @click="ceshi">测试按钮</div> -->
     </el-dialog>
 </template>
 
@@ -189,6 +224,12 @@ export default {
     },
     updateCourse:{
       type:Array
+    },
+    remoteTag:{
+      type:Array
+    },
+    firstUpdate:{
+      type:String
     }
   },
   data () {
@@ -199,7 +240,6 @@ export default {
       callback();
     }
     var validateChoose = (rule,value,callback) => {
-      console.log(this.selectedList,value)
       for(let i= 0;i< this.selectedList.length;i++){
         if(value.includes(Number(this.selectedList[i])) && !this.updateCourse.includes(Number(this.selectedList[i]))){
           callback("这个课程在数据库里面已经有了哦");
@@ -208,26 +248,45 @@ export default {
       callback();
     }
     return {
+      isTag:false,
+      list:[],
       loading:false,//远程搜索loading
       rules:{
-        name:[{required:true,message:'请输入课程名称',trigger:'blur'}],
+        name:[{required:true,message:'请输入课程名称',trigger:'blur'},{max:30,message:'名称过长',trigger:'change'}],
         exam:[{required:true,message:'请选择考试名称',trigger:'blur'}],
         expire:[{required:true,message:'请选择已学课程过期时间',trigger:'blur'}],
         end_time:[{required:true,message:'请选择结束时间',trigger:'blur'}],
         tag:[{required:true,message:'请选择全科学员标签',trigger:'blur'}],
         repeat:[{required:true,message:'请选择复读课程',trigger:'blur'}],
-        // upgrade:[{required:true,message:'请选择升级课程',trigger:'blur'}],
-        // auditions:[{required:true,message:'请选择试听课程',trigger:'blur'}],
         upgrade:[{ validator: validateCourse, trigger: 'blur' }],
         auditions:[{ validator: validateCourse, trigger: 'blur' }],
         courses:[{required:true,message:'请选择已学课程',trigger:'blur'},{validator:validateChoose,trigger:'change'}],
         first_time:[{required:true,message:'请选择首次次开启时间',trigger:'blur'}],
         again_time:[{required:true,message:'请选择二次开启时间',trigger:'blur'}]
       },
-      projectlist: []
+      projectlist: [],
+      defaultProps: {
+        children: 'tagSubList',
+        label: 'name'
+      }
+    }
+  },
+  computed:{
+    updatedTag(){
+      return this.data.tag;
     }
   },
   methods: {
+    // 选择tag标签
+    chooseTag(data) {
+      this.data.tag = [];
+      this.list = this.$refs.tree.getCheckedNodes().filter(o=>{
+        if(!o.appid){
+          this.data.tag.push(o.id);
+          return o;
+        }
+      });
+    },
     // 选择试卷种类
     changeExam(val){
       if(val == 3){
@@ -237,14 +296,12 @@ export default {
     },
     //关闭弹层
     closeDialog(formName) {
-     this.$refs.ruleForm.resetFields();
+    //  this.$refs.ruleForm.resetFields();
      this.$emit('closeDialog');
     },
     submitForm(ruleForm){
       this.$refs[ruleForm].validate((valid)=>{
         if(valid){
-          console.log("验证成功");
-          console.log(this.data);
           if(this.judgeTime()){
             this.$message({
               message:'请注意你选择的时间顺序，否则无法保存',
@@ -260,7 +317,6 @@ export default {
             return;
           }
           if(this.type === "add"){//新增还是修改
-            console.log("新增")
             // this.addloading = true;
             this.$emit('save',this.data);
           }else{
@@ -299,12 +355,25 @@ export default {
         }
       }
       return false;
+    },
+    checkedKeys(val){//选中数组
+      this.$refs.tree.setCheckedKeys(val);
     }
 
   },
   mounted () {
   },
   async created() {
+  },
+  updated() {
+    if(this.firstUpdate === 'update'){
+      this.$nextTick(this.checkedKeys(this.data.tag));
+      this.$emit("changeType")
+    }
+    if(this.firstUpdate === "add"){
+      this.list = [];
+      this.$emit("changeType")
+    }
   }
 }
 </script>
@@ -324,6 +393,34 @@ export default {
     text-align: center;
     .el-form-item__content {
       margin-left: 0 !important;
+    }
+  }
+  .tree-box{
+    position: relative;
+
+    .input{
+      border: 1px solid #dcdfe6;
+      min-height: 40px;
+      border-radius: 5px;
+      box-sizing: border-box;
+      padding-left: 13px;
+      padding: 0 10px;
+      .item{
+        display:inline-block;
+        padding: 0 6px;
+      }
+      .plac{
+        color: #c0c4cc;
+      }
+    }
+    .child{
+      width: 220px;
+      border: 2px solid #ebeef5;
+      position: absolute;
+      z-index: 10;
+      margin-top: 10px;
+      height: 210px;
+      overflow-y: scroll;
     }
   }
 </style>

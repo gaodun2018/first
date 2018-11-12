@@ -49,25 +49,30 @@
      :data="ruleForm"
      :updateCourse="updateCourse"
      :remoteList="remoteList"
+     :remoteTag="remoteTag"
      :selectedList="selectedList"
+     :firstUpdate="firstUpdate"
      @showCfaDialog="showCfaDialog"
      @closeDialog="closeDialog"
      @save="dialogSave"
      @dialogChangeForm="dialogChangeForm"
      @remoteMethod="remoteMethod"
+     @changeType="changeType"
     ></creatCFA>
   </div>
 </template>
 
 <script>
-import creatCFA from './updateCFADialog'
+import creatCFA from './updateCFADialog';
 export default {
   data () {
     return {
       changeId:'',
       selectedList:[],//已被选择课程
       updateCourse:[],
+      firstUpdate: '',
       remoteList:[],
+      remoteTag:[],//远程搜索的tag标签
       dialogVisable:false,//控制子组件显示隐藏
       type:"add",//控制子组件是新增还是修改
       page:1,
@@ -94,6 +99,10 @@ export default {
     creatCFA
   },
   methods: {
+    // 修改类型
+    changeType(){
+      this.firstUpdate = "";
+    },
     // 修改每页数量
     handleSizeChange(val){
       this.pageSize = val;
@@ -108,11 +117,12 @@ export default {
     showCfaDialog (val,val2){
       this.updateCourse=[];
       this.type = val;
+      this.firstUpdate=val;
       if(val === "update"){
         this.ruleForm.courses = [];
         this.changeId = val2.id;
         this.ruleForm.name = val2.name;
-        // this.ruleForm.tag = val2.tag;
+        // this.ruleForm.tag = val2.tag[0].id;
         this.ruleForm.exam = val2.exam;
         this.ruleForm.expire = new Date(val2.expire);
         this.ruleForm.end_time = new Date(val2.end_time);
@@ -126,34 +136,36 @@ export default {
           this.ruleForm.courses.push(Number(o))
           this.search(o);
         });
-
+        this.ruleForm.tag = [];
+        val2.tag.forEach(o=>{
+          this.ruleForm.tag.push(o.id);
+        })
         this.search(this.ruleForm.repeat);
         if(this.ruleForm.upgrade != 0){
           this.search(this.ruleForm.upgrade);
+        }else{
+          this.ruleForm.upgrade = "";
         }
         if(this.ruleForm.auditions != 0){
           this.search(this.ruleForm.auditions);
+        }else{
+          this.ruleForm.auditions = "";
         }
-        // this.ruleForm = val2;
-        console.log(val2);
       }
       this.dialogVisable = true;
     },
     closeDialog(){//关闭弹框
       this.dialogVisable = false;
+      this.resetForm()
       this.remoteList = [];
     },
     // 点击保存事件
     dialogSave(data){
-      console.log(data)
       this.ruleForm = data;
-      console.log("点击保存事件");
       this.addLesson();
     },
     // 修改事件
     dialogChangeForm(data){
-      console.log(data)
-      console.log("修改保存")
       this.ruleForm = data;
       this.addLesson();
     },
@@ -184,19 +196,20 @@ export default {
       this.ruleForm.courses = this.ruleForm.courses.join(",");
       this.ruleForm.upgrade = this.ruleForm.upgrade?this.ruleForm.upgrade : 0;
       this.ruleForm.auditions = this.ruleForm.auditions?this.ruleForm.auditions:0;
+      this.ruleForm.tag = this.ruleForm.tag.join(',');
       let ret;
       if(this.type == "add"){
         ret = await this.$http.addSendLesson(this.ruleForm);
       }else{
         ret = await this.$http.changeCfaLesson(this.changeId,this.ruleForm);
       }
-      console.log(ret);
       if(ret.status === 0){
         this.$message({
           message:this.type == 'add'?'新建续课成功':'修改续课成功',
           type:'success'
         })
         this.dialogVisable = false;
+        this.resetForm();
         this.getLesson();
       }else{
         this.$message({
@@ -250,16 +263,40 @@ export default {
         let ret = await this.$http.getRemoteCourse(4,0,params);
         this.loading = false;
         if(ret.status == 0){
-          console.log(ret);
           this.remoteList = ret.result;
         }else{
           this.remoteList = [];
         }
       }
+    },
+    async getRemoteTag(){
+      let ret = await this.$http.getRemoteTag();
+      if(ret.status === 0) {
+        this.remoteTag = ret.result;
+        this.remoteTag.forEach(o=>{
+          o.name = o.tag_name;
+        })
+      }
+    },
+    // 重置表单
+    resetForm(){
+      this.ruleForm.name = "";
+      this.ruleForm.exam = "";
+      this.ruleForm.tag = "" ;
+      this.ruleForm.repeat = "";
+      this.ruleForm.upgrade = '';
+      this.ruleForm.auditions = "";
+      this.ruleForm.first_time = "";
+      this.ruleForm.again_time = "";
+      this.ruleForm.courses = [];
+      this.ruleForm.expire = "";
+      this.ruleForm.end_time = ""
     }
+
   },
   created(){
     this.getLesson();
+    this.getRemoteTag();
   }
 }
 </script>

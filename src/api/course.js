@@ -3,6 +3,7 @@ import { formPost, formPut } from '../util/zeusFormAxios.js';
 
 import { Message } from 'element-ui';
 import { getBaseUrl } from '../util/config'
+import axios from 'axios';
 
 //拉取项目科目
 export const getProjectSubject = params => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/course/manage/get/project/subject/list`, params)
@@ -106,3 +107,6 @@ export const deleteCfaLesson = (task_id,params) => zDelete(`${getBaseUrl()}apiga
 
 // 修改续课课程
 export const changeCfaLesson = (task_id,params) => put(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/task/${task_id}`,params);
+
+// 远程搜索学员标签
+export const getRemoteTag = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/saas-service/assign-course/api/InterFace/tagList`,params);
