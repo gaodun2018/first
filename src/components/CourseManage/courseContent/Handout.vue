@@ -230,6 +230,10 @@ export default {
     },
     // 新增课程讲义分类
     async addType(){
+      if(this.addinput.length>15){
+        this.$message.warning('分类请控制在15个字符以内');
+        return;
+      }
       let params = {
         course_id: this.course_id,
         name:this.addinput
@@ -244,7 +248,7 @@ export default {
         this.getTypeList();
       }else{
         this.$message({
-          message:'新增课程讲义分类失败',
+          message:ret.message,
           type:'warning'
         })
       }
@@ -256,7 +260,7 @@ export default {
       }
       let ret = await this.$http.deleteHandoutType(id,params);
       if(ret.status === 0){
-        this.$message.success('删除课程分类成功');
+        this.$message.success('删除课程讲义分类成功');
         this.getTypeList();
       }else{
         this.$message.error(ret.message);
@@ -264,6 +268,10 @@ export default {
     },
     // 修改课程讲义分类
     async updateType (id,name) {
+      if(name.length > 15){
+        this.$message.warning('请将分类控制在15个字符以内');
+        return;
+      }
       for(let i = 0;i<this.classifyList.length;i++){
         if(this.classifyList[i].id != id){
           if(this.classifyList[i].cate_name == name){
