@@ -14,6 +14,13 @@ export const handoutTable = [{
   }
 },
 {
+  text: '分类',
+  key: 'type',
+  flex: {
+    flex: 1.5
+  }
+},
+{
   text: '文件',
   key: 'file_name',
   flex: {
