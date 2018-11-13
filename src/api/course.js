@@ -3,6 +3,7 @@ import { formPost, formPut } from '../util/zeusFormAxios.js';
 
 import { Message } from 'element-ui';
 import { getBaseUrl } from '../util/config'
+import { constants } from 'zlib';
 
 //拉取项目科目
 export const getProjectSubject = params => get(`/saas-service/course/manage/get/project/subject/list`, params)
@@ -98,3 +99,15 @@ export const courseStageSort = (params) => formPost(`/saas-service/course/gragat
 /***日志****/
 // 获取日志列表
 export const getLogsList = (params) => get(`/calais/v1/backend/logs`,params);
+
+// 获取课程讲义分类列表
+export const getHandoutTypeList = (id, params) => get(`/saas-service/course/${id}/handout/cate`,params);
+
+// 新增课程讲义分类
+export const addHandoutType = (params) => post(`/saas-service/course/handout/cate/add`,params);
+
+// 删除课程讲义分类
+export const deleteHandoutType = (id,params) => zDelete(`/saas-service/course/handout/cate/${id}`,params);
+
+// 更新课程讲义分类
+export const updateHandoutType = (id,params) => put(`/saas-service/course/handout/cate/${id}`,params);
