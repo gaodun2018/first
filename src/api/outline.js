@@ -93,3 +93,6 @@ export const updatePlaybackAddr = params => formPost(`${getBaseUrl()}apigateway.
 
 // 校验课中\时间...
 export const getValidation = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/items/validation`, params)
+
+//拉取Glive大纲的条目
+export const getGliveSyllabusItems = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/course/syllabus/items`, params);

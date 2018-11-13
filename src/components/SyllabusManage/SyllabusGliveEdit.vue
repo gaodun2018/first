@@ -62,7 +62,7 @@
                         <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
                         <span class="dif-type dif-type1" :class="{'dif-type3': secItem.type==1||secItem.type==3}">{{secItem.type|typeFormat}}</span>&nbsp;
                         <span class="dif-type dif-type2" :class="{'dif-type3': secItem.required==0}">{{secItem.required|requiredFormat}}</span>&nbsp;
-                        <span v-if="!secItem.resource" class="dif-type">直播</span>
+                        <!-- <span v-if="!secItem.resource" class="dif-type">直播</span> -->
                         <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                         <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
                           {{secItem.name}}
@@ -102,7 +102,7 @@
                           </el-col>
                         </el-row>
                         <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
-                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)" v-if='!secItem.resource || secItem.resource && secItem.resource.discriminator == "legacy_live" '>添加回放地址</span>
+                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)" v-if='secItem.resource && secItem.resource.discriminator == "legacy_live" '>添加回放地址</span>
                       </div>
                     </div>
                   </draggable>
@@ -1461,11 +1461,11 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       let course_syllabus_id = {
-        course_syllabus_id: this.syllabus_id
+        syllabus_id: this.syllabus_id
       };
-      let ret = await this.$http.getSyllabusItems(course_syllabus_id);
+      let ret = await this.$http.getGliveSyllabusItems(course_syllabus_id);
       loading.close();
-      if (ret.status == 0) {
+      if (ret.code == 0) {
         // ret.result[0].children[0].children[0].knowledgeId =  '112';
         // ret.result[0].children[0].children[0].knowledgeName = 'shiian';
         ret.result.forEach(item => {
