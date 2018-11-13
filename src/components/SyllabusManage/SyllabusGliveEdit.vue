@@ -67,7 +67,7 @@
                         <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
                           {{secItem.name}}
                           <span class="gray">
-                          （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource.id}}</template>）
+                          （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource_id}}</template>）
                             <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                           </span>
                         </span>
@@ -102,7 +102,7 @@
                           </el-col>
                         </el-row>
                         <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
-                        <span class="chrgt" @click="addGliveAddr1(secItem.item_id)" v-if='secItem.resource && secItem.resource.discriminator == "legacy_live" '>添加回放地址</span>
+                        <span class="chrgt" @click="addGliveAddr1(secItem.id)" v-if='secItem.resource && secItem.resource.discriminator == "live_playback_link" '>添加回放地址</span>
                       </div>
                     </div>
                   </draggable>
@@ -156,12 +156,12 @@
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="直播时长" v-if='resourceType === "legacy_live"'  style='margin-top: 20px;'>
+          <el-form-item label="直播时长" v-if='resourceType === "live_playback_link"'  style='margin-top: 20px;'>
             <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input> 分钟
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('legacy_live')" v-if='resourceType === "legacy_live"'>{{btnLoading?'新增中':'确 定'}}
+            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('live_playback_link')" v-if='resourceType === "live_playback_link"'>{{btnLoading?'新增中':'确 定'}}
             </el-button>
             <el-button v-else style="margin-top:12px;" @click="secondSubmit('addResFirFrom1')">下一步</el-button>
           </el-form-item>
@@ -545,6 +545,7 @@ export default {
       gliveAddr2: '', //实时回放地址
       hasType2: true, //是否展示课中
       timeVali: true, //课中时间是否合理
+      playBackItem: ''
     };
   },
   filters: {
@@ -885,7 +886,7 @@ export default {
     },
     //新增大纲资源条目
     async addSyllabusResourceItem(val) {
-      if (val && val == 'legacy_live') { //gLive直播不在弹窗内挂资源
+      if (val && val == 'live_playback_link') { //gLive直播不在弹窗内挂资源
         if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
           return this.$message.warning("请设置开启时间！");
         }
@@ -893,13 +894,28 @@ export default {
           let ret = await this.CourseSyllabusItem();
           if (ret.status == 0) {
             this.dialogFormVisible = false;
-            this.getSyllabusItems();
+            let param = {
+                syllabus_id: this.syllabus_id,
+                item_id: ret.result.id,
+            }
+            let rep = await this.$http.updatePlaybackAddr(param)
+            if (rep.code == 0) {
+                this.getSyllabusItems();
+            }
           }
         } else if (this.resourceAction === "update") {
           let ret = await this.ChangeSyllabusItem();
           if (ret.status == 0) {
             this.dialogFormVisible = false;
-            this.getSyllabusItems();
+            // this.getSyllabusItems();
+            let param = {
+                syllabus_id: this.syllabus_id,
+                item_id: ret.result.id,
+            }
+            let rep = await this.$http.updatePlaybackAddr(param)
+            if (rep.code == 0) {
+                this.getSyllabusItems();
+            }
           }
         }
       } else {
@@ -1611,7 +1627,7 @@ export default {
       this.showAddGliveDialog1 = true
       this.playBackItem = itemId
       this.gliveAddr1 = ret.result.inst_replay
-      this.gliveAddr2 = ret.result.edit_replay
+      this.gliveAddr2 = ret.result.video_id
     },
     // 检查资源时间
     async checkTime(val){
@@ -1640,7 +1656,7 @@ export default {
         syllabus_id: this.syllabus_id,
         item_id: this.playBackItem,
         inst_replay: this.gliveAddr1,
-        edit_replay: this.gliveAddr2
+        video_id: this.gliveAddr2
       }
       let ret = await this.$http.updatePlaybackAddr(params)
       this.showAddGliveDialog1 = false
@@ -1674,7 +1690,7 @@ export default {
               "discriminator": "paper",
               "label": "试卷"
           },{
-              "discriminator": "legacy_live",
+              "discriminator": "live_playback_link",
               "label": "直播"
           },
           // {

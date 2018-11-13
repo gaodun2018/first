@@ -88,7 +88,7 @@ export const getPlaybackAddr = (item_id, params) => get(`${getBaseUrl()}apigatew
 // 添加和更新直播地址
 export const updateLiveAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/live-addresses`, params)
 
-// 获取直播回放地址
+// 添加和更新直播回放地址
 export const updatePlaybackAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params)
 
 // 校验课中\时间...
