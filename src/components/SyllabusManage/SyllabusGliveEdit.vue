@@ -68,7 +68,7 @@
                           {{secItem.name}}
                           <span class="gray">
                           （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource_id}}</template>）
-                            <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                            <template v-if="secItem.study_time&&secItem.study_time!='0'&&secItem.resource&&secItem.resource.discriminator =='live_playback_link' "><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
                             <span v-if='secItem.start_time' style="color: red;margin-left: 10px;">开启时间：{{secItem.start_time| dateFormat}}</span>
                           </span>
                         </span>
@@ -798,7 +798,7 @@ export default {
     //第二步往下一步
     async secondSubmit(formName) {
       if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
-        return this.$message.warning("请设置开启时间！");
+        return this.$message.error("请设置开启时间！");
       }
       if (!this.resourceType) {
         this.$message.warning("请选择资源类型！");
@@ -894,7 +894,7 @@ export default {
     async addSyllabusResourceItem(val) {
       if (val && val == 'live_playback_link') { //gLive直播不在弹窗内挂资源
         if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
-          return this.$message.warning("请设置开启时间！");
+          return this.$message.error("请设置开启时间！");
         }
         if (this.resourceAction === "add") {
           let ret = await this.CourseSyllabusItem();
@@ -1218,6 +1218,12 @@ export default {
         type: this.addResFirFrom.type,
         required: this.addResFirFrom.required
       };
+      if (this.addResFirFrom.study_time == 0) {
+          return this.$message({
+              type: 'error',
+              message: '直播时长不能为0！'
+          })
+      }
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
         params.study_time = this.addResFirFrom.study_time;
@@ -1333,7 +1339,7 @@ export default {
       this.addResFirFrom.required = +item.required;
       this.addResFirFrom.apply_to = item.apply_to ? [item.apply_to] : []; //1表示跳级测试，2表示提分盒子
       this.addResFirFrom.start_time = item.start_time; //开启时间
-      this.addResFirFrom.study_time = item.study_time; //学习时长
+      this.addResFirFrom.study_time = item.study_time? item.study_time: '' //学习时长
       this.currentId = item.id;
       this.resourceRadio = item.resource && String(item.resource_id);
       this.nativeResourceRadio = item.resource && String(item.resource_id); //原来的选项
