@@ -546,7 +546,8 @@ export default {
       gliveAddr2: '', //实时回放地址
       hasType2: true, //是否展示课中
       timeVali: true, //课中时间是否合理
-      playBackItem: ''
+      playBackItem: '',
+      resourceItemId: '', //资源条目id
     };
   },
   filters: {
@@ -1326,6 +1327,7 @@ export default {
     },
     //弹出修改资源的弹层
     async openeEditResource(partId, item) {
+        this.resourceItemId = item.id
       let ret = await this.$http.getValidation({parent_id: partId})
       if (ret.result.Has && item.type != 2) {
         this.hasType2 = false
@@ -1652,6 +1654,9 @@ export default {
       let params = {
         syllabus_id: this.syllabusid,
         start_time: val
+      }
+      if (this.resourceAction === 'update') {
+        params.item_id = this.resourceItemId
       }
       let ret = await this.$http.getValidation(params)
       if (ret.result.Has) {
