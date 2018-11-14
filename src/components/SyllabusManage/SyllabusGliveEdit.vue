@@ -69,6 +69,7 @@
                           <span class="gray">
                           （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource_id}}</template>）
                             <template v-if="secItem.study_time&&secItem.study_time!='0'"><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                            <span v-if='secItem.start_time' style="color: red;margin-left: 10px;">开启时间：{{secItem.start_time| dateFormat}}</span>
                           </span>
                         </span>
 
@@ -576,6 +577,11 @@ export default {
           return '选修'
           break;
       }
+    },
+    dateFormat(val) {
+        var time = new Date(val);
+        var time1 = time.toLocaleDateString().replace(/\//g, "/") + " " + time.toTimeString().substr(0, 8);
+        return time1.substring(0, time1.length-3)
     }
   },
   methods: {
@@ -679,13 +685,13 @@ export default {
         if (val.resource.discriminator === "video") {
           let goVideo = this.$router.resolve({
             name: "previewVideo",
-            params: { id: val.resource.id }
+            params: { id: val.resource_id }
           });
           window.open(goVideo.href, "_blank");
         } else if (val.resource.discriminator === "resource_group") {
           let goGroup = this.$router.resolve({
             name: "editResourceGroup",
-            params: { id: val.resource.id }
+            params: { id: val.resource_id }
           });
           window.open(goGroup.href, "blank");
         } else {
@@ -724,7 +730,7 @@ export default {
       var oInput = document.createElement("input");
       if (obj) {
         if (obj.resource) {
-          oInput.value = val + "," + obj.resource.id;
+          oInput.value = val + "," + obj.resource_id;
         } else {
           this.$message({
             message: "您还没有挂资源",
@@ -1065,7 +1071,7 @@ export default {
       if (createResponse.status === 0) {
         // 资源id
         try {
-          this.resourceRadio = createResponse.result.resource.id;
+          this.resourceRadio = createResponse.result.resource_id;
         } catch (error) {
           this.btnLoading = false;
           loading.close();
@@ -1329,8 +1335,8 @@ export default {
       this.addResFirFrom.start_time = item.start_time; //开启时间
       this.addResFirFrom.study_time = item.study_time; //学习时长
       this.currentId = item.id;
-      this.resourceRadio = item.resource && String(item.resource.id);
-      this.nativeResourceRadio = item.resource && String(item.resource.id); //原来的选项
+      this.resourceRadio = item.resource && String(item.resource_id);
+      this.nativeResourceRadio = item.resource && String(item.resource_id); //原来的选项
       this.resourceType = item.resource && item.resource.discriminator;
       this.dialogFormVisible = true;
       this.resourceAction = "update";
