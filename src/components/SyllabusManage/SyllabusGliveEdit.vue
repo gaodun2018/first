@@ -1218,8 +1218,7 @@ export default {
         type: this.addResFirFrom.type,
         required: this.addResFirFrom.required
       };
-      console.log(this.addResFirFrom.study_time)
-      if (this.addResFirFrom.study_time === 0) {
+      if (this.addResFirFrom.study_time === '0') {
           return this.$message({
               type: 'error',
               message: '直播时长不能为0！'
@@ -1261,6 +1260,12 @@ export default {
         type: this.addResFirFrom.type,
         required: this.addResFirFrom.required
       };
+      if (this.addResFirFrom.study_time === '0') {
+          return this.$message({
+              type: 'error',
+              message: '直播时长不能为0！'
+          })
+      }
       if (this.addResFirFrom.study_time) {
         //学习时长， 单位分钟
         params.study_time = this.addResFirFrom.study_time;
