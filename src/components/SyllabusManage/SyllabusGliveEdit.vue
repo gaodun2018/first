@@ -1218,7 +1218,8 @@ export default {
         type: this.addResFirFrom.type,
         required: this.addResFirFrom.required
       };
-      if (this.addResFirFrom.study_time == 0) {
+      console.log(this.addResFirFrom.study_time)
+      if (this.addResFirFrom.study_time === 0) {
           return this.$message({
               type: 'error',
               message: '直播时长不能为0！'
