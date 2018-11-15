@@ -275,6 +275,11 @@ export default {
         this.remoteTag = ret.result;
         this.remoteTag.forEach(o=>{
           o.name = o.tag_name;
+          o.tagSubList = o.tagSubList? o.tagSubList : [];
+          if(o.tagSubList.length == 0 || o.tagSubList.length == 1 &&  Array.isArray(o.tagSubList[0])){
+            o.disabled = true;
+            o.tagSubList[0].disabled = true;
+          }
         })
       }
     },
@@ -292,7 +297,6 @@ export default {
       this.ruleForm.expire = "";
       this.ruleForm.end_time = ""
     }
-
   },
   created(){
     this.getLesson();

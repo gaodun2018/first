@@ -3,7 +3,7 @@
       <el-form :model="data" :rules="rules" ref="ruleForm" label-width="140px" class="demo-ruleForm">
         <div class="cfa-box">
         <el-form-item label="任务名称" prop="name">
-          <el-input v-model="data.name"  style="width:90%;"></el-input>
+          <el-input v-model="data.name"  style="width:90%;" placeholder="请输入任务名称"></el-input>
         </el-form-item>
         <el-form-item label="考试" prop="exam">
           <el-select v-model="data.exam" placeholder="请选择考试" @change="changeExam">
@@ -36,29 +36,11 @@
           <el-date-picker
             v-model="data.expire"
             type="date"
-            placeholder="选择日期">
+            placeholder="请选择已学课程过期时间">
           </el-date-picker>
         </el-form-item>
 
         <el-form-item label="全科学员标签" prop="tag">
-          <!-- <el-select
-            style="width:50%;"
-            v-model="data.tag"
-            filterable
-            remote
-            clearable
-            reserve-keyword
-            placeholder="请选择全科学员标签"
-            value-key="id"
-            :loading="loading">
-            <el-option
-              v-for="item in remoteTag"
-              :key="item.id"
-              :label="`${item.tag_name}-(标签id：${item.id})`"
-              :value="item.id">
-            </el-option>
-          </el-select> -->
-
           <div class="tree-box">
             <div class="input" @click="isTag = !isTag">
               <div class="plac" v-if="list.length === 0">请选择全科学员标签</div>
@@ -139,14 +121,14 @@
           <el-date-picker
             v-model="data.first_time"
             type="date"
-            placeholder="选择二次开启日期">
+            placeholder="请选择首次开启时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="二次开启时间" prop="again_time">
           <el-date-picker
             v-model="data.again_time"
             type="date"
-            placeholder="选择日期">
+            placeholder="请选择二次时间">
           </el-date-picker>
         </el-form-item>
 
@@ -154,7 +136,7 @@
           <el-date-picker
             v-model="data.end_time"
             type="date"
-            placeholder="选择结束日期">
+            placeholder="请选择结束时间">
           </el-date-picker>
         </el-form-item>
         </div>
@@ -235,7 +217,13 @@ export default {
   data () {
     var validateCourse = (rule,value,callback) => {
       if(!value && this.data.exam != 3) {
-        return callback("请选择对应课程")
+        return callback("请选择升级课程")
+      }
+      callback();
+    }
+    var validateCourse2 = (rule,value,callback) => {
+      if(!value && this.data.exam != 3) {
+        return callback("请选择试听课程")
       }
       callback();
     }
@@ -252,16 +240,16 @@ export default {
       list:[],
       loading:false,//远程搜索loading
       rules:{
-        name:[{required:true,message:'请输入课程名称',trigger:'blur'},{max:30,message:'名称过长',trigger:'change'}],
+        name:[{required:true,message:'请输入任务名称',trigger:'blur'},{max:30,message:'最多输入30个字符',trigger:'change'}],
         exam:[{required:true,message:'请选择考试名称',trigger:'blur'}],
         expire:[{required:true,message:'请选择已学课程过期时间',trigger:'blur'}],
         end_time:[{required:true,message:'请选择结束时间',trigger:'blur'}],
         tag:[{required:true,message:'请选择全科学员标签',trigger:'blur'}],
         repeat:[{required:true,message:'请选择复读课程',trigger:'blur'}],
         upgrade:[{ validator: validateCourse, trigger: 'blur' }],
-        auditions:[{ validator: validateCourse, trigger: 'blur' }],
+        auditions:[{ validator: validateCourse2, trigger: 'blur' }],
         courses:[{required:true,message:'请选择已学课程',trigger:'blur'},{validator:validateChoose,trigger:'change'}],
-        first_time:[{required:true,message:'请选择首次次开启时间',trigger:'blur'}],
+        first_time:[{required:true,message:'请选择首次开启时间',trigger:'blur'}],
         again_time:[{required:true,message:'请选择二次开启时间',trigger:'blur'}]
       },
       projectlist: [],
@@ -304,16 +292,18 @@ export default {
     submitForm(ruleForm){
       this.$refs[ruleForm].validate((valid)=>{
         if(valid){
-          if(this.judgeTime()){
+          let judgeTime = this.judgeTime();
+          if(judgeTime.ok){
             this.$message({
-              message:'请注意你选择的时间顺序，否则无法保存',
+              message:judgeTime.msg,
               type:'warning'
             })
             return;
           }
-          if(this.judgeCourse()){
+          let judgeCourse = this.judgeCourse()
+          if(judgeCourse.ok){
             this.$message({
-              message:'请注意你选择的课程有重复，否则无法保存',
+              message: judgeCourse.msg,
               type:"warning"
             })
             return;
@@ -337,26 +327,41 @@ export default {
       let second = Date.parse(this.data.first_time);
       let third = Date.parse(this.data.again_time);
       let forth = Date.parse(this.data.end_time);
-      if(first>second || first>third || first>forth || second>third || second>forth || third>forth){
-        return true;
+
+      if(first>=second){
+        return {ok:true,msg:'已学课程过期时间和首次开启时间有冲突，请检查'};
+      }else if(second>=third){
+        return {ok:true,msg:'首次开启时间和二次开启时间有冲突，请检查'};
+      } else if(third>=forth){
+        return {ok:true,msg:'二次开启时间和结束时间有冲突，请检查'};
       }else{
-        return false;
+        return {ok:false,msg:''};
       }
     },
     // 判断课程
     judgeCourse(){
       let first = this.data.repeat;
-      let second = this.data.auditions?this.data.auditions:0;
-      let third = this.data.upgrade?this.data.upgrade:-1;
-      if(first == second || first == third || second == third){
-        return true;
-      }
+      let second = this.data.upgrade?this.data.upgrade:-1;
+      let third = this.data.auditions?this.data.auditions:0;
+      console.log(this.data.courses, first , second,third)
       for(let i=0;i<this.data.courses.length;i++){
-        if(this.data.courses[i] == first || this.data.courses[i] == second || this.data.courses[i] == third){
-          return true;
+        if(this.data.courses[i] == first){
+          return {ok:true,msg:"复读课程和已学课程ID有重复，请检查"};
+        }else if(this.data.courses[i] == second) {
+          console.log('eeeee')
+          return {ok:true,msg:"升级课程和已学课程ID有重复，请检查"};
+        }else if (this.data.courses[i] == third) {
+          return {ok:true,msg:"试听课程和已学课程ID有重复，请检查"};
         }
       }
-      return false;
+      if(first == second){
+        return {ok:true,msg:"复读课程和升级课程ID有重复，请检查"};
+      }else if(second == third){
+        return {ok:true,msg:"升级课程和试听课程ID有重复，请检查"};
+      }else if(first == third){
+        return {ok:true,msg:"复读课程和试听课程ID有重复，请检查"};
+      }
+      return {ok:false,msg:""};
     },
     checkedKeys(val){//选中数组
       this.$refs.tree.setCheckedKeys(val);
