@@ -391,6 +391,7 @@ export default {
       //判断是编辑还是复制
       if (copy) {
         //复制一个课程大纲
+        return this.$message.warning('该大纲类型不支持复制功能!')
         this.btnLoading = false;
         this.dialogTitle = "复制课程大纲";
         this.ruleForm.title = "";
