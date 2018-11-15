@@ -12,105 +12,104 @@
         <div class="chapterbox">
           <span style="font-size: 14px;">友情提醒：大纲中必须创建<span style="color: red;">课中</span>环节，学员才可学习哦</span>
           <template v-if="coursesylllevel === 2">
-            <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}">
-            <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
-              <div class="chaptit" @click="spread(firstItem)">
-                <span class="chlft">
-                  <span v-if="openArr.includes(firstItem.id)" style="font-weight: bold;" class="el-icon-arrow-down"></span>
-                  <span v-else style="font-weight: bold;" class="el-icon-arrow-right"></span>
-                  {{firstItem.name}} <span class="gray">（条目ID：{{firstItem.id}}） </span>
-                </span>
-                <el-row class="chrgt" style="width:60px;">
-                  <el-col :span="12">
-                    <el-dropdown trigger="click" @click.native="handleSpread">
-                      <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
-                      <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
-                        <el-dropdown-item @click.native="copyId(firstItem.id)">
-                          <span class="dropdown-child">复制条目ID</span>
-                        </el-dropdown-item>
-                        <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem)">
-                          <span class="dropdown-child">删除</span>
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </el-col>
-                </el-row>
-
-                <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
-                <span class="chrgt" @click.stop="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
-                <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
-                v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
-                || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
-                  <el-option
-                    v-for="item in erjiCourseOptions"
-                    :key="item.two_level_subiect_id"
-                    :label="'二级科目：'+item.name"
-                    :value="item.two_level_subiect_id">
-                    <span style='display:none'>二级科目：</span>
-                    <span>{{item.name}}</span>
-                  </el-option>
-                </el-select>
-              </div>
-
-              <div>
-                <el-collapse-transition>
-                  <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}">
-                    <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
-                      <div class="knowledge">
-                        <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
+            <!-- <draggable v-model="tabledata" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.first-chapter-box'}"> -->
+                <div v-for="firstItem in tabledata" :key="firstItem.id" class="first-chapter-box">
+                    <div class="chaptit" @click="spread(firstItem)">
                         <span class="chlft">
-                        <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
-                        <span class="dif-type dif-type1" :class="{'dif-type3': secItem.type==1||secItem.type==3}">{{secItem.type|typeFormat}}</span>&nbsp;
-                        <span class="dif-type dif-type2" :class="{'dif-type3': secItem.required==0}">{{secItem.required|requiredFormat}}</span>&nbsp;
-                        <!-- <span v-if="!secItem.resource" class="dif-type">直播</span> -->
-                        <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
-                        <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
-                          {{secItem.name}}
-                          <span class="gray">
-                          （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource_id}}</template>）
-                            <template v-if="secItem.study_time&&secItem.study_time!='0'&&secItem.resource&&secItem.resource.discriminator =='live_playback_link' "><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
-                            <span v-if='secItem.start_time' style="color: red;margin-left: 10px;">开启时间：{{secItem.start_time| dateFormat}}</span>
-                          </span>
+                        <span v-if="openArr.includes(firstItem.id)" style="font-weight: bold;" class="el-icon-arrow-down"></span>
+                        <span v-else style="font-weight: bold;" class="el-icon-arrow-right"></span>
+                        {{firstItem.name}} <span class="gray">（条目ID：{{firstItem.id}}） </span>
                         </span>
-
                         <el-row class="chrgt" style="width:60px;">
-                          <el-col :span="12">
-                            <el-dropdown trigger="click">
-                              <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
-                              <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
-                                <el-dropdown-item @click.native="copyId(secItem.id , secItem)">
-                                  <span class="dropdown-child" >复制条目/资源ID</span>
+                        <el-col :span="12">
+                            <el-dropdown trigger="click" @click.native="handleSpread">
+                            <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                            <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                                <el-dropdown-item @click.native="copyId(firstItem.id)">
+                                <span class="dropdown-child">复制条目ID</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item v-if="secItem.resource && secItem.resource.discriminator === 'video'">
-                                  <span class="dropdown-child">
-                                    设置试听
-                                    <el-switch
-                                      @change="changePreWatch(secItem)"
-                                      v-bind="{value:secItem.audition == 1&&secItem.audition?true:false}"
-                                      active-color="#2884E0"
-                                      inactive-color="#BFBFBF">
-                                    </el-switch>
-                                  </span>
+                                <el-dropdown-item  @click.native="openDelOutlineDialog(firstItem)">
+                                <span class="dropdown-child">删除</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item @click.native="goPreview(secItem)">
-                                  <span class="dropdown-child" >预览</span>
-                                </el-dropdown-item>
-                                <el-dropdown-item  @click.native="openDelResDialog(secItem)">
-                                  <span class="dropdown-child">删除</span>
-                                </el-dropdown-item>
-                              </el-dropdown-menu>
+                            </el-dropdown-menu>
                             </el-dropdown>
-                          </el-col>
+                        </el-col>
                         </el-row>
-                        <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
-                        <span class="chrgt" @click="addGliveAddr1(secItem.id)" v-if='secItem.resource && secItem.resource.discriminator == "live_playback_link" '>添加回放地址</span>
-                      </div>
+
+                        <span class="chrgt" @click.stop="editproject(firstItem.id,firstItem.name)">修改</span>
+                        <span class="chrgt" @click.stop="openAddResDialog(firstItem)" style="color:#FF9C1C;">新增资源</span>
+                        <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
+                        v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
+                        || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
+                        <el-option
+                            v-for="item in erjiCourseOptions"
+                            :key="item.two_level_subiect_id"
+                            :label="'二级科目：'+item.name"
+                            :value="item.two_level_subiect_id">
+                            <span style='display:none'>二级科目：</span>
+                            <span>{{item.name}}</span>
+                        </el-option>
+                        </el-select>
                     </div>
-                  </draggable>
-                </el-collapse-transition>
-              </div>
-            </div>
-            </draggable>
+                    <div>
+                        <!-- <el-collapse-transition> -->
+                        <!-- <draggable v-show="openArr.includes(firstItem.id)" v-model="firstItem.children" element="div" @end="dragEnd" :move="onMoveCallback" :options="{animation:150,draggable:'.second-chapter-box'}"> -->
+                            <div class="resourcebox second-chapter-box" v-for="secItem in firstItem.children" :key="secItem.id">
+                                <div class="knowledge">
+                                    <!-- <el-tag class="attribute-tag" size="small" type="danger" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</el-tag> -->
+                                    <span class="chlft">
+                                    <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
+                                    <span class="dif-type dif-type1" :class="{'dif-type3': secItem.type==1||secItem.type==3}">{{secItem.type|typeFormat}}</span>&nbsp;
+                                    <span class="dif-type dif-type2" :class="{'dif-type3': secItem.required==0}">{{secItem.required|requiredFormat}}</span>&nbsp;
+                                    <!-- <span v-if="!secItem.resource" class="dif-type">直播</span> -->
+                                    <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                                    <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
+                                    {{secItem.name}}
+                                    <span class="gray">
+                                    （条目ID：{{secItem.id}}<template v-if="secItem.resource"> 资源ID：{{secItem.resource && secItem.resource_id}}</template>）
+                                        <template v-if="secItem.study_time&&secItem.study_time!='0'&&secItem.resource&&secItem.resource.discriminator =='live_playback_link' "><span class="chline">|</span>建议学习：{{secItem.study_time}}分钟</template>
+                                        <span v-if='secItem.start_time' style="color: red;margin-left: 10px;">开启时间：{{secItem.start_time| dateFormat}}</span>
+                                    </span>
+                                    </span>
+
+                                    <el-row class="chrgt" style="width:60px;">
+                                    <el-col :span="12">
+                                        <el-dropdown trigger="click">
+                                        <span class="el-dropdown-link" style="color:#2CA4D9;">更多</span>
+                                        <el-dropdown-menu slot="dropdown" style="margin-top:0px;">
+                                            <el-dropdown-item @click.native="copyId(secItem.id , secItem)">
+                                            <span class="dropdown-child" >复制条目/资源ID</span>
+                                            </el-dropdown-item>
+                                            <!-- <el-dropdown-item v-if="secItem.resource && secItem.resource.discriminator === 'video'">
+                                            <span class="dropdown-child">
+                                                设置试听
+                                                <el-switch
+                                                @change="changePreWatch(secItem)"
+                                                v-bind="{value:secItem.audition == 1&&secItem.audition?true:false}"
+                                                active-color="#2884E0"
+                                                inactive-color="#BFBFBF">
+                                                </el-switch>
+                                            </span>
+                                            </el-dropdown-item> -->
+                                            <el-dropdown-item @click.native="goPreview(secItem)">
+                                            <span class="dropdown-child" >预览</span>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item  @click.native="openDelResDialog(secItem)">
+                                            <span class="dropdown-child">删除</span>
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </el-col>
+                                    </el-row>
+                                    <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
+                                    <span class="chrgt" @click="addGliveAddr1(secItem.id)" v-if='secItem.resource && secItem.resource.discriminator == "live_playback_link" '>添加回放地址</span>
+                                </div>
+                            </div>
+                        <!-- </draggable> -->
+                        <!-- </el-collapse-transition> -->
+                    </div>
+                </div>
+            <!-- </draggable> -->
           </template>
           <div class="chaptit additem">
             <span @click="openFirLvDialog">新增一级大纲目录</span>
@@ -1259,17 +1258,14 @@ export default {
         course_syllabus_id: this.syllabus_id,
         audition: this.audition,
         type: this.addResFirFrom.type,
-        required: this.addResFirFrom.required
+        required: this.addResFirFrom.required,
+        study_time: this.addResFirFrom.study_time
       };
       if (this.addResFirFrom.study_time === '0') {
           return this.$message({
               type: 'error',
               message: '直播时长不能为0！'
           })
-      }
-      if (this.addResFirFrom.study_time) {
-        //学习时长， 单位分钟
-        params.study_time = this.addResFirFrom.study_time;
       }
       if (this.addResFirFrom.start_time) {
         //开启时间 时间戳
