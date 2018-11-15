@@ -1266,6 +1266,8 @@ export default {
               type: 'error',
               message: '直播时长不能为0！'
           })
+      } else if (!this.addResFirFrom.study_time) {
+          params.study_time = 0
       }
       if (this.addResFirFrom.start_time) {
         //开启时间 时间戳
