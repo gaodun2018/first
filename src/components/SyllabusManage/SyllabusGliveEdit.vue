@@ -102,7 +102,7 @@
                                     </el-col>
                                     </el-row>
                                     <span class="chrgt" @click="openeEditResource(firstItem.id, secItem)">修改</span>
-                                    <span class="chrgt" @click="addGliveAddr1(secItem.id)" v-if='secItem.resource && secItem.resource.discriminator == "live_playback_link" '>添加回放地址</span>
+                                    <span class="chrgt" @click="addGliveAddr1(secItem.id, secItem.resource_id)" v-if='secItem.resource && secItem.resource.discriminator == "live_playback_link" '>添加回放地址</span>
                                 </div>
                             </div>
                         <!-- </draggable> -->
@@ -547,6 +547,7 @@ export default {
       timeVali: true, //课中时间是否合理
       playBackItem: '',
       resourceItemId: '', //资源条目id
+      itemResourceId: '', //资源条目的资源id
     };
   },
   filters: {
@@ -903,6 +904,8 @@ export default {
             let param = {
                 syllabus_id: this.syllabus_id,
                 item_id: ret.result.id,
+                relation_id: '-1',
+                discriminator: 'live_playback_link'
             }
             let rep = await this.$http.updatePlaybackAddr(param)
             if (rep.code == 0) {
@@ -917,6 +920,8 @@ export default {
             let param = {
                 syllabus_id: this.syllabus_id,
                 item_id: ret.result.id,
+                relation_id: this.itemResourceId,
+                discriminator: 'live_playback_link'
             }
             let rep = await this.$http.updatePlaybackAddr(param)
             if (rep.code == 0) {
@@ -1326,6 +1331,7 @@ export default {
     //弹出修改资源的弹层
     async openeEditResource(partId, item) {
         this.resourceItemId = item.id
+        this.itemResourceId = item.resource_id
       let ret = await this.$http.getValidation({parent_id: partId})
       if (ret.result.Has && item.type != 2) {
         this.hasType2 = false
@@ -1638,12 +1644,13 @@ export default {
       this.showAddGliveDialog = true
       this.gliveAddr = ret.result.live_link
     },
-    async addGliveAddr1 (itemId){
+    async addGliveAddr1 (itemId, resourceId){
       this.gliveAddr1 = ''
       this.gliveAddr2 = ''
       let ret = await this.$http.getPlaybackAddr(itemId)
       this.showAddGliveDialog1 = true
       this.playBackItem = itemId
+      this.itemResourceId = resourceId
       this.gliveAddr1 = ret.result.inst_replay
       this.gliveAddr2 = ret.result.video_id
     },
@@ -1677,7 +1684,9 @@ export default {
         syllabus_id: this.syllabus_id,
         item_id: this.playBackItem,
         inst_replay: this.gliveAddr1,
-        video_id: this.gliveAddr2
+        video_id: this.gliveAddr2,
+        relation_id: this.itemResourceId,
+        discriminator: 'live_playback_link'
       }
       let ret = await this.$http.updatePlaybackAddr(params)
       this.showAddGliveDialog1 = false
