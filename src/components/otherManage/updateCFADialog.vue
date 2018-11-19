@@ -284,7 +284,7 @@ export default {
     },
     //关闭弹层
     closeDialog(formName) {
-    //  this.$refs.ruleForm.resetFields();
+     this.$refs.ruleForm.resetFields();
      this.isTag = false;
      this.$refs.tree.setCheckedKeys([]);
      this.$emit('closeDialog');
@@ -329,11 +329,11 @@ export default {
       let forth = Date.parse(this.data.end_time);
 
       if(first>=second){
-        return {ok:true,msg:'已学课程过期时间和首次开启时间有冲突，请检查'};
+        return {ok:true,msg:'已学课程过期时间大于首次开启时间，请修改'};
       }else if(second>=third){
-        return {ok:true,msg:'首次开启时间和二次开启时间有冲突，请检查'};
+        return {ok:true,msg:'首次开启时间大于二次开启时间，请修改'};
       } else if(third>=forth){
-        return {ok:true,msg:'二次开启时间和结束时间有冲突，请检查'};
+        return {ok:true,msg:'二次开启时间大于结束时间，请修改'};
       }else{
         return {ok:false,msg:''};
       }
