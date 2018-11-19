@@ -41,14 +41,14 @@
                         <el-select v-model="firstItem.two_level_subject" placeholder="请选择二级科目" class="chrgt erji-course"
                         v-if='project_id==4 && (subject_id==40||subject_id == 27||subject_id==26||subject_id==90)
                         || project_id==16 && (subject_id==64||subject_id==65)' @change='selectSubjectTwo(firstItem.two_level_subject, firstItem.id, firstItem.name)'>
-                        <el-option
-                            v-for="item in erjiCourseOptions"
-                            :key="item.two_level_subiect_id"
-                            :label="'二级科目：'+item.name"
-                            :value="item.two_level_subiect_id">
-                            <span style='display:none'>二级科目：</span>
-                            <span>{{item.name}}</span>
-                        </el-option>
+                            <el-option
+                                v-for="item in erjiCourseOptions"
+                                :key="item.two_level_subiect_id"
+                                :label="'二级科目：'+item.name"
+                                :value="item.two_level_subiect_id">
+                                <span style='display:none'>二级科目：</span>
+                                <span>{{item.name}}</span>
+                            </el-option>
                         </el-select>
                     </div>
                     <div>
@@ -583,7 +583,7 @@ export default {
         var time = new Date(val);
         var time1 = time.toLocaleDateString().replace(/\//g, "/") + " " + time.toTimeString().substr(0, 8);
         return time1.substring(0, time1.length-3)
-    }
+    },
   },
   methods: {
     // 直接创建条目
@@ -761,7 +761,7 @@ export default {
     },
     selectclk(discriminator) {
       this.addResFirFrom.apply_to = [];
-      this.addResFirFrom.start_time = "";
+    //   this.addResFirFrom.start_time = "";
       this.resourceType = discriminator;
     },
     //弹出新增资源的弹层
