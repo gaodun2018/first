@@ -762,6 +762,7 @@ export default {
     selectclk(discriminator) {
       this.addResFirFrom.apply_to = [];
     //   this.addResFirFrom.start_time = "";
+      this.addResFirFrom.study_time = ''
       this.resourceType = discriminator;
     },
     //弹出新增资源的弹层
