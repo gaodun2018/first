@@ -45,7 +45,7 @@
                                 v-for="item in erjiCourseOptions"
                                 :key="item.two_level_subiect_id"
                                 :label="'二级科目：'+item.name"
-                                :value="item.two_level_subiect_id">
+                                :value="+item.two_level_subiect_id">
                                 <span style='display:none'>二级科目：</span>
                                 <span>{{item.name}}</span>
                             </el-option>
