@@ -141,7 +141,7 @@
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button @click="directSyllabus('addResFirFrom')" v-if="resourceAction === 'add'" :loading="onlySetLoading" style="margin-top:12px;">{{onlySetLoading?"正在创建中":"只创建条目"}}</el-button>
-            <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" :loading="onlySetLoading" style="margin-top:12px;">{{onlySetLoading?"正在修改中":"只修改条目"}}</el-button>
+            <!-- <el-button @click="directChangeSyllabus('addResFirFrom')" v-if="resourceAction === 'update'" :loading="onlySetLoading" style="margin-top:12px;">{{onlySetLoading?"正在修改中":"只修改条目"}}</el-button> -->
             <el-button type="primary" style="margin-top:12px;" @click="firstNextSubmit('addResFirFrom')">继续加资源</el-button>
           </el-form-item>
         </el-form>
