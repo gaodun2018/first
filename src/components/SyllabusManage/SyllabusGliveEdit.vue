@@ -192,7 +192,7 @@
                   <i class="el-icon-info"></i>
                 </el-tooltip>
               </el-form-item>
-              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="valiMinites">
+              <el-form-item label="视频时长（分）" prop="duration_minutes" class="displayinline" :rules="[{required: true, message: '请填写视频时长的分钟', trigger: 'blur'},...valiMinites]">
                 <el-input v-model="videoForm.duration_minutes" @input="handleInputMinutesChange" placeholder="请填写视频时长的分钟" auto-complete="off"></el-input>
                 分
               </el-form-item>
