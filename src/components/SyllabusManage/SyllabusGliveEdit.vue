@@ -1678,7 +1678,13 @@ export default {
         live_link: this.gliveAddr
       }
       let ret = await this.$http.updateLiveAddr(params)
-      this.showAddGliveDialog = false
+      if(ret.code == 0) {
+        this.$message.success('修改直播地址成功！')
+        this.showAddGliveDialog = false
+      } else {
+        this.$message.error('修改直播地址失败！')
+        this.showAddGliveDialog = false
+      }
     },
     async updatePlaybackAddr() {
       let params = {
@@ -1690,7 +1696,13 @@ export default {
         discriminator: 'live_playback_link'
       }
       let ret = await this.$http.updatePlaybackAddr(params)
-      this.showAddGliveDialog1 = false
+      if(ret.code == 0) {
+        this.$message.success('修改回放地址成功！')
+        this.showAddGliveDialog1 = false
+      } else {
+        this.$message.error('修改回放地址失败！')
+        this.showAddGliveDialog1 = false
+      }
     },
   },
   computed: {
