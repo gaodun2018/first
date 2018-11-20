@@ -1077,7 +1077,7 @@ export default {
       if (createResponse.status === 0) {
         // 资源id
         try {
-          this.resourceRadio = createResponse.result.resource_id;
+          this.resourceRadio = createResponse.result.resource.id;
         } catch (error) {
           this.btnLoading = false;
           loading.close();
