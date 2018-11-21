@@ -921,7 +921,7 @@ export default {
             let param = {
                 syllabus_id: this.syllabus_id,
                 item_id: ret.result.id,
-                relation_id: this.itemResourceId,
+                relation_id: this.itemResourceId || '-1',
                 discriminator: 'live_playback_link'
             }
             let rep = await this.$http.updatePlaybackAddr(param)
