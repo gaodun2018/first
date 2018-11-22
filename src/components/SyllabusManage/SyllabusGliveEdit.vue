@@ -61,8 +61,7 @@
                                     <span class="dif-type" v-if="secItem.apply_to == '2' || secItem.apply_to=='1' ">{{secItem.apply_to=='2'?'提分盒子':secItem.apply_to=='1'?'跳级测试': ''}}</span>
                                     <span class="dif-type dif-type1" :class="{'dif-type3': secItem.type==1||secItem.type==3}">{{secItem.type|typeFormat}}</span>&nbsp;
                                     <span class="dif-type dif-type2" :class="{'dif-type3': secItem.required==0}">{{secItem.required|requiredFormat}}</span>&nbsp;
-                                    <!-- <span v-if="!secItem.resource" class="dif-type">直播</span> -->
-                                    <span v-if="secItem.resource && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
+                                    <span v-if="secItem.resource && secItem.resource.discriminator && secItem.apply_to != '2' && secItem.apply_to !='1'" class="dif-type">{{secItem.resource && secItem.resource.discriminator | Resource2chn}}</span>&nbsp;
                                     <span class="audition" v-if="secItem.audition&&secItem.audition=='1'">试听</span>
                                     {{secItem.name}}
                                     <span class="gray">
