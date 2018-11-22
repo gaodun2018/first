@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="addCourse cfa-course-dialog" :title="type== 'add'?'新建一次续派课':'修改续派课'" :visible.sync="dialog" @close="closeDialog('ruleForm')" :before-close="closeDialog">
+  <el-dialog class="addCourse cfa-course-dialog" :title="type== 'add'?'新增续派课任务':'修改续派课任务'" :visible.sync="dialog" @close="closeDialog('ruleForm')" :before-close="closeDialog">
       <el-form :model="data" :rules="rules" ref="ruleForm" label-width="140px" class="demo-ruleForm">
         <div class="cfa-box">
         <el-form-item label="任务名称" prop="name">
