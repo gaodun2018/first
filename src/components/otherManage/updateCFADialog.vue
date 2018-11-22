@@ -230,7 +230,7 @@ export default {
     var validateChoose = (rule,value,callback) => {
       for(let i= 0;i< this.selectedList.length;i++){
         if(value.includes(Number(this.selectedList[i])) && !this.updateCourse.includes(Number(this.selectedList[i]))){
-          callback("这个课程在数据库里面已经有了哦");
+          callback("该课程在其他任务中已存在，不可重复选择~");
         }
       }
       callback();
@@ -329,11 +329,11 @@ export default {
       let forth = Date.parse(this.data.end_time);
 
       if(first>=second){
-        return {ok:true,msg:'已学课程过期时间大于首次开启时间，请修改'};
+        return {ok:true,msg:'已学课程过期时间必须小于首次开启时间，请修改'};
       }else if(second>=third){
-        return {ok:true,msg:'首次开启时间大于二次开启时间，请修改'};
+        return {ok:true,msg:'首次开启时间必须小于二次开启时间，请修改'};
       } else if(third>=forth){
-        return {ok:true,msg:'二次开启时间大于结束时间，请修改'};
+        return {ok:true,msg:'二次开启时间必须小于结束时间，请修改'};
       }else{
         return {ok:false,msg:''};
       }
