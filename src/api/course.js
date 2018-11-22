@@ -4,6 +4,7 @@ import { formPost, formPut } from '../util/zeusFormAxios.js';
 import { Message } from 'element-ui';
 import { getBaseUrl } from '../util/config'
 import { constants } from 'zlib';
+import axios from 'axios';
 
 //拉取项目科目
 export const getProjectSubject = params => get(`/saas-service/course/manage/get/project/subject/list`, params)
@@ -111,3 +112,21 @@ export const deleteHandoutType = (id,params) => zDelete(`/saas-service/course/ha
 
 // 更新课程讲义分类
 export const updateHandoutType = (id,params) => put(`/saas-service/course/handout/cate/${id}`,params);
+
+// 获取续派课任务列表
+export const sendLessonList = (params) => get(`/saas-service/assign-course/task`,params);
+
+// 新建续课任务
+export const addSendLesson = (params) => formPost(`/saas-service/assign-course/task`,params);
+
+//远程搜索续派课课程项目
+export const getRemoteCourse =(classid, courseid, params) => get(`/school-service/plan/class/get/${classid}/course/${courseid}`,params);
+
+// 删除续派课
+export const deleteCfaLesson = (task_id,params) => zDelete(`/saas-service/assign-course/task/${task_id}`,params);
+
+// 修改续课课程
+export const changeCfaLesson = (task_id,params) => put(`/saas-service/assign-course/task/${task_id}`,params);
+
+// 远程搜索学员标签
+export const getRemoteTag = (params) => get(`/saas-service/assign-course/api/InterFace/tagList`,params);

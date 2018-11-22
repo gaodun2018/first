@@ -149,7 +149,12 @@ const resourceModuleKnowledgeEdit = resolve => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeEdit.vue'))
     },'resourceModuleKnowledgeEdit')
 }
-
+// CFA全科续派课
+const cfaXuCourse = resolve => {
+  require.ensure(['../components/otherManage/cfaCourse.vue'], (require) => {
+      resolve(require('../components/otherManage/cfaCourse.vue'))
+  },'CourseModuleList')
+}
 
 export const routes = [
 	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
@@ -173,7 +178,8 @@ export const routes = [
 		{ path: '/resource/resource-group/create',meta:{ title:'新增资源组' }, name:'createResourceGroup',component: resourceModuleResourceGroupCreate }, // 新增资源组
 		{ path: '/resource/resource-group/edit/:id',meta:{ title:'编辑资源组' }, name:'editResourceGroup',component: resourceModuleResourceGroupEdit }, // 编辑资源组
 		{ path: '/resource/knowledge/create',meta:{ title:'新增知识点' }, name:'10010',component: resourceModuleKnowledgeCreate }, // 新增知识点
-		{ path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
+    { path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
+    { path: '/other/cfa-course/list',meta:{ title:'CFA全科续派课' }, name:'928',component: cfaXuCourse }, // CFA全科续派课
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10001',component: Page404 }, // 404
