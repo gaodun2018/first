@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="addCourse cfa-course-dialog" title="新建一次续派课" :visible.sync="dialog" @close="closeDialog('ruleForm')" :before-close="closeDialog">
+  <el-dialog class="addCourse cfa-course-dialog" :title="type== 'add'?'新建一次续派课':'修改续派课'" :visible.sync="dialog" @close="closeDialog('ruleForm')" :before-close="closeDialog">
       <el-form :model="data" :rules="rules" ref="ruleForm" label-width="140px" class="demo-ruleForm">
         <div class="cfa-box">
         <el-form-item label="任务名称" prop="name">
@@ -240,17 +240,17 @@ export default {
       list:[],
       loading:false,//远程搜索loading
       rules:{
-        name:[{required:true,message:'请输入任务名称',trigger:'blur'},{max:30,message:'最多输入30个字符',trigger:'change'}],
-        exam:[{required:true,message:'请选择考试名称',trigger:'blur'}],
-        expire:[{required:true,message:'请选择已学课程过期时间',trigger:'blur'}],
-        end_time:[{required:true,message:'请选择结束时间',trigger:'blur'}],
-        tag:[{required:true,message:'请选择全科学员标签',trigger:'blur'}],
-        repeat:[{required:true,message:'请选择复读课程',trigger:'blur'}],
-        upgrade:[{ validator: validateCourse, trigger: 'blur' }],
-        auditions:[{ validator: validateCourse2, trigger: 'blur' }],
-        courses:[{required:true,message:'请选择已学课程',trigger:'blur'},{validator:validateChoose,trigger:'change'}],
-        first_time:[{required:true,message:'请选择首次开启时间',trigger:'blur'}],
-        again_time:[{required:true,message:'请选择二次开启时间',trigger:'blur'}]
+        name:[{required:true,message:'请输入任务名称',trigger:'change'},{max:30,message:'最多输入30个字符',trigger:'change'}],
+        exam:[{required:true,message:'请选择考试名称',trigger:'change'}],
+        expire:[{required:true,message:'请选择已学课程过期时间',trigger:'change'}],
+        end_time:[{required:true,message:'请选择结束时间',trigger:'change'}],
+        tag:[{required:true,message:'请选择全科学员标签',trigger:'change'}],
+        repeat:[{required:true,message:'请选择复读课程',trigger:'change'}],
+        upgrade:[{ validator: validateCourse, trigger: 'change' }],
+        auditions:[{ validator: validateCourse2, trigger: 'change' }],
+        courses:[{required:true,message:'请选择已学课程',trigger:'change'},{validator:validateChoose,trigger:'change'}],
+        first_time:[{required:true,message:'请选择首次开启时间',trigger:'change'}],
+        again_time:[{required:true,message:'请选择二次开启时间',trigger:'change'}]
       },
       projectlist: [],
       defaultProps: {

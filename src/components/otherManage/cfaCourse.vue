@@ -14,22 +14,27 @@
       <el-table ref="multipleTable" border :data="cfaList" style="width: 100%">
         <el-table-column prop="id" label="任务ID" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="name" label="任务名称" min-width="180">
+        <el-table-column prop="name" label="任务名称" min-width="160">
         </el-table-column>
 
-        <el-table-column prop="courses" label="课程ID" min-width="80">
+        <el-table-column  prop="courses" label="课程ID" min-width="180">
           <template slot-scope="scope">
-            {{scope.row.courses.join(",")}}
+           <div class="courses-wrap">
+            <span  v-for="(p,i) in scope.row.courses" :key="p">{{p}}{{ (i+1) == scope.row.courses.length? '':','}}</span>
+           </div>
           </template>
         </el-table-column>
 
-        <el-table-column prop="first_time" label="首次开启时间" min-width="160" fixed="right">
+        <el-table-column prop="first_time" label="首次开启时间" min-width="130">
         </el-table-column>
 
-        <el-table-column prop="again_time" label="二次开启时间" min-width="160" fixed="right">
+        <el-table-column prop="again_time" label="二次开启时间" min-width="130">
         </el-table-column>
 
-        <el-table-column label="操作" width="200" align="center" fixed="right">
+        <el-table-column prop="end_time" label="结束时间" min-width="130">
+        </el-table-column>
+
+        <el-table-column label="操作" width="180" align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" @click="showCfaDialog('update',scope.row)">修改</el-button>
             <el-button type="text" @click="deleteLesson(scope.row.id)">删除</el-button>
@@ -105,6 +110,7 @@ export default {
     },
     // 修改每页数量
     handleSizeChange(val){
+      this.page = 1;
       this.pageSize = val;
       this.getLesson()
     },
@@ -309,5 +315,9 @@ export default {
   .input-search {
     text-align: right;
     margin-bottom: 20px;
+  }
+  .courses-wrap{
+    display: flex;
+    flex-wrap: wrap;
   }
 </style>
