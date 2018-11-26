@@ -11,6 +11,12 @@ const SyllabusModuleList = resolve => {
         resolve(require('../components/SyllabusManage/SyllabusModuleList.vue'))
     },'SyllabusModuleList')
 }
+// Glive&SS大纲列表
+const SyllabusModuleGlive = resolve => {
+    require.ensure(['../components/SyllabusManage/SyllabusModuleGlive.vue'], (require) => {
+        resolve(require('../components/SyllabusManage/SyllabusModuleGlive.vue'))
+    },'SyllabusModuleGlive')
+}
 // 视频列表
 const resourceModuleVideoList = resolve => {
     require.ensure(['../components/resourceCenter/videoManage/resourceModuleVideoList.vue'], (require) => {
@@ -149,6 +155,12 @@ const resourceModuleKnowledgeEdit = resolve => {
         resolve(require('../components/resourceCenter/resourceModuleKnowledgeEdit.vue'))
     },'resourceModuleKnowledgeEdit')
 }
+// Glive编辑课程大纲
+const SyllabusGliveEdit = resolve => {
+  require.ensure(['../components/SyllabusManage/SyllabusGliveEdit.vue'], (require) => {
+      resolve(require('../components/SyllabusManage/SyllabusGliveEdit.vue'))
+  },'SyllabusGliveEdit')
+}
 // CFA全科续派课
 const cfaXuCourse = resolve => {
   require.ensure(['../components/otherManage/cfaCourse.vue'], (require) => {
@@ -160,6 +172,7 @@ export const routes = [
 	{ path: '/', name:'5500',component: Entry ,redirect: '/home',children: [
 		{ path: '/course/manage/list',meta:{ title:'课程列表' }, name:'928',component: CourseModuleList }, // 课程列表
 		{ path: '/syllabus/manage/list',meta:{ title:'课程大纲列表' }, name:'929',component: SyllabusModuleList }, // 课程大纲列表
+		{ path: '/glive/syllabus/manage/list',meta:{ title:'Glive&SS大纲列表' }, name:'966',component: SyllabusModuleGlive }, // Glive&SS大纲列表
 		{ path: '/resource/video/list',meta:{ title:'视频列表' }, name:'932',component: resourceModuleVideoList }, // 视频列表
 		{ path: '/resource/handout/list',meta:{ title:'讲义列表' }, name:'934',component: resourceModuleHandoutList }, // 讲义列表
 		{ path: '/resource/resource-group/list',meta:{ title:'资源组列表' }, name:'959',component: resourceModuleResourceGroupList }, // 资源组列表
@@ -178,8 +191,9 @@ export const routes = [
 		{ path: '/resource/resource-group/create',meta:{ title:'新增资源组' }, name:'createResourceGroup',component: resourceModuleResourceGroupCreate }, // 新增资源组
 		{ path: '/resource/resource-group/edit/:id',meta:{ title:'编辑资源组' }, name:'editResourceGroup',component: resourceModuleResourceGroupEdit }, // 编辑资源组
 		{ path: '/resource/knowledge/create',meta:{ title:'新增知识点' }, name:'10010',component: resourceModuleKnowledgeCreate }, // 新增知识点
-    { path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
-    { path: '/other/cfa-course/list',meta:{ title:'CFA全科续派课' }, name:'928',component: cfaXuCourse }, // CFA全科续派课
+        { path: '/resource/knowledge/edit/:id',meta:{ title:'编辑知识点' }, name:'10011',component: resourceModuleKnowledgeEdit }, // 编辑知识点
+        { path: '/syllabus/glive/edit/:sid',meta:{ title:'编辑课程大纲' }, name:'10005',component: SyllabusGliveEdit }, // Glive编辑课程大纲
+        { path: '/other/cfa-course/list',meta:{ title:'CFA全科续派课' }, name:'928',component: cfaXuCourse }, // CFA全科续派课
 	]},
 	{ path: '/login',meta:{ title:'登陆' }, name:'10000',component: Login }, // 登陆
 	{ path: '*',meta:{ title:'404' }, name:'10001',component: Page404 }, // 404

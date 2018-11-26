@@ -33,15 +33,7 @@
               <el-input placeholder="请输入课程大纲ID、名称" size="small" v-model="searchinput" @keyup.native.enter="handleIconClick">
                 <i slot="suffix" class="el-input__icon el-icon-search" @click="handleIconClick"></i>
               </el-input>
-              <el-button
-                type="primary"
-                size="small"
-                @click="addCourseOutline"
-                :disabled="isBtnDisabled"
-                v-if="unlocking('SY_CREATE')"
-              >
-                +&nbsp;新建一个课程大纲
-              </el-button>
+              <el-button type="primary" size="small" @click="addCourseOutline" v-if="unlocking('SY_CREATE')">+&nbsp;新建一个课程大纲</el-button>
               <a class='docBtn' :href="`${docUrl}#/outlineCourse`" target="_blank">
                 <i class="el-icon-question"></i>
                 使用帮助
@@ -57,6 +49,12 @@
         </el-table-column>
         <el-table-column prop="title" label="课程大纲名称" min-width="200">
         </el-table-column>
+        <el-table-column label="大纲类型" min-width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.type == 1">Glive2.0</span>
+            <span v-else>SmartSchool</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="project.name" label="所属项目" min-width="100">
         </el-table-column>
         <el-table-column prop="subject.name" label="所属科目" min-width="125">
@@ -69,12 +67,11 @@
             <span class="rowtype" v-else>禁用</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="340" fixed="right" align="center">
+        <el-table-column label="操作" width="260" fixed="right" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
             <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row, 'true')">复制大纲</el-button>
-            <el-button type="text" @click="toShow(scope.row.id)">操作日志</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,6 +102,12 @@
             <el-option label="否" value="1"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="大纲类型" prop="type" :rules="[ { required: true, message: '请选择大纲类型', trigger: 'change' }]">
+          <el-select v-model="ruleForm.type" placeholder="大纲类型" :disabled="isCopy">
+            <el-option label="Glive2.0" value="1"></el-option>
+            <el-option label="Smartschool" value="2"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item class="coursebtn">
           <el-button type="primary" v-if="substatus=='addoutline'" :loading="btnLoading" @click="submitForm('ruleForm')">{{btnLoading?'保存中':'确 定'}}
           </el-button>
@@ -116,14 +119,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-    <log-dialog
-    :dialog="logVisiable"
-    :list="logList"
-    :total="logTotal"
-    @handleChangePage="handleChangePage"
-    @toClose="toClose"
-    ></log-dialog>
   </div>
 </template>
 <style>
@@ -131,19 +126,10 @@
 <script>
 import { mapState } from "vuex";
 import { getDocumentUrl } from "../../util/config.js";
-import logDialog from "../public/showLogsDialog";
 
 export default {
-  components:{
-      logDialog,
-  },
   data() {
     return {
-      logVisiable: false,
-      logList: [], //日志列表
-      logTotal: 0,
-      page:1,
-      sourceId: 0,
       docUrl: getDocumentUrl,
       tableLoading: false, //列表loading
       btnLoading: false, //按钮loading
@@ -154,7 +140,8 @@ export default {
         title: "",
         project_id: "",
         subject_id: "",
-        status: ""
+        status: "",
+        type: ""
       },
       dialogFormVisible: false,
       options: [
@@ -185,45 +172,10 @@ export default {
       dialogCourse: true,
       selectcur: false, //项目选择器开关
       isCopy: false, //复制大纲状态
-      dialogTitle: "新建课程大纲",
-      isBtnDisabled: true,
+      dialogTitle: "新建课程大纲"
     };
   },
   methods: {
-    //   打开日志
-    toShow(val){
-        this.sourceId = val;
-        this.logVisiable = true;
-        this.getLogList();
-    },
-    //   关闭操作日志
-    toClose(){
-        this.logVisiable = false;
-    },
-    // 分页触发
-    handleChangePage(val) {
-        this.page = val;
-        this.getLogList();
-    },
-    // 获取log日志
-    async getLogList() {
-        let params = {
-            page_num: this.page,
-            page_size: 50,
-            log_type:2,
-            source_id:this.sourceId?this.sourceId:'',
-        }
-        let ret = await this.$http.getLogsList(params);
-        if(ret.code == 0){
-            this.logList = ret.result.data;
-            this.logTotal = ret.result.total;
-        }else{
-            this.$message({
-                message:'获取日志错误',
-                type: 'warning'
-            })
-        }
-    },
     //项目选择器开关
     visibleChange(bool) {
       this.selectcur = bool;
@@ -386,12 +338,6 @@ export default {
       this.searchinput = "";
       this.getCourseSyllabuses();
     },
-    // async getProjectSubject(projectid) {
-    //     let ret = await this.$http.getProjectSubject();
-    //     if (ret.status == 0) {
-    //         this.projectlist = ret.result;
-    //     }
-    // },
     selectval(value) {
       // 状态搜索
       this.selectvalue = value;
@@ -416,15 +362,12 @@ export default {
         subject_id: this.clversm,
         status: this.selectvalue,
         keyword: this.searchinput,
-        type: 0
+        type: 1
       });
-      this.tableLoading = false;
       if (ret.status == 0) {
-        this.isBtnDisabled = false;
+        this.tableLoading = false;
         this.CourseLineList = ret.result.list;
         this.courselinenum = parseInt(ret.result.total);
-      }else {
-        this.isBtnDisabled = true;
       }
     },
     handleSizeChange(val) {
@@ -442,11 +385,13 @@ export default {
         project_id: String(row.project.id),
         subject_id: String(row.subject.id),
         status: String(row.status),
-        is_knowledge_open:row.is_knowledge_open
+        is_knowledge_open:row.is_knowledge_open,
+        type: String(row.type)
       };
       //判断是编辑还是复制
       if (copy) {
         //复制一个课程大纲
+        return this.$message.warning('该大纲类型不支持复制功能!')
         this.btnLoading = false;
         this.dialogTitle = "复制课程大纲";
         this.ruleForm.title = "";
@@ -485,14 +430,19 @@ export default {
       this.dialogFormVisible = true;
     },
     //查看大纲按钮
-    checkSyllabus(index, row) {
+    async checkSyllabus(index, row) {
       if (row.template == null) {
-        this.$router.push({
-          path: "/syllabus/manage/template/" + row.id
+        let ret = await this.$http.selectSyllabus(row.id, {
+            template_id: 6
         });
+        if (ret.status == 0 && ret.result == true) {
+            this.$router.push({
+                path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
+            });
+        }
       } else {
         this.$router.push({
-          path: "/syllabus/manage/edit/" + row.id
+          path: "/syllabus/glive/edit/" + row.id + '?glive=' + 1
         });
       }
     }

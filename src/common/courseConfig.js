@@ -9,8 +9,8 @@ export const course_type = [{
     course_type_id: '11',
     name: 'EP2.0',
 }, {
-    course_type_id: '4',
-    name: '私播课-Glive+',
+    course_type_id: '12',
+    name: 'Glive2.0',
 }];
 
 //老网课类型
@@ -21,8 +21,8 @@ export const old_course_type =[{
   course_type_id: '3',
   name: '自适应学习网课-EP',
 }, {
-  course_type_id: '4',
-  name: '私播课-Glive+',
+  course_type_id: '12',
+  name: 'Glive2.0',
 }];
 
 //下拉搜索的网课类型列表

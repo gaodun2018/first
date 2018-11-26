@@ -1,6 +1,16 @@
-import { post, get, put, zDelete } from '../util/zeusAxios.js';
-import { getBaseUrl } from '../util/config'
-import { formPost, formPut } from "../util/zeusFormAxios";
+import {
+    post,
+    get,
+    put,
+    zDelete
+} from '../util/zeusAxios.js';
+import {
+    getBaseUrl
+} from '../util/config'
+import {
+    formPost,
+    formPut
+} from "../util/zeusFormAxios";
 
 //获取项目和科目
 export const getProjectSubject = params => get(`/saas-service/course/manage/get/project/subject/list`, params);
@@ -71,10 +81,31 @@ export const sortSyllabus = (id, params) => formPut(`/saas-service/course/syllab
 export const getOutlineKnowledgeList = (params) => get(`/caen/v1/backend/knowledge/syllabuses/course`, params);
 
 // 提交大纲知识点
-export const saveOutlineKnowledgeList = (item_id,knowledge_id,params) => formPut(`/toc-service/item/${item_id}/knowledge/${knowledge_id}`, params);
+export const saveOutlineKnowledgeList = (item_id, knowledge_id, params) => formPut(`/toc-service/item/${item_id}/knowledge/${knowledge_id}`, params);
 
 //保存视频资源
 export const createSyllabusVideoResource = params => formPost(`/resource-api/resource/video`, params)
 
 //大纲获取二级科目
 export const getSubjectTwoList = (params) => get(`/saas-service/subject/two/list`, params);
+
+// 获取直播地址
+export const getLiveAddr = (syllabus_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/live-addresses/${syllabus_id}`, params);
+
+// 获取直播回放地址
+export const getPlaybackAddr = (item_id, params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses/${item_id}`, params);
+
+// 添加和更新直播地址
+export const updateLiveAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/live-addresses`, params)
+
+// 添加和更新直播回放地址
+export const updatePlaybackAddr = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params)
+
+// 校验课中\时间...
+export const getValidation = params => formPost(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/items/validation`, params)
+
+//拉取Glive大纲的条目
+export const getGliveSyllabusItems = (params) => get(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/course/syllabus/items`, params);
+
+//删除直播回放地址
+export const deletePlayBackAddr = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params);
