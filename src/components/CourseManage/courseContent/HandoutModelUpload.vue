@@ -72,7 +72,8 @@ export default {
         },
         materialUpload() {
             return (
-                getBaseUrl() + "apigateway.gaodun.com/course-api/upload/handout"
+                // getBaseUrl() + "apigateway.gaodun.com/course-api/upload/handout"
+                getBaseUrl() + "course-api.gaodun.com/upload/handout"
             );
         }
     },
