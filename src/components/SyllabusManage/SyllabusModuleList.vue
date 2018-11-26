@@ -69,11 +69,12 @@
             <span class="rowtype" v-else>禁用</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="260" fixed="right" align="center">
+        <el-table-column label="操作" width="340" fixed="right" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row)" v-if="unlocking('SY_BASIC_SET')">基本设置</el-button>
             <el-button type="text" @click="checkSyllabus(scope.$index, scope.row)" v-if="unlocking('SY_CONTENT')">编辑大纲内容</el-button>
             <el-button type="text" @click="UpdateOutlineTitle(scope.$index, scope.row, 'true')">复制大纲</el-button>
+            <el-button type="text" @click="toShow(scope.row.id)">操作日志</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,6 +116,14 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <log-dialog
+    :dialog="logVisiable"
+    :list="logList"
+    :total="logTotal"
+    @handleChangePage="handleChangePage"
+    @toClose="toClose"
+    ></log-dialog>
   </div>
 </template>
 <style>
@@ -122,10 +131,19 @@
 <script>
 import { mapState } from "vuex";
 import { getDocumentUrl } from "../../util/config.js";
+import logDialog from "../public/showLogsDialog";
 
 export default {
+  components:{
+      logDialog,
+  },
   data() {
     return {
+      logVisiable: false,
+      logList: [], //日志列表
+      logTotal: 0,
+      page:1,
+      sourceId: 0,
       docUrl: getDocumentUrl,
       tableLoading: false, //列表loading
       btnLoading: false, //按钮loading
@@ -172,6 +190,40 @@ export default {
     };
   },
   methods: {
+    //   打开日志
+    toShow(val){
+        this.sourceId = val;
+        this.logVisiable = true;
+        this.getLogList();
+    },
+    //   关闭操作日志
+    toClose(){
+        this.logVisiable = false;
+    },
+    // 分页触发
+    handleChangePage(val) {
+        this.page = val;
+        this.getLogList();
+    },
+    // 获取log日志
+    async getLogList() {
+        let params = {
+            page_num: this.page,
+            page_size: 50,
+            log_type:2,
+            source_id:this.sourceId?this.sourceId:'',
+        }
+        let ret = await this.$http.getLogsList(params);
+        if(ret.code == 0){
+            this.logList = ret.result.data;
+            this.logTotal = ret.result.total;
+        }else{
+            this.$message({
+                message:'获取日志错误',
+                type: 'warning'
+            })
+        }
+    },
     //项目选择器开关
     visibleChange(bool) {
       this.selectcur = bool;

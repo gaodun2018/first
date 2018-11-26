@@ -29,6 +29,7 @@ const state = {
     gaodun_course_id: 0,
     glive_open: 0,
     handout_download_open: 0,   //批量讲义
+    handout_category_open: 0,  //讲义是否设置分类展示
     knowledge_recommend_open: 0,
     knowledge_syllabus_open: 0,
     mock_gradation_open: 0,
@@ -141,7 +142,7 @@ const mutations = {
     }
     state.resource_intro = data;
     state.resource_intro_id = resource_intro_id;
-    console.log(state.resource_intro_id);
+    // console.log(state.resource_intro_id);
   },
   [RESOURCE_UPDATE](state, data) {
     let ids = state.course_update_ids;
