@@ -547,6 +547,7 @@ export default {
       playBackItem: '',
       resourceItemId: '', //资源条目id
       itemResourceId: '', //资源条目的资源id
+      itemResourceInfo: {}, //资源条目的资源内容
     };
   },
   filters: {
@@ -897,8 +898,12 @@ export default {
         if (this.addResFirFrom.type == 2 && !this.addResFirFrom.start_time) {
           return this.$message.error("请设置开启时间！");
         }
+        this.btnLoading = true;
         if (this.resourceAction === "add") {
           let ret = await this.CourseSyllabusItem();
+          if (ret) {
+            this.btnLoading = false;
+          }
           if (ret.status == 0) {
             this.dialogFormVisible = false;
             let param = {
@@ -914,6 +919,9 @@ export default {
           }
         } else if (this.resourceAction === "update") {
           let ret = await this.ChangeSyllabusItem();
+          if (ret) {
+            this.btnLoading = false;
+          }
           if (ret.status == 0) {
             this.dialogFormVisible = false;
             // this.getSyllabusItems();
@@ -922,6 +930,12 @@ export default {
                 item_id: ret.result.id,
                 relation_id: this.itemResourceId || '-1',
                 discriminator: 'live_playback_link'
+            }
+            if (this.itemResourceInfo.video_id) {
+              param.video_id = this.itemResourceInfo.video_id
+            }
+            if (this.itemResourceInfo.inst_replay) {
+              param.inst_replay = this.itemResourceInfo.inst_replay
             }
             let rep = await this.$http.updatePlaybackAddr(param)
             if (rep.code == 0) {
@@ -1332,6 +1346,7 @@ export default {
     async openeEditResource(partId, item) {
         this.resourceItemId = item.id
         this.itemResourceId = item.resource_id
+        this.itemResourceInfo = item.resource
       let ret = await this.$http.getValidation({parent_id: partId})
       if (ret.result.Has && item.type != 2) {
         this.hasType2 = false
@@ -1677,6 +1692,9 @@ export default {
         live_link: this.gliveAddr
       }
       let ret = await this.$http.updateLiveAddr(params)
+      if (ret) {
+        this.getSyllabusItems();
+      }
       if(ret.code == 0) {
         this.$message.success('修改直播地址成功！')
         this.showAddGliveDialog = false
@@ -1695,6 +1713,9 @@ export default {
         discriminator: 'live_playback_link'
       }
       let ret = await this.$http.updatePlaybackAddr(params)
+      if (ret) {
+        this.getSyllabusItems();
+      }
       if(ret.code == 0) {
         this.$message.success('修改回放地址成功！')
         this.showAddGliveDialog1 = false
