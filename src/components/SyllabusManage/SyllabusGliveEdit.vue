@@ -160,7 +160,7 @@
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('live_playback_link')" v-if='resourceType === "live_playback_link"'>{{btnLoading?'新增中':'确 定'}}
+            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('live_playback_link')" v-if='addResFirFrom.type ==2 && resourceType === "live_playback_link"'>{{btnLoading?'新增中':'确 定'}}
             </el-button>
             <el-button v-else style="margin-top:12px;" @click="secondSubmit('addResFirFrom1')">下一步</el-button>
           </el-form-item>
