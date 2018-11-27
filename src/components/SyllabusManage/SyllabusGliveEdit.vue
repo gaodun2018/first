@@ -332,7 +332,7 @@
     color: #bdb4b4;
   }
   .tabplane .el-dialog {
-    max-width: 680px;
+    min-width: 680px;
     margin-bottom: 0px;
   }
   .addResourceDialog .el-pagination {
