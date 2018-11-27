@@ -931,10 +931,10 @@ export default {
                 relation_id: this.itemResourceId || '-1',
                 discriminator: 'live_playback_link'
             }
-            if (this.itemResourceInfo && this.itemResourceInfo.video_id) {
+            if (this.itemResourceInfo && this.itemResourceInfo.discriminator == 'live_playback_link' && this.itemResourceInfo.video_id) {
               param.video_id = this.itemResourceInfo.video_id
             }
-            if (this.itemResourceInfo && this.itemResourceInfo.inst_replay) {
+            if (this.itemResourceInfo && this.itemResourceInfo.discriminator == 'live_playback_link' && this.itemResourceInfo.inst_replay) {
               param.inst_replay = this.itemResourceInfo.inst_replay
             }
             let rep = await this.$http.updatePlaybackAddr(param)
