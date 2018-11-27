@@ -264,9 +264,16 @@
       </el-dialog>
       <el-dialog title="编辑回放地址" class="tabplane address-dialog" :visible.sync="showAddGliveDialog1" size="tiny">
         <span class="address-t">实时回放地址</span>
-        <el-input v-model="gliveAddr1" placeholder=""></el-input>
+        <el-input v-model="gliveAddr1" placeholder="" style='width: 95%;'></el-input>
         <span class="address-t">回放视频地址</span>
-        <el-input v-model="gliveAddr2" placeholder=""></el-input>
+        <el-input v-model="gliveAddr2" placeholder="" style='width: 95%;'></el-input>
+        <el-tooltip placement="top">
+            <div slot="content">
+              只需要输入地址中不同部分即可,如示例:红色部分：<br/>{{urltip}}
+              <span style="color:red;">16oe3We00h1ye2hZ</span>{{urltip2}}
+            </div>
+            <i class="el-icon-info"></i>
+          </el-tooltip>
         <span slot='footer'>
           <el-button @click="showAddGliveDialog1 = false">取 消</el-button>
           <el-button type="primary" @click="updatePlaybackAddr">确 定</el-button>
@@ -325,7 +332,7 @@
     color: #bdb4b4;
   }
   .tabplane .el-dialog {
-    min-width: 680px;
+    max-width: 680px;
     margin-bottom: 0px;
   }
   .addResourceDialog .el-pagination {
@@ -1609,8 +1616,11 @@ export default {
       }
     },
     //解析视频地址获得视频id
-    async getVideoPath() {
+    async getVideoPath(videoUrl) {
       let url = getSrcStr(this.videoForm.video_id);
+      if (videoUrl) {
+            url = getSrcStr(videoUrl);
+        }
       let params = {
         url: url
       };
@@ -1708,9 +1718,31 @@ export default {
         syllabus_id: this.syllabus_id,
         item_id: this.playBackItem,
         inst_replay: this.gliveAddr1,
-        video_id: this.gliveAddr2,
         relation_id: this.itemResourceId,
         discriminator: 'live_playback_link'
+      }
+      if (this.gliveAddr2) {
+        let pathRet = await this.getVideoPath(this.gliveAddr2);
+        let video_id = "";
+        if (pathRet.status == 0) {
+            if (!pathRet.result.video_id) {
+                return this.$message({
+                type: "warning",
+                message: "视频地址解析失败！"
+                });
+            }
+            video_id = pathRet.result.video_id;
+            this.gliveAddr2 = video_id;
+        } else if (pathRet.status == 1) {
+        //为1时使用用户输入的地址
+            video_id = this.gliveAddr2
+        } else {
+            return this.$message({
+                type: "warning",
+                message: "视频地址解析失败！"
+            });
+        }
+        params.video_id = this.gliveAddr2
       }
       let ret = await this.$http.updatePlaybackAddr(params)
       if (ret) {
