@@ -155,7 +155,7 @@
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="直播时长" v-if='resourceType === "live_playback_link"'  style='margin-top: 20px;'>
+          <el-form-item label="直播时长" v-if='addResFirFrom.type ==2 && resourceType === "live_playback_link"'  style='margin-top: 20px;'>
             <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input> 分钟
           </el-form-item>
           <el-form-item class="coursebtn">
@@ -768,9 +768,11 @@ export default {
     },
     selectclk(discriminator) {
       this.addResFirFrom.apply_to = [];
-    //   this.addResFirFrom.start_time = "";
       this.addResFirFrom.study_time = ''
       this.resourceType = discriminator;
+      if (this.addResFirFrom.type !=2) {
+          this.addResFirFrom.start_time = "";
+      }
     },
     //弹出新增资源的弹层
     async openAddResDialog(val) {
