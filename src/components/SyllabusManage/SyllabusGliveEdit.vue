@@ -155,12 +155,12 @@
             <el-date-picker v-model="addResFirFrom.start_time" type="datetime" value-format="timestamp" placeholder="请设置开启时间" format='yyyy-MM-dd HH:mm' @change='checkTime(addResFirFrom.start_time)'>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="直播时长" v-if='resourceType === "live_playback_link"'  style='margin-top: 20px;'>
+          <el-form-item label="直播时长" v-if='addResFirFrom.type ==2 && resourceType === "live_playback_link"'  style='margin-top: 20px;'>
             <el-input v-model="addResFirFrom.study_time" style="width: 220px;"></el-input> 分钟
           </el-form-item>
           <el-form-item class="coursebtn">
             <el-button style="margin-top:12px;" @click="prev">上一步</el-button>
-            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('live_playback_link')" v-if='resourceType === "live_playback_link"'>{{btnLoading?'新增中':'确 定'}}
+            <el-button type="primary" :loading="btnLoading" @click="addSyllabusResourceItem('live_playback_link')" v-if='addResFirFrom.type ==2 && resourceType === "live_playback_link"'>{{btnLoading?'新增中':'确 定'}}
             </el-button>
             <el-button v-else style="margin-top:12px;" @click="secondSubmit('addResFirFrom1')">下一步</el-button>
           </el-form-item>
@@ -264,9 +264,16 @@
       </el-dialog>
       <el-dialog title="编辑回放地址" class="tabplane address-dialog" :visible.sync="showAddGliveDialog1" size="tiny">
         <span class="address-t">实时回放地址</span>
-        <el-input v-model="gliveAddr1" placeholder=""></el-input>
+        <el-input v-model="gliveAddr1" placeholder="" style='width: 95%;'></el-input>
         <span class="address-t">回放视频地址</span>
-        <el-input v-model="gliveAddr2" placeholder=""></el-input>
+        <el-input v-model="gliveAddr2" placeholder="" style='width: 95%;'></el-input>
+        <el-tooltip placement="top">
+            <div slot="content">
+              只需要输入地址中不同部分即可,如示例:红色部分：<br/>{{urltip}}
+              <span style="color:red;">16oe3We00h1ye2hZ</span>{{urltip2}}
+            </div>
+            <i class="el-icon-info"></i>
+          </el-tooltip>
         <span slot='footer'>
           <el-button @click="showAddGliveDialog1 = false">取 消</el-button>
           <el-button type="primary" @click="updatePlaybackAddr">确 定</el-button>
@@ -761,9 +768,11 @@ export default {
     },
     selectclk(discriminator) {
       this.addResFirFrom.apply_to = [];
-    //   this.addResFirFrom.start_time = "";
       this.addResFirFrom.study_time = ''
       this.resourceType = discriminator;
+      if (this.addResFirFrom.type !=2) {
+          this.addResFirFrom.start_time = "";
+      }
     },
     //弹出新增资源的弹层
     async openAddResDialog(val) {
@@ -931,10 +940,10 @@ export default {
                 relation_id: this.itemResourceId || '-1',
                 discriminator: 'live_playback_link'
             }
-            if (this.itemResourceInfo.video_id) {
+            if (this.itemResourceInfo && this.itemResourceInfo.discriminator == 'live_playback_link' && this.itemResourceInfo.video_id) {
               param.video_id = this.itemResourceInfo.video_id
             }
-            if (this.itemResourceInfo.inst_replay) {
+            if (this.itemResourceInfo && this.itemResourceInfo.discriminator == 'live_playback_link' && this.itemResourceInfo.inst_replay) {
               param.inst_replay = this.itemResourceInfo.inst_replay
             }
             let rep = await this.$http.updatePlaybackAddr(param)
@@ -1609,8 +1618,11 @@ export default {
       }
     },
     //解析视频地址获得视频id
-    async getVideoPath() {
+    async getVideoPath(videoUrl) {
       let url = getSrcStr(this.videoForm.video_id);
+      if (videoUrl) {
+            url = getSrcStr(videoUrl);
+        }
       let params = {
         url: url
       };
@@ -1708,9 +1720,31 @@ export default {
         syllabus_id: this.syllabus_id,
         item_id: this.playBackItem,
         inst_replay: this.gliveAddr1,
-        video_id: this.gliveAddr2,
         relation_id: this.itemResourceId,
         discriminator: 'live_playback_link'
+      }
+      if (this.gliveAddr2) {
+        let pathRet = await this.getVideoPath(this.gliveAddr2);
+        let video_id = "";
+        if (pathRet.status == 0) {
+            if (!pathRet.result.video_id) {
+                return this.$message({
+                type: "warning",
+                message: "视频地址解析失败！"
+                });
+            }
+            video_id = pathRet.result.video_id;
+            this.gliveAddr2 = video_id;
+        } else if (pathRet.status == 1) {
+        //为1时使用用户输入的地址
+            video_id = this.gliveAddr2
+        } else {
+            return this.$message({
+                type: "warning",
+                message: "视频地址解析失败！"
+            });
+        }
+        params.video_id = this.gliveAddr2
       }
       let ret = await this.$http.updatePlaybackAddr(params)
       if (ret) {
