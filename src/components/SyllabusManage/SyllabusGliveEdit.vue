@@ -5,6 +5,7 @@
           <span>课程大纲：{{title}}</span>
         </el-col>
         <el-col :span="6">
+           <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>
           <el-button type="primary" @click="addGliveAddr" style="float: right;">增加直播地址</el-button>
         </el-col>
       </el-row>
@@ -279,8 +280,23 @@
           <el-button type="primary" @click="updatePlaybackAddr">确 定</el-button>
         </span>
       </el-dialog>
+      <v-upload
+        :b-visible="uploaddialogVisible"
+        :title="'批量导入课程大纲'"
+        :url-title="'课程大纲Excel模板下载'"
+        :download-url="'//simg01.gaodunwangxiao.com/%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5%E7%9A%84%E8%A1%A8%E6%A0%BC%E6%A8%A1%E6%9D%BF.zip'"
+        :upload-url="uploadUrl"
+        :upload-data="uploadData"
+        :name="'import_from'"
+        @uploadSuccessCallback="uploadSuccessCallback"
+        @handleCloesDialog="uploaddialogVisible = false"
+        :fileTypes="['csv','xls','xlsx']"
+    ></v-upload>
     </div>
   </template>
+ <style>
+
+</style>
 <style lang="less">
   .chapterbox .chaptit {
     cursor: pointer;
@@ -405,6 +421,13 @@
       margin: 10px;
     }
   }
+  .permission-outlinemodule{
+    .BatchFilesUpload{
+      .el-dialog__body{
+        padding: 25px 140px 10px;
+      }
+    }
+  }
   @media screen and (min-height: 320px) and (max-height: 650px) {
     .permission-outlinemodule {
       .addResourceDialog {
@@ -440,11 +463,13 @@ import {
 import { isNumber, getSrcStr } from "../../util/util.js";
 import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
 import SelectKnowledge from "../public/SelectKnowledgeDialog.vue";
+import vUpload from "../public/BatchFilesUpload.vue";
 export default {
   name: "SyllabusModuleEdit",
   components: {
     draggable,
     HandoutUpload,
+    vUpload,
     SelectKnowledge
   },
   data() {
@@ -464,6 +489,21 @@ export default {
       }
     };
     return {
+       clonedialogVisible: false,
+            ruleProject: {
+                region: ""
+            },
+            rulesject: {
+                region: [
+                    { required: true, message: "选择旧大纲", trigger: "change" }
+                ]
+            },
+            uploaddialogVisible: false,
+            coursesyllid: "", //大纲id
+            modulelist: [],
+            title: "", //大纲标题
+            tag_id:'',   //tag_id
+
       audition: 0, //是否为试听字段
       startType: "", //开始的资源类型
       endType: "", // 结束时的资源类型
@@ -618,6 +658,33 @@ export default {
         }
       });
     },
+    cloneruleProject(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    this.clonedialogVisible = false;
+                } else {
+                    return false;
+                }
+            });
+        },
+         uploadSuccessCallback(){
+            this.$router.replace({
+                path: "/syllabus/manage/edit/" + this.coursesyllid
+            });
+        },
+         async checkSyllabus() {
+            let ret = await this.$http.checkSyllabus(this.coursesyllid);
+            if (ret.status == 0) {
+                this.title = ret.result.title;
+                this.tag_id = ret.result.tag_id;
+                //当用户已经选择大纲时则直接跳转过去
+                if (ret.result.template && ret.result.template.id) {
+                    this.$router.push({
+                        path: "/syllabus/manage/edit/" + this.coursesyllid
+                    });
+                }
+            }
+        },
     // 直接修改条目名称
     directChangeSyllabus(formName) {
       this.$refs[formName].validate(async valid => {
@@ -1760,6 +1827,15 @@ export default {
     },
   },
   computed: {
+     uploadUrl(){
+            return `toc-service/course/syllabus/${this.coursesyllid}/items/batch`
+        },
+        uploadData(){
+            return {
+                course_syllabus_id : this.coursesyllid,
+                tag_id : this.tag_id,
+            }
+        },
     syllabus_id() {
       return this.$route.params.sid;
     },
