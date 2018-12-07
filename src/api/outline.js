@@ -109,3 +109,9 @@ export const getGliveSyllabusItems = (params) => get(`${getBaseUrl()}apigateway.
 
 //删除直播回放地址
 export const deletePlayBackAddr = (params) => zDelete(`${getBaseUrl()}apigateway.gaodun.com/calais/api/v1/playback-addresses`, params);
+
+//获取大纲id
+export const getSyllabusId = params => get(`/api/v1/syllabus/item-resource/item-ids`, params);
+
+//获取模版链接
+export const getLink = params => get(`/api/v1/syllabus/item-resource`, params);

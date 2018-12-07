@@ -3,9 +3,21 @@
       <el-row class="outlineeat">
         <el-col :span="18">
           <span>课程大纲：{{title}}</span>
+          <el-popover
+              placement="right"
+              width="460"
+              trigger="click">
+              <el-table :data="gridData">
+                <el-table-column width="150" property="order" type="index" label="序号"></el-table-column>
+                <el-table-column width="200" property="item_id" label="大纲"></el-table-column>
+                <el-table-column width="100" property="item_name" label="大纲条目"></el-table-column>
+              </el-table>
+           <el-button round slot="reference" @click=getSyllabusId>复制大纲id</el-button>
+              </el-popover>
         </el-col>
         <el-col :span="6">
-           <span class="tolead" @click="uploaddialogVisible = true">批量导入课程大纲</span>
+           
+           <span class="tolead" @click="getLink">批量导入课程大纲</span>
           <el-button type="primary" @click="addGliveAddr" style="float: right;">增加直播地址</el-button>
         </el-col>
       </el-row>
@@ -281,17 +293,23 @@
         </span>
       </el-dialog>
       <v-upload
+        :link="linkData"
         :b-visible="uploaddialogVisible"
-        :title="'批量导入课程大纲'"
-        :url-title="'课程大纲Excel模板下载'"
-        :download-url="'//simg01.gaodunwangxiao.com/%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5%E7%9A%84%E8%A1%A8%E6%A0%BC%E6%A8%A1%E6%9D%BF.zip'"
+        :title="'批量导入'"
         :upload-url="uploadUrl"
         :upload-data="uploadData"
+        :auto-upload="autoUpload"
         :name="'import_from'"
         @uploadSuccessCallback="uploadSuccessCallback"
         @handleCloesDialog="uploaddialogVisible = false"
         :fileTypes="['csv','xls','xlsx']"
-    ></v-upload>
+    >
+     <!--  <template slot="uploadData1">
+          <span class="sc">上传类型</span>
+          <el-radio v-model="radio" label="大纲导入模版">大纲</el-radio>
+          <el-radio v-model="radio" label="资源导入模版">资源</el-radio>
+      </template> -->
+    </v-upload>
     </div>
   </template>
  <style>
@@ -428,6 +446,17 @@
       }
     }
   }
+  .outlineeat .tolead {
+      right: 140px;
+      top: 20px;
+       background-color: #409EFF;
+      border-color: #409EFF;   
+}
+.el-button.is-round {
+    border-radius: 20px;
+    padding: 6px 23px;
+    margin-left: 40px;
+    }
   @media screen and (min-height: 320px) and (max-height: 650px) {
     .permission-outlinemodule {
       .addResourceDialog {
@@ -463,7 +492,8 @@ import {
 import { isNumber, getSrcStr } from "../../util/util.js";
 import HandoutUpload from "./SyllabusModuleHandoutUpload.vue";
 import SelectKnowledge from "../public/SelectKnowledgeDialog.vue";
-import vUpload from "../public/BatchFilesUpload.vue";
+// import vUpload from "../public/BatchFilesUpload.vue";
+import vUpload from "../public/BatchFilesUploadGive.vue";
 export default {
   name: "SyllabusModuleEdit",
   components: {
@@ -503,7 +533,14 @@ export default {
             modulelist: [],
             title: "", //大纲标题
             tag_id:'',   //tag_id
-
+            gridData: [{
+            item_id:1000,
+            item_name: '测试大纲',
+            },{
+            item_id:1001,
+            item_name: '测试大纲2',
+            },
+          ],
       audition: 0, //是否为试听字段
       startType: "", //开始的资源类型
       endType: "", // 结束时的资源类型
@@ -595,6 +632,9 @@ export default {
       resourceItemId: '', //资源条目id
       itemResourceId: '', //资源条目的资源id
       itemResourceInfo: {}, //资源条目的资源内容
+      autoUpload:false,//...
+      radio:'',
+      linkData:''
     };
   },
   filters: {
@@ -633,6 +673,55 @@ export default {
     },
   },
   methods: {
+    //获取大纲模版链接
+    getLink(){
+      this.uploaddialogVisible = true;
+      let syllabusid=this.syllabus_id;
+      let params = {syllabusid};
+      let res = this.$http.getLink(params);
+       console.log(1);
+      let result=res.result;
+      if (res.code == 0) {
+        // let arr=Object.keys(result.template)
+        if (result.template.item_template!==''|| result.template.resource_template!=='') {
+          this.linkData = result.template;
+        }
+        else{
+          setTimeout(()=>{
+            this.$message({
+              message: "模版为空",
+              type: "success"
+            })},1000);
+          }
+        
+      }
+      else {
+            this.$message({
+              message: "获取链接失败",
+              type: "success"
+            });
+          }
+    },
+    //获取大纲id
+    getSyllabusId(){
+      let syllabusid=this.syllabus_id;
+      let params = {syllabusid};
+      let res = this.$http.getSyllabusId(params);
+      if (res.code == 0) {
+        this.tableData = result.items;
+        // this.$message({
+        //   message: "已获取成功",
+        //   type: "success"
+        // });
+      }
+      else {
+            this.$message({
+              message: "获取大纲id失败",
+              type: "success"
+            });
+          }
+       
+    },
     // 直接创建条目
     directSyllabus(formName) {
       this.$refs[formName].validate(async valid => {
@@ -673,7 +762,7 @@ export default {
             });
         },
          async checkSyllabus() {
-            let ret = await this.$http.checkSyllabus(this.coursesyllid);
+            let ret = await this.$http.fs(this.coursesyllid);
             if (ret.status == 0) {
                 this.title = ret.result.title;
                 this.tag_id = ret.result.tag_id;
@@ -1828,7 +1917,10 @@ export default {
   },
   computed: {
      uploadUrl(){
-            return `toc-service/course/syllabus/${this.coursesyllid}/items/batch`
+            //上传资源url
+            return `/api/v1/syllabus/item-resource/resource/${this.coursesyllid}`
+            //上传大纲url
+            // /api/v1/syllabus/item-resource/item
         },
         uploadData(){
             return {

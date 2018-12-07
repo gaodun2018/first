@@ -4,6 +4,7 @@
             <el-upload
                 class="upload-demo"
                 drag
+                :auto-upload="autoUpload"
                 :action="materialUpload"
                 :on-change="handleChange"
                 :on-remove="handleRemove"
@@ -33,6 +34,7 @@
         <el-row class="upload-tips">
             <span>提示：若模板Excel导入失败，请新建文件，将模板中内容复制到新文件中，再次尝试。</span>
         </el-row>
+        <slot name="uploadData1"></slot>
     </el-dialog>
 </template>
 <style lang="less">
@@ -95,6 +97,9 @@ export default {
         name: {
             // 上传文件的字段名
             default: "name"
+        },
+        autoUpload:{
+            default: true,
         }
     },
     data() {
